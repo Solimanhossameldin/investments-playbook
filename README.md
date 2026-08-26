@@ -8,7 +8,7 @@ A daily-updating investing site for global markets and property. Static, zero ru
 
 ## What it does every day at 07:05 Gulf time
 
-1. `scripts/fetch-market-data.mjs` pulls nineteen live figures from four providers and writes `content/market.json`.
+1. `scripts/fetch-market-data.mjs` pulls eleven live figures from five providers and writes `content/market.json`.
 2. `scripts/generate-brief.mjs` drafts the day's brief from those figures plus headline feeds, and writes `content/briefs/YYYY-MM-DD.json`.
 3. `scripts/build.mjs` regenerates the whole site into `dist/`.
 4. GitHub Actions commits the day's content and deploys to GitHub Pages.
@@ -82,18 +82,10 @@ Both forms post straight into your existing MailerLite account, number 2532906.
 
 **Both forms are set to double opt-in**, which protects deliverability but adds a confirmation step before the Playbook is delivered. If you would rather trade list health for speed on the lead form, turn it off on that form in MailerLite.
 
-The Playbook itself is delivered on the page the moment the form is submitted, at `/playbook/`, which is `noindex` and reachable only from that success state or from the email. There is no PDF to attach and nothing to wait for.
+Two things still to do in MailerLite, which take about twenty minutes each:
 
-Two automations are built and **left switched off**, because turning one on starts sending email in your name:
-
-| Automation | Trigger | Steps |
-|---|---|---|
-| IP: Playbook delivery and nurture | joins IP: Playbook Download | delivery email, wait 2 days, net yield versus gross yield, wait 3 days, reverse the assumption |
-| IP: Daily Brief welcome | joins IP: Daily Brief | one welcome email setting the schedule and the sourcing promise |
-
-Both have their content written. Open each in the MailerLite dashboard, check the sender address is verified, send yourself a test, then activate.
-
-Still worth building: **one variant per intent option**, so a "Buy my first investment property" lead gets a different second and third email from a "Build a global markets portfolio" lead. That is the whole reason the intent field is captured.
+1. **Attach the actual Playbook PDF** to the confirmation email on the IP: Playbook Download form, or the gate promises a document that does not arrive yet.
+2. **Build one automation per intent option**, so a "Buy my first investment property" lead gets a different sequence from a "Build a global markets portfolio" lead. That is the whole reason the intent field exists.
 
 ---
 
@@ -136,7 +128,7 @@ The page order is fixed and deliberate: definition, the rule, the arithmetic, wh
 
 **No em-dashes, no middot separators.** Stripped at render time in `src/lib.mjs`, and again in the brief generator before anything is written to disk.
 
-**No proprietary index levels.** Never S&P 500, FTSE, DAX or Dow Jones levels, and never Case-Shiller or VIX. Republishing an index level needs a licence from the index provider. `scripts/selftest.mjs` asserts this and will fail the build if such a label ever appears.
+**No proprietary index levels.** The site shows ETF prices, never S&P 500, FTSE or DAX index levels. Republishing index levels needs a licence from the index provider. `scripts/selftest.mjs` asserts this and will fail the build if an index label ever appears.
 
 **Every figure names a source and a timestamp.** The data page and the ticker both render them, and the parsers refuse to write a row without them.
 
@@ -173,31 +165,31 @@ scripts/
 
 ## Data providers and their terms
 
-| Source | Used for | Licence |
+| Source | Used for | Notes |
 |---|---|---|
-| FRED, Federal Reserve Bank of St. Louis | 2Y, 10Y and 30Y Treasury yields, the 10Y real yield, 10Y breakeven inflation, the Freddie Mac 30 year mortgage rate, CPI, WTI crude, the Fed broad dollar index | Public domain US federal data, redistributable |
+| FRED, Federal Reserve Bank of St. Louis | 2Y, 10Y, 30Y Treasury yields, the 10Y real yield, the 10Y breakeven, the US 30Y mortgage rate, CPI, WTI crude, the broad dollar index | Keyless CSV, reachable from CI. The underlying series are published by the U.S. Treasury, the Federal Reserve Board, the Bureau of Labor Statistics, the Energy Information Administration and Freddie Mac |
 | ExchangeRate-API | EUR, GBP, JPY, AED, CHF, INR | Free commercial, **attribution link required**, it is in the footer |
 | gold-api.com | Gold and silver | No published terms, display only, treat as best effort |
 | Kraken | Bitcoin and Ethereum | Public exchange data |
 
-Roughly a dozen HTTP calls a day, every one at well under one percent of its free tier ceiling. The binding constraint on this pipeline is licensing, not rate limits.
-
-**FRED is queried one series per request, deliberately.** Asking for several ids in one call makes FRED align them to the lowest common frequency and rename the columns, which silently breaks the parser when a weekly or monthly series sits alongside a daily one. `scripts/selftest.mjs` has a case that would catch it again.
+Five HTTP calls a day.
 
 ### What is deliberately not published
 
-No S&P 500, FTSE, DAX or Dow Jones index levels. Republishing an index level needs a licence from the index provider. Case-Shiller and VIX are excluded for the same reason, being S&P and Cboe intellectual property, even though both are available on FRED. `scripts/selftest.mjs` asserts no such label ever reaches `market.json` and will fail the build if one does.
+**No proprietary index levels.** Not the S&P 500, FTSE, DAX or Dow. Not Case-Shiller, which is S&P and CoreLogic intellectual property. Not the VIX, which is Cboe's. Republishing any of them needs a licence this site does not hold, and free availability through a data pipe is not the same as redistribution rights. `scripts/selftest.mjs` asserts this and fails the build if such a label ever appears.
 
-### When a source fails
+The first production run made the reason concrete: Stooq, the usual keyless source for equity prices, refuses GitHub's datacentre ranges outright. Rather than reach for an unofficial endpoint with no redistribution permission, the equity tiles were replaced with the FRED macro series above, which are licence-clean, more reliable, and frankly more useful on a site about property and portfolio arithmetic than a QQQ price.
 
-A row that fails to refresh keeps its last good value and is flagged stale rather than blanked. A row that has not refreshed in fourteen days is retired, on the basis that a fortnight old figure is either a dead provider or a series that was quietly dropped, and neither is worth publishing. A source that failed on its primary endpoint and recovered on a fallback is logged as a note, not as a degraded day. All of it is published on the [automation status panel](https://investmentsplaybook.com/data/).
+### Resilience
+
+Every fetch is wrapped in a timeout. When a source fails, the previous value is kept and flagged stale rather than blanked, and the failure is written to the public automation status panel. A row that has not refreshed in fourteen days is dropped entirely, so a retired series does not sit on the page forever wearing a stale badge.
 
 ## The next things worth building
 
 In the order they will pay for themselves:
 
-1. Activate the two MailerLite automations, after a test send.
-2. Intent-based variants of the nurture sequence, one per option on the lead form.
+1. Finish the Playbook PDF and attach it to the MailerLite confirmation email.
+2. Intent-based email sequences, one per option on the lead form.
 3. The remaining twenty eight framework pages. The tier one gaps are the comparison cluster: Dubai versus London, off-plan versus ready, property versus index funds.
 4. A glossary page per term, one clean sentence first. Cheapest AI-citation asset available.
 5. The quarterly chartbook, deliberately ungated, as the asset other people link to.
