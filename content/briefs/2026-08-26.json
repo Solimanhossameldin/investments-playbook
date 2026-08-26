@@ -6,15 +6,18 @@
  "subtitle": "A steep long end, gold near record ground, and a Dubai market where the hold period just got longer.",
  "readMinutes": 4,
  "author": "Soliman Hossam Eldin",
+ "correction": "An earlier version of this issue quoted the Treasury curve at 4.17, 4.64 and 5.17 percent for 25 August, and gold at 4,636.20. Those figures came from a feed the site has since replaced. Every figure below is now the one published on the market data page, sourced from FRED at the Federal Reserve Bank of St. Louis, whose latest curve observation is 24 August.",
  "items": [
   {
    "heading": "The long end is doing the talking",
-   "what_happened": "The US Treasury curve on 25 August put the two year at 4.17 percent, the ten year at 4.64 percent and the thirty year at 5.17 percent. The ten year rose three basis points on the day while the two year fell three. The gap between the two year and the thirty year is now a full percentage point.",
-   "what_it_means": "A curve that steepens from the long end rather than the short end is not the market pricing rate cuts. It is the market pricing term premium: the extra yield investors demand for lending across thirty years rather than two. That premium responds to supply, to inflation uncertainty, and to how confident lenders feel about the fiscal path, none of which a central bank controls directly. It is worth separating the two stories, because they call for different responses. Short rates falling is a growth story. Long rates rising is a risk story.",
-   "what_it_means_for_you": "If you hold long duration bonds because someone told you bonds are the safe part, this is the moment to check what duration you actually own. If you are pricing a property purchase, the thirty year yield is the anchor most mortgage pricing eventually follows, and 5.17 percent is not a number that argues for cheaper borrowing next year. And if you are running a discounted cash flow on an off-plan payment plan, this is the rate environment your discount rate lives in.",
+   "what_happened": "On 24 August the US Treasury curve put the two year at 4.24 percent, the ten year at 4.70 and the thirty year at 5.23. The ten year and the thirty year each eased four basis points on the day while the two year did not move at all. The gap between the two year and the thirty year is 99 basis points, a basis point short of a full percentage point.",
+   "what_it_means": "A curve this steep at the long end is not the market pricing rate cuts. It is the market pricing term premium: the extra yield investors demand for lending across thirty years rather than two. That premium responds to supply, to inflation uncertainty, and to how confident lenders feel about the fiscal path, none of which a central bank controls directly. The composition is worth reading too. The ten year real yield is 2.38 percent and the ten year breakeven inflation rate is 2.32 percent, so of that 4.70 nominal, slightly more than half is compensation for real return and slightly less than half is compensation for expected inflation. It is worth separating the two stories, because they call for different responses. Short rates falling is a growth story. Long rates staying high is a risk story.",
+   "what_it_means_for_you": "If you hold long duration bonds because someone told you bonds are the safe part, this is the moment to check what duration you actually own. If you are pricing a property purchase, the thirty year yield is the anchor most mortgage pricing eventually follows, and 5.23 percent is not a number that argues for cheaper borrowing next year. The US thirty year mortgage rate in the week to 20 August was 6.65 percent, roughly 142 basis points above the thirty year Treasury, which is close to its normal spread rather than a distressed one. And if you are running a discounted cash flow on an off-plan payment plan, a 2.38 percent real yield is the floor your discount rate should start from.",
    "tags": ["rates", "duration"],
    "sources": [
-    {"name": "U.S. Department of the Treasury, daily yield curve", "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve"}
+    {"name": "U.S. Treasury constant maturity series via FRED", "url": "https://fred.stlouisfed.org/series/DGS30"},
+    {"name": "10 year breakeven inflation rate, FRED", "url": "https://fred.stlouisfed.org/series/T10YIE"},
+    {"name": "Freddie Mac 30 year fixed mortgage average via FRED", "url": "https://fred.stlouisfed.org/series/MORTGAGE30US"}
    ]
   },
   {
@@ -29,24 +32,26 @@
    ]
   },
   {
-   "heading": "Gold at 4,636 and the link that stopped working",
-   "what_happened": "Gold traded at 4,636 dollars an ounce on the morning of 26 August, with silver at 68.23. That is with the US ten year at 4.64 percent, which on the textbook relationship should be an unfriendly environment for an asset that pays no income.",
-   "what_it_means": "The standard model says gold moves inversely to real interest rates, because the opportunity cost of holding a non-yielding asset rises when safe assets pay more. That relationship has held for most of the past two decades and it has been visibly weaker in this cycle. The most cited explanation is that the marginal buyer changed: central bank reserve accumulation is less sensitive to real yields than a Western investor allocating between gold and Treasury Inflation Protected Securities. When the buyer changes, the correlation you learned changes with it.",
+   "heading": "Gold at 4,628 and the link that stopped working",
+   "what_happened": "Gold traded at 4,627.70 dollars an ounce on the afternoon of 26 August, with silver at 68.86. That is with the US ten year real yield at 2.38 percent, which on the textbook relationship should be an unfriendly environment for an asset that pays no income at all.",
+   "what_it_means": "The standard model says gold moves inversely to real interest rates, because the opportunity cost of holding a non-yielding asset rises when safe assets pay a positive return after inflation. That relationship held for most of the past two decades and it has been visibly weaker in this cycle. The most cited explanation is that the marginal buyer changed: central bank reserve accumulation is less sensitive to real yields than a Western investor allocating between gold and Treasury Inflation Protected Securities. When the buyer changes, the correlation you learned changes with it.",
    "what_it_means_for_you": "The useful lesson is not about gold, it is about correlations generally. A relationship that has held for twenty years is a strong prior and not a law, and portfolios built on the assumption that two assets will keep behaving as they did are carrying a risk that does not show up in any volatility number. This is the four boxes question: name the economic environment each of your holdings needs, and count how many need the same one.",
    "tags": ["gold", "correlation", "real rates"],
    "sources": [
     {"name": "gold-api.com, spot reference price", "url": "https://api.gold-api.com"},
-    {"name": "Gold prices and real interest rates", "url": "https://goldsilver.com/industry-news/article/gold-prices-and-real-interest-rates-what-every-investor-must-know/"}
+    {"name": "10 year Treasury inflation indexed yield, FRED", "url": "https://fred.stlouisfed.org/series/DFII10"}
    ]
   }
  ],
  "numbers": [
-  {"label": "US 10Y Treasury", "value": "4.64%", "note": "Up 3 basis points on the day"},
-  {"label": "US 2Y Treasury", "value": "4.17%", "note": "Down 3, the curve steepened from the long end"},
-  {"label": "US 30Y Treasury", "value": "5.17%", "note": "A full point above the two year"},
-  {"label": "Gold", "value": "$4,636.20", "note": "Non-yielding, and rising anyway"},
+  {"label": "US 10Y Treasury", "value": "4.70%", "note": "Down 4 basis points on 24 August"},
+  {"label": "US 2Y Treasury", "value": "4.24%", "note": "Unchanged, so the steepening is all at the long end"},
+  {"label": "US 30Y Treasury", "value": "5.23%", "note": "99 basis points above the two year"},
+  {"label": "US 10Y Real Yield", "value": "2.38%", "note": "The number a real asset has to beat"},
+  {"label": "US 30Y Mortgage", "value": "6.65%", "note": "Week to 20 August, 142 basis points over the long bond"},
+  {"label": "Gold", "value": "$4,627.70", "note": "Non-yielding, and rising anyway"},
   {"label": "USD / AED", "value": "3.6725", "note": "The peg, unchanged as always"},
-  {"label": "Bitcoin", "value": "$79,071", "note": "Up 0.72 percent on the session open"}
+  {"label": "Bitcoin", "value": "$78,487", "note": "Flat on the session, down 0.03 percent"}
  ],
  "calendar": [
   {"day": "Thursday", "event": "Freddie Mac publishes the weekly US 30 year mortgage rate"},
