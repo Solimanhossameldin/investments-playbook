@@ -4,6 +4,18 @@
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "A brief for 2026-08-26 already exists.",
+   "ranAt": "2026-08-26T11:30:28.091Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "partial",
+   "detail": "12 figures refreshed. Notes: metal-XAU fetch failed; stooq HTTP 404; treasury-primary The operation was aborted due to timeout",
+   "ranAt": "2026-08-26T11:30:28.042Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "A brief for 2026-08-26 already exists.",
    "ranAt": "2026-08-26T10:42:03.774Z"
   },
   {
