@@ -803,4 +803,263 @@ Rebalancing band, the 5/25 rule
       { name: "A Wealth of Common Sense, Larry Swedroe's 5/25 rebalancing rule", url: "https://awealthofcommonsense.com/2014/03/larry-swedroe-525-rebalancing-rule/" },
     ],
   },
+  /* ==================== COMPARISONS ==================== */
+  {
+    slug: "dubai-vs-london",
+    title: "Dubai versus London",
+    category: "property",
+    tier: 1,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "A Dubai resident buying a London rental pays roughly ten percent of the purchase price in stamp duty alone once the additional property and non resident surcharges are added, then pays UK income tax on the rent and UK capital gains tax on the exit, none of which exists in Dubai, which is why a lower headline yield in Dubai often survives contact with reality better than a higher one in London.",
+
+    body: `The comparison is almost always made on gross yield, and gross yield is the one number where London can look competitive. Outer London boroughs advertise six and seven percent. Dubai advertises six to eight. On that basis a buyer concludes the two markets are similar and picks on sentiment.
+
+They are not similar. They differ at three separate points, and each one takes a bite the headline never mentions: what you pay to get in, what the tax authority takes each year, and what it takes when you leave.
+
+## Getting in
+
+In Dubai the entry cost is roughly six to seven percent of the price. Four percent to the Dubai Land Department, two percent agency commission with five percent VAT on the commission, a trustee office fee of around four thousand dirhams, and an administrative charge. There is no purchase tax beyond the transfer fee.
+
+In England the entry cost is stamp duty, and for the buyer this site is written for it is not the headline rate. A UK resident buying their only home pays the standard bands. A Dubai based investor buying a rental pays those bands **plus five percentage points** for owning another property **plus two percentage points** for not having been in the UK for 183 days. Both surcharges apply to every band, including the band that would otherwise be zero.
+
+On a six hundred thousand pound flat that works out as follows.
+
+- The first 125,000 at seven percent: 8,750
+- The next 125,000 at nine percent: 11,250
+- The remaining 350,000 at twelve percent: 42,000
+
+Sixty two thousand pounds, which is **10.3 percent of the purchase price in tax alone**, before conveyancing and survey. Dubai's entire round trip in costs a buyer less than London's stamp duty on its own.
+
+## Holding it
+
+This is the part that is usually left out entirely. Rental income from a UK property is UK taxable income wherever the landlord lives. Under the Non-resident Landlord Scheme the agent or the tenant deducts basic rate tax at source unless HMRC approves you to receive rent gross and file a return instead. Either way the tax is due.
+
+Dubai levies no personal income tax on rental income.
+
+Take the six hundred thousand pound flat at six percent gross, so thirty six thousand a year, and strip it the way the [net rental yield](/playbooks/net-rental-yield/) framework does. Service charge on a leasehold flat, management at ten percent plus VAT, a month of void, a maintenance reserve. Call it twenty four thousand of taxable profit. Basic rate tax takes roughly five thousand of that.
+
+Against a total outlay near six hundred and sixty five thousand, the flat nets under three percent. The Dubai worked example in the net yield framework, on a market advertising a seven percent gross, lands at 4.3 percent net and pays no tax on it.
+
+## Leaving
+
+A non resident selling UK residential property pays UK capital gains tax on the gain, at eighteen or twenty four percent depending on where the gain sits against the income tax bands, with an annual exempt amount of three thousand pounds. There is also a sixty day reporting deadline, and missing it is its own penalty.
+
+Dubai charges no capital gains tax. The exit cost is the agency commission and the transfer, which the [transaction cost drag](/playbooks/transaction-cost-drag/) framework covers.
+
+## So what is London actually for
+
+Three things, and they are real.
+
+**Currency.** The dirham is pegged to the dollar. A portfolio denominated entirely in dollars is a bet, even if it does not feel like one. Sterling assets are a hedge against that, and for someone whose children may study or settle in the UK they are a liability match rather than a speculation.
+
+**Institutional depth.** Title, planning, dispute resolution and a rental market with centuries of case law behind it. Dubai's framework is good and improving fast, but it is decades old rather than centuries.
+
+**Debt.** UK mortgage markets for non residents are narrower than for residents but they exist, and long fixed rate money in a low yielding market behaves differently from short money in a high yielding one.
+
+None of those three is a yield argument. That is the point. If the case for London is diversification, say so and size it as diversification. If the case is income, the arithmetic above is the case against.`,
+    formula: `Dubai, entry
+  Transfer fee                4.00% of price
+  Agency commission           2.00% + 5% VAT on the commission
+  Trustee and admin           roughly AED 4,500
+  Purchase tax                none
+  Annual tax on rent          none
+  Capital gains tax on exit   none
+
+England, entry, non resident buying an additional property
+  SDLT band rate            + 5 pp additional property
+                            + 2 pp non resident
+  applied to every band, including the nil rate band
+
+  Worked, GBP 600,000
+    125,000 x 7%   =  8,750
+    125,000 x 9%   = 11,250
+    350,000 x 12%  = 42,000
+    Total SDLT     = 62,000   (10.3% of price)
+
+  Annual tax on rent          income tax on the net profit,
+                              deducted at source under the NRL scheme
+                              unless HMRC approves gross payment
+  Capital gains tax on exit   18% or 24% on the gain,
+                              GBP 3,000 annual exempt amount,
+                              reportable within 60 days`,
+    failureModes: [
+      "It compares two tax positions, not two buildings. A buyer who is or becomes UK tax resident faces a completely different calculation, and one who is already UK resident may find the surcharges do not both apply.",
+      "Personal allowance eligibility for non residents is not universal. British citizens generally keep it, others depend on the treaty. Assuming it applies can flatter the London number by a few thousand pounds a year.",
+      "Mortgage interest relief for individual UK landlords is a basic rate credit rather than a deduction, which changes the arithmetic sharply for a leveraged buyer and is not modelled above.",
+      "Corporate ownership changes everything in both directions, including stamp duty at the fifteen percent flat rate in some cases, and is a question for a tax adviser rather than a framework page.",
+      "The yields quoted are indicative market averages from secondary sources. Your building is not an average.",
+      "It says nothing about capital growth, which is the argument most London buyers are actually making. The costs above are certain; the growth is not.",
+    ],
+    whenToUse:
+      "Before treating a London gross yield and a Dubai gross yield as comparable numbers, which they are not. Also before assuming that a portfolio held entirely in a dollar pegged currency is diversified.",
+    sources: [
+      { name: "HMRC, Stamp Duty Land Tax residential rates", url: "https://www.gov.uk/stamp-duty-land-tax/residential-property-rates" },
+      { name: "HMRC, Capital Gains Tax rates and allowances", url: "https://www.gov.uk/capital-gains-tax/rates" },
+      { name: "HMRC, tax on UK rental income if you live abroad", url: "https://www.gov.uk/tax-uk-income-live-abroad/rent" },
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/" },
+      { name: "London rental yields by borough, 2026, indicative", url: "https://investropa.com/blogs/news/london-rental-yields" },
+    ],
+  },
+
+  {
+    slug: "off-plan-vs-ready",
+    title: "Off-plan versus ready",
+    category: "property",
+    tier: 1,
+    calculator: "off-plan-irr",
+    reviewed: R,
+    summary:
+      "A ready property starts paying rent immediately while an off-plan unit pays nothing until handover, so an off-plan purchase has to make up several years of foregone net yield out of its price advantage and its appreciation before it is even level, which is why the two can only be compared as cash flows and never as headline prices.",
+
+    body: `Both are sold on the same sentence: get in at today's price. The difference is what happens in the years between paying and owning, and that gap is where the entire comparison lives.
+
+## What each one actually is
+
+**Ready** is a building that exists. You can stand in it, read last year's service charge invoices, meet the owners association, see whether the chiller is original, and let it to a tenant the month you complete. You pay the whole price now and you own an income stream now.
+
+**Off-plan** is a contract to buy a building that does not exist yet, paid for in instalments against construction milestones, registered with the Land Department through Oqood rather than as a title deed. It produces no income at all until handover.
+
+## Why money later is worth less, and why that is not the whole story
+
+The genuine advantage of a payment plan is that a dirham paid in three years costs less than a dirham paid today. That is real and it is the argument the [off-plan IRR](/playbooks/off-plan-irr/) framework exists to quantify. Two plans at the same headline price are not the same price, and a post handover plan can be worth eight to fifteen percent of the headline figure against a front loaded one.
+
+But the same clock runs the other way. A ready unit at a 4.3 percent net yield produces income in every one of those years. An off-plan unit produces none. Over a three year build that is roughly thirteen percent of value in foregone net rent, which the payment plan discount has to cover before the off-plan purchase is even level.
+
+Resist the temptation to net those two numbers off in your head. They arrive at different times and in different sizes, which is exactly the situation percentages handle badly. Lay both out as dated cash flows and compare the internal rates of return. That is not a formality, it is the only way the answer comes out right.
+
+## What protects your money, and what does not
+
+Dubai's Law No. 8 of 2007 is better than most jurisdictions and worth understanding precisely.
+
+Every project has its own escrow account. Purchaser payments and any project finance must go into it. The account is dedicated to that project's construction, and payments in it cannot be attached by the developer's other creditors, which is the provision that matters if a developer gets into trouble elsewhere. After the completion certificate the escrow agent retains five percent of the account value and releases it to the developer one year after the units are registered to buyers.
+
+Note what that protects and what it does not. It protects your money from being spent on a different project or seized by an unrelated creditor. It does not guarantee the building is delivered on time, delivered to the specification in the brochure, or worth what you agreed to pay when it finally arrives.
+
+## The risk nobody prices
+
+Off-plan units hand over in batches. On handover day, several hundred near identical apartments become available for sale and for rent in the same tower in the same month, and every one of the investors who bought for the flip is trying the same exit at once.
+
+That is a structural feature of the product, not bad luck, and it is the single most common reason an off-plan purchase that looked good on paper disappoints. The ready market has no equivalent.
+
+## The honest summary
+
+Off-plan suits a buyer with a long horizon, no need for income in the meantime, tolerance for delay, and a genuine price or plan advantage they have actually calculated rather than been told about. Ready suits a buyer who wants the income to start, wants to inspect what they are buying, and would rather pay a premium for certainty than be paid for uncertainty.
+
+Neither is the smart choice in general. The one that is wrong for you is the one you cannot fund if the timeline slips by two years.`,
+    formula: `Compare as cash flows, never as prices.
+
+Ready
+  t0    - (price + acquisition costs)
+  t1..n + net rent each year
+  tn    + sale proceeds - exit costs
+
+Off-plan
+  t0    - deposit
+  t1..k - each instalment on its due date
+  tk    - handover payment, registration, fit out
+  tk+1..n + net rent, but only from handover
+  tn    + sale proceeds - exit costs
+
+Then compare the internal rates of return, not the totals.
+
+The gap the off-plan discount has to cover
+  foregone net yield  =  net yield x years to handover
+  at 4.3% over 3 years  =  ~12.9% of value
+  before any allowance for delay`,
+    failureModes: [
+      "It assumes handover happens on schedule. Build a delay case at plus twelve and plus twenty four months and see whether the answer survives it, because a delayed handover pushes every rent receipt back while the payments already made stay where they are.",
+      "The escrow law protects the money from misuse, not the buyer from a bad purchase. Reading it as a guarantee of delivery or of value is the most common misunderstanding in the market.",
+      "Comparing a discounted off-plan price against today's ready price ignores that the ready unit will also have moved by handover. The comparison has to be against the ready market at handover, which nobody knows.",
+      "Off-plan service charges are estimates until the owners association is running. The first real invoice is frequently higher than the projection used to sell the unit.",
+      "The handover glut is not modelled by any standard IRR. If your exit assumes selling within a year of handover, that assumption deserves its own stress test.",
+      "Mortgage availability differs. Financing a ready unit is straightforward, financing an off-plan purchase before handover often is not, which changes what you can actually afford.",
+    ],
+    whenToUse:
+      "Before signing a payment plan, and specifically before accepting any comparison made in headline prices. Also whenever a plan is presented as a discount without the discount having been calculated.",
+    sources: [
+      { name: "Dubai Law No. 8 of 2007, escrow accounts for real estate development", url: "https://dlp.dubai.gov.ae/Legislation%20Reference/2007/Law%20No.%20(8)%20of%202007.html" },
+      { name: "Dubai Land Department, Oqood and off-plan registration", url: "https://dubailand.gov.ae/en/" },
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/eservices/" },
+    ],
+  },
+
+  {
+    slug: "property-vs-index-funds",
+    title: "Property versus index funds",
+    category: "cross-asset",
+    tier: 1,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "Property and index funds are not competing return numbers, they are competing structures: property offers cheap leverage and a contractual income at the cost of eight to ten percent round trip friction, total illiquidity and single tenant concentration, while a fund offers instant diversification and near zero costs with no safe way to borrow against it.",
+
+    body: `The argument is usually had as though one asset returns more than the other, and it is settled by whoever has the better recent anecdote. That framing is wrong, because the two are not different bets on the same thing. They are different machines, and the differences that matter are structural.
+
+## The five that actually decide it
+
+**Leverage.** This is the real difference and everything else is secondary. A bank will lend against a flat at four to one, secured on the asset, for twenty five years, at a rate anchored to the long bond. Nobody will do that against a fund portfolio on terms a sane person would accept. Leverage multiplies whatever the asset does, in both directions, and it is the reason property has made more people wealthy than funds have. It is also the reason it has ruined more of them.
+
+**Friction.** The round trip cost of buying and selling property in Dubai is roughly eight to ten percent of value once the transfer fee, both commissions with VAT, and the trustee and NOC charges are counted. A global index fund costs a fraction of one percent to buy and a few basis points a year to hold. Over a two year hold that friction is four to five percent a year, which consumes an entire net yield. Over ten years it is under one percent a year. The [transaction cost drag](/playbooks/transaction-cost-drag/) framework is the whole of this argument.
+
+**Liquidity.** A fund can be sold on a Tuesday and settles that week. A property takes months, cannot be sold in part, and is least sellable exactly when you most need the money, because the reason you need it is usually the reason nobody is buying.
+
+**Concentration.** One property is one building, in one city, in one currency, let to one tenant, exposed to one owners association and one chiller. A global fund is thousands of companies across dozens of economies. Investors who would never put their entire liquid net worth into a single stock routinely put several times their net worth, borrowed, into a single apartment, and do not experience it as concentration.
+
+**Effort.** Property is a job. Tenants, agents, service charge disputes, maintenance, renewals, the occasional vacancy. Some of that can be paid away at five to eight percent of collected rent, which the yield calculation should already reflect. The rest is your evenings. A fund asks nothing of you, which is a genuine return in a currency that does not appear in any spreadsheet.
+
+## The honest comparison
+
+If you want to compare them properly, you cannot compare a levered property's return on equity against an unlevered fund's total return. That comparison is between leverage and no leverage, and leverage wins on the way up every time.
+
+Compare like with like. Either strip the debt out of the property and look at the unlevered yield plus growth against the fund, or accept that you are choosing leverage, and stress test it: what a two year vacancy does, what a refinancing at a rate three points higher does, what a fifteen percent price fall does to equity that was twenty five percent of the purchase price. The [drawdown recovery](/playbooks/drawdown-recovery-math/) arithmetic applies to a leveraged property far more brutally than to a fund.
+
+## Where the tax tail matters
+
+For a globally mobile investor the fund side has a trap the property side does not: a US domiciled ETF exposes a non resident holder to US estate tax on the US situs assets above a small threshold. Irish domiciled funds tracking the same index generally do not. This is the [fund domicile](/playbooks/fund-domicile/) question, and it is worth more to most people than the expense ratio they spent an afternoon comparing.
+
+Property held in the UAE by a UAE resident has no income tax, no capital gains tax and no estate tax, but succession is governed by rules that a will and a structure need to address deliberately.
+
+## The framing that actually helps
+
+Ask what each holding needs in order to work, and count how many of your holdings need the same thing. That is the [four boxes](/playbooks/all-weather/) question. Property is growth and income, illiquid, levered, local. A global equity fund is growth, liquid, unlevered, diversified. They are genuinely different boxes, which is the strongest argument for owning both and the weakest argument for arguing about which is better.`,
+    formula: `The comparison people make
+  levered property return on equity   vs   unlevered fund return
+  which is a comparison of leverage, not of assets.
+
+The comparison worth making
+  Property, unlevered
+    net yield (after every running cost)
+    + expected capital growth
+    - annualised round trip friction over YOUR hold period
+        = 8-10% of value / years held
+
+  Fund
+    expected total return
+    - expense ratio
+    - dealing costs, a few basis points
+
+  Then, separately, decide whether you want leverage,
+  and stress it:
+    vacancy of 24 months
+    refinancing 3 points higher
+    a 15% price fall against 25% equity
+        -> 60% of your equity, before costs`,
+    failureModes: [
+      "Expected returns are assumptions, not data. Any version of this comparison that leans on a projected growth rate is only as good as that rate, which is why the friction and leverage terms, which are knowable, deserve more weight than the growth term, which is not.",
+      "It ignores the primary residence, which is not an investment in the same sense and should not be counted in this comparison at all.",
+      "Property returns quoted by the industry are frequently gross and frequently exclude the round trip. Fund returns are quoted net of fees and after everything. The two are not being reported on the same basis.",
+      "A REIT is neither of these things and behaves like equity in the short run and property in the long run, which frustrates people expecting one or the other.",
+      "The tax position dominates for some investors and is irrelevant for others. A framework page cannot know which you are.",
+      "Leverage is available to some buyers and not others. If you cannot get a mortgage, the strongest argument for property does not apply to you.",
+    ],
+    whenToUse:
+      "When the choice is being framed as which one returns more, which is the wrong question. Also before adding a second property to a portfolio that already holds one, where the concentration argument is at its strongest.",
+    sources: [
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/" },
+      { name: "IRS, estate tax for nonresidents not citizens of the United States", url: "https://www.irs.gov/businesses/small-businesses-self-employed/some-nonresidents-with-us-assets-must-file-estate-tax-returns" },
+      { name: "Bank for International Settlements, property price statistics", url: "https://www.bis.org/statistics/pp.htm" },
+    ],
+  },
 ];
