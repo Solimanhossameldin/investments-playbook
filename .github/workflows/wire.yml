@@ -11,7 +11,7 @@ on:
 # having two deployments race.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
