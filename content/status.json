@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "fetch-wire",
+   "result": "partial",
+   "detail": "23 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
+   "at": "2026-08-26T19:02:31.271Z"
+  },
+  {
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "A brief for 2026-08-26 already exists.",
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "A brief for 2026-08-26 already exists.",
    "ranAt": "2026-08-26T10:42:03.774Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "partial",
-   "detail": "10 figures refreshed, 2 source(s) failed: stooq, treasury",
-   "ranAt": "2026-08-26T10:42:03.717Z"
   }
  ]
 }
