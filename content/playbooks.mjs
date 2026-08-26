@@ -1697,4 +1697,723 @@ The test
       { name: "Dubai Land Department, transaction data", url: "https://dubailand.gov.ae/en/open-data/real-estate-data/" },
     ],
   },
+  /* ==================== BATCH THREE ==================== */
+  {
+    slug: "price-per-square-foot",
+    title: "Price per square foot",
+    category: "valuation",
+    tier: 1,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "Price per square foot is the purchase price divided by the area on the title deed, and it is the only way to compare two different properties honestly, provided the comparison is made against genuine recent transactions in the same building rather than against asking prices across a district.",
+    body: `Every property is unique, which is the argument used to avoid comparison and the reason comparison matters. Price per square foot is how it is done.
+
+## The calculation, and the number that goes in it
+
+Purchase price divided by area. The area is the one on the [title deed](/glossary/title-deed/), not the one in the brochure, and the two are not always the same. Brochure areas sometimes include balconies, terraces or a share of common space in ways the deed does not.
+
+Use the deed. It is the area the service charge is levied on, so consistency there also keeps the [net yield](/playbooks/net-rental-yield/) honest.
+
+## What to compare against
+
+The hierarchy runs from most useful to least, and most buyers work it backwards.
+
+**Recent transactions in the same building.** The gold standard. Same service charge, same association, same view corridors, same everything except floor and layout. Dubai publishes transaction data, so this is checkable rather than a matter of opinion.
+
+**Recent transactions in comparable buildings in the same community.** Good, with adjustments for age, amenity and finish.
+
+**Asking prices in the same building.** Weak. An asking price is a hypothesis, and in a soft market the gap between asking and achieved widens exactly when you most need the number to be right.
+
+**District averages in a portal or a market report.** Nearly useless for a specific unit. A district average blends studios and penthouses, towers and villas, new and fifteen years old.
+
+## The adjustments that actually matter
+
+Floor level, within reason. View, which can be worth a great deal and can be lost when the plot opposite is developed. Layout efficiency, because two units of identical area can have very different usable space. Age and condition. Whether the sale was at arm's length, since a transfer between related parties tells you nothing about market value.
+
+Also adjust for what is included. A furnished unit and an empty one at the same price per foot are not the same deal, and the furniture is worth far less to you than it cost the seller.
+
+## Where it stops being useful
+
+Price per square foot values the box. It does not value the income. Two units at the same price per foot with different service charges and different achievable rents have different [net yields](/playbooks/net-rental-yield/), and the yield is what you are buying if you are buying a rental.
+
+Run both. Price per foot tells you whether you are paying a fair price for the asset. Net yield tells you whether the asset is worth owning.`,
+    formula: `Price per square foot
+  = purchase price / area on the title deed
+
+Comparison hierarchy, best first
+  1. achieved prices, same building, last 6-12 months
+  2. achieved prices, comparable buildings, same community
+  3. asking prices, same building        (weak)
+  4. district averages in a market report (near useless)
+
+Adjustments
+  + higher floor, better view, efficient layout
+  + recent renovation
+  - age, poor layout, obstructed view
+  - furnished (worth less to you than it cost the seller)
+  x  ignore non arm's length transfers entirely
+
+Then, separately
+  net yield = what the income is worth
+  price per foot = what the box is worth
+  Both, every time.`,
+    failureModes: [
+      "Brochure area and title deed area can differ, and using the larger one makes an expensive property look reasonable while also understating the service charge per foot.",
+      "Asking prices are not transactions. In a soft market the gap between asking and achieved is widest precisely when the number matters most.",
+      "District averages blend property types that have nothing to do with each other, which is why they are quoted in marketing and rarely in valuations.",
+      "It ignores income entirely. A fairly priced box with a poor yield is still a poor rental investment.",
+      "Off-plan prices per foot include an expectation about the future, so comparing them against completed units compares two different things.",
+      "One transaction is not a market. Three or four comparable sales are the minimum before the number means anything.",
+    ],
+    whenToUse:
+      "Before every offer, and again before every listing when selling. It is also the fastest way to sanity check a price presented as a special opportunity.",
+    sources: [
+      { name: "Dubai Land Department, real estate transaction data", url: "https://dubailand.gov.ae/en/open-data/real-estate-data/" },
+      { name: "Dubai Pulse, DLD transactions open dataset", url: "https://www.dubaipulse.gov.ae/data/dld-transactions/dld_transactions-open" },
+      { name: "Dubai Land Department, eServices", url: "https://dubailand.gov.ae/en/eservices/" },
+    ],
+  },
+
+  {
+    slug: "discounted-cash-flow",
+    title: "Discounted cash flow",
+    category: "valuation",
+    tier: 1,
+    calculator: "off-plan-irr",
+    reviewed: R,
+    summary:
+      "Discounted cash flow values an asset by converting every future payment it produces into what that payment is worth today, using a discount rate that reflects what the money could otherwise earn, which makes it the only honest way to compare investments whose cash arrives at different times.",
+    body: `Every argument about payment plans, off-plan pricing and rent versus buy is an argument about timing. Discounted cash flow is the tool that settles them, and it rests on one idea.
+
+## The idea
+
+A dirham you receive in three years is worth less than a dirham today, because today's dirham can be earning in the meantime. How much less depends on what it could earn, which is the discount rate.
+
+At a five percent discount rate, a dirham in three years is worth about 86 fils today. At ten percent, about 75 fils. The further out the payment and the higher the rate, the less it is worth now.
+
+## Why it matters here
+
+An off-plan [payment plan](/glossary/payment-plan/) is a series of dated payments. Two plans with the same headline total are not the same price, and the difference is exactly what discounting reveals. A post handover plan defers money into a period where you could be earning rent, so it is worth real value against a front loaded one.
+
+The same machinery answers [rent versus buy](/playbooks/rent-vs-buy/): both are streams of payments over time, and comparing them any other way produces the wrong answer.
+
+## Choosing the discount rate
+
+This is where the judgement sits and where most analyses quietly cheat.
+
+The rate should reflect what the money would otherwise earn at comparable risk. For a cash buyer that might be the [real yield](/glossary/real-yield/) plus a risk premium. For a leveraged buyer the mortgage rate is a reasonable floor, because money not spent on the property could repay debt.
+
+A rate that is too low makes distant payments look nearly as valuable as immediate ones, which flatters long payment plans. A rate that is too high does the opposite. The discipline is to pick the rate before running the numbers, not after seeing which answer you preferred.
+
+## Net present value and IRR
+
+Two outputs come from the same set of cash flows.
+
+**Net present value** discounts every flow at your chosen rate and sums them. Positive means the investment beats that rate. Negative means it does not.
+
+**[Internal rate of return](/glossary/internal-rate-of-return/)** finds the rate at which net present value equals zero. It is the rate the investment itself earns, and it can be compared against your alternatives directly.
+
+NPV answers is this worth doing at my hurdle. IRR answers what does this actually earn. Both come from the same table, and the table is the work.
+
+## The honest warning
+
+A discounted cash flow model is an opinion dressed as arithmetic. The arithmetic is exact and the inputs are guesses: future rent, future service charges, the exit price, the discount rate. Changing the exit price assumption by ten percent can change the answer completely.
+
+That is not an argument against the method. It is an argument for running the model three times, at pessimistic, expected and optimistic assumptions, and making the decision on the range rather than on the single number that came out first.`,
+    formula: `Present value of one future amount
+  PV = FV / (1 + r)^n
+
+  r = discount rate per period
+  n = number of periods
+
+Net present value of a series
+  NPV = sum of  CF(t) / (1 + r)^t   for every t
+
+  Positive NPV  ->  beats your hurdle rate
+  Negative NPV  ->  does not
+
+Internal rate of return
+  the value of r at which NPV = 0
+
+Discount factors, for intuition
+  r = 5%    1 year 0.952   3 years 0.864   5 years 0.784
+  r = 8%    1 year 0.926   3 years 0.794   5 years 0.681
+  r = 12%   1 year 0.893   3 years 0.712   5 years 0.567
+
+Always run it three times
+  pessimistic / expected / optimistic
+  and decide on the range`,
+    failureModes: [
+      "The discount rate is chosen by the person who wants a particular answer more often than anyone admits. Pick it first, write it down, and do not revise it because the output displeased you.",
+      "Terminal value, the assumed sale price at the end, frequently dominates the result. If most of the value sits in a number you guessed about year ten, the model is a forecast wearing a spreadsheet.",
+      "It assumes cash flows arrive as scheduled. Delay is the norm in construction and the model should be run with the delay case as standard rather than as an afterthought.",
+      "IRR misbehaves when cash flows change sign more than once, producing multiple mathematically valid answers. Where that happens, use NPV instead.",
+      "Comparing IRRs across very different time periods ranks them wrongly. A high IRR over eight months and a lower one over ten years are not directly comparable.",
+      "Precision in the output implies confidence the inputs do not support. Two significant figures is usually more honest than four.",
+    ],
+    whenToUse:
+      "Whenever money moves at more than one point in time, which covers payment plans, rent versus buy, refinancing decisions and any comparison between an income asset and a growth one.",
+    sources: [
+      { name: "Aswath Damodaran, NYU Stern, valuation resources", url: "https://pages.stern.nyu.edu/~adamodar/" },
+      { name: "Dubai Land Department, real estate transaction data", url: "https://dubailand.gov.ae/en/open-data/real-estate-data/" },
+    ],
+  },
+
+  {
+    slug: "rent-increase-caps",
+    title: "Rent increase caps and the rental index",
+    category: "property",
+    tier: 1,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "Dubai caps how much a landlord may raise rent on renewal according to how far the current rent sits below the RERA rental index, rising in steps from no increase at all up to a maximum of twenty percent, which means a landlord's yield improvement is limited by law rather than by negotiation.",
+    body: `This is the rule that decides whether an underlet property can be repriced, and it is misunderstood by landlords and tenants in roughly equal measure.
+
+## How the cap works
+
+Under Decree No. 43 of 2013, the permitted increase depends on how far the existing rent sits below the average market rent for comparable units, as determined by the RERA rental index.
+
+- Within ten percent of the index: **no increase permitted**
+- Eleven to twenty percent below: **up to five percent**
+- Twenty one to thirty percent below: **up to ten percent**
+- Thirty one to forty percent below: **up to fifteen percent**
+- More than forty percent below: **up to twenty percent**
+
+The index is the authority, not the landlord's opinion of market rent and not the agent's. The Land Department publishes a calculator that returns the permitted figure for a specific unit.
+
+## What this means if you are buying
+
+A property let well below market is not the bargain it appears. You cannot simply reprice it to market on renewal. If the sitting rent is thirty five percent below the index you may raise it fifteen percent, which still leaves it below market, and you repeat the exercise the following year.
+
+That has three consequences for the arithmetic. The yield you can achieve in year one is the passing rent, not the market rent. The path to market rent takes years, not one renewal. And the [break-even occupancy](/playbooks/break-even-occupancy/) calculation should use the rent you are legally able to charge, not the one in the sales pitch.
+
+Buying a vacant unit avoids the problem entirely, which is part of why vacant possession commands a premium.
+
+## Notice, which is where landlords lose
+
+A rent increase requires ninety days written notice before the tenancy expires unless the contract specifies otherwise. Miss it and the tenancy renews on the existing terms.
+
+Separately, ending a tenancy for reasons other than tenant breach, including sale or personal use, requires twelve months notice served through notary or registered mail. A message on a phone is not service.
+
+These are the provisions that most often decide disputes, and they are procedural rather than substantive: a landlord with a perfectly good case loses it by serving notice incorrectly.
+
+## The tenant's side of the same rule
+
+The cap is symmetrical in usefulness. A tenant facing an increase can check the index themselves and decline anything above the permitted figure. The Rental Dispute Centre exists for the disagreement that follows.`,
+    formula: `Permitted increase on renewal, Decree 43 of 2013
+
+  Current rent vs RERA index average
+    within 10% of index        no increase
+    11% to 20% below           up to  5%
+    21% to 30% below           up to 10%
+    31% to 40% below           up to 15%
+    more than 40% below        up to 20%
+
+Notice
+  rent increase        90 days written notice before expiry
+  ending a tenancy     12 months notice, notary or
+                       registered mail, for reasons other
+                       than tenant breach
+
+The buyer's arithmetic
+  Year 1 yield uses the passing rent, not market rent.
+  Closing a 35% gap at 15% a year takes several renewals.
+  Vacant possession removes the constraint, and is priced
+  accordingly.`,
+    failureModes: [
+      "The index moves. A gap calculated against last year's index is not the gap that applies at the next renewal, and the calculator should be run fresh each time.",
+      "The tiers apply to the permitted maximum, not to an automatic entitlement. A landlord may still agree less, and in a soft market frequently should.",
+      "Notice served incorrectly defeats an otherwise valid increase. Procedure decides more disputes here than substance does.",
+      "It applies to renewal of an existing tenancy. A new tenancy with a new tenant is a different transaction, which is why vacant possession is worth paying for.",
+      "Rules and tiers are set by decree and can be amended, so a framework page is a starting point rather than a current legal position.",
+      "This is general information and not legal advice. A live dispute belongs with the Rental Dispute Centre or a lawyer, not with a calculator.",
+    ],
+    whenToUse:
+      "Before buying any tenanted property, because the achievable rent is a legal question before it is a market one. Also every year before serving or receiving a renewal notice.",
+    sources: [
+      { name: "Dubai Land Department, RERA rental index and calculator", url: "https://dubailand.gov.ae/en/eservices/rental-index/" },
+      { name: "Dubai Land Department, Rental Dispute Settlement Centre", url: "https://dubailand.gov.ae/en/" },
+      { name: "Decree 43 of 2013, rent increase tiers, summary", url: "https://roi.altamimirealestate.com/blog/rera-rent-increase-calculator-dubai" },
+    ],
+  },
+
+  {
+    slug: "asset-allocation-by-horizon",
+    title: "Allocation by horizon",
+    category: "portfolio",
+    tier: 1,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "Allocation by horizon assigns each pot of money an asset mix based on when it will be spent rather than on the owner's appetite for risk, because a deposit needed in eighteen months and a retirement fund needed in twenty five years are different problems that a single risk profile cannot answer.",
+    body: `The standard approach asks how much risk you can tolerate and produces one allocation for everything you own. That question has the wrong subject. Risk tolerance is a feeling. The date the money is needed is a fact.
+
+## The frame
+
+Split what you own by when it will be spent, and allocate each bucket to that horizon.
+
+**Under two years.** School fees, a deposit, a planned relocation. Cash and short dated instruments. No equities, whatever the outlook, because the recovery time from a bad year exceeds the horizon.
+
+**Two to five years.** Short and medium duration bonds, some equity if the date is soft. A [drawdown](/glossary/drawdown/) here is survivable but not comfortable.
+
+**Five to fifteen years.** A balanced mix. Long enough that equity volatility is a feature rather than a threat, short enough that a bad final year still matters.
+
+**Fifteen years and beyond.** Predominantly equity. Over that span the risk of holding equities is lower than the risk of not holding them, because inflation compounds against cash relentlessly and quietly.
+
+## Why this beats a single risk profile
+
+It removes the two failure modes that actually destroy outcomes.
+
+The first is having money you need next year invested in something that can fall forty percent. No risk questionnaire prevents this, because the questionnaire asks how you feel rather than when you need it.
+
+The second is having a thirty year horizon invested in cash because a questionnaire once described you as cautious. That is not caution, it is a guaranteed real loss, and it is the more common error among conservative savers.
+
+## Where property fits
+
+Property is a fifteen year plus asset by construction. The [transaction cost drag](/playbooks/transaction-cost-drag/) alone requires years to absorb, and it cannot be sold in part or in a hurry.
+
+Which means property should be funded from the long bucket, and buying it should never drain the short one. A purchase that consumes the emergency reserve has moved money from the two year bucket into the fifteen year one, and the [emergency liquidity](/playbooks/emergency-liquidity/) framework explains why that ends badly.
+
+## The part people skip
+
+Write down the actual dates. Not "retirement", a year. Not "the children's education", the year the first one starts. Most people discover when they do this that their horizons are shorter and more clustered than they assumed, and that changes the allocation before any market view does.`,
+    formula: `Bucket by date, then allocate.
+
+  Under 2 years      cash, short deposits
+                     0% equity, no exceptions
+
+  2 to 5 years       short and medium bonds
+                     0-30% equity depending on how firm
+                     the date is
+
+  5 to 15 years      balanced
+                     40-70% equity
+
+  15 years plus      predominantly equity
+                     70-100%
+
+  Property           funded only from the 15 year bucket
+
+Then check
+  Does the sum of the short buckets cover everything
+  I know I must pay in the next 24 months?
+  If not, the allocation is wrong regardless of what
+  the risk questionnaire said.`,
+    failureModes: [
+      "Horizons move. Redundancy, illness or a change of country can turn a fifteen year bucket into a two year one overnight, which is the argument for holding the short bucket larger than feels necessary.",
+      "The bands are conventions rather than science. The principle, that time until spending drives the mix, is robust; the exact percentages are not.",
+      "It says nothing about currency. A long bucket allocated correctly but denominated in the wrong currency is still mismatched, which the peg framework covers.",
+      "Illiquid assets cannot be re-bucketed later, so the horizon judgement has to be made before purchase rather than reviewed afterwards.",
+      "A single very large expense inside a long horizon can dominate it. Model the specific liability rather than assuming the average.",
+      "It can encourage over-engineering. Three buckets that exist are worth more than seven that are conceptually neater and never maintained.",
+    ],
+    whenToUse:
+      "Before choosing any allocation, and again whenever a date changes. It is also the fastest way to diagnose a portfolio that feels wrong without knowing why.",
+    sources: [
+      { name: "Morningstar, Mind the Gap 2025", url: "https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt2c5c4d9171638c42/689b424311f3880edc4b4813/US_Mind_the_Gap_2025.pdf" },
+      { name: "Federal Reserve Bank of St. Louis, real yields and inflation series", url: "https://fred.stlouisfed.org/series/DFII10" },
+    ],
+  },
+
+  {
+    slug: "rebalancing-bands",
+    title: "Rebalancing bands",
+    category: "portfolio",
+    tier: 2,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "A rebalancing band is a rule that triggers a trade only when a holding drifts beyond a set distance from its target weight, which keeps a portfolio close to its intended allocation while trading far less often than a calendar schedule would.",
+    body: `Left alone, a portfolio becomes whatever performed best. That is not a strategy, it is drift, and by the time it is obvious the concentration is already large.
+
+## Two ways to rebalance
+
+**By calendar.** Check on a fixed date, annually or quarterly, and restore the targets. Simple, and it trades whether or not anything has moved.
+
+**By band.** Set a tolerance around each target and act only when a holding crosses it. A common formulation is the five and twenty five rule: act when a holding is five percentage points from its target in absolute terms, or twenty five percent away in relative terms, whichever is smaller.
+
+For a sixty percent target, the absolute band triggers at fifty five or sixty five. For a four percent target, five points would be meaningless, so the relative band triggers at three or five percent. The rule adapts to position size, which is why it works across a whole portfolio rather than only the large holdings.
+
+## Why bands usually win
+
+They trade less. Fewer trades means lower costs and, in taxable jurisdictions, fewer realised gains. For an investor in the UAE the tax argument is weaker, but the cost and the behavioural argument remain.
+
+They also act when it matters. A calendar rebalance in a quiet year does nothing useful. A band triggers precisely when something has moved a long way, which is when the portfolio has genuinely changed shape.
+
+## What rebalancing is actually for
+
+Not returns. The evidence that rebalancing improves returns is thin and depends heavily on the period examined. It controls risk.
+
+An unrebalanced portfolio does not stay where you put it. A sixty forty portfolio left through a long equity bull market becomes eighty twenty, which is a different portfolio with a different [drawdown](/playbooks/drawdown-recovery-math/) profile, adopted by nobody.
+
+The discomfort is the point. Rebalancing means selling what has done well and buying what has not, which is the opposite of what the [behaviour gap](/playbooks/the-behaviour-gap/) says investors actually do. That is precisely why it should be a rule rather than a judgement.
+
+## Making it work
+
+Write the bands down with the allocation. Check quarterly, act only when a band is breached. Where new money is going in, direct it at the underweight holding first, because that rebalances without selling anything.
+
+And distinguish drift from a decision. If the allocation itself no longer suits your horizon, change the target deliberately. Do not let the market change it for you and then justify it afterwards.`,
+    formula: `The 5/25 rule
+
+  Trigger a rebalance when a holding is
+    5 percentage points from target, absolute
+    or
+    25 percent from target, relative
+  whichever is the smaller move.
+
+Worked
+  Target 60%   absolute band  55% to 65%
+               relative band  45% to 75%
+               -> absolute binds, act at 55 or 65
+
+  Target 10%   absolute band   5% to 15%
+               relative band  7.5% to 12.5%
+               -> relative binds, act at 7.5 or 12.5
+
+  Target 4%    relative band   3% to 5%
+
+Cheapest first
+  1. direct new contributions to the underweight
+  2. direct income and dividends to the underweight
+  3. only then sell the overweight`,
+    failureModes: [
+      "It does not reliably raise returns and any framework that sells it that way is overclaiming. Its job is holding the risk profile you chose.",
+      "In a long trend, rebalancing repeatedly sells the winner and will underperform doing nothing, sometimes for years. The discipline has to survive that.",
+      "Bands on very small holdings generate noise. Below a couple of percent of the portfolio, a position is usually not worth the maintenance.",
+      "Illiquid assets cannot be banded at all. Property sits outside the mechanism and has to be handled by controlling what you add.",
+      "Rebalancing across accounts and jurisdictions can have tax consequences that outweigh the benefit, which changes the calculation for anyone not in a zero tax jurisdiction.",
+      "It assumes the target allocation was right. Rebalancing precisely to a badly chosen allocation is discipline pointed at the wrong object.",
+    ],
+    whenToUse:
+      "Set the bands the day the allocation is set, not later. Check quarterly, act rarely, and never rebalance because of a market view.",
+    sources: [
+      { name: "A Wealth of Common Sense, Larry Swedroe's 5/25 rebalancing rule", url: "https://awealthofcommonsense.com/2014/03/larry-swedroe-525-rebalancing-rule/" },
+      { name: "Morningstar, Mind the Gap 2025", url: "https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt2c5c4d9171638c42/689b424311f3880edc4b4813/US_Mind_the_Gap_2025.pdf" },
+    ],
+  },
+
+  {
+    slug: "inflation-and-real-returns",
+    title: "Inflation and real returns",
+    category: "cross-asset",
+    tier: 1,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "A real return is what is left after inflation, and because inflation compounds silently against every asset at once, a portfolio that looks like it is growing in currency terms can be losing purchasing power for years without a single statement showing a loss.",
+    body: `Every return quoted anywhere is a nominal return unless it says otherwise. Nominal returns are what the statement shows. Real returns are what you can buy.
+
+## The arithmetic
+
+Real return is roughly the nominal return minus inflation. Precisely, it is (1 + nominal) divided by (1 + inflation), minus one, which matters at higher rates.
+
+Five percent nominal with three percent inflation is about 1.9 percent real. Three percent nominal with three percent inflation is zero. Two percent in a deposit account with four percent inflation is a two percent annual loss, and it will appear on every statement as a gain.
+
+## Why this is the most important number nobody uses
+
+Over a working life the difference compounds enormously. Thirty years at five percent nominal multiplies by 4.3. Thirty years at 1.9 percent real multiplies by 1.76. Both describe the same portfolio. Only the second describes what it will buy.
+
+Cash is the clearest case. Cash has never lost nominal value and has lost purchasing power in most decades. A saver who avoids all volatility has not avoided risk, they have chosen a certain slow loss over an uncertain outcome with a positive expectation. That is a choice, but it should be a conscious one.
+
+## Reading it in the market
+
+The market prices this daily and publishes the answer. The [real yield](/glossary/real-yield/) on an inflation protected government bond is the observable real return on the safest asset available. [Breakeven inflation](/glossary/breakeven-inflation/), the gap between the nominal and real yields at the same maturity, is what the market expects inflation to be.
+
+Those two numbers give you a hurdle. If the ten year real yield is 2.38 percent, that is what a government will pay you, after inflation, for taking no credit risk. Any asset you own instead of that has to beat it, after its own costs, or it is not earning its place.
+
+## What actually protects purchasing power
+
+**Inflation linked bonds** do it by construction, which is why their yield is the definition of a real return.
+
+**Property** does it imperfectly. Rents tend to follow inflation over long periods, though in Dubai the [rent increase caps](/playbooks/rent-increase-caps/) put a legal ceiling on how fast that adjustment happens. Service charges, meanwhile, inflate without a cap.
+
+**Equities** do it well over long horizons and badly over short ones, because companies can raise prices but margins compress before they do.
+
+**Cash** does not, ever, except briefly when rates exceed inflation.
+
+## The practical instruction
+
+Quote every long term plan in real terms. A retirement number, a school fee projection, a target portfolio value: state it in today's money and inflate the contributions, or state it in future money and be honest that the figure is inflated. Mixing the two is how plans that look adequate turn out not to be.`,
+    formula: `Real return
+  exact       (1 + nominal) / (1 + inflation) - 1
+  approximate  nominal - inflation
+
+  5% nominal, 3% inflation  ->  1.94% real
+  3% nominal, 3% inflation  ->  0% real
+  2% nominal, 4% inflation  ->  -1.92% real
+
+Compounding the difference over 30 years
+  5.0% nominal   x 4.32
+  1.9% real      x 1.76
+  Same portfolio. Different question.
+
+The market's own numbers
+  real yield         = return after inflation on an
+                       inflation protected government bond
+  breakeven          = nominal yield - real yield
+                     = the inflation the market expects
+
+  Anything you own instead of that bond has to beat
+  the real yield, after costs, to earn its place.`,
+    failureModes: [
+      "Headline inflation is not your inflation. School fees, rent and healthcare have run well above general indices for long stretches, and those are the categories that dominate an expatriate family's spending.",
+      "It assumes a single inflation rate applies to you, when your spending is split across countries and currencies with different rates.",
+      "Inflation protected bonds carry duration risk. They protect purchasing power at maturity, not the price along the way.",
+      "The property inflation hedge is weaker than usually claimed, because rent adjustment is lagged, capped by regulation in some markets, and costs inflate alongside income.",
+      "Comparing a real return against a nominal target, or the reverse, produces an error the size of the inflation rate, and it happens constantly in retirement planning.",
+      "Past inflation is a poor guide to future inflation, which is why the market's breakeven rate is more useful than a historical average.",
+    ],
+    whenToUse:
+      "Every time a return, a target or a projection is stated. The first question about any number in a financial plan should be whether it is nominal or real, and most of the time nobody has asked.",
+    sources: [
+      { name: "Federal Reserve Bank of St. Louis, 10 year real yield", url: "https://fred.stlouisfed.org/series/DFII10" },
+      { name: "Federal Reserve Bank of St. Louis, 10 year breakeven inflation", url: "https://fred.stlouisfed.org/series/T10YIE" },
+      { name: "U.S. Bureau of Labor Statistics, Consumer Price Index", url: "https://www.bls.gov/cpi/" },
+    ],
+  },
+
+  {
+    slug: "uae-wills-and-succession",
+    title: "Wills and succession in the UAE",
+    category: "tax",
+    tier: 1,
+    calculator: "estate-tax-exposure",
+    reviewed: R,
+    summary:
+      "Assets held in the UAE by a non-Muslim expatriate do not automatically pass under their home country will, and without a will registered in a recognised UAE registry the default distribution rules apply to those assets regardless of the owner's nationality or intentions.",
+    body: `This is the gap that catches expatriate property owners, and it catches them at the worst possible moment for their families to be discovering it.
+
+## The problem in one paragraph
+
+A foreign will is not automatically recognised by UAE courts for UAE-situated assets. Without a will registered here, UAE succession rules apply to the property, the bank accounts and the company shares held here. Accounts can be frozen while the position is resolved. An unmarried partner may receive nothing. A distribution the owner never intended can become the legal outcome.
+
+## What a registered will does
+
+The DIFC Wills Service allows non-Muslims, of any nationality and whether or not resident in the UAE, to register a will covering UAE assets. Abu Dhabi operates its own registry. A registered will lets you direct where your UAE assets go, and it appoints guardians for minor children, which is frequently the more urgent half.
+
+Several forms exist, from a full estate will covering all UAE assets and guardianship, down to narrower instruments covering only Dubai real property, only financial assets, only business interests, or only guardianship. The narrower ones cost less and cover less.
+
+## The interaction nobody joins up
+
+Succession and tax are separate questions and both bite.
+
+A UAE will governs where your UAE assets go. It does nothing about the [US estate tax](/glossary/us-estate-tax/) exposure created by holding US shares or US domiciled funds, which is a tax on the asset rather than a question of distribution, and which starts above a sixty thousand dollar exemption for a non-resident non-citizen. The [fund domicile](/playbooks/fund-domicile/) framework covers that side.
+
+You can therefore have a perfectly drafted will directing assets to your family, and a tax bill on those same assets that the will does nothing to prevent. Both need addressing, and they are addressed in different places.
+
+## What to actually do
+
+**Establish which assets are situated where.** UAE property and UAE accounts are UAE assets. A fund is situated where it is domiciled, not where your broker is. That is the [situs](/glossary/situs/) question and it decides which rules apply.
+
+**Register a will for the UAE assets**, sized to what you own. If there are minor children, the guardianship provision alone justifies it.
+
+**Check the foreign wills still work.** Multiple wills across jurisdictions can accidentally revoke one another if they are not drafted to sit alongside each other. This is the most common technical failure.
+
+**Review after every material change.** Marriage, divorce, a birth, a new property, a change of residency.
+
+## The honest caveat
+
+This is a framework page, not legal advice, and succession is one of the areas where general information is least adequate. The federal position on non-Muslims and civil succession law has been evolving. Anyone with UAE assets and a family should be taking advice from a UAE qualified lawyer rather than from a website, including this one.
+
+What a page like this can usefully do is make sure the question gets asked, because the common failure is not choosing the wrong structure. It is never realising there was a choice.`,
+    formula: `The two questions, which are separate
+
+  1. Where do my assets go?          succession
+     answered by a will registered in a
+     recognised UAE registry
+
+  2. What is taxed on death?         estate tax
+     answered by the situs of each asset
+     US shares and US domiciled funds
+       -> US estate tax above USD 60,000
+          for a non-resident non-citizen
+
+Situs, briefly
+  UAE property           UAE
+  UAE bank account       UAE
+  Fund                   country of domicile
+  Company shares         country of incorporation
+
+  Not where your broker is. Not where you live.
+
+Sizing the will
+  full estate      all UAE assets + guardianship
+  real property    Dubai real estate only
+  financial        accounts and portfolios
+  business         UAE company shares
+  guardianship     minor children`,
+    failureModes: [
+      "It is general information and not legal advice, and succession is precisely the area where that distinction matters most. Take UAE qualified advice.",
+      "Multiple wills across jurisdictions can revoke one another when they are not drafted to coexist, which is the most common technical failure and one a non-specialist will not spot.",
+      "A will does nothing about estate tax. Distribution and taxation are separate mechanisms and solving one leaves the other untouched.",
+      "The federal legal position on non-Muslims and civil succession has been changing, so anything written on a website has a shelf life.",
+      "Registries and fee structures differ between emirates, and a Dubai registration does not necessarily reach assets elsewhere in the UAE.",
+      "Joint accounts and jointly held property have their own treatment that a simple will may not address as the owner assumes.",
+    ],
+    whenToUse:
+      "Before or immediately after buying UAE property, and again on marriage, divorce, a birth, or any change of residency. If there are minor children, immediately, for the guardianship provision alone.",
+    sources: [
+      { name: "DIFC Courts Wills Service", url: "https://www.difc.ae/business/dispute-resolution/difc-courts-wills-service" },
+      { name: "DIFC wills for non-Muslims, eligibility and will types, summary", url: "https://www.almaazmilawyers.com/insights/difc-wills-non-muslim-uae-guide" },
+      { name: "IRS, estate tax for nonresidents not citizens of the United States", url: "https://www.irs.gov/businesses/small-businesses-self-employed/some-nonresidents-with-us-assets-must-file-estate-tax-returns" },
+    ],
+  },
+
+  {
+    slug: "the-primary-residence",
+    title: "The home you live in",
+    category: "property",
+    tier: 2,
+    calculator: "rent-vs-buy",
+    reviewed: R,
+    summary:
+      "A home you live in produces no income and cannot be sold without buying or renting somewhere else, which makes it a consumption asset with an investment attached rather than an investment, and treating it as the latter distorts every other decision in the portfolio.",
+    body: `The sentence people say is that their home is their biggest investment. It is usually their biggest asset and it is rarely an investment, and the difference changes what you should do with the rest of your money.
+
+## Why it is not an investment
+
+An investment produces cash or can be sold for cash you get to keep. A home does neither.
+
+It produces no rent, because you are the tenant. It costs money every year in service charges, maintenance and insurance. And when you sell it, you have to live somewhere, so the proceeds are largely committed before they arrive. Selling into a rising market means buying into the same rising market.
+
+What it does produce is imputed rent: the rent you no longer pay. That is real and it belongs in the [rent versus buy](/playbooks/rent-vs-buy/) calculation. But it is consumption, not income, and it never appears in a bank account.
+
+## What it does to a balance sheet
+
+Three distortions, all of them common.
+
+**It hides concentration.** A person with a mortgaged home and one rental in the same city has most of their net worth in one property market, financed with leverage. Counted properly that is a [concentration](/playbooks/concentration-limits/) problem. Counted as "my home plus one investment" it does not look like one.
+
+**It absorbs the emergency fund.** Deposits and acquisition costs are drawn from liquid savings, and the result is an owner with a large asset and no cash. That is the situation the [emergency liquidity](/playbooks/emergency-liquidity/) framework exists to prevent, and the home purchase is the most common way people arrive at it.
+
+**It flatters the return.** House price appreciation gets compared against savings account interest, which ignores the years of service charges, maintenance, interest and transaction costs. Run the same [transaction cost drag](/playbooks/transaction-cost-drag/) arithmetic on your own home and the number is usually sobering.
+
+## The expatriate version
+
+Buying a home in a country where your right to remain depends on employment adds a risk that residents do not carry. If the job ends, the timeline for leaving may be shorter than the timeline for selling a property well, and those two clocks running against each other is how people sell badly.
+
+That is not an argument against buying. It is an argument for the [emergency liquidity](/playbooks/emergency-liquidity/) reserve being genuinely larger here, and for the purchase making sense at a horizon long enough to absorb a bad exit.
+
+## How to count it properly
+
+Keep it on the balance sheet at market value less selling costs, and note beside it that it is not available. Exclude it from the assets funding retirement unless you have a specific, dated plan to downsize or move to a cheaper country, in which case count only the difference.
+
+Then make every other allocation decision on what is left. That number is smaller than the headline net worth and it is the only part that is actually doing any work.`,
+    formula: `What a home returns
+  imputed rent            real, but consumed, never banked
+  - service charge
+  - maintenance and insurance
+  - mortgage interest
+  - amortised transaction costs
+  +/- price change
+  = the honest figure, and it is not a yield
+
+On the balance sheet
+  Value          market value less selling costs
+  Available      no, unless there is a dated downsizing
+                 or relocation plan
+  Counts towards retirement funding
+                 only the planned difference between
+                 this home and the next one
+
+The concentration check
+  home equity + rental equity
+  ---------------------------  = one property market,
+        net worth               usually leveraged`,
+    failureModes: [
+      "Imputed rent is genuinely valuable and dismissing it entirely understates the case for owning. The point is that it is consumption rather than income, not that it is worthless.",
+      "In markets with strong long run appreciation, a home has built real wealth for many people, and the framework should not be read as an argument against buying one.",
+      "Security of tenure has a value no spreadsheet captures, particularly for families with children in school.",
+      "A mortgage is a forced savings mechanism, and for people who would not otherwise save, the discipline has produced better outcomes than the arithmetic alone suggests.",
+      "It ignores the option to let the home and move, which converts it into an income asset and is available to some owners and not others.",
+      "Where residency depends on property ownership, the asset is buying something other than a return and should be valued accordingly.",
+    ],
+    whenToUse:
+      "When calculating net worth for any planning purpose, and before assuming the home forms part of a retirement plan. Also before buying a second property, when the concentration question becomes live.",
+    sources: [
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/" },
+      { name: "Bank for International Settlements, residential property price statistics", url: "https://www.bis.org/statistics/pp.htm" },
+    ],
+  },
+
+  {
+    slug: "sunk-cost-and-selling",
+    title: "Sunk cost and the decision to sell",
+    category: "behavioural",
+    tier: 2,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "The price paid for an asset has no bearing on whether to keep it, because that money is spent either way, and the only question that matters is whether the asset is the best use of the capital it currently ties up.",
+    body: `Nobody wants to sell at a loss. That reluctance is the most expensive habit in investing, and it is entirely about the past.
+
+## The test
+
+Ask one question. If I did not own this, and I had the money it would release, would I buy it today at today's price?
+
+If yes, keep it. If no, the only thing keeping you in the position is the price you paid, and the price you paid is gone regardless of what you do next.
+
+That is the whole framework. Everything else is the reasons people find not to apply it.
+
+## Why it is so hard
+
+The purchase price becomes an anchor, and selling below it converts a paper loss into an admitted one. Loss aversion makes that admission feel worse than the ongoing cost of holding, even when the ongoing cost is larger.
+
+Property makes it worse than markets do. There is no daily price, so the loss stays theoretical for longer. Valuation is a matter of opinion, so a hopeful opinion is always available. And the transaction cost of selling gives a rational-sounding reason to defer a decision that has already been made emotionally.
+
+## The cost of holding, which is real
+
+A property held for reasons of pride still charges you. The service charge continues, the mortgage continues, the maintenance continues, and the capital sits in an asset you have already concluded you would not buy.
+
+That last part is the real cost: opportunity. Capital tied to a unit yielding two percent net, in a building you would not choose again, is capital not doing something better. The loss was incurred when the value fell, not on the day you accept it.
+
+## What the test does not mean
+
+It is not an argument for selling whenever something falls. Applied honestly it will frequently say keep, because a sound asset in a soft market is exactly the thing worth holding through, and the [drawdown recovery](/playbooks/drawdown-recovery-math/) arithmetic favours patience for assets that still work.
+
+The test separates two cases that feel identical from the inside. Holding because the asset is good, and holding because selling would confirm a mistake. Only the first is a decision.
+
+## Doing it before you need to
+
+The reason to write down your reasons for owning something at the time you buy it is that the reasons are available later, in your own handwriting, when the position has moved against you and your memory has become creative about what you originally expected.
+
+That is the same discipline as an investment policy statement in the [behaviour gap](/playbooks/the-behaviour-gap/) framework. Decide while calm what would change your mind, then check against it rather than against your feelings on the day.`,
+    formula: `The only question
+
+  If I did not own this, and I held the cash it
+  would release, would I buy it today at today's
+  price, net of the cost of selling?
+
+    Yes  ->  keep it
+    No   ->  the purchase price is the only thing
+             holding you, and it is already spent
+
+What does not belong in the decision
+  what you paid
+  what it was worth at the peak
+  what you told people you expected
+  how close it is to breaking even
+
+What does
+  today's net yield on today's value
+  the cost and time of selling
+  what the released capital would do instead
+  whether the original reasons for owning it hold`,
+    failureModes: [
+      "Applied carelessly it becomes an argument for constant trading, and turnover has its own costs which in property are punishing.",
+      "The would I buy it today test needs an honest current valuation, and for illiquid assets that is exactly what is hardest to obtain.",
+      "Some costs of selling are real and forward looking rather than sunk, including agent fees, the NOC and the time the sale takes. Those belong in the decision.",
+      "Tax consequences of realising a gain or loss are forward looking too, and in jurisdictions where they apply they can legitimately change the answer.",
+      "It ignores non-financial reasons for holding, which can be entirely valid provided they are stated rather than disguised as financial ones.",
+      "A property that would not be bought today may still be worth holding if selling now means realising a temporary dislocation, which is a judgement the test cannot make for you.",
+    ],
+    whenToUse:
+      "Annually on everything you own, and immediately whenever you catch yourself explaining a holding by reference to what you paid for it.",
+    sources: [
+      { name: "Morningstar, Mind the Gap 2025", url: "https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt2c5c4d9171638c42/689b424311f3880edc4b4813/US_Mind_the_Gap_2025.pdf" },
+      { name: "Dubai Land Department, real estate transaction data", url: "https://dubailand.gov.ae/en/open-data/real-estate-data/" },
+    ],
+  },
 ];
