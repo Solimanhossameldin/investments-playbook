@@ -104,8 +104,10 @@ npm run daily     # all three, exactly as the Action runs them
 Tests:
 
 ```bash
-node scripts/selftest.mjs   # data parsers, against real recorded payloads
-node scripts/calctest.mjs   # all six calculators, 40 assertions
+npm test                        # all three suites
+node scripts/selftest.mjs       # data parsers, against real recorded payloads
+node scripts/fallbacktest.mjs   # the FRED and stooq.pl fallback paths
+node scripts/calctest.mjs       # all six calculators, 40 assertions
 ```
 
 ---
@@ -165,7 +167,7 @@ scripts/
 
 | Source | Used for | Licence |
 |---|---|---|
-| U.S. Department of the Treasury | 2Y, 10Y and 30Y yields | Public domain |
+| U.S. Department of the Treasury | 2Y, 10Y and 30Y yields | Public domain (falls back to FRED, which GitHub Actions can always reach) |
 | ExchangeRate-API | EUR, GBP, JPY, AED, CHF, INR | Free commercial, **attribution link required**, it is in the footer |
 | gold-api.com | Gold and silver | No published terms, display only, treat as best effort |
 | Kraken | Bitcoin and Ethereum | Public exchange data |

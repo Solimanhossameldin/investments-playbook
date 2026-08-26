@@ -11,7 +11,11 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MARKET = path.join(root, "content/market.json");
 const STATUS = path.join(root, "content/status.json");
 
-const UA = { "User-Agent": "InvestmentsPlaybook/1.0 (+https://investmentsplaybook.com)" };
+const UA = {
+  "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36 InvestmentsPlaybook/1.0 (+https://investmentsplaybook.com)",
+  "Accept": "*/*",
+  "Accept-Language": "en",
+};
 const TIMEOUT = 12000;
 
 async function get(url, as = "json") {
@@ -69,6 +73,43 @@ async function treasury() {
       changePct: p ? +(((v - p) / p) * 100).toFixed(2) : null,
       source: "U.S. Department of the Treasury",
       sourceUrl: "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
+      asOf, order, stale: false,
+    });
+  }
+}
+
+
+/* 1b. TREASURY FALLBACK. FRED publishes the same series as a keyless CSV.
+   Used when home.treasury.gov refuses the request, which it does from some
+   datacentre ranges. Same figures, different pipe, credited to FRED. */
+async function treasuryFred() {
+  const from = new Date(Date.now() - 21 * 86400000).toISOString().slice(0, 10);
+  const csv = await get(
+    `https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS2,DGS10,DGS30&cosd=${from}`,
+    "text"
+  );
+  const lines = csv.trim().split("\n");
+  const rowsCsv = lines.slice(1).map((l) => l.split(",")).filter((c) => c.length >= 4);
+  const usable = rowsCsv.filter((c) => c.slice(1, 4).some((v) => v && v !== "."));
+  if (!usable.length) throw new Error("no usable FRED rows");
+  const last = usable.at(-1);
+  const prev = usable.length > 1 ? usable.at(-2) : null;
+  const asOf = new Date(`${last[0]}T00:00:00Z`).toISOString();
+
+  for (const [idx, label, symbol, order] of [
+    [1, "US 2Y Treasury", "us-2y", 21],
+    [2, "US 10Y Treasury", "us-10y", 20],
+    [3, "US 30Y Treasury", "us-30y", 22],
+  ]) {
+    const v = parseFloat(last[idx]);
+    if (!Number.isFinite(v)) continue;
+    const p = prev ? parseFloat(prev[idx]) : NaN;
+    rows.push({
+      symbol, label, category: "rate", value: v, unit: "%",
+      changeAbs: Number.isFinite(p) ? +(v - p).toFixed(3) : null,
+      changePct: Number.isFinite(p) && p ? +(((v - p) / p) * 100).toFixed(2) : null,
+      source: "FRED, Federal Reserve Bank of St. Louis",
+      sourceUrl: "https://fred.stlouisfed.org/series/DGS10",
       asOf, order, stale: false,
     });
   }
@@ -148,7 +189,12 @@ async function stooq() {
     "CL.F": ["wti", "Crude Oil WTI", "commodity", 32],
   };
   const syms = Object.keys(defs).map((s) => s.toLowerCase()).join(",");
-  const csv = await get(`https://stooq.com/q/l/?s=${syms}&f=sd2t2ohlcv&h&e=csv`, "text");
+  let csv;
+  try {
+    csv = await get(`https://stooq.com/q/l/?s=${syms}&f=sd2t2ohlcv&h&e=csv`, "text");
+  } catch (e) {
+    csv = await get(`https://stooq.pl/q/l/?s=${syms}&f=sd2t2ohlcv&h&e=csv`, "text");
+  }
   const lines = csv.trim().split("\n").slice(1);
   let got = 0;
   for (const line of lines) {
@@ -173,7 +219,13 @@ async function stooq() {
 }
 
 /* ---------------- run ---------------- */
-const tasks = [["treasury", treasury], ["fx", fx], ["metals", metals], ["crypto", crypto], ["stooq", stooq]];
+const withFallback = (primary, backup) => async () => {
+  try { await primary(); } catch (e) { errors[`${primary.name}-primary`] = String(e.message || e); await backup(); }
+};
+const tasks = [
+  ["treasury", withFallback(treasury, treasuryFred)],
+  ["fx", fx], ["metals", metals], ["crypto", crypto], ["stooq", stooq],
+];
 await Promise.all(
   tasks.map(async ([name, fn]) => {
     try { await fn(); } catch (e) { errors[name] = String(e.message || e); }
@@ -194,14 +246,18 @@ const merged = [...bySymbol.values()].sort(
 
 fs.writeFileSync(MARKET, JSON.stringify({ asOf: nowIso(), quotes: merged }, null, 1));
 
-const errCount = Object.keys(errors).length;
-const status = rows.length === 0 ? "failed" : errCount ? "partial" : "ok";
+// A "-primary" entry means a source refused but its fallback covered it.
+// That is a note, not a degraded day.
+const notes = Object.entries(errors);
+const realFailures = notes.filter(([k]) => !k.endsWith("-primary"));
+const errCount = notes.length;
+const status = rows.length === 0 ? "failed" : realFailures.length ? "partial" : "ok";
 let s = { runs: [] };
 try { s = JSON.parse(fs.readFileSync(STATUS, "utf8")); } catch {}
 s.runs.unshift({
   job: "fetch-market-data",
   status,
-  detail: `${rows.length} figures refreshed${errCount ? `, ${errCount} source(s) failed: ${Object.keys(errors).join(", ")}` : ""}`,
+  detail: `${rows.length} figures refreshed${errCount ? `. Notes: ${notes.map(([k, v]) => `${k} ${v}`).join("; ").slice(0, 300)}` : ""}`,
   ranAt: nowIso(),
 });
 s.runs = s.runs.slice(0, 40);
