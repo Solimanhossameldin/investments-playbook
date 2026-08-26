@@ -1,0 +1,10 @@
+{
+ "runs": [
+  {
+   "job": "fetch-market-data",
+   "status": "failed",
+   "detail": "0 figures refreshed, 6 source(s) failed: fx, treasury, crypto, metal-XAU, metal-XAG, stooq",
+   "ranAt": "2026-08-26T08:53:47.901Z"
+  }
+ ]
+}

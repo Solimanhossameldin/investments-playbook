@@ -1,0 +1,17 @@
+{
+ "asOf": "2026-08-26T07:20:00Z",
+ "quotes": [
+  {"symbol":"us-10y","label":"US 10Y Treasury","category":"rate","value":4.64,"changeAbs":0.03,"changePct":0.65,"unit":"%","source":"U.S. Department of the Treasury","sourceUrl":"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve","asOf":"2026-08-25T00:00:00Z","order":20,"stale":false},
+  {"symbol":"us-2y","label":"US 2Y Treasury","category":"rate","value":4.17,"changeAbs":-0.03,"changePct":-0.71,"unit":"%","source":"U.S. Department of the Treasury","sourceUrl":"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve","asOf":"2026-08-25T00:00:00Z","order":21,"stale":false},
+  {"symbol":"us-30y","label":"US 30Y Treasury","category":"rate","value":5.17,"changeAbs":0.03,"changePct":0.58,"unit":"%","source":"U.S. Department of the Treasury","sourceUrl":"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve","asOf":"2026-08-25T00:00:00Z","order":22,"stale":false},
+  {"symbol":"xau","label":"Gold","category":"commodity","value":4636.2,"changeAbs":null,"changePct":null,"unit":"USD/oz","source":"gold-api.com","sourceUrl":"https://api.gold-api.com","asOf":"2026-08-26T07:16:12Z","order":30,"stale":false},
+  {"symbol":"xag","label":"Silver","category":"commodity","value":68.23,"changeAbs":null,"changePct":null,"unit":"USD/oz","source":"gold-api.com","sourceUrl":"https://api.gold-api.com","asOf":"2026-08-25T12:54:27Z","order":31,"stale":false},
+  {"symbol":"usd-eur","label":"USD / EUR","category":"fx","value":0.8575,"changeAbs":null,"changePct":null,"unit":"","source":"ExchangeRate-API","sourceUrl":"https://www.exchangerate-api.com","asOf":"2026-08-25T00:02:31Z","order":40,"stale":false},
+  {"symbol":"usd-gbp","label":"USD / GBP","category":"fx","value":0.7336,"changeAbs":null,"changePct":null,"unit":"","source":"ExchangeRate-API","sourceUrl":"https://www.exchangerate-api.com","asOf":"2026-08-25T00:02:31Z","order":41,"stale":false},
+  {"symbol":"usd-jpy","label":"USD / JPY","category":"fx","value":159.24,"changeAbs":null,"changePct":null,"unit":"","source":"ExchangeRate-API","sourceUrl":"https://www.exchangerate-api.com","asOf":"2026-08-25T00:02:31Z","order":42,"stale":false},
+  {"symbol":"usd-aed","label":"USD / AED","category":"fx","value":3.6725,"changeAbs":null,"changePct":null,"unit":"","source":"ExchangeRate-API","sourceUrl":"https://www.exchangerate-api.com","asOf":"2026-08-25T00:02:31Z","order":43,"stale":false},
+  {"symbol":"usd-chf","label":"USD / CHF","category":"fx","value":0.8027,"changeAbs":null,"changePct":null,"unit":"","source":"ExchangeRate-API","sourceUrl":"https://www.exchangerate-api.com","asOf":"2026-08-25T00:02:31Z","order":44,"stale":false},
+  {"symbol":"btc-usd","label":"Bitcoin","category":"crypto","value":79071.4,"changeAbs":561.9,"changePct":0.72,"unit":"USD","source":"Kraken","sourceUrl":"https://www.kraken.com","asOf":"2026-08-26T07:18:00Z","order":50,"stale":false},
+  {"symbol":"eth-usd","label":"Ethereum","category":"crypto","value":2463.84,"changeAbs":21.29,"changePct":0.87,"unit":"USD","source":"Kraken","sourceUrl":"https://www.kraken.com","asOf":"2026-08-26T07:18:00Z","order":51,"stale":false}
+ ]
+}

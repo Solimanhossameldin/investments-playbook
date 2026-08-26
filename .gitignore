@@ -1,0 +1,6 @@
+_archive/
+.DS_Store
+*.log
+dist/
+go-live.command
+node_modules/

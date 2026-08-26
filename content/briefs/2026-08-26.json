@@ -1,0 +1,58 @@
+{
+ "slug": "2026-08-26-the-curve-and-the-keys",
+ "date": "2026-08-26",
+ "title": "The curve and the keys",
+ "emoji": "🧭",
+ "subtitle": "A steep long end, gold near record ground, and a Dubai market where the hold period just got longer.",
+ "readMinutes": 4,
+ "author": "Soliman Hossam Eldin",
+ "items": [
+  {
+   "heading": "The long end is doing the talking",
+   "what_happened": "The US Treasury curve on 25 August put the two year at 4.17 percent, the ten year at 4.64 percent and the thirty year at 5.17 percent. The ten year rose three basis points on the day while the two year fell three. The gap between the two year and the thirty year is now a full percentage point.",
+   "what_it_means": "A curve that steepens from the long end rather than the short end is not the market pricing rate cuts. It is the market pricing term premium: the extra yield investors demand for lending across thirty years rather than two. That premium responds to supply, to inflation uncertainty, and to how confident lenders feel about the fiscal path, none of which a central bank controls directly. It is worth separating the two stories, because they call for different responses. Short rates falling is a growth story. Long rates rising is a risk story.",
+   "what_it_means_for_you": "If you hold long duration bonds because someone told you bonds are the safe part, this is the moment to check what duration you actually own. If you are pricing a property purchase, the thirty year yield is the anchor most mortgage pricing eventually follows, and 5.17 percent is not a number that argues for cheaper borrowing next year. And if you are running a discounted cash flow on an off-plan payment plan, this is the rate environment your discount rate lives in.",
+   "tags": ["rates", "duration"],
+   "sources": [
+    {"name": "U.S. Department of the Treasury, daily yield curve", "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve"}
+   ]
+  },
+  {
+   "heading": "Dubai is flat, and flat changes the arithmetic",
+   "what_happened": "Dubai residential prices were roughly unchanged year on year in June 2026, sitting around ten percent below their peak after several years of exceptional growth. The dirham remains pegged at 3.6725 to the dollar, so for a dollar based buyer the currency has done nothing either way.",
+   "what_it_means": "In a market rising fifteen percent a year, transaction costs are noise. In a flat one they are the entire story. The round trip cost of buying and selling in Dubai is roughly eight to ten percent once you count the four percent transfer fee, both agency commissions with VAT, and the trustee and NOC charges. Spread over two years that is four to five percent a year, which consumes an entire net rental yield and then some. Spread over seven years it is under one and a half percent. Nothing about any individual property has changed. The denominator has.",
+   "what_it_means_for_you": "This is the minimum hold period question, and it is worth answering honestly rather than optimistically. If your plan required an exit inside three years, a flat market has quietly turned that plan into a five year one. Check what your own net yield is, not the gross yield in the listing, because in a flat market the income is doing all the work. And if you are being shown a resale as a quick flip, ask what price it needs to reach simply to cover the round trip.",
+   "tags": ["dubai", "property", "transaction costs"],
+   "sources": [
+    {"name": "Dubai property market, the 2026 data", "url": "https://www.consultycs.com/is-the-dubai-property-market-about-to-crash-the-2026-data/"},
+    {"name": "Dubai Land Department, fees and charges", "url": "https://dubailand.gov.ae/en/"}
+   ]
+  },
+  {
+   "heading": "Gold at 4,636 and the link that stopped working",
+   "what_happened": "Gold traded at 4,636 dollars an ounce on the morning of 26 August, with silver at 68.23. That is with the US ten year at 4.64 percent, which on the textbook relationship should be an unfriendly environment for an asset that pays no income.",
+   "what_it_means": "The standard model says gold moves inversely to real interest rates, because the opportunity cost of holding a non-yielding asset rises when safe assets pay more. That relationship has held for most of the past two decades and it has been visibly weaker in this cycle. The most cited explanation is that the marginal buyer changed: central bank reserve accumulation is less sensitive to real yields than a Western investor allocating between gold and Treasury Inflation Protected Securities. When the buyer changes, the correlation you learned changes with it.",
+   "what_it_means_for_you": "The useful lesson is not about gold, it is about correlations generally. A relationship that has held for twenty years is a strong prior and not a law, and portfolios built on the assumption that two assets will keep behaving as they did are carrying a risk that does not show up in any volatility number. This is the four boxes question: name the economic environment each of your holdings needs, and count how many need the same one.",
+   "tags": ["gold", "correlation", "real rates"],
+   "sources": [
+    {"name": "gold-api.com, spot reference price", "url": "https://api.gold-api.com"},
+    {"name": "Gold prices and real interest rates", "url": "https://goldsilver.com/industry-news/article/gold-prices-and-real-interest-rates-what-every-investor-must-know/"}
+   ]
+  }
+ ],
+ "numbers": [
+  {"label": "US 10Y Treasury", "value": "4.64%", "note": "Up 3 basis points on the day"},
+  {"label": "US 2Y Treasury", "value": "4.17%", "note": "Down 3, the curve steepened from the long end"},
+  {"label": "US 30Y Treasury", "value": "5.17%", "note": "A full point above the two year"},
+  {"label": "Gold", "value": "$4,636.20", "note": "Non-yielding, and rising anyway"},
+  {"label": "USD / AED", "value": "3.6725", "note": "The peg, unchanged as always"},
+  {"label": "Bitcoin", "value": "$79,071", "note": "Up 0.72 percent on the session open"}
+ ],
+ "calendar": [
+  {"day": "Thursday", "event": "Freddie Mac publishes the weekly US 30 year mortgage rate"},
+  {"day": "Friday", "event": "US personal consumption expenditures price index, the Federal Reserve's preferred inflation measure"},
+  {"day": "Month end", "event": "Dubai Land Department transaction volumes for August"}
+ ],
+ "publishedAt": "2026-08-26T03:05:00Z",
+ "generatedBy": "first issue, written by the desk"
+}

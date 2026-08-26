@@ -1,0 +1,115 @@
+#!/usr/bin/env node
+// Unit tests for the calculator engine. Runs the same file the browser runs.
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+new Function(fs.readFileSync(path.join(root, "src/app/calc.js"), "utf8"))();
+const { CALC } = globalThis.IPCalc;
+
+let fails = 0;
+const check = (name, cond, got) => {
+  if (cond) console.log(`  pass  ${name}`);
+  else { console.log(`  FAIL  ${name}  got: ${JSON.stringify(got)}`); fails++; }
+};
+const numOf = (s) => parseFloat(String(s).replace(/[^0-9.\-]/g, ""));
+
+console.log("\nNet rental yield");
+{
+  const r = CALC["net-rental-yield"]({
+    price: 1500000, rent: 105000, size: 900, sc: 18, mgmt: 5, vac: 8, maint: 5,
+    insur: 1500, dld: 4, agency: 2, vat: 5, closing: 4600, ltv: 0, rate: 4.5, term: 25,
+  });
+  check("gross yield is 7.00%", r.gross === "7.00%", r.gross);
+  // acquisition: 60,000 + 31,500 + 4,600 = 96,100
+  check("acquisition costs are 96,100", numOf(r.acq) === 96100, r.acq);
+  check("net yield is materially below gross", numOf(r.net) < 5 && numOf(r.net) > 3.5, r.net);
+  check("no debt means no debt service", numOf(r.debt) === 0, r.debt);
+  check("break-even occupancy under 100% unlevered", numOf(r.breakeven) < 100, r.breakeven);
+
+  const lev = CALC["net-rental-yield"]({
+    price: 1500000, rent: 105000, size: 900, sc: 18, mgmt: 5, vac: 8, maint: 5,
+    insur: 1500, dld: 4, agency: 2, vat: 5, closing: 4600, ltv: 75, rate: 4.5, term: 25,
+  });
+  // 1,125,000 at 4.5% over 25y is about 75,100 a year
+  check("annuity mortgage cost is right", Math.abs(numOf(lev.debt) - 75100) < 800, lev.debt);
+  check("leverage raises break-even occupancy", numOf(lev.breakeven) > numOf(r.breakeven), [r.breakeven, lev.breakeven]);
+  check("cash on cash is negative when yield is under the rate", numOf(lev.coc) < 0, lev.coc);
+}
+
+console.log("\nRent versus buy");
+{
+  const base = { price: 1500000, rent: 90000, sc: 20000, proptax: 0, deposit: 25, rate: 4.5,
+    alt: 6, growth: 3, rentgrowth: 3, roundtrip: 9, hold: 7 };
+  const r = CALC["rent-vs-buy"](base);
+  // 1,125,000 x 4.5% = 50,625 interest; 375,000 x 6% = 22,500 opp; + 20,000 sc
+  check("year one owning cost is 93,125", numOf(r.ownCost) === 93125, r.ownCost);
+  check("that is 6.21% of value, above the 5% rule", Math.abs(numOf(r.ratio) - 6.21) < 0.02, r.ratio);
+  check("round trip is 135,000", numOf(r.tcost) === 135000, r.tcost);
+  const short = CALC["rent-vs-buy"]({ ...base, hold: 2 });
+  check("a two year hold favours renting", short.verdict === "Renting costs less", short.verdict);
+  const long = CALC["rent-vs-buy"]({ ...base, hold: 25, growth: 5 });
+  check("a long hold with growth favours buying", long.verdict === "Buying costs less", long.verdict);
+}
+
+console.log("\nOff-plan payment plan");
+{
+  const base = { price: 1500000, disc: 6, months: 30,
+    aDown: 20, aBuild: 60, aHand: 20, aPost: 0, aPostMonths: 0,
+    bDown: 10, bBuild: 30, bHand: 20, bPost: 40, bPostMonths: 48 };
+  const r = CALC["off-plan-irr"](base);
+  check("the back-loaded plan is cheaper today", r.winner === "Plan B", r.winner);
+  check("plan A present value below headline", numOf(r.aPV) < 1500000, r.aPV);
+  check("plan B discount beats plan A", numOf(r.bEff) > numOf(r.aEff), [r.aEff, r.bEff]);
+  check("instalments sum to 100 percent", r.checkA === "100%" && r.checkB === "100%", [r.checkA, r.checkB]);
+  const zero = CALC["off-plan-irr"]({ ...base, disc: 0 });
+  check("at a zero discount rate both plans cost the headline", numOf(zero.aPV) === 1500000 && numOf(zero.bPV) === 1500000, [zero.aPV, zero.bPV]);
+  check("and the verdict is level", zero.winner === "Level", zero.winner);
+  const badSum = CALC["off-plan-irr"]({ ...base, aPost: 10 });
+  check("a plan that does not total 100 is flagged", badSum.checkA.includes("check"), badSum.checkA);
+}
+
+console.log("\nSafe withdrawal rate");
+{
+  const r = CALC["safe-withdrawal-rate"]({ spend: 180000, other: 0, have: 400000, save: 90000, real: 5, custom: 4 });
+  check("classic target is 25x the gap", numOf(r.classic) === 4500000, r.classic);
+  check("conservative target is larger", numOf(r.cons) > numOf(r.classic), [r.cons, r.classic]);
+  check("optimistic target is smaller", numOf(r.opt) < numOf(r.classic), [r.opt, r.classic]);
+  check("year one income equals the spend", numOf(r.firstYear) === 180000, r.firstYear);
+  check("years to target is finite and sensible", numOf(r.years) > 15 && numOf(r.years) < 30, r.years);
+  const withPension = CALC["safe-withdrawal-rate"]({ spend: 180000, other: 60000, have: 0, save: 90000, real: 5, custom: 4 });
+  check("other income shrinks the target", numOf(withPension.classic) === 3000000, withPension.classic);
+}
+
+console.log("\nUS estate tax exposure");
+{
+  const under = CALC["estate-tax-exposure"]({ us: 60000, divYield: 1.5, wht: 30, ucitsWht: 15, years: 20 });
+  check("nothing is due at exactly 60,000", numOf(under.estateTax) === 0, under.estateTax);
+  const r = CALC["estate-tax-exposure"]({ us: 500000, divYield: 1.5, wht: 30, ucitsWht: 15, years: 20 });
+  // tentative on 500,000 = 155,800; less the 13,000 credit = 142,800
+  check("500,000 produces 142,800", numOf(r.estateTax) === 142800, r.estateTax);
+  check("taxable above the exemption is 440,000", numOf(r.taxable) === 440000, r.taxable);
+  check("dividend cost on the US fund is 2,250", numOf(r.divUS) === 2250, r.divUS);
+  check("the UCITS halves it", numOf(r.divUCITS) === 1125, r.divUCITS);
+  check("twenty year dividend saving is 22,500", numOf(r.divSavingTotal) === 22500, r.divSavingTotal);
+  const big = CALC["estate-tax-exposure"]({ us: 5000000, divYield: 1.5, wht: 30, ucitsWht: 15, years: 20 });
+  check("effective rate rises with size but stays under 40%", numOf(big.effective) > numOf(r.effective) && numOf(big.effective) < 40, [r.effective, big.effective]);
+}
+
+console.log("\nLump sum versus cost averaging");
+{
+  const base = { amount: 500000, months: 12, ret: 7, cash: 4, horizon: 10 };
+  const r = CALC["lump-sum-vs-dca"](base);
+  check("investing now wins on a rising expectation", r.verdict === "Investing now wins", r.verdict);
+  check("the gap is positive and modest", numOf(r.gapPct) > 0 && numOf(r.gapPct) < 10, r.gapPct);
+  check("average time uninvested is 5.5 months", r.avgIn === "5.5 months", r.avgIn);
+  check("a break-even fall is identified", r.breakeven.startsWith("A fall of"), r.breakeven);
+  const one = CALC["lump-sum-vs-dca"]({ ...base, months: 1 });
+  check("a one month window makes them identical", Math.abs(numOf(one.lump) - numOf(one.dca)) < 1, [one.lump, one.dca]);
+  const cashBeats = CALC["lump-sum-vs-dca"]({ ...base, ret: 2, cash: 8 });
+  check("if cash out-earns the market, averaging wins", cashBeats.verdict === "Cost averaging wins", cashBeats.verdict);
+}
+
+console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll calculator checks passed.\n");
+process.exit(fails ? 1 : 0);

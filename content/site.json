@@ -1,0 +1,30 @@
+{
+  "name": "Investments Playbook",
+  "domain": "investmentsplaybook.com",
+  "origin": "https://investmentsplaybook.com",
+  "tagline": "The arithmetic behind every investment decision.",
+  "description": "A daily brief on global markets and property, a library of the frameworks that actually work, and the calculators that turn them into your number.",
+  "author": {
+    "name": "Soliman Hossam Eldin",
+    "role": "Head of Sales and Marketing, OneLink Properties, Dubai",
+    "years": "13+ years in UAE real estate",
+    "initials": "SH",
+    "linkedin": "https://www.linkedin.com/in/solimanhossameldin",
+    "site": "https://solimanhossameldin.com",
+    "bio": "Soliman has spent thirteen years inside the UAE property market, on the side of the table that sees the numbers before the brochure does. Investments Playbook is where the arithmetic gets published rather than pitched."
+  },
+  "mailerlite": {
+    "account": "2532906",
+    "briefFormId": "196852881104570257",
+    "leadFormId": "196852884221986141"
+  },
+  "disclaimer": "Investments Playbook publishes educational research and general information. Nothing on this site is personal investment advice, a solicitation, or a recommendation to buy or sell any asset. Property and securities can fall in value. Past performance does not predict future returns. Figures shown are indicative and may be delayed. Always take regulated professional advice before acting.",
+  "attribution": "Market figures on this site come from the U.S. Department of the Treasury, ExchangeRate-API, gold-api.com, Kraken and Stooq. Every figure carries its own source and timestamp.",
+  "nav": [
+    { "href": "/brief/", "label": "The Brief" },
+    { "href": "/playbooks/", "label": "Playbooks" },
+    { "href": "/calculators/", "label": "Calculators" },
+    { "href": "/data/", "label": "Market Data" },
+    { "href": "/about/", "label": "About" }
+  ]
+}

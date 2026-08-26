@@ -1,0 +1,15 @@
+{
+  "name": "investments-playbook",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Investments Playbook. A daily brief on global markets and property, a framework library, and six calculators. Static, zero dependencies, auto-updated daily.",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "data": "node scripts/fetch-market-data.mjs",
+    "brief": "node scripts/generate-brief.mjs",
+    "build": "node scripts/build.mjs",
+    "daily": "npm run data && npm run brief && npm run build",
+    "serve": "node scripts/build.mjs && npx --yes serve dist -l 4173"
+  }
+}
