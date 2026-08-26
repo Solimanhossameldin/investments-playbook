@@ -1,0 +1,10 @@
+{
+ "source": "none",
+ "note": "No data yet. Export a transactions CSV from the Dubai Land Department open data search and drop it in content/dld/, or set DUBAI_PULSE_KEY and DUBAI_PULSE_SECRET.",
+ "generatedAt": "2026-08-26T19:00:10.736Z",
+ "windowDays": 365,
+ "minSales": 30,
+ "totalSales": 0,
+ "communities": [],
+ "skipped": []
+}

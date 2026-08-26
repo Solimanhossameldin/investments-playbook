@@ -111,6 +111,8 @@ node scripts/calctest.mjs       # all six calculators, 40 assertions
 node scripts/wiretest.mjs   # the feed parser, against recorded RSS and Atom payloads
 node scripts/glossarytest.mjs # 911 checks: one-sentence definitions, resolving links, house style
 node scripts/playbooktest.mjs # 803 checks: summary format, failure modes present, internal links resolve
+node scripts/dldtest.mjs      # 26 checks: CSV parsing, the sales-only filter, the minimum-data rule
+npm test                      # all six suites
 ```
 
 ---
@@ -141,6 +143,14 @@ Georgia is on every device already, so the only webfont loaded is Inter for the 
 
 The globe is plain canvas 2D with the projection written out by hand, not WebGL and not a library, which is why it costs a few kilobytes rather than a few hundred.
 
+**Community pages.** `/communities/` is built from Dubai Land Department transaction records, and there are two ways to feed it.
+
+*Today, by hand.* Go to the [DLD open data search](https://dubailand.gov.ae/en/open-data/real-estate-data/), run a transactions query for the last twelve months, download the CSV, drop it in `content/dld/`, and run `npm run communities`. The CSV itself is gitignored; the aggregated `content/communities.json` is what gets committed. The search is behind a captcha, which a person can pass once a month and a script cannot, which is exactly why this path exists.
+
+*Later, automatically.* Set `DUBAI_PULSE_KEY` and `DUBAI_PULSE_SECRET` and the same script pulls from the [Dubai Pulse API](https://www.dubaipulse.gov.ae/data/dld-transactions/dld_transactions-open) instead. Registration takes up to fourteen days. The API response is mapped in exactly one function in `scripts/fetch-dld.mjs`, so if the real shape differs from the documentation that function is the only thing to fix.
+
+**The rule that keeps these pages honest:** a community is published only if it has at least 30 recorded sales in the window, and only if enough of those rows carry an area to support a median price per square foot. Everything else is listed as withheld, with its sale count, rather than being published as a thin page with a meaningless number. That threshold is the difference between programmatic pages and spam, and `scripts/dldtest.mjs` enforces it.
+
 **A new glossary term.** Add an object to `content/glossary.mjs`. The page, the index entry, the A to Z, the schema markup and the related links all follow. `scripts/glossarytest.mjs` then enforces the part that matters: the definition must be a single self-contained sentence between 80 and 340 characters that does not open with a pronoun, because the whole point of the page is that an answer engine can lift that sentence alone. Every entry also carries a `trap`, the specific way people get that term wrong, which is what makes the page worth reading rather than worth scraping.
 
 **A new calculator.** Add a spec to `CALCULATORS` in `src/templates/calculators.mjs` and the matching maths function to `CALC` in `src/app/calc.js`. Then add assertions to `scripts/calctest.mjs`, because a calculator that is quietly wrong is worse than no calculator.
@@ -168,6 +178,8 @@ content/
   site.json          global config, MailerLite IDs, heroGlobe flag, disclaimer text
   playbooks.mjs      the 40 framework articles
   glossary.mjs       47 defined terms
+  communities.json   written by the community generator
+  dld/               drop DLD CSV exports here, gitignored
   wire-sources.mjs   the primary source feeds the wire reads
   wire.json          written by the wire job, every quarter hour
   static.mjs         about, disclosure standards, privacy
@@ -183,6 +195,8 @@ src/
 scripts/
   fetch-market-data.mjs
   fetch-wire.mjs
+  fetch-dld.mjs
+  lib/dld.mjs
   generate-brief.mjs
   build.mjs
   selftest.mjs

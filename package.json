@@ -4,13 +4,16 @@
   "private": true,
   "type": "module",
   "description": "Investments Playbook. A daily brief on global markets and property, a framework library, and six calculators. Static, zero dependencies, auto-updated daily.",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "data": "node scripts/fetch-market-data.mjs",
     "brief": "node scripts/generate-brief.mjs",
     "build": "node scripts/build.mjs",
-    "test": "node scripts/selftest.mjs && node scripts/calctest.mjs",
+    "test": "node scripts/selftest.mjs && node scripts/calctest.mjs && node scripts/wiretest.mjs && node scripts/glossarytest.mjs && node scripts/playbooktest.mjs && node scripts/dldtest.mjs",
     "daily": "npm run data && npm run brief && npm run build",
-    "serve": "node scripts/build.mjs && npx --yes serve dist -l 4173"
+    "serve": "node scripts/build.mjs && npx --yes serve dist -l 4173",
+    "communities": "node scripts/fetch-dld.mjs"
   }
 }

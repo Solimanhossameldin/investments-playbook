@@ -1,6 +1,7 @@
 _archive/
 .DS_Store
 *.log
+content/dld/*.csv
 dist/
 go-live.command
 node_modules/

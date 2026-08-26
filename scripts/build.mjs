@@ -11,6 +11,7 @@ import * as P from "../src/templates/pages.mjs";
 import { CALCULATORS, calcIndex, calcPage } from "../src/templates/calculators.mjs";
 import { wirePage, wireStrip } from "../src/templates/wire.mjs";
 import { glossaryIndex, glossaryTerm } from "../src/templates/glossary.mjs";
+import { communityIndex, communityPage } from "../src/templates/communities.mjs";
 import glossary from "../content/glossary.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
 import playbooks from "../content/playbooks.mjs";
@@ -26,6 +27,7 @@ const site = read("content/site.json");
 const market = read("content/market.json", { asOf: null, quotes: [] });
 const status = read("content/status.json", { runs: [] });
 const wire = read("content/wire.json", { fetchedAt: null, items: [], sourcesOk: 0, sourcesTotal: 0 });
+const communities = read("content/communities.json", { source: "none", communities: [], skipped: [], totalSales: 0, minSales: 30, windowDays: 365 });
 
 const briefs = fs.existsSync(path.join(root, "content/briefs"))
   ? fs
@@ -86,6 +88,11 @@ emit(wirePage({ site, wire }));
 const playbookTitles = Object.fromEntries(playbooks.map((p) => [p.slug, p.title]));
 emit(glossaryIndex({ site, terms: glossary }));
 glossary.forEach((term) => emit(glossaryTerm({ site, term, terms: glossary, playbookTitles })));
+
+// A community page exists only where the data supports one. The generator
+// withholds the rest, so there is nothing here to guard against.
+emit(communityIndex({ site, data: communities }));
+(communities.communities || []).forEach((c) => emit(communityPage({ site, c, data: communities })));
 emit(P.briefIndex({ site, briefs }));
 briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1] })));
 emit(P.playbookIndex({ site, playbooks }));
