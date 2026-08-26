@@ -66,7 +66,7 @@ export function playbookDoc({ site, playbooks, calculators }) {
     )
     .join("");
 
-  const body = `<article class="doc">
+  const body = `<article class="pbdoc">
 
 <header class="doc-cover">
   <p class="doc-cover__eyebrow">Global markets and property</p>

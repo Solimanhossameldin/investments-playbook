@@ -118,6 +118,10 @@ node scripts/calctest.mjs       # all six calculators, 40 assertions
 
 The page order is fixed and deliberate: definition, the rule, the arithmetic, where it breaks, when to use it, sources. That order is built for AI answer engines, which lift a clean one-sentence definition from the top of a page. Do not reorder it.
 
+**The look.** Business-press: black masthead, white page, Georgia headlines and serif article body, one red (`#DC0000`) used as punctuation, a cream (`#ECE5C0`) for pulled-out blocks, and hairline rules doing the separating. The palette lives entirely in the `:root` block at the top of `src/styles.css`. The variable names are inherited from the first edition, so `--gold` now carries the red. Rename them if it bothers you, but change the values in one place, not scattered through the file.
+
+Georgia is on every device already, so the only webfont loaded is Inter for the interface type, plus IBM Plex Mono for figures.
+
 **The depth and motion layer.** `src/app/motion.js` and the block at the bottom of `src/styles.css` hold every 3D and animation effect: the hero globe, the running ticker, card tilt, scroll reveals, the header condense and the scroll progress bar. It is entirely additive. Delete both and the site renders correctly, just flat. Everything in it is switched off under `prefers-reduced-motion`, and the tilt is gated behind `(hover: hover) and (pointer: fine)` so phones never get it.
 
 The globe is plain canvas 2D with the projection written out by hand, not WebGL and not a library, which is why it costs a few kilobytes rather than a few hundred.

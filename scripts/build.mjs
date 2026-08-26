@@ -92,7 +92,7 @@ fs.writeFileSync(path.join(dist, "app.js"), app);
 
 fs.writeFileSync(
   path.join(dist, "favicon.svg"),
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#0A1628"/><text x="32" y="45" font-family="Georgia,serif" font-size="38" fill="#C9A961" text-anchor="middle">IP</text></svg>`
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#000000"/><rect x="0" y="56" width="64" height="8" fill="#DC0000"/><text x="32" y="44" font-family="Georgia,serif" font-size="36" fill="#FFFFFF" text-anchor="middle">IP</text></svg>`
 );
 
 fs.writeFileSync(path.join(dist, "CNAME"), `${site.domain}\n`);

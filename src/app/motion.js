@@ -44,16 +44,25 @@
     if (reduced) return;
     var heads = document.querySelectorAll(".hero h1, .doc-cover h1");
     Array.prototype.forEach.call(heads, function (h) {
-      var words = h.textContent.trim().split(/\s+/);
-      if (words.length > 24) return;
-      h.textContent = "";
-      words.forEach(function (w, i) {
-        var s = document.createElement("span");
-        s.className = "w";
-        s.textContent = w;
-        s.style.setProperty("--d", 90 + i * 55 + "ms");
-        h.appendChild(s);
-        if (i < words.length - 1) h.appendChild(document.createTextNode(" "));
+      if ((h.textContent || "").trim().split(/\s+/).length > 24) return;
+      // Walk the children rather than flattening textContent, so a deliberate
+      // line break in the markup survives being split into words.
+      var n = 0;
+      var nodes = Array.prototype.slice.call(h.childNodes);
+      nodes.forEach(function (node) {
+        if (node.nodeType !== 3) return;
+        var frag = document.createDocumentFragment();
+        node.nodeValue.split(/(\s+)/).forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          var s = document.createElement("span");
+          s.className = "w";
+          s.textContent = part;
+          s.style.setProperty("--d", 90 + n * 55 + "ms");
+          n++;
+          frag.appendChild(s);
+        });
+        h.replaceChild(frag, node);
       });
     });
   })();
@@ -237,9 +246,9 @@
 
       /* atmosphere, so the dot cloud reads as a solid body and not confetti */
       var atmo = ctx.createRadialGradient(cx, cy, R * 0.15, cx, cy, R * 1.5);
-      atmo.addColorStop(0, "rgba(23,52,96,0.62)");
-      atmo.addColorStop(0.62, "rgba(15,33,62,0.38)");
-      atmo.addColorStop(1, "rgba(10,22,40,0)");
+      atmo.addColorStop(0, "rgba(38,38,38,0.72)");
+      atmo.addColorStop(0.62, "rgba(23,23,23,0.45)");
+      atmo.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = atmo;
       ctx.beginPath();
       ctx.arc(cx, cy, R * 1.5, 0, 6.2832);
@@ -250,7 +259,7 @@
       var rim = R * 1.0565;
       ctx.beginPath();
       ctx.arc(cx, cy, rim, 0, 6.2832);
-      ctx.strokeStyle = "rgba(201,169,97,0.30)";
+      ctx.strokeStyle = "rgba(255,255,255,0.22)";
       ctx.lineWidth = 1;
       ctx.stroke();
 
@@ -259,8 +268,8 @@
         var p = rot(pts[i]);
         var q = project(p);
         var front = p[2] > 0;
-        var a = front ? 0.20 + p[2] * 0.62 : 0.075;
-        ctx.fillStyle = "rgba(201,169,97," + a.toFixed(3) + ")";
+        var a = front ? 0.18 + p[2] * 0.55 : 0.06;
+        ctx.fillStyle = "rgba(255,255,255," + a.toFixed(3) + ")";
         var r = (front ? 1.7 : 1.1) * q[3];
         ctx.fillRect(q[0] - r / 2, q[1] - r / 2, r, r);
       }
@@ -279,7 +288,7 @@
           if (!started) { ctx.moveTo(qm[0], qm[1]); started = true; }
           else ctx.lineTo(qm[0], qm[1]);
         }
-        ctx.strokeStyle = "rgba(214,183,116,0.42)";
+        ctx.strokeStyle = "rgba(220,0,0,0.62)";
         ctx.lineWidth = 1.1;
         ctx.stroke();
 
@@ -292,7 +301,7 @@
           var qp = project(pp);
           ctx.beginPath();
           ctx.arc(qp[0], qp[1], 2.1 * qp[3], 0, 6.2832);
-          ctx.fillStyle = "rgba(232,206,150,0.9)";
+          ctx.fillStyle = "rgba(255,90,90,0.95)";
           ctx.fill();
         }
       }
@@ -304,12 +313,12 @@
         var qc = project(pc);
         ctx.beginPath();
         ctx.arc(qc[0], qc[1], 2.4 * qc[3], 0, 6.2832);
-        ctx.fillStyle = "rgba(201,169,97,0.95)";
+        ctx.fillStyle = "rgba(220,0,0,1)";
         ctx.fill();
         var pulse = (Math.sin(t * 0.0016 + c) + 1) / 2;
         ctx.beginPath();
         ctx.arc(qc[0], qc[1], (3 + pulse * 8) * qc[3], 0, 6.2832);
-        ctx.strokeStyle = "rgba(201,169,97," + (0.28 * (1 - pulse)).toFixed(3) + ")";
+        ctx.strokeStyle = "rgba(220,0,0," + (0.34 * (1 - pulse)).toFixed(3) + ")";
         ctx.lineWidth = 1;
         ctx.stroke();
       }

@@ -17,7 +17,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&family=Montserrat:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/styles.css">
 ${jsonld.map((j) => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join("\n")}`;
 }
@@ -100,14 +100,14 @@ export function leadBand(site) {
     <div>
       <p class="eyebrow">The flagship document</p>
       <h2 style="font-size:clamp(2.1rem,4.4vw,3.2rem)">The Investments Playbook, 2026 edition</h2>
-      <p style="color:#b9c2cf;max-width:52ch;margin-top:18px">The complete framework library in one document. Portfolio construction, property arithmetic, risk sizing, and the tax and structure decisions that quietly cost globally mobile investors the most money.</p>
+      <p style="color:#c4c4c4;max-width:52ch;margin-top:18px">The complete framework library in one document. Portfolio construction, property arithmetic, risk sizing, and the tax and structure decisions that quietly cost globally mobile investors the most money.</p>
       <div class="lead__stats">
         <div class="lead__stat"><b>13+</b><span>Years in market</span></div>
         <div class="lead__stat"><b>40</b><span>Frameworks</span></div>
         <div class="lead__stat"><b>6</b><span>Calculators</span></div>
         <div class="lead__stat"><b>Free</b><span>No card required</span></div>
       </div>
-      <p style="font-size:12px;color:#7d8798;margin-top:16px">Framework count as of ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })}. Calculator count as of the same date.</p>
+      <p style="font-size:12px;color:#8c8c8c;margin-top:16px">Framework count as of ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })}. Calculator count as of the same date.</p>
     </div>
     <div>${leadForm(site)}</div>
   </div>
@@ -137,8 +137,8 @@ export function footer(site) {
   return `<footer class="band band--ink-deep ftr"><div class="wrap">
   <div class="ftr__cols">
     <div>
-      <a class="mark" href="/" style="color:#fbf9f5">Investments <b>Playbook</b></a>
-      <p style="font-size:13.5px;color:#7d8798;margin-top:14px;max-width:34ch">${esc(copy(site.description))}</p>
+      <a class="mark" href="/" style="color:#ffffff">Investments <b>Playbook</b></a>
+      <p style="font-size:13.5px;color:#8c8c8c;margin-top:14px;max-width:34ch">${esc(copy(site.description))}</p>
     </div>
     <div><h4>The Brief</h4><ul>
       <li><a href="/brief/">Latest issue</a></li>
@@ -165,8 +165,8 @@ export function footer(site) {
     </ul></div>
   </div>
   <div class="ftr__legal">
-    <p><strong style="color:#98a3b3">Data attribution.</strong> ${esc(site.attribution)} Currency rates are provided by <a href="https://www.exchangerate-api.com" rel="noopener">ExchangeRate-API</a>. Proprietary index levels are deliberately not republished. Case-Shiller and VIX are excluded for the same reason, being S&P and Cboe intellectual property.</p>
-    <p><strong style="color:#98a3b3">Risk disclaimer.</strong> ${esc(site.disclaimer)}</p>
+    <p><strong style="color:#a8a8a8">Data attribution.</strong> ${esc(site.attribution)} Currency rates are provided by <a href="https://www.exchangerate-api.com" rel="noopener">ExchangeRate-API</a>. Proprietary index levels are deliberately not republished. Case-Shiller and VIX are excluded for the same reason, being S&P and Cboe intellectual property.</p>
+    <p><strong style="color:#a8a8a8">Risk disclaimer.</strong> ${esc(site.disclaimer)}</p>
     <p>&copy; ${new Date().getFullYear()} ${esc(site.name)}. <a href="/disclosure/">Editorial and disclosure standards</a>. <a href="/privacy/">Privacy</a>.</p>
   </div>
 </div></footer>`;

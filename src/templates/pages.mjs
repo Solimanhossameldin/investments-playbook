@@ -128,7 +128,7 @@ export function home({ site, market, brief, playbooks, calculators }) {
     </div>
   </div>
   <div class="matrix-x"><span>Liquid</span><span>Illiquid</span></div>
-  <p style="color:#98a3b3;max-width:64ch;margin-top:30px;font-size:14.5px">The two axes that decide almost everything are not risk and return. They are what an asset pays you while you hold it, and how quickly you can stop holding it. Get both boxes filled and most portfolio arguments dissolve.</p>
+  <p style="color:#a8a8a8;max-width:64ch;margin-top:30px;font-size:14.5px">The two axes that decide almost everything are not risk and return. They are what an asset pays you while you hold it, and how quickly you can stop holding it. Get both boxes filled and most portfolio arguments dissolve.</p>
   <div class="btn-row" style="margin-top:22px"><a class="btn btn--ghost" href="/playbooks/">See where your portfolio sits</a></div>
   </div>
 </div></section>
@@ -501,7 +501,7 @@ export function notFound({ site }) {
   const body = `<section class="band band--ink" style="min-height:52vh"><div class="wrap">
   <p class="eyebrow">404</p>
   <h1 style="font-size:clamp(2.4rem,6vw,4rem)">That page is not in the Playbook.</h1>
-  <p style="color:#b9c2cf;max-width:48ch;margin-top:20px">The link may be old, or the framework may have moved. The library index is the fastest way back.</p>
+  <p style="color:#c4c4c4;max-width:48ch;margin-top:20px">The link may be old, or the framework may have moved. The library index is the fastest way back.</p>
   <div class="btn-row" style="margin-top:26px">
     <a class="btn btn--solid" href="/playbooks/">Browse the library</a>
     <a class="btn btn--ghost" href="/">Home</a>
