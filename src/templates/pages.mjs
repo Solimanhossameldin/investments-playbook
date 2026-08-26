@@ -33,7 +33,7 @@ function itemHtml(it, n) {
 </article>`;
 }
 
-export function home({ site, market, brief, playbooks, calculators }) {
+export function home({ site, market, brief, playbooks, calculators, wireHtml = "" }) {
   const cards = playbooks.slice(0, 9);
   const briefBlock = brief
     ? `<div class="brief-head">
@@ -116,6 +116,18 @@ export function home({ site, market, brief, playbooks, calculators }) {
     <div class="stat"><div class="stat__v">Daily</div><div class="stat__c">Data and brief refresh</div></div>
   </div>
 </div></section>
+
+${
+  wireHtml
+    ? `<section class="band band--tight band--paper"><div class="wrap">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:18px">
+    <p class="eyebrow" style="margin:0">On the wire</p>
+    <a href="/wire/" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-muted);text-decoration:none">All releases</a>
+  </div>
+  ${wireHtml}
+</div></section>`
+    : ""
+}
 
 <section class="band" id="today"><div class="wrap">
   <p class="eyebrow rise">Today's brief</p>

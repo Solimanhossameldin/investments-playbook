@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { page } from "../src/templates/layout.mjs";
 import * as P from "../src/templates/pages.mjs";
 import { CALCULATORS, calcIndex, calcPage } from "../src/templates/calculators.mjs";
+import { wirePage, wireStrip } from "../src/templates/wire.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
 import playbooks from "../content/playbooks.mjs";
 import * as STATIC from "../content/static.mjs";
@@ -22,6 +23,7 @@ const read = (p, fb) => {
 const site = read("content/site.json");
 const market = read("content/market.json", { asOf: null, quotes: [] });
 const status = read("content/status.json", { runs: [] });
+const wire = read("content/wire.json", { fetchedAt: null, items: [], sourcesOk: 0, sourcesTotal: 0 });
 
 const briefs = fs.existsSync(path.join(root, "content/briefs"))
   ? fs
@@ -76,7 +78,8 @@ function emit(spec) {
 }
 
 /* ---------- pages ---------- */
-emit(P.home({ site, market, brief: briefs[0], playbooks, calculators: calcMeta }));
+emit(P.home({ site, market, brief: briefs[0], playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }) }));
+emit(wirePage({ site, wire }));
 emit(P.briefIndex({ site, briefs }));
 briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1] })));
 emit(P.playbookIndex({ site, playbooks }));

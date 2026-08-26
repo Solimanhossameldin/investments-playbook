@@ -85,6 +85,32 @@
     if (search) search.addEventListener("input", apply);
   }
 
+  /* ---------------- wire filter ---------------- */
+  var wireChips = document.querySelectorAll("#wire-chips .chip");
+  if (wireChips.length) {
+    var wireEmpty = document.getElementById("wire-empty");
+    wireChips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        var cat = c.getAttribute("data-cat");
+        wireChips.forEach(function (x) { x.setAttribute("aria-pressed", String(x === c)); });
+        var shown = 0;
+        document.querySelectorAll(".wi").forEach(function (row) {
+          var on = cat === "all" || row.getAttribute("data-cat") === cat;
+          row.style.display = on ? "" : "none";
+          if (on) shown++;
+        });
+        // A day heading with nothing under it is noise, so it goes too.
+        document.querySelectorAll("[data-day]").forEach(function (day) {
+          var any = Array.prototype.some.call(day.querySelectorAll(".wi"), function (r) {
+            return r.style.display !== "none";
+          });
+          day.hidden = !any;
+        });
+        if (wireEmpty) wireEmpty.hidden = shown > 0;
+      });
+    });
+  }
+
   /* ---------------- gate ---------------- */
   function openGate() {
     var fade = document.querySelector("[data-gate-fade]");

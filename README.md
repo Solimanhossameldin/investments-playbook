@@ -108,6 +108,7 @@ npm test                        # all three suites
 node scripts/selftest.mjs       # data parsers, against real recorded payloads
 node scripts/fallbacktest.mjs   # the FRED and stooq.pl fallback paths
 node scripts/calctest.mjs       # all six calculators, 40 assertions
+node scripts/wiretest.mjs   # the feed parser, against recorded RSS and Atom payloads
 ```
 
 ---
