@@ -94,17 +94,22 @@ export function leadForm(site) {
 </form>`;
 }
 
-export function leadBand(site) {
+// Counts are passed in and rendered, never typed in by hand. A site whose
+// argument is that the advertised number and the real number differ cannot
+// afford to advertise a number it does not have.
+export function leadBand(site, counts = {}) {
+  const frameworks = counts.frameworks ?? 0;
+  const calculators = counts.calculators ?? 0;
   return `<section class="band band--ink" id="playbook"><div class="wrap">
   <div class="lead">
     <div>
       <p class="eyebrow">The flagship document</p>
       <h2 style="font-size:clamp(2.1rem,4.4vw,3.2rem)">The Investments Playbook, 2026 edition</h2>
-      <p style="color:#c4c4c4;max-width:52ch;margin-top:18px">The complete framework library in one document. Portfolio construction, property arithmetic, risk sizing, and the tax and structure decisions that quietly cost globally mobile investors the most money.</p>
+      <p style="color:#c4c4c4;max-width:52ch;margin-top:18px">Every framework in the library, in one document. Portfolio construction, property arithmetic, risk sizing, and the tax and structure decisions that quietly cost globally mobile investors the most money.</p>
       <div class="lead__stats">
         <div class="lead__stat"><b>13+</b><span>Years in market</span></div>
-        <div class="lead__stat"><b>40</b><span>Frameworks</span></div>
-        <div class="lead__stat"><b>6</b><span>Calculators</span></div>
+        <div class="lead__stat"><b>${frameworks}</b><span>Frameworks</span></div>
+        <div class="lead__stat"><b>${calculators}</b><span>Calculators</span></div>
         <div class="lead__stat"><b>Free</b><span>No card required</span></div>
       </div>
       <p style="font-size:12px;color:#8c8c8c;margin-top:16px">Framework count as of ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })}. Calculator count as of the same date.</p>

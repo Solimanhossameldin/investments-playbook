@@ -137,6 +137,9 @@
     if (reduced) return;
     var hero = document.querySelector(".hero");
     if (!hero) return;
+    // heroGlobe:false in content/site.json turns the hero back into pure
+    // typography. The rest of the motion layer is unaffected.
+    if (hero.classList.contains("hero--plain")) return;
 
     var glow = document.createElement("div");
     glow.className = "hero__glow";

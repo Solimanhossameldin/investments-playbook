@@ -277,7 +277,7 @@ export function calcIndex({ site }) {
   return { title: `Calculators. Property and portfolio arithmetic. ${site.name}`, description: "Six free calculators for property and portfolio decisions. Net rental yield, rent versus buy, off-plan IRR, withdrawal rate, US estate tax exposure and lump sum versus cost averaging.", path: "/calculators/", body };
 }
 
-export function calcPage({ site, calc }) {
+export function calcPage({ site, calc, counts }) {
   const body = `<section class="band"><div class="wrap">
   <p class="eyebrow"><a href="/calculators/" style="color:inherit;text-decoration:none">Calculators</a> / ${esc(calc.category)}</p>
   <h1 style="font-size:clamp(2.1rem,5vw,3.2rem);max-width:20ch">${esc(calc.name)}</h1>
@@ -314,7 +314,7 @@ export function calcPage({ site, calc }) {
   </div>
   <p style="font-size:12px;color:var(--muted);margin-top:40px;max-width:var(--prose)">${esc(site.disclaimer)}</p>
 </div></section>
-${leadBand(site)}`;
+${leadBand(site, counts)}`;
 
   return {
     title: `${calc.name} calculator. ${site.name}`,

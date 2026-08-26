@@ -41,5 +41,6 @@
       "href": "/about/",
       "label": "About"
     }
-  ]
+  ],
+  "heroGlobe": false
 }

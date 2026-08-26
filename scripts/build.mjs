@@ -68,7 +68,8 @@ playbooks.forEach((pb) => {
   emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related }));
 });
 emit(calcIndex({ site }));
-CALCULATORS.forEach((calc) => emit(calcPage({ site, calc })));
+const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length };
+CALCULATORS.forEach((calc) => emit(calcPage({ site, calc, counts })));
 emit(playbookDoc({ site, playbooks, calculators: calcMeta }));
 emit(P.dataPage({ site, market, status }));
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));

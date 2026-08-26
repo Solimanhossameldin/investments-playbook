@@ -69,8 +69,36 @@ export function home({ site, market, brief, playbooks, calculators }) {
        <p class="brief-sub">The daily pipeline is live. Subscribe and the first issue lands at 7am GST.</p>
        <div class="gate__box" style="max-width:520px;margin-top:24px"><h4>Get the brief</h4><p>Every weekday morning at 7am GST.</p>${briefForm(site)}</div>`;
 
+  // The typographic hero fills its second column with real figures rather than
+  // decoration. Four rows, each carrying its own source, straight off the same
+  // market.json the data page publishes.
+  const boxOrder = ["us-10y", "us-30y-mortgage", "us-10y-real", "xau"];
+  const boxRows = boxOrder
+    .map((sym) => (market.quotes || []).find((q) => q.symbol === sym))
+    .filter(Boolean);
+  const heroBox =
+    site.heroGlobe === false && boxRows.length
+      ? `<aside class="hero__box rise" aria-label="Selected market figures">
+    <p class="hero__box-h">Today's figures</p>
+    ${boxRows
+      .map(
+        (q) => `<div class="hbx">
+      <span class="hbx__l">${esc(q.label)}</span>
+      <span class="hbx__v">${q.unit === "%" ? fmt(q.value, 2) + "%" : fmt(q.value, q.value < 10 ? 4 : 2)}</span>
+      <span class="hbx__c ${q.changePct === null || q.changePct === undefined ? "flat" : dir(q.changePct)}">${
+        q.changePct === null || q.changePct === undefined ? "n/a" : glyph(q.changePct) + " " + pct(q.changePct)
+      }</span>
+    </div>`
+      )
+      .join("")}
+    <p class="hero__box-f">Every figure named and timestamped on the <a href="/data/">data page</a>.</p>
+  </aside>`
+      : "";
+
   const body = `
-<section class="band band--ink hero"><div class="wrap">
+<section class="band band--ink hero${site.heroGlobe === false ? " hero--plain" : ""}"><div class="wrap">
+  <div class="hero__cols">
+  <div>
   <p class="eyebrow rise">Global markets and property</p>
   <h1 class="rise">${esc(site.tagline)}</h1>
   <p class="hero__sub rise">${esc(copy(site.description))} Read it in three minutes. Free.</p>
@@ -78,10 +106,13 @@ export function home({ site, market, brief, playbooks, calculators }) {
     <a class="btn btn--solid" href="#today">Read today's brief</a>
     <a class="btn btn--ghost" href="#playbook">Get the Playbook</a>
   </div>
+  </div>
+  ${heroBox}
+  </div>
   <div class="stats rise">
     <div class="stat"><div class="stat__v" data-count="3" data-suffix=" min">3 min</div><div class="stat__c">To read the daily brief</div></div>
-    <div class="stat"><div class="stat__v" data-count="40">40</div><div class="stat__c">Frameworks in the library</div></div>
-    <div class="stat"><div class="stat__v" data-count="6">6</div><div class="stat__c">Working calculators</div></div>
+    <div class="stat"><div class="stat__v" data-count="${playbooks.length}">${playbooks.length}</div><div class="stat__c">Frameworks in the library</div></div>
+    <div class="stat"><div class="stat__v" data-count="${calculators.length}">${calculators.length}</div><div class="stat__c">Working calculators</div></div>
     <div class="stat"><div class="stat__v">Daily</div><div class="stat__c">Data and brief refresh</div></div>
   </div>
 </div></section>
@@ -180,7 +211,7 @@ export function home({ site, market, brief, playbooks, calculators }) {
   <div class="btn-row" style="margin-top:30px"><a class="btn btn--ghost" href="/playbooks/">Browse the full library</a></div>
 </div></section>
 
-${leadBand(site)}
+${leadBand(site, { frameworks: playbooks.length, calculators: calculators.length })}
 ${authorBand(site)}`;
 
   return {

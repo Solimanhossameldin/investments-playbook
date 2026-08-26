@@ -118,6 +118,10 @@ node scripts/calctest.mjs       # all six calculators, 40 assertions
 
 The page order is fixed and deliberate: definition, the rule, the arithmetic, where it breaks, when to use it, sources. That order is built for AI answer engines, which lift a clean one-sentence definition from the top of a page. Do not reorder it.
 
+**The hero has two forms.** `heroGlobe` in `content/site.json` switches between them. `true` gives the rotating globe. `false` gives the typographic hero: no canvas, a red rule, and a Today's Figures box built from the same `market.json` the data page publishes. One word, no other edits.
+
+**Counts are never typed by hand.** The framework and calculator numbers in the hero stats and the lead band are rendered from `playbooks.length` and `CALCULATORS.length`. A site whose argument is that the advertised number and the real number differ cannot afford to advertise a number it does not have.
+
 **The look.** Business-press: black masthead, white page, Georgia headlines and serif article body, one red (`#DC0000`) used as punctuation, a cream (`#ECE5C0`) for pulled-out blocks, and hairline rules doing the separating. The palette lives entirely in the `:root` block at the top of `src/styles.css`. The variable names are inherited from the first edition, so `--gold` now carries the red. Rename them if it bothers you, but change the values in one place, not scattered through the file.
 
 Georgia is on every device already, so the only webfont loaded is Inter for the interface type, plus IBM Plex Mono for figures.
