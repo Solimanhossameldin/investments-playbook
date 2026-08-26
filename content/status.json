@@ -4,6 +4,18 @@
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "A brief for 2026-08-26 already exists.",
+   "ranAt": "2026-08-26T17:01:28.084Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "partial",
+   "detail": "17 figures refreshed. Notes: metals fetch failed",
+   "ranAt": "2026-08-26T17:01:28.039Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "A brief for 2026-08-26 already exists.",
    "ranAt": "2026-08-26T16:46:39.367Z"
   },
   {
