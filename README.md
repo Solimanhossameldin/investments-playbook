@@ -118,6 +118,10 @@ node scripts/calctest.mjs       # all six calculators, 40 assertions
 
 The page order is fixed and deliberate: definition, the rule, the arithmetic, where it breaks, when to use it, sources. That order is built for AI answer engines, which lift a clean one-sentence definition from the top of a page. Do not reorder it.
 
+**Four figures are live, fifteen are not, and that is a provider limit rather than a choice.** `src/app/live.js` refreshes gold, silver, Bitcoin and Ethereum in the visitor's browser once a minute, direct from gold-api.com and Kraken, which both allow cross-origin browser requests. FRED does not, so Treasuries, the real yield, breakeven, the mortgage rate, CPI, oil and the dollar index stay build-time. Nothing is lost by that: at source they change daily, weekly or monthly. Live rows carry a green dot on the data page. Failure is silent, and the built figures remain.
+
+The pipeline now runs **twice a day**, at 03:05 UTC and again at 21:15 UTC, because FRED posts the daily Treasury curve around 20:15 UTC and the second pass catches it the same day. The brief generator skips when an issue already exists for the date, so only the data refreshes on the evening run.
+
 **The hero has two forms.** `heroGlobe` in `content/site.json` switches between them. `true` gives the rotating globe. `false` gives the typographic hero: no canvas, a red rule, and a Today's Figures box built from the same `market.json` the data page publishes. One word, no other edits.
 
 **Counts are never typed by hand.** The framework and calculator numbers in the hero stats and the lead band are rendered from `playbooks.length` and `CALCULATORS.length`. A site whose argument is that the advertised number and the real number differ cannot afford to advertise a number it does not have.

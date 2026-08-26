@@ -4,6 +4,10 @@ on:
   schedule:
     # 03:05 UTC every day, which is 07:05 Gulf Standard Time.
     - cron: "5 3 * * *"
+    # FRED posts the daily Treasury curve around 20:15 UTC. A second pass at
+    # 21:15 picks it up the same day instead of the next morning. The brief
+    # generator sees an issue already exists for the date and skips.
+    - cron: "15 21 * * *"
   push:
     branches: [main]
   workflow_dispatch:

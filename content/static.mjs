@@ -104,6 +104,12 @@ Subscriber and lead information is stored in MailerLite, which handles the email
 
 The calculators run entirely in your browser. The numbers you type are never transmitted anywhere, are not stored, and are not visible to this site or to anyone operating it. Refresh the page and they are gone.
 
+## Live price refreshes
+
+Four figures on this site refresh in your browser rather than at build time: gold, silver, Bitcoin and Ethereum. That means your browser makes a request directly to gold-api.com and to Kraken about once a minute while a page carrying those figures is open, and those providers can see your IP address and browser, exactly as they would if you visited their own sites. No information about you is sent to them by this site, because this site has none to send. If the requests fail or you block them, the figures published at the last build are shown instead and nothing else changes.
+
+Every other figure is fetched by the build server, not by you.
+
 ## Local storage
 
 If you subscribe from the homepage, the site sets a single flag in your browser's local storage so that the rest of the brief stays visible on your next visit. It contains no personal data and never leaves your browser. Clearing your browser data removes it.

@@ -83,6 +83,7 @@ fs.copyFileSync(path.join(root, "src/styles.css"), path.join(dist, "styles.css")
 const app = [
   fs.readFileSync(path.join(root, "src/app/calc.js"), "utf8"),
   fs.readFileSync(path.join(root, "src/app/motion.js"), "utf8"),
+  fs.readFileSync(path.join(root, "src/app/live.js"), "utf8"),
   fs.readFileSync(path.join(root, "src/app/app.js"), "utf8"),
 ]
   .join("\n")

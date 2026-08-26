@@ -82,10 +82,10 @@ export function home({ site, market, brief, playbooks, calculators }) {
     <p class="hero__box-h">Today's figures</p>
     ${boxRows
       .map(
-        (q) => `<div class="hbx">
+        (q) => `<div class="hbx" data-sym="${esc(q.symbol)}">
       <span class="hbx__l">${esc(q.label)}</span>
-      <span class="hbx__v">${q.unit === "%" ? fmt(q.value, 2) + "%" : fmt(q.value, q.value < 10 ? 4 : 2)}</span>
-      <span class="hbx__c ${q.changePct === null || q.changePct === undefined ? "flat" : dir(q.changePct)}">${
+      <span class="hbx__v" data-live-v>${q.unit === "%" ? fmt(q.value, 2) + "%" : fmt(q.value, q.value < 10 ? 4 : 2)}</span>
+      <span class="hbx__c ${q.changePct === null || q.changePct === undefined ? "flat" : dir(q.changePct)}" data-live-c>${
         q.changePct === null || q.changePct === undefined ? "n/a" : glyph(q.changePct) + " " + pct(q.changePct)
       }</span>
     </div>`
@@ -476,11 +476,11 @@ export function dataPage({ site, market, status }) {
       <thead><tr><th>Measure</th><th class="n">Level</th><th class="n">Change</th><th>As of</th><th>Source</th></tr></thead>
       <tbody>${rows
         .map(
-          (q) => `<tr${q.stale ? ' style="opacity:.55"' : ""}>
-        <td>${esc(q.label)}${q.stale ? ' <span class="badge">last good</span>' : ""}</td>
-        <td class="n">${q.unit === "%" ? fmt(q.value, 2) + "%" : fmt(q.value, q.value < 10 ? 4 : 2)}</td>
-        <td class="n ${dir(q.changePct)}">${q.changePct === null || q.changePct === undefined ? "n/a" : pct(q.changePct)}</td>
-        <td class="note">${esc(gst(q.asOf))} GST</td>
+          (q) => `<tr data-sym="${esc(q.symbol)}"${q.stale ? ' style="opacity:.55"' : ""}>
+        <td>${esc(q.label)}${q.stale ? ' <span class="badge">last good</span>' : ""}<span class="livedot" data-live-dot hidden title="Refreshing live in your browser"></span></td>
+        <td class="n" data-live-v>${q.unit === "%" ? fmt(q.value, 2) + "%" : fmt(q.value, q.value < 10 ? 4 : 2)}</td>
+        <td class="n ${dir(q.changePct)}" data-live-c>${q.changePct === null || q.changePct === undefined ? "n/a" : pct(q.changePct)}</td>
+        <td class="note" data-live-t>${esc(gst(q.asOf))} GST</td>
         <td><a href="${esc(q.sourceUrl)}" rel="noopener nofollow">${esc(q.source)}</a></td>
       </tr>`
         )
@@ -494,6 +494,7 @@ export function dataPage({ site, market, status }) {
     <p class="eyebrow">Refreshed daily, automatically</p>
     <h2>Market data</h2>
     <p>These figures are indicative and may be delayed. Each row names its own source and its own timestamp, because a number without a provenance is not a number, it is a claim.</p>
+    <p style="font-size:13.5px">Gold, silver, Bitcoin and Ethereum carry a <span class="livedot" style="position:relative;top:-1px"></span> and refresh in your browser about once a minute, straight from the provider named in the row. Everything else is rebuilt twice a day, because at source it changes daily, weekly or monthly and a faster clock on this page would not make it any newer.</p>
   </div>
   ${tables || '<p style="color:var(--muted)">The first data pull runs tonight.</p>'}
 

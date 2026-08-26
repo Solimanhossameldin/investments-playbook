@@ -43,19 +43,18 @@ export function ticker(market) {
   const sorted = [...q].sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category) || a.order - b.order);
   return `<div class="ticker"><div class="wrap"><div class="ticker__in">
 ${sorted
-  .slice(0, 16)
   .map(
-    (x) => `<div class="tk${x.stale ? " tk--stale" : ""}"${x.stale ? ' title="Last good value, feed did not refresh"' : ""}>
+    (x) => `<div class="tk${x.stale ? " tk--stale" : ""}" data-sym="${esc(x.symbol)}"${x.stale ? ' title="Last good value, feed did not refresh"' : ""}>
   <span class="tk__l">${esc(x.label)}</span>
-  <span class="tk__r"><span class="tk__v">${x.unit === "%" ? fmt(x.value, 2) + "%" : fmt(x.value, x.value < 10 ? 4 : 2)}</span>${
-      x.changePct === null || x.changePct === undefined
-        ? ""
-        : `<span class="tk__c ${dir(x.changePct)}">${glyph(x.changePct)} ${pct(x.changePct)}</span>`
-    }</span>
+  <span class="tk__r"><span class="tk__v" data-live-v>${x.unit === "%" ? fmt(x.value, 2) + "%" : fmt(x.value, x.value < 10 ? 4 : 2)}</span><span class="tk__c ${
+      x.changePct === null || x.changePct === undefined ? "flat" : dir(x.changePct)
+    }" data-live-c>${
+      x.changePct === null || x.changePct === undefined ? "" : glyph(x.changePct) + " " + pct(x.changePct)
+    }</span></span>
 </div>`
   )
   .join("")}
-<div class="ticker__meta"><span>As of ${esc(gst(market.asOf))} GST</span><a href="/data/">Sources</a></div>
+<div class="ticker__meta"><span data-live-stamp>As of ${esc(gst(market.asOf))} GST</span><a href="/data/">Sources</a></div>
 </div></div></div>`;
 }
 
