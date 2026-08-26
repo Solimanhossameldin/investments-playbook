@@ -1,5 +1,5 @@
 {
- "asOf": "2026-08-26T11:30:28.042Z",
+ "asOf": "2026-08-26T11:51:00.635Z",
  "quotes": [
   {
    "symbol": "us-10y",
@@ -13,7 +13,7 @@
    "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
    "asOf": "2026-08-24T00:00:00.000Z",
    "order": 20,
-   "stale": false
+   "stale": true
   },
   {
    "symbol": "us-2y",
@@ -27,7 +27,7 @@
    "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
    "asOf": "2026-08-24T00:00:00.000Z",
    "order": 21,
-   "stale": false
+   "stale": true
   },
   {
    "symbol": "us-30y",
@@ -41,35 +41,37 @@
    "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
    "asOf": "2026-08-24T00:00:00.000Z",
    "order": 22,
-   "stale": false
+   "stale": true
   },
   {
    "symbol": "xau",
    "label": "Gold",
    "category": "commodity",
-   "value": 4624.6,
+   "value": 4619.4,
    "changePct": null,
    "changeAbs": null,
    "unit": "USD/oz",
    "source": "gold-api.com",
    "sourceUrl": "https://api.gold-api.com",
-   "asOf": "2026-08-26T10:41:43Z",
+   "asOf": "2026-08-26T11:50:43Z",
    "order": 30,
-   "stale": true
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "xag",
    "label": "Silver",
    "category": "commodity",
-   "value": 68.59,
+   "value": 68.61,
    "changePct": null,
    "changeAbs": null,
    "unit": "USD/oz",
    "source": "gold-api.com",
    "sourceUrl": "https://api.gold-api.com",
-   "asOf": "2026-08-26T11:29:42Z",
+   "asOf": "2026-08-26T11:50:42Z",
    "order": 31,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "usd-eur",
@@ -83,7 +85,8 @@
    "sourceUrl": "https://www.exchangerate-api.com",
    "asOf": "2026-08-26T00:02:31.000Z",
    "order": 40,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "usd-gbp",
@@ -97,7 +100,8 @@
    "sourceUrl": "https://www.exchangerate-api.com",
    "asOf": "2026-08-26T00:02:31.000Z",
    "order": 41,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "usd-jpy",
@@ -111,7 +115,8 @@
    "sourceUrl": "https://www.exchangerate-api.com",
    "asOf": "2026-08-26T00:02:31.000Z",
    "order": 42,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "usd-aed",
@@ -125,7 +130,8 @@
    "sourceUrl": "https://www.exchangerate-api.com",
    "asOf": "2026-08-26T00:02:31.000Z",
    "order": 43,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "usd-chf",
@@ -139,7 +145,8 @@
    "sourceUrl": "https://www.exchangerate-api.com",
    "asOf": "2026-08-26T00:02:31.000Z",
    "order": 44,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "usd-inr",
@@ -153,35 +160,38 @@
    "sourceUrl": "https://www.exchangerate-api.com",
    "asOf": "2026-08-26T00:02:31.000Z",
    "order": 45,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "btc-usd",
    "label": "Bitcoin",
    "category": "crypto",
-   "value": 78612.2,
-   "changeAbs": 102.7,
-   "changePct": 0.13,
+   "value": 78414.9,
+   "changeAbs": -94.6,
+   "changePct": -0.12,
    "unit": "USD",
    "source": "Kraken",
    "sourceUrl": "https://www.kraken.com",
-   "asOf": "2026-08-26T11:30:09.511Z",
+   "asOf": "2026-08-26T11:50:59.315Z",
    "order": 50,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   },
   {
    "symbol": "eth-usd",
    "label": "Ethereum",
    "category": "crypto",
-   "value": 2465.12,
-   "changeAbs": 22.57,
-   "changePct": 0.92,
+   "value": 2460.81,
+   "changeAbs": 18.26,
+   "changePct": 0.75,
    "unit": "USD",
    "source": "Kraken",
    "sourceUrl": "https://www.kraken.com",
-   "asOf": "2026-08-26T11:30:09.511Z",
+   "asOf": "2026-08-26T11:50:59.315Z",
    "order": 51,
-   "stale": false
+   "stale": false,
+   "fetched_at": "2026-08-26T11:51:00.635Z"
   }
  ]
 }

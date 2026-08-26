@@ -4,6 +4,18 @@
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "A brief for 2026-08-26 already exists.",
+   "ranAt": "2026-08-26T11:51:00.685Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "partial",
+   "detail": "10 figures refreshed. Notes: macro no usable FRED rows; rates no usable FRED rows",
+   "ranAt": "2026-08-26T11:51:00.635Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "A brief for 2026-08-26 already exists.",
    "ranAt": "2026-08-26T11:30:28.091Z"
   },
   {
