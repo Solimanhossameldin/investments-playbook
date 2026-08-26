@@ -739,6 +739,9 @@ h1, h2, h3, h4 { letter-spacing: -0.018em; line-height: 1.1; }
 }
 
 /* ---------- live figures ---------- */
+/* The class sets display, which beats the browser's own [hidden] rule, so a
+   row that is not live would keep showing the dot. Say it explicitly. */
+.livedot[hidden] { display: none; }
 .livedot {
   display: inline-block; width: 6px; height: 6px; border-radius: 50%;
   background: #2eb086; margin-left: 8px; vertical-align: middle;
