@@ -2416,4 +2416,679 @@ What does
       { name: "Dubai Land Department, real estate transaction data", url: "https://dubailand.gov.ae/en/open-data/real-estate-data/" },
     ],
   },
+  /* ==================== BATCH FOUR, TO FORTY ==================== */
+  {
+    slug: "due-diligence-before-an-offer",
+    title: "Due diligence before an offer",
+    category: "property",
+    tier: 1,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "Due diligence on a property purchase means verifying the four things that determine what you will actually earn, namely the title, the service charge and reserve position, the tenancy status, and the achievable rent, and every one of them is checkable before an offer rather than after it.",
+    body: `Most buyers do their thinking about a property before they see the documents, and most unpleasant surprises are in the documents. The order is fixable and it costs nothing to fix.
+
+## The four things
+
+**Title.** Confirm what is actually being sold. The [title deed](/glossary/title-deed/) names the owner, the unit and the area, and that area is the one the service charge is levied on and the one your price per square foot should use. Confirm whether it is [freehold](/glossary/freehold/) and whether there is a mortgage registered against it that must be discharged at transfer.
+
+**Service charge and reserves.** Ask for the approved budget, the reserve fund balance and any special levies raised in the last three years. A charge that looks low for the building type is frequently a charge that is not collecting for the reserve, which is covered in [the service charge and the reserve fund](/playbooks/service-charge-and-reserves/).
+
+**Tenancy status.** Vacant or tenanted, and if tenanted, at what rent, on what expiry, and how far below the RERA index. That last number caps what you can charge next year, and [rent increase caps](/playbooks/rent-increase-caps/) explains why a cheaply let unit is not the opportunity it looks like.
+
+**Achievable rent.** Not the asking rent and not the seller's projection. Recent Ejari registrations for comparable units in the same building.
+
+## The documents to ask for, all of which exist
+
+Title deed. The approved owners association budget for the current year. The reserve fund statement. The last two years of accounts. The current tenancy contract and Ejari registration. A recent service charge statement showing the account is clear, since arrears will surface at the [no objection certificate](/glossary/no-objection-certificate/) stage anyway.
+
+If a seller or agent cannot produce these, that is itself information.
+
+## What to inspect
+
+Beyond the obvious condition of the unit: the age and state of the building's plant, particularly chillers and lifts, because those are the items that produce special levies. Whether the building is chiller free or the tenant pays cooling separately, which changes what any quoted rent is worth. Water ingress in bathrooms and around balcony doors. And the view, checked against what is planned on the plots opposite rather than what is there now.
+
+## Then run the arithmetic, in this order
+
+Price per square foot against genuine recent transactions in the same building. Then [net yield](/playbooks/net-rental-yield/) using the verified service charge and the achievable rent rather than the advertised ones. Then [break-even occupancy](/playbooks/break-even-occupancy/), which tells you how much vacancy the purchase survives. Then the [minimum hold period](/glossary/minimum-hold-period/), which tells you whether your intended horizon is long enough to absorb the round trip.
+
+If all four still look right, make the offer. If any of them changed materially once real numbers replaced the marketing ones, that is the process working.
+
+## The discipline
+
+Decide what would make you walk away before you fall in love with the unit. Write it down. The reason is the same reason the [sunk cost](/playbooks/sunk-cost-and-selling/) framework exists: judgement made in advance is better than judgement made while committed.`,
+    formula: `Verify, in this order
+
+  1. Title
+       deed area, freehold status, registered mortgage
+  2. Service charge and reserves
+       approved budget, reserve balance,
+       special levies in the last 3 years
+  3. Tenancy
+       vacant or let, rent, expiry,
+       gap to the RERA index
+  4. Achievable rent
+       recent Ejari registrations, same building
+
+Then calculate, in this order
+
+  price per sq ft   vs recent transactions, same building
+  net yield         verified charge, achievable rent
+  break-even occupancy
+  minimum hold period vs your intended horizon
+
+Walk-away conditions
+  written down before viewing, not after`,
+    failureModes: [
+      "It assumes the documents are available and current. Where an owners association is poorly run, the budget may be late or the accounts unaudited, which is itself a finding.",
+      "Comparable Ejari registrations tell you what was agreed, not what is achievable today, and in a moving market the two diverge.",
+      "A physical inspection by a buyer is not a survey. For anything other than a straightforward apartment, a professional inspection is cheap against what it can find.",
+      "It says nothing about the developer's or the association's future behaviour, which is the risk that produces levies and cannot be diligenced away.",
+      "Off-plan purchases have a different checklist entirely, since there is no building to inspect and no service charge history to read.",
+      "Time pressure from an agent is a negotiating tactic and it is most effective precisely on the buyers who have not done this work in advance.",
+    ],
+    whenToUse:
+      "Before every offer, without exception, and ideally before the second viewing so the arithmetic informs the negotiation rather than following it.",
+    sources: [
+      { name: "Dubai Land Department, eServices and title verification", url: "https://dubailand.gov.ae/en/eservices/" },
+      { name: "Dubai Land Department, RERA rental index", url: "https://dubailand.gov.ae/en/eservices/rental-index/" },
+      { name: "Dubai Pulse, DLD transactions open dataset", url: "https://www.dubaipulse.gov.ae/data/dld-transactions/dld_transactions-open" },
+    ],
+  },
+
+  {
+    slug: "selling-well",
+    title: "Selling well",
+    category: "property",
+    tier: 2,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "The price a property achieves is set mostly in the first three weeks of listing, because that is when the buyers already searching see it fresh, which makes the initial asking price the single most consequential decision in the sale and the one most often made by wishful thinking.",
+    body: `Everyone researches how to buy. Almost nobody researches how to sell, and the sell side is where the round trip cost is decided.
+
+## Why the first three weeks decide it
+
+At any moment there is a pool of buyers actively looking in your building and your price bracket. When a new listing appears they all see it at once, and their interest is highest while it is new.
+
+Price it correctly and you are competing for that attention with a number that survives comparison. Price it optimistically and the pool inspects it, discounts it, and moves on. They do not come back when you reduce, because by then the listing is old and the reduction reads as weakness rather than as opportunity.
+
+A property that has sat for four months with two price cuts is worth less than the same property freshly listed at the eventual price. The market has learned something about the seller.
+
+## Setting the number
+
+Use achieved transactions in the same building over the last six to twelve months, adjusted for floor, view and condition, exactly as in [price per square foot](/playbooks/price-per-square-foot/). Not asking prices, which are hypotheses, and not what you paid, which is [sunk](/playbooks/sunk-cost-and-selling/).
+
+Then decide deliberately whether to price at, slightly below, or above that level. Slightly below generates competition and frequently achieves more than the higher asking price would have. Above is a bet that your unit is genuinely differentiated, and it costs you the first three weeks if it is not.
+
+## Vacant or tenanted
+
+This is the decision sellers get wrong most often.
+
+A tenanted unit sells to investors only. A vacant unit sells to investors and to end users, and end users pay more because they are buying a home rather than a yield. Vacant possession typically commands a premium for that reason alone.
+
+Against that, an empty unit earns nothing while it sits, and the notice required to end a tenancy for sale is twelve months served correctly. So the decision has to be made a year before you intend to sell, which is why it is so often made by default.
+
+If the tenancy is at or above market and expires soon, tenanted may be fine. If it is well below market, you are asking an investor to buy a capped income stream, and they will price it accordingly.
+
+## The costs, so the net is not a surprise
+
+Agency commission with VAT. The [no objection certificate](/glossary/no-objection-certificate/) fee. Trustee charges. Any early settlement fee on your mortgage, which is a real number and frequently forgotten. Service charges paid to the transfer date.
+
+Add them before deciding whether the sale is worth doing at all. The [transaction cost drag](/playbooks/transaction-cost-drag/) framework applies to the exit exactly as it did to the entry.
+
+## Presentation, briefly
+
+Empty and clean beats furnished and lived in for photography. Fix the small visible defects, because buyers extrapolate from them to the things they cannot see. Professional photographs are worth their cost several times over on a listing that will be scrolled past in two seconds.`,
+    formula: `Set the price
+  achieved transactions, same building, 6-12 months
+  adjusted for floor, view, condition
+  NOT asking prices, NOT what you paid
+
+The three week rule
+  weeks 1-3   the active buyer pool sees it fresh
+  weeks 4+    the pool has already discounted it
+  a listing with two cuts sells below a listing
+  that opened at the eventual price
+
+Net proceeds
+  agreed price
+  - agency commission + VAT
+  - NOC fee
+  - trustee and transfer charges
+  - mortgage early settlement fee
+  - service charge to the transfer date
+  = what actually reaches you
+
+Vacant vs tenanted
+  vacant     investors + end users, higher price,
+             no income while it sits,
+             12 months notice to arrange
+  tenanted   investors only, priced off the passing rent`,
+    failureModes: [
+      "Pricing high to leave room for negotiation assumes buyers negotiate up from an anchor. In a market with comparable listings they simply look at the comparable listing instead.",
+      "It assumes reliable transaction data exists for your building. For unusual or thinly traded properties, comparables may be genuinely absent and the price is a wider range.",
+      "The vacant possession premium varies by market segment and is largest at the end-user end. For a pure investment tower it may be small or absent.",
+      "Ending a tenancy to sell requires twelve months correctly served notice, and getting the procedure wrong costs a year rather than a fee.",
+      "Agents are paid on completion, not on price, so their incentive to close is stronger than their incentive to hold out. That is not dishonesty, it is arithmetic worth understanding.",
+      "In a falling market, the first three weeks logic still applies but the correct price is below the last comparable rather than at it, which sellers find hardest to accept.",
+    ],
+    whenToUse:
+      "A year before you intend to sell, because the tenancy decision needs that long. Then again the week before listing, to set the number from data rather than from hope.",
+    sources: [
+      { name: "Dubai Land Department, real estate transaction data", url: "https://dubailand.gov.ae/en/open-data/real-estate-data/" },
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/" },
+      { name: "Dubai Pulse, DLD transactions open dataset", url: "https://www.dubaipulse.gov.ae/data/dld-transactions/dld_transactions-open" },
+    ],
+  },
+
+  {
+    slug: "insurance-and-its-gaps",
+    title: "Insurance and its gaps",
+    category: "risk",
+    tier: 2,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "Insurance transfers risks that would be financially catastrophic and is poor value for risks that would merely be inconvenient, which means the useful question is never what am I insured for but which single event would do the most damage and whether anything currently covers it.",
+    body: `Most people are insured for the things that come bundled and uninsured for the things that would actually ruin them. The bundling is not a conspiracy, it is just what happens when nobody sits down and lists the failures.
+
+## The principle
+
+Insure what you could not absorb. Self-insure what you could.
+
+A five thousand dirham repair is an inconvenience, and paying an insurer to carry it costs more over time than carrying it yourself. A total loss of income for two years is not absorbable by almost anyone, and that is what insurance is for.
+
+That single test reorders most people's cover immediately.
+
+## The four that matter for a property owner abroad
+
+**Health.** Usually the one people have, often through an employer, which is precisely the problem: it ends when the job does, at the same moment residency does. Understand what happens to cover in the gap.
+
+**Income protection or critical illness.** The largest uninsured exposure most working people carry. Your ability to earn is the asset funding everything else, including the mortgage, and it is the one nobody insures. If you were unable to work for three years, what pays the service charge.
+
+**Life cover sized to the debt, not to a round number.** For a property owner the specific job is clearing the mortgage so the family is not forced to sell a leveraged asset in a hurry. Size it to the outstanding balance plus the costs of a forced sale, then add what dependants need beyond that.
+
+**Property insurance, and knowing which one you have.** The owners association insures the structure through the service charge. That is not the same as contents cover, and it is not the same as landlord liability for injury to a tenant or damage originating in your unit. Owners frequently assume the association's policy covers all three. It generally does not.
+
+## The gaps that catch expatriates specifically
+
+Cover tied to employment ends with employment. Cover tied to residency may lapse on leaving. Policies written in one country may not pay for events in another, and a policy bought in a previous posting may quietly no longer apply where you now live.
+
+And the exclusion that surprises people most: rental income is not usually covered for ordinary vacancy. Loss of rent cover typically applies after an insured event such as a fire making the property uninhabitable, not because a tenant left. Vacancy is a risk you carry yourself, which is why [break-even occupancy](/playbooks/break-even-occupancy/) and the [emergency reserve](/playbooks/emergency-liquidity/) exist.
+
+## How to review it in an hour
+
+List the events that would do real damage: death, long term illness, disability, job loss, a major uninsured repair, liability for injury. Against each, write what currently pays. The blanks are the answer, and there are usually two or three.
+
+Then check the sizing on what you do have, because cover bought five years ago against a smaller mortgage and no children is cover sized for a different life.`,
+    formula: `The test
+  Could I absorb this loss without changing my life?
+    yes  ->  self-insure, keep the premium
+    no   ->  transfer it
+
+The grid, filled in honestly
+  Event                          What pays?
+  --------------------------------------------
+  Death                          life cover, sized to
+                                 mortgage + costs of a
+                                 forced sale + dependants
+  Long term illness/disability   income protection
+                                 (the usual blank)
+  Job loss                       cash reserve, not insurance
+  Major repair                   reserve fund + own cash
+  Liability to a tenant          landlord liability
+                                 (not the OA policy)
+  Contents                       own policy
+                                 (not the OA policy)
+  Vacancy                        nothing. It is not insurable.
+
+Excess and premium
+  raise the excess on small risks
+  spend the saving on the large ones`,
+    failureModes: [
+      "This is general information about categories of cover, not advice on a specific policy, and policy wordings differ enormously between insurers and jurisdictions.",
+      "Insurance is priced to be profitable for the insurer on average, so buying it for small risks is a losing trade repeated many times.",
+      "Employer provided cover is convenient and ends with the employment, which is the moment it is most needed.",
+      "Sizing life cover to a round number rather than to the actual liability leaves either a gap or years of wasted premium.",
+      "Critical illness and income protection are different products solving different problems, and the definitions in the policy decide whether a claim pays.",
+      "Vacancy and ordinary tenant default are generally not insurable, so no amount of cover substitutes for a reserve.",
+    ],
+    whenToUse:
+      "Once, properly, with the grid filled in. Then after any change of job, country, mortgage, marital status or dependants, all of which change the sizing.",
+    sources: [
+      { name: "Central Bank of the UAE, insurance supervision", url: "https://www.centralbank.ae/en/" },
+      { name: "Dubai Land Department, jointly owned property and owners associations", url: "https://dubailand.gov.ae/en/" },
+    ],
+  },
+
+  {
+    slug: "order-of-debt-repayment",
+    title: "The order of debt repayment",
+    category: "risk",
+    tier: 1,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "Spare money should clear the highest interest rate debt first, because repaying a debt is a guaranteed return equal to its interest rate, and only once the rate on the remaining debt falls below what the money could reliably earn elsewhere does investing instead become the better trade.",
+    body: `Paying off a debt at eighteen percent is an eighteen percent return, guaranteed, tax free in most jurisdictions and available immediately. Almost nothing in a portfolio offers that.
+
+## The rule
+
+Rank every debt by interest rate. Pay minimums on all of them. Put every spare dirham against the highest rate. When it is gone, move to the next.
+
+It is arithmetically optimal and it is boring, which is why the alternative exists.
+
+## The alternative, and when it is right
+
+The snowball method pays the smallest balance first regardless of rate, to produce a visible win and build momentum. It costs money in interest and it works for people who would otherwise give up.
+
+If you have abandoned a repayment plan before, use the snowball. If you have not, use the rate order. Choosing the mathematically optimal plan you will not finish is worse than the slightly costlier one you will, which is the same argument the [behaviour gap](/playbooks/the-behaviour-gap/) makes about portfolios.
+
+## Where the mortgage sits
+
+Usually last, and often not at all.
+
+A mortgage at four percent, secured, long dated, on an asset producing rent, is not the same animal as a credit card at eighteen. Clearing it early is a guaranteed four percent return, which is respectable and lower than most long horizon alternatives.
+
+Three things argue for clearing it anyway, and none of them are arithmetic. It lowers [break-even occupancy](/playbooks/break-even-occupancy/), so the property survives a longer vacancy. It reduces the equity destroyed by a price fall, since leverage cuts both ways. And it removes a fixed obligation from a life where residency may depend on employment.
+
+Weigh those against the return you are giving up and decide deliberately. Most people should be somewhere between the extremes rather than at either.
+
+## What comes before all of it
+
+The [emergency reserve](/playbooks/emergency-liquidity/). Clearing debt with money you then have to re-borrow at a worse rate is not progress, and the moment you need cash is disproportionately likely to be the moment credit is withdrawn.
+
+Fund the immediate layer first. Then attack the expensive debt. Then build the rest of the reserve alongside.
+
+## The one exception worth naming
+
+Where an employer matches pension or savings contributions, take the match before anything else including expensive debt. A fifty percent match is an immediate fifty percent return and nothing on the debt ladder beats it.`,
+    formula: `The order
+
+  0. Employer match, if any
+       an immediate 50% or 100% return
+  1. Emergency reserve, immediate layer
+       3-6 months of household expenses
+  2. Debt by interest rate, highest first
+       minimums on everything else
+  3. Remaining emergency layers
+       property reserve, transition fund
+  4. Investing
+       once remaining debt is below what the money
+       can reliably earn
+  5. Mortgage overpayment
+       a guaranteed return equal to the rate,
+       plus a reduction in fragility that the
+       arithmetic does not price
+
+The comparison at each step
+  guaranteed return from repaying  =  the interest rate
+  expected return from investing   =  a range, not a number
+
+  Prefer the guarantee unless the gap is wide.`,
+    failureModes: [
+      "It compares a certain return against an expected one as though they are the same kind of number. Repaying debt is guaranteed; the investment alternative is a range, and the certainty is worth something the arithmetic does not show.",
+      "Early settlement fees on fixed rate mortgages can be substantial and change the answer entirely, so check the actual charge before overpaying.",
+      "In jurisdictions where mortgage interest is deductible the effective rate is lower than the headline, which moves the mortgage further down the list. In the UAE this does not apply to individuals.",
+      "Clearing debt to zero while holding no cash reserve is the most common sequencing error and it usually ends in borrowing again at a worse rate.",
+      "Some debt is cheap and long dated by design, and clearing it early can trade a valuable liability for an illiquid asset position.",
+      "The snowball costs more in interest, and recommending it to someone who did not need it is a real cost rather than a harmless preference.",
+    ],
+    whenToUse:
+      "Whenever there is spare money and more than one place it could go, which is most months. Also immediately after any windfall, before the decision gets made by inertia.",
+    sources: [
+      { name: "Central Bank of the UAE, consumer protection", url: "https://www.centralbank.ae/en/" },
+      { name: "Federal Reserve Bank of St. Louis, mortgage rate series", url: "https://fred.stlouisfed.org/series/MORTGAGE30US" },
+    ],
+  },
+
+  {
+    slug: "corporate-vs-personal-ownership",
+    title: "Corporate versus personal ownership",
+    category: "tax",
+    tier: 1,
+    calculator: "estate-tax-exposure",
+    reviewed: R,
+    summary:
+      "In the UAE, rental income earned by an individual from property held personally without a licence falls outside corporate tax entirely, while the same property held through a company is taxable at nine percent above the threshold, which makes the ownership structure a larger decision than most buyers realise.",
+    body: `The question usually arrives as a suggestion from someone selling a structure. It deserves a proper answer, because the default in the UAE is unusually favourable and the structure often makes it worse.
+
+## The UAE position, stated carefully
+
+Under the corporate tax regime, income a natural person earns from real estate investment, meaning leasing, sub-leasing and holding for capital appreciation, sits outside corporate tax where no licence is required for the activity. The test is whether the activity requires a licence, not how passive it feels and not how large the income is.
+
+Hold the same property through a company and the income is business income, taxable at nine percent above the threshold, with no equivalent exemption.
+
+For an ordinary landlord letting on standard tenancy contracts, personal ownership is therefore the simpler and cheaper position, and adding a company can create a tax liability that did not previously exist.
+
+## The trap that connects to short letting
+
+Licensed activity is treated differently. Running holiday homes requires a permit. Brokerage requires a licence. Systematic buying and selling as a business requires one. Those activities can bring a natural person into corporate tax scope once turnover from them passes the relevant threshold in a calendar year.
+
+Which means the decision in [short let versus long let](/playbooks/short-let-vs-long-let/) is not only an operational one. Converting long lets into licensed holiday homes changes the character of the income, and at scale it can change the tax treatment. That is a consequence almost nobody models when comparing nightly rates against annual rents.
+
+## What a company can genuinely be for
+
+Not tax, usually, in this jurisdiction. The real reasons are these.
+
+**Multiple owners.** Shared ownership between partners or family members is far cleaner as shares in an entity than as names on a deed.
+
+**Succession.** Shares can be dealt with under a will more flexibly than jointly held property, which interacts with [wills and succession](/playbooks/uae-wills-and-succession/).
+
+**Liability separation**, for genuine development or trading activity rather than passive letting.
+
+**Scale.** At a certain portfolio size the administration, financing and governance are simply easier inside an entity.
+
+Against those, count the costs: formation, annual licensing, audit and filing, potentially different mortgage terms and rates, transfer costs on moving property into the structure, and the tax that was not payable before.
+
+## The rule of thumb
+
+For one or two properties let on ordinary tenancies, personal ownership is almost always right in the UAE.
+
+For a genuine business, multiple owners, or a portfolio large enough that governance matters, a structure may earn its keep, and the reasons will be operational rather than fiscal.
+
+Anyone proposing a structure primarily for tax reasons in a jurisdiction where the personal position is already outside the tax net should be asked to explain precisely which tax is being saved.
+
+## The necessary caveat
+
+This is general information and the rules are recent, detailed and subject to interpretation and change. Thresholds, licensing tests and free zone treatment all have specifics this page does not cover. Decisions here belong with a UAE tax adviser, and the cost of that advice is trivial against the cost of structuring wrongly.`,
+    formula: `UAE corporate tax, real estate, in outline
+
+  Natural person, no licence required
+    leasing, sub-leasing, holding for appreciation
+    -> outside corporate tax scope
+
+  Natural person, licensed activity
+    holiday homes, brokerage, development,
+    systematic trading
+    -> in scope once turnover from licensed
+       activity passes the threshold
+
+  Company, any real estate income
+    rent, development profit, capital gains
+    -> taxable at 9% above the threshold
+       no natural person exemption
+
+Reasons to use a company
+  multiple owners
+  succession planning
+  liability separation for genuine trading
+  portfolio scale and governance
+
+Costs to net off
+  formation, licensing, audit, filing
+  transfer costs to move property in
+  different mortgage terms
+  the tax that was not payable before`,
+    failureModes: [
+      "This is general information, not tax advice, and the corporate tax regime is recent enough that guidance and interpretation continue to develop.",
+      "Free zone entities have their own treatment with qualifying income tests that this summary does not attempt to cover.",
+      "Moving an existing property into a company is itself a transaction with transfer costs and possibly a tax event, so the comparison is not simply between two steady states.",
+      "Mortgage availability, rates and loan to value can differ for corporate borrowers, sometimes materially, which can outweigh a structural benefit.",
+      "Thresholds and licensing tests are specific and change, so any figure quoted on a website has a shelf life.",
+      "A structure recommended by someone who earns a fee for establishing it deserves the same scepticism as any other product sold on commission.",
+    ],
+    whenToUse:
+      "Before buying, because moving a property into a structure later costs transfer fees. Also before converting long lets to holiday homes, where the licensing question changes the tax character of the income.",
+    sources: [
+      { name: "UAE Federal Tax Authority, corporate tax", url: "https://tax.gov.ae/en/taxes/corporate.tax.aspx" },
+      { name: "UAE corporate tax treatment of real estate income, summary", url: "https://www.kayrouzandassociates.com/insights/corporate-tax-uae-real-estate-income-rental-capital-gains" },
+      { name: "Dubai Department of Economy and Tourism, holiday home permits", url: "https://www.dubaideted.gov.ae/en" },
+    ],
+  },
+
+  {
+    slug: "what-bonds-are-for",
+    title: "What bonds are for",
+    category: "portfolio",
+    tier: 1,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "Bonds are held to provide a predictable payment stream and to behave differently from equities when equities fall, not to produce high returns, which means the right question about a bond holding is what job it does in the portfolio rather than what yield it shows.",
+    body: `Bonds confuse people because they are sold as the safe part and then lose money. Both halves of that sentence are true, and the resolution is understanding which risk they remove and which they add.
+
+## The two risks
+
+**Credit risk** is the borrower not paying. A developed market government bond has very little of it. A high yield corporate bond has a great deal, which is what the yield is compensating for.
+
+**Interest rate risk** is the price falling when rates rise, and it is measured by [duration](/glossary/duration/). A bond with a duration of eight loses roughly eight percent of its price when rates rise a percentage point. That is arithmetic, not sentiment.
+
+A portfolio described as safe because it holds bonds is safe from the first risk and exposed to the second, and the second is what produces the double digit annual losses that surprise people.
+
+## What the job actually is
+
+**A different behaviour.** In a growth shock, high quality government bonds have historically risen while equities fell. That is the diversification the allocation is buying, and it is why [correlation](/glossary/correlation/) matters more here than yield.
+
+**A known payment.** For money needed on a date, a bond maturing near that date removes uncertainty in a way no equity can. This is the [allocation by horizon](/playbooks/asset-allocation-by-horizon/) argument made concrete.
+
+**Dry powder.** A holding that has not fallen is what funds a [rebalance](/playbooks/rebalancing-bands/) into equities after they have.
+
+None of those is about return. Bonds should be expected to return less than equities over long periods, and if they did not, nobody would hold equities.
+
+## Matching duration to purpose
+
+This is the part usually skipped. Short duration for money needed soon, longer duration for a distant liability or for genuine equity diversification.
+
+Holding a long duration bond fund as a cash substitute is a rates bet wearing a cardigan. Holding short duration bonds as a hedge against an equity crash provides less protection than expected, because it is precisely the long end that rallies when growth disappoints.
+
+## Where the correlation assumption fails
+
+The diversification argument rests on bonds and equities moving apart, and they do not always. In an inflation shock both fall together, because rising rates hurt bond prices and compress equity valuations at the same time. That is the case the [all-weather](/playbooks/all-weather/) framework exists to address, and it is why inflation linked bonds and real assets sit alongside conventional bonds rather than being replaced by them.
+
+## The practical version
+
+Decide the job first. Money needed in three years is short duration government bonds. Diversification against an equity fall is longer duration high quality government bonds. Yield enhancement is credit risk, which is equity risk wearing a different label, and it should be counted in the equity allocation rather than the bond one.`,
+    formula: `The two risks
+  credit risk   will the borrower pay?
+                government (developed) ~ none
+                investment grade       ~ some
+                high yield             ~ a lot, that is the yield
+
+  rate risk     price falls when rates rise
+                approximate loss = duration x rate change
+                duration 8, rates +1%  ->  about -8%
+
+Match the duration to the job
+  money needed in 2-3 years    short duration government
+  equity crash diversifier     longer duration government
+  income today                 credit, but count it as
+                               equity-like risk
+
+What bonds are not for
+  beating equities over long horizons
+  being a cash substitute, if duration is long
+  yield chasing, which just buys credit risk`,
+    failureModes: [
+      "The negative correlation with equities is a historical tendency, not a law, and it fails exactly in the inflation shocks where diversification is most needed.",
+      "Reaching for yield in bonds means taking credit risk, which correlates with equities, so it quietly removes the diversification the allocation was for.",
+      "Bond funds do not mature, so they never return a known amount on a known date. An individual bond does, and for a dated liability that difference matters.",
+      "Currency exposure in a foreign bond fund can exceed the interest rate exposure, which makes an unhedged foreign bond holding a currency position first and a bond position second.",
+      "In jurisdictions with tax on income, the after tax yield on a bond can be far below the headline, which changes the comparison against equities entirely.",
+      "Very low or negative real yields make the conventional case for bonds much weaker, and there have been long periods where holding them cost purchasing power.",
+    ],
+    whenToUse:
+      "Before buying any bond or bond fund, to name the job it is doing. Also when a portfolio described as balanced has lost money in a year when it was expected to protect.",
+    sources: [
+      { name: "Federal Reserve Bank of St. Louis, Treasury constant maturity yields", url: "https://fred.stlouisfed.org/series/DGS10" },
+      { name: "Federal Reserve Bank of St. Louis, 10 year real yield", url: "https://fred.stlouisfed.org/series/DFII10" },
+      { name: "Bank for International Settlements, debt securities statistics", url: "https://www.bis.org/statistics/secstats.htm" },
+    ],
+  },
+
+  {
+    slug: "what-diversification-does",
+    title: "What diversification does, and does not",
+    category: "portfolio",
+    tier: 1,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "Diversification removes the risk specific to any one holding and does nothing about the risk shared by all of them, which is why a portfolio of thirty companies in one country or six apartments in one city is far less diversified than the number of lines suggests.",
+    body: `Diversification is the one thing in investing that is genuinely free, and it is routinely spent on the wrong axis.
+
+## The two risks it separates
+
+**Specific risk** belongs to one holding. A tenant defaults, a chiller fails, a company loses a lawsuit. Spreading across enough holdings makes any single one immaterial, and this is the risk diversification eliminates.
+
+**Systematic risk** is shared. A recession, a rate shock, a regional downturn. It affects everything at once and no amount of spreading removes it, because there is nothing to spread into that is not also affected.
+
+The number of lines in a portfolio addresses the first and says nothing about the second.
+
+## Where the count misleads
+
+Thirty holdings in one country's equity market removes specific risk almost entirely and leaves you fully exposed to that country. Six apartments in one city is one property market with six sets of paperwork. Five funds that all hold the same large global companies is one fund with five fee schedules.
+
+The useful test is not how many things do I own. It is how many different conditions do my holdings need in order to work. That is the [four boxes](/playbooks/all-weather/) question and it counts economic environments rather than line items.
+
+## The diminishing returns
+
+Most of the specific risk reduction from adding holdings happens early. Going from one holding to ten removes the great majority of it. Going from thirty to a hundred changes very little.
+
+Which means the marginal effort is better spent on the second axis: different economies, different currencies, different asset classes, different drivers. A portfolio of twenty holdings across four genuinely different exposures is better diversified than a hundred holdings inside one.
+
+## What it does not do
+
+**It does not prevent losses.** In a systematic decline a diversified portfolio falls. It falls less than a concentrated one, usually, and that is the whole claim.
+
+**It does not improve expected return.** It improves return for a given level of risk. Those are different statements and the second is the honest one.
+
+**It does not survive [correlations](/glossary/correlation/) changing.** Assets that behave independently in calm markets frequently move together in a crisis, which is when the diversification was supposed to earn its keep.
+
+## The version that applies to you
+
+For most expatriate investors the binding constraint is not the number of funds. It is that salary, property, currency and often residency are all pointed at one place. That single fact dominates everything happening inside the investment account.
+
+Fixing it means adding exposures that do not depend on the same conditions, which usually means assets outside the region and outside the currency, and it is the reason [concentration limits](/playbooks/concentration-limits/) and [currency risk](/playbooks/currency-risk-and-the-peg/) sit next to this page rather than apart from it.`,
+    formula: `Two risks
+  specific     one holding      -> diversifiable
+  systematic   shared by all    -> not diversifiable
+
+The wrong count
+  number of holdings
+
+The right count
+  number of distinct conditions your holdings need
+
+  Ask of each holding: what environment does this
+  need in order to work?
+    growth?  inflation?  falling rates?  local demand?
+  Then count how many need the same one.
+
+Diminishing returns
+  1 -> 10 holdings    most specific risk removed
+  10 -> 30            modest further benefit
+  30 -> 100           negligible
+
+  After that, diversify across drivers,
+  not across line items.`,
+    failureModes: [
+      "It cannot remove systematic risk, and portfolios sold as diversified frequently imply protection they cannot deliver in a broad decline.",
+      "Correlations rise in crises, so the measured diversification of a calm period overstates what is available in a bad one.",
+      "Over-diversification has real costs in complexity, fees and the temptation to tinker, without adding meaningful risk reduction beyond a point.",
+      "It says nothing about valuation. A well diversified portfolio of expensive assets is still a portfolio of expensive assets.",
+      "Diversifying into things you do not understand in order to raise the count is worse than a simpler portfolio you can hold through a bad year.",
+      "For most people the largest single exposure is human capital, the ability to earn, and no investment portfolio diversifies that.",
+    ],
+    whenToUse:
+      "When a portfolio feels diversified because it has many lines. Count conditions rather than holdings, and the answer is frequently uncomfortable.",
+    sources: [
+      { name: "Morningstar, Mind the Gap 2025", url: "https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt2c5c4d9171638c42/689b424311f3880edc4b4813/US_Mind_the_Gap_2025.pdf" },
+      { name: "Bank for International Settlements, statistics", url: "https://www.bis.org/statistics/" },
+    ],
+  },
+
+  {
+    slug: "reverse-the-assumption",
+    title: "Reverse the assumption",
+    category: "valuation",
+    tier: 1,
+    calculator: "off-plan-irr",
+    reviewed: R,
+    summary:
+      "Reversing the assumption means taking the price being asked, holding your required return fixed, and solving for the growth rate the price implies, which converts a forecast you were asked to accept into a claim about the future that can be checked against history.",
+    body: `Most investment cases are built forwards. Assume a growth rate, apply it, arrive at a number that justifies the decision. The assumption is the weakest part of the model and it is the part nobody argues about, because it arrived first and quietly.
+
+Run it backwards instead.
+
+## The method
+
+Take the price. Hold your required return fixed at what you actually need. Solve for the growth rate that makes the two meet.
+
+Then ask one question: has this asset, in this market, ever actually done that, and for how long?
+
+It is the same arithmetic as a [discounted cash flow](/playbooks/discounted-cash-flow/). What changes is which number is the output. Instead of supplying an assumption and receiving a valuation, you supply the valuation the market is charging and receive the assumption embedded in it.
+
+## Why this is harder to argue with
+
+A forecast is a matter of opinion and opinions are hard to falsify. An implied growth rate is a specific claim, and specific claims can be checked against the record.
+
+If a payment plan needs eleven percent annual appreciation for five years to produce the return you were promised, that is now the discussion. Not whether the developer is credible or the location is improving, but whether eleven percent for five consecutive years is something this market has delivered, how often, and what conditions it required.
+
+Frequently the answer is that it has, occasionally, in a particular period, and the person selling is implicitly assuming it repeats. That may be true. It is at least now visible.
+
+## Where it applies
+
+**An off-plan payment plan** implies an appreciation rate. Solve for it, then compare against the actual transaction record for that community.
+
+**A rental purchase** implies a rent growth path if the yield alone does not meet your hurdle. In Dubai that path is constrained by [rent increase caps](/playbooks/rent-increase-caps/), which is a legal ceiling on the assumption.
+
+**A share price** implies an earnings growth rate.
+
+**A retirement plan** implies a withdrawal rate and a return, and the [safe withdrawal rate](/playbooks/safe-withdrawal-rate/) framework is the same exercise done in reverse for a different question.
+
+## The honest use of it
+
+This does not tell you the price is wrong. Markets price in things a spreadsheet cannot, and an implied rate that looks demanding is sometimes exactly right.
+
+What it does is move the assumption from something you were handed to something you have to defend. That single change kills a large share of bad purchases, and the ones it does not kill you enter with your eyes open, which is the most any framework can offer.
+
+## The sentence to use
+
+When someone presents a return, the useful question is not do you think this will work. It is what would have to be true for this to work, and how often has that been true.`,
+    formula: `Forwards, the usual way
+  assume growth rate  ->  compute value
+                          -> compare to price
+  (the assumption is the weakest link and
+   nobody argues about it)
+
+Backwards, this way
+  take the price
+  hold your required return fixed
+  solve for the growth rate implied
+
+  Then check the implied rate against the record.
+
+Worked shape, off-plan
+  Price and payment plan are given.
+  Required return, say 10%.
+  Solve for the appreciation rate at which the
+  IRR of the plan equals 10%.
+
+  Suppose it comes out at 11% a year for 5 years.
+  The question is now factual:
+    has this community delivered 11% for 5
+    consecutive years, and under what conditions?
+
+The sentence
+  Not "do you think this will work"
+  but "what would have to be true for this to work,
+  and how often has that been true"`,
+    failureModes: [
+      "The implied rate is only as good as the other inputs. Change the required return or the exit costs and the implied growth rate moves with them.",
+      "Historical rates are evidence, not a limit. Markets do sometimes deliver rates they have never delivered before, and dismissing a purchase purely because the implied rate is unprecedented is its own error.",
+      "It works cleanly for a single dominant assumption and less cleanly where several uncertain inputs interact, in which case a scenario range is more honest than one implied number.",
+      "It can be gamed by choosing a low required return, which makes almost any price look justifiable. Set the hurdle before running the exercise.",
+      "For assets with no transaction history, and new communities frequently have none, there is nothing to check the implied rate against.",
+      "It says nothing about liquidity or timing. An implied rate that is achievable over ten years does not help someone who needs to exit in three.",
+    ],
+    whenToUse:
+      "Whenever a projected return is presented rather than calculated by you. It is the fastest way to convert a sales conversation into a factual one.",
+    sources: [
+      { name: "Aswath Damodaran, NYU Stern, valuation resources", url: "https://pages.stern.nyu.edu/~adamodar/" },
+      { name: "Dubai Land Department, real estate transaction data", url: "https://dubailand.gov.ae/en/open-data/real-estate-data/" },
+      { name: "Dubai Pulse, DLD transactions open dataset", url: "https://www.dubaipulse.gov.ae/data/dld-transactions/dld_transactions-open" },
+    ],
+  },
 ];

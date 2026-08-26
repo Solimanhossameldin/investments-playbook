@@ -110,7 +110,7 @@ node scripts/fallbacktest.mjs   # the FRED and stooq.pl fallback paths
 node scripts/calctest.mjs       # all six calculators, 40 assertions
 node scripts/wiretest.mjs   # the feed parser, against recorded RSS and Atom payloads
 node scripts/glossarytest.mjs # 911 checks: one-sentence definitions, resolving links, house style
-node scripts/playbooktest.mjs # 415 checks: summary format, failure modes present, internal links resolve
+node scripts/playbooktest.mjs # 803 checks: summary format, failure modes present, internal links resolve
 ```
 
 ---
@@ -166,7 +166,7 @@ The globe is plain canvas 2D with the projection written out by hand, not WebGL 
 ```
 content/
   site.json          global config, MailerLite IDs, heroGlobe flag, disclaimer text
-  playbooks.mjs      the 12 framework articles
+  playbooks.mjs      the 40 framework articles
   glossary.mjs       47 defined terms
   wire-sources.mjs   the primary source feeds the wire reads
   wire.json          written by the wire job, every quarter hour
