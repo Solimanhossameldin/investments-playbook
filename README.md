@@ -159,8 +159,10 @@ The globe is plain canvas 2D with the projection written out by hand, not WebGL 
 
 ```
 content/
-  site.json          global config, MailerLite IDs, disclaimer text
+  site.json          global config, MailerLite IDs, heroGlobe flag, disclaimer text
   playbooks.mjs      the 12 framework articles
+  wire-sources.mjs   the primary source feeds the wire reads
+  wire.json          written by the wire job, every quarter hour
   static.mjs         about, disclosure standards, privacy
   market.json        written daily by the pipeline
   status.json        automation health, shown publicly
@@ -173,6 +175,7 @@ src/
   app/app.js         DOM wiring, forms, filters
 scripts/
   fetch-market-data.mjs
+  fetch-wire.mjs
   generate-brief.mjs
   build.mjs
   selftest.mjs
