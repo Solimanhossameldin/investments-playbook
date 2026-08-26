@@ -12,17 +12,19 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 // Daily series. Note the blank row: FRED writes "." on non-trading days,
 // and CPI is monthly so it only prints on the first of the month.
-const RATES_CSV = `observation_date,DGS2,DGS10,DGS30,DFII10,T10YIE,MORTGAGE30US
-2026-08-20,4.21,4.66,5.19,2.11,2.55,.
-2026-08-21,.,.,.,.,.,6.67
-2026-08-24,4.22,4.67,5.20,2.12,2.55,.
-2026-08-25,4.24,4.70,5.23,2.15,2.55,.
-`;
-const MACRO_CSV = `observation_date,DCOILWTICO,DTWEXBGS,CPIAUCSL
-2026-06-01,.,.,321.400
-2026-08-21,64.10,121.44,.
-2026-08-25,64.55,121.80,.
-`;
+// FRED is asked for one series at a time, so each stub is a single column.
+// The blank rows are real: FRED writes "." on days a series does not publish.
+const FRED = {
+  DGS2: "observation_date,DGS2\n2026-08-24,4.22\n2026-08-25,4.24\n",
+  DGS10: "observation_date,DGS10\n2026-08-20,4.66\n2026-08-21,.\n2026-08-24,4.67\n2026-08-25,4.70\n",
+  DGS30: "observation_date,DGS30\n2026-08-24,5.20\n2026-08-25,5.23\n",
+  DFII10: "observation_date,DFII10\n2026-08-24,2.12\n2026-08-25,2.15\n",
+  T10YIE: "observation_date,T10YIE\n2026-08-24,2.55\n2026-08-25,2.55\n",
+  MORTGAGE30US: "observation_date,MORTGAGE30US\n2026-08-14,6.71\n2026-08-21,6.67\n",
+  DCOILWTICO: "observation_date,DCOILWTICO\n2026-08-21,64.10\n2026-08-25,64.55\n",
+  DTWEXBGS: "observation_date,DTWEXBGS\n2026-08-21,121.44\n2026-08-25,121.80\n",
+  CPIAUCSL: "observation_date,CPIAUCSL\n2026-05-01,320.9\n2026-06-01,321.400\n",
+};
 const FX = { result: "success", time_last_update_utc: "Tue, 25 Aug 2026 00:02:31 +0000", base_code: "USD",
   rates: { USD: 1, AED: 3.6725, EUR: 0.85749, GBP: 0.73358, JPY: 159.24, CHF: 0.80269, INR: 87.41 } };
 const GOLD = { currency: "USD", name: "Gold", price: 4636.200195, symbol: "XAU", updatedAt: "2026-08-26T07:16:12Z" };
@@ -35,7 +37,9 @@ const KRAKEN = { error: [], result: {
 global.fetch = async (url) => {
   const u = String(url);
   if (u.includes("fredgraph.csv")) {
-    return new Response(u.includes("DGS2") ? RATES_CSV : MACRO_CSV, { status: 200 });
+    const id = new URL(u).searchParams.get("id");
+    if (!FRED[id]) throw new Error(`no FRED stub for ${id}`);
+    return new Response(FRED[id], { status: 200 });
   }
   if (u.includes("open.er-api.com")) return new Response(JSON.stringify(FX), { status: 200 });
   if (u.includes("gold-api.com/price/XAU")) return new Response(JSON.stringify(GOLD), { status: 200 });
@@ -65,6 +69,7 @@ console.log("\nParser checks");
 check("19 quotes parsed", market.quotes.length === 19, market.quotes.length);
 check("10Y takes the LAST published value", by["us-10y"]?.value === 4.7, by["us-10y"]?.value);
 check("10Y change skips the blank row", by["us-10y"]?.changeAbs === 0.03, by["us-10y"]?.changeAbs);
+check("weekly and daily series do not contaminate each other", by["us-30y-mortgage"]?.changeAbs === -0.04, by["us-30y-mortgage"]?.changeAbs);
 check("real yield parsed", by["us-10y-real"]?.value === 2.15, by["us-10y-real"]?.value);
 check("breakeven parsed", by["breakeven-10y"]?.value === 2.55, by["breakeven-10y"]?.value);
 check("weekly mortgage rate found in its own column", by["us-30y-mortgage"]?.value === 6.67, by["us-30y-mortgage"]?.value);
@@ -100,7 +105,10 @@ console.log("\nPartial failure");
 global.fetch = async (url) => {
   const u = String(url);
   if (u.includes("gold-api.com")) throw new Error("provider down");
-  if (u.includes("fredgraph.csv")) return new Response(u.includes("DGS2") ? RATES_CSV : MACRO_CSV, { status: 200 });
+  if (u.includes("fredgraph.csv")) {
+    const id = new URL(u).searchParams.get("id");
+    return new Response(FRED[id] ?? "", { status: 200 });
+  }
   if (u.includes("open.er-api.com")) return new Response(JSON.stringify(FX), { status: 200 });
   if (u.includes("api.kraken.com")) return new Response(JSON.stringify(KRAKEN), { status: 200 });
   throw new Error("no stub");

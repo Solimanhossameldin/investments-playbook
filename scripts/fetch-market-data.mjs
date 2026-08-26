@@ -35,48 +35,48 @@ const nowIso = () => new Date().toISOString();
    licence to worry about. Deliberately NOT used: Case-Shiller and VIX,
    which are S&P and Cboe intellectual property.
 ----------------------------------------------------------------*/
-async function fredSeries(defs, windowDays = 400) {
-  const ids = defs.map((d) => d.id).join(",");
+async function fredOne(def, windowDays) {
   const from = new Date(Date.now() - windowDays * 86400000).toISOString().slice(0, 10);
   const csv = await get(
-    `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${ids}&cosd=${from}`,
+    `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${def.id}&cosd=${from}`,
     "text"
   );
-  const lines = csv.trim().split("\n");
-  const header = lines[0].split(",").map((h) => h.trim());
-  const table = lines.slice(1).map((l) => l.split(","));
+  // One series per request. Asking for several at once makes FRED align them
+  // to the lowest common frequency and rename the columns, which is why this
+  // is deliberately not batched.
+  const pts = [];
+  for (const line of csv.trim().split("\n").slice(1)) {
+    const [date, raw] = line.split(",");
+    const v = parseFloat(raw);
+    if (Number.isFinite(v)) pts.push([date, v]);
+  }
+  if (!pts.length) throw new Error(`${def.id}: no observations`);
 
-  for (const def of defs) {
-    const col = header.indexOf(def.id);
-    if (col < 0) continue;
-    // Each series has its own frequency, so walk its own column for the
-    // last two published values rather than assuming aligned rows.
-    const pts = [];
-    for (const row of table) {
-      const v = parseFloat(row[col]);
-      if (Number.isFinite(v)) pts.push([row[0], v]);
-    }
-    if (!pts.length) continue;
-    const [date, value] = pts.at(-1);
-    const prev = pts.length > 1 ? pts.at(-2)[1] : null;
-    rows.push({
-      symbol: def.symbol,
-      label: def.label,
-      category: def.category,
-      value: +value.toFixed(def.dp ?? 2),
-      changeAbs: prev === null ? null : +(value - prev).toFixed(3),
-      changePct: prev ? +(((value - prev) / prev) * 100).toFixed(2) : null,
-      unit: def.unit,
-      source: def.source,
-      sourceUrl: `https://fred.stlouisfed.org/series/${def.id}`,
-      asOf: new Date(`${date}T00:00:00Z`).toISOString(),
-      order: def.order,
-      stale: false,
-    });
-  }
-  if (!rows.some((r) => defs.some((d) => d.symbol === r.symbol))) {
-    throw new Error("no usable FRED rows");
-  }
+  const [date, value] = pts.at(-1);
+  const prev = pts.length > 1 ? pts.at(-2)[1] : null;
+  rows.push({
+    symbol: def.symbol,
+    label: def.label,
+    category: def.category,
+    value: +value.toFixed(def.dp ?? 2),
+    changeAbs: prev === null ? null : +(value - prev).toFixed(3),
+    changePct: prev ? +(((value - prev) / prev) * 100).toFixed(2) : null,
+    unit: def.unit,
+    source: def.source,
+    sourceUrl: `https://fred.stlouisfed.org/series/${def.id}`,
+    asOf: new Date(`${date}T00:00:00Z`).toISOString(),
+    order: def.order,
+    stale: false,
+  });
+}
+
+async function fredSeries(defs, windowDays = 400) {
+  const results = await Promise.all(
+    defs.map((d) => fredOne(d, windowDays).then(() => null).catch((e) => `${d.id} ${e.message}`))
+  );
+  const failed = results.filter(Boolean);
+  if (failed.length === defs.length) throw new Error(failed.join("; "));
+  if (failed.length) errors[`fred-${defs[0].id}`] = failed.join("; ");
 }
 
 /* 1. RATES AND THE REAL COST OF MONEY. */
