@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { page } from "../src/templates/layout.mjs";
 import * as P from "../src/templates/pages.mjs";
 import { CALCULATORS, calcIndex, calcPage } from "../src/templates/calculators.mjs";
+import { playbookDoc } from "../src/templates/document.mjs";
 import playbooks from "../content/playbooks.mjs";
 import * as STATIC from "../content/static.mjs";
 
@@ -44,7 +45,7 @@ function emit(spec) {
   const full = path.join(dist, out);
   fs.mkdirSync(path.dirname(full), { recursive: true });
   fs.writeFileSync(full, html);
-  if (spec.path !== "/404.html") written.push(spec.path);
+  if (spec.path !== "/404.html" && !spec.noindex) written.push(spec.path);
 }
 
 /* ---------- pages ---------- */
@@ -61,6 +62,7 @@ playbooks.forEach((pb) => {
 });
 emit(calcIndex({ site }));
 CALCULATORS.forEach((calc) => emit(calcPage({ site, calc })));
+emit(playbookDoc({ site, playbooks, calculators: calcMeta }));
 emit(P.dataPage({ site, market, status }));
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));
 emit(P.staticPage({ site, title: `Editorial and disclosure standards. ${site.name}`, description: "How figures are sourced, how the daily brief is produced, how corrections are handled, and every commercial relationship declared.", path: "/disclosure/", eyebrow: "Editorial standards", heading: "How this is produced, and every conflict declared.", bodyMd: STATIC.disclosure }));

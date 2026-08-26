@@ -362,3 +362,56 @@ input[type="range"] { width: 100%; accent-color: var(--gold); padding: 0; border
   .arch a { grid-template-columns: 1fr; gap: 6px; }
   .ftr__cols { grid-template-columns: 1fr; }
 }
+
+/* ---------- the Playbook document ---------- */
+.doc { max-width: 780px; margin: 0 auto; }
+.doc h2, .doc h3, .doc h4 { font-family: var(--serif); }
+.doc-cover { text-align: center; padding: 40px 0 80px; border-bottom: 1px solid var(--hair-light); margin-bottom: 64px; }
+.doc-cover__eyebrow { font-size: 10.5px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold-muted); margin: 0 0 28px; }
+.doc-cover h1 { font-size: clamp(3rem, 9vw, 5.6rem); font-weight: 300; line-height: 0.98; }
+.doc-cover__ed { font-family: var(--mono); font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin: 26px 0 60px; }
+.doc-cover__by { font-family: var(--serif); font-size: 1.5rem; line-height: 1.35; margin: 0; }
+.doc-cover__by span { display: block; font-family: var(--sans); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.doc-cover__meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 48px; }
+
+.doc-intro, .doc-matrix { margin-bottom: 64px; }
+.doc-intro h2, .doc-matrix h2 { font-size: 1.9rem; margin-bottom: 18px; }
+.doc-intro p, .doc-matrix p { margin: 0 0 16px; }
+.doc-matrix .tbl { margin: 24px 0; }
+.doc-matrix .tbl th:first-child { width: 90px; }
+
+.doc-toc { border-top: 1px solid var(--hair-light); border-bottom: 1px solid var(--hair-light); padding: 34px 0; margin-bottom: 72px; }
+.doc-toc h2 { font-size: 1.5rem; margin-bottom: 22px; }
+.doc-toc > ol { list-style: none; margin: 0; padding: 0; }
+.doc-toc > ol > li { margin-bottom: 22px; }
+.doc-toc__cat { display: block; font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-muted); margin-bottom: 8px; }
+.doc-toc ol ol { list-style: none; margin: 0; padding: 0; }
+.doc-toc ol ol li { margin: 0; }
+.doc-toc a { display: block; padding: 6px 0; text-decoration: none; font-size: 15px; }
+.doc-toc a:hover { color: var(--gold-muted); }
+.doc-toc__n { display: inline-block; width: 26px; font-family: var(--mono); font-size: 12px; color: var(--gold-muted); }
+
+.doc-part { margin-bottom: 72px; }
+.doc-part__h { font-size: 2.4rem; padding-bottom: 14px; border-bottom: 2px solid var(--gold); margin-bottom: 48px; }
+.doc-ch { margin-bottom: 64px; }
+.doc-ch__n { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-muted); margin: 0 0 6px; }
+.doc-ch h3 { font-size: 2rem; margin-bottom: 6px; }
+.doc-ch h4 { font-size: 1.25rem; margin: 30px 0 12px; }
+.doc-ch__calc { font-size: 13px; color: var(--muted); border-left: 2px solid var(--gold); padding-left: 14px; }
+.doc-ch__calc a { color: var(--gold-muted); word-break: break-all; }
+.doc-end { text-align: center; padding-top: 40px; border-top: 1px solid var(--hair-light); font-size: 14px; color: var(--muted); }
+.doc-end a { color: var(--gold-muted); }
+
+@media print {
+  .hdr, .ticker, .ftr, .btn { display: none !important; }
+  body { background: #fff; font-size: 11pt; }
+  .band { padding: 0; }
+  .doc { max-width: none; }
+  .doc-cover { page-break-after: always; padding-top: 22%; }
+  .doc-toc { page-break-after: always; }
+  .doc-part__h { page-break-before: always; }
+  .doc-ch { page-break-inside: auto; }
+  .doc-ch h3, .doc-ch h4 { page-break-after: avoid; }
+  .formula, .tbl, .definition { page-break-inside: avoid; }
+  a { text-decoration: none; color: #000; }
+}

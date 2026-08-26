@@ -4,3 +4,4 @@ _archive/
 dist/
 go-live.command
 node_modules/
+push.command

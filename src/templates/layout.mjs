@@ -1,12 +1,13 @@
 import { esc, copy, fmt, pct, dir, glyph, gst, COUNTRIES, DIAL, INTENTS } from "../lib.mjs";
 
-export function head({ site, title, description, path, jsonld = [], ogType = "website" }) {
+export function head({ site, title, description, path, jsonld = [], ogType = "website", noindex = false }) {
   const url = site.origin + path;
   return `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(copy(description))}">
 <link rel="canonical" href="${esc(url)}">
+${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:type" content="${ogType}">
 <meta property="og:title" content="${esc(title)}">
@@ -171,11 +172,11 @@ export function footer(site) {
 </div></footer>`;
 }
 
-export function page({ site, market, title, description, path, body, jsonld, ogType }) {
+export function page({ site, market, title, description, path, body, jsonld, ogType, noindex }) {
   return `<!doctype html>
 <html lang="en">
 <head>
-${head({ site, title, description, path, jsonld, ogType })}
+${head({ site, title, description, path, jsonld, ogType, noindex })}
 </head>
 <body>
 ${header(site, path)}

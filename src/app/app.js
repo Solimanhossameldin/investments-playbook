@@ -146,7 +146,7 @@
         lead_status: "New",
       }).then(function () {
         var wrap = form.parentNode;
-        wrap.innerHTML = '<div class="ok"><h4>Check your inbox</h4><p style="margin:0;font-size:14px">Confirm your email and the Playbook is on its way. If it has not arrived in five minutes, look in promotions or spam.</p></div>';
+        wrap.innerHTML = '<div class="ok"><h4>Here it is</h4><p style="margin:0 0 14px;font-size:14px">Open it now, and confirm the email we just sent so the daily brief reaches you.</p><a class="btn btn--solid" href="/playbook/">Read the Playbook</a></div>';
       }).catch(function () {
         busy(form, false);
         var e = document.createElement("p");
