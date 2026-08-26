@@ -4,6 +4,18 @@
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "A brief for 2026-08-26 already exists.",
+   "ranAt": "2026-08-26T18:25:21.989Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-08-26T18:25:21.933Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "A brief for 2026-08-26 already exists.",
    "ranAt": "2026-08-26T18:04:58.182Z"
   },
   {
@@ -227,18 +239,6 @@
    "status": "partial",
    "detail": "10 figures refreshed, 2 source(s) failed: stooq, treasury",
    "ranAt": "2026-08-26T10:42:03.717Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "A brief for 2026-08-26 already exists.",
-   "ranAt": "2026-08-26T10:01:28.078Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "partial",
-   "detail": "10 figures refreshed, 2 source(s) failed: stooq, treasury",
-   "ranAt": "2026-08-26T10:01:28.008Z"
   }
  ]
 }
