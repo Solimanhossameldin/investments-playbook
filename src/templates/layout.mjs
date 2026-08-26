@@ -1,6 +1,6 @@
 import { esc, copy, fmt, pct, dir, glyph, gst, COUNTRIES, DIAL, INTENTS } from "../lib.mjs";
 
-export function head({ site, title, description, path, jsonld = [], ogType = "website", noindex = false }) {
+export function head({ site, title, description, path, jsonld = [], ogType = "website", noindex = false, assets = {} }) {
   const url = site.origin + path;
   return `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +18,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css${assets.css ? `?v=${assets.css}` : ""}">
 ${jsonld.map((j) => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join("\n")}`;
 }
 
@@ -176,11 +176,11 @@ export function footer(site) {
 </div></footer>`;
 }
 
-export function page({ site, market, title, description, path, body, jsonld, ogType, noindex }) {
+export function page({ site, market, title, description, path, body, jsonld, ogType, noindex, assets = {} }) {
   return `<!doctype html>
 <html lang="en">
 <head>
-${head({ site, title, description, path, jsonld, ogType, noindex })}
+${head({ site, title, description, path, jsonld, ogType, noindex, assets })}
 </head>
 <body>
 ${header(site, path)}
@@ -189,7 +189,7 @@ ${ticker(market)}
 ${body}
 </main>
 ${footer(site)}
-<script src="/app.js" defer></script>
+<script src="/app.js${assets.js ? `?v=${assets.js}` : ""}" defer></script>
 </body>
 </html>`;
 }

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Static site build. Zero dependencies. Reads content, writes dist.
 
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -45,9 +46,28 @@ try {
 }
 fs.mkdirSync(dist, { recursive: true });
 
+/* ---------- assets, composed first so their hash can version the URLs ----------
+   GitHub Pages serves /styles.css and /app.js with a cache lifetime, so a
+   returning visitor can keep an old copy after a deploy. Stamping the URL with
+   a hash of the contents means a changed file is a changed URL. */
+const cssText = fs.readFileSync(path.join(root, "src/styles.css"), "utf8");
+const appText = [
+  fs.readFileSync(path.join(root, "src/app/calc.js"), "utf8"),
+  fs.readFileSync(path.join(root, "src/app/motion.js"), "utf8"),
+  fs.readFileSync(path.join(root, "src/app/live.js"), "utf8"),
+  fs.readFileSync(path.join(root, "src/app/app.js"), "utf8"),
+]
+  .join("\n")
+  .replace("__ML_ACCOUNT__", site.mailerlite.account)
+  .replace("__ML_BRIEF__", site.mailerlite.briefFormId)
+  .replace("__ML_LEAD__", site.mailerlite.leadFormId);
+
+const hash = (t) => crypto.createHash("sha1").update(t).digest("hex").slice(0, 8);
+const assets = { css: hash(cssText), js: hash(appText) };
+
 const written = [];
 function emit(spec) {
-  const html = page({ site, market, ...spec });
+  const html = page({ site, market, assets, ...spec });
   const out = spec.path === "/404.html" ? "404.html" : path.join(spec.path.replace(/^\/|\/$/g, ""), "index.html");
   const full = path.join(dist, out);
   fs.mkdirSync(path.dirname(full), { recursive: true });
@@ -78,19 +98,8 @@ emit(P.staticPage({ site, title: `Privacy. ${site.name}`, description: "What thi
 emit(P.notFound({ site }));
 
 /* ---------- assets ---------- */
-fs.copyFileSync(path.join(root, "src/styles.css"), path.join(dist, "styles.css"));
-
-const app = [
-  fs.readFileSync(path.join(root, "src/app/calc.js"), "utf8"),
-  fs.readFileSync(path.join(root, "src/app/motion.js"), "utf8"),
-  fs.readFileSync(path.join(root, "src/app/live.js"), "utf8"),
-  fs.readFileSync(path.join(root, "src/app/app.js"), "utf8"),
-]
-  .join("\n")
-  .replace("__ML_ACCOUNT__", site.mailerlite.account)
-  .replace("__ML_BRIEF__", site.mailerlite.briefFormId)
-  .replace("__ML_LEAD__", site.mailerlite.leadFormId);
-fs.writeFileSync(path.join(dist, "app.js"), app);
+fs.writeFileSync(path.join(dist, "styles.css"), cssText);
+fs.writeFileSync(path.join(dist, "app.js"), appText);
 
 fs.writeFileSync(
   path.join(dist, "favicon.svg"),
