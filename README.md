@@ -109,6 +109,7 @@ node scripts/selftest.mjs       # data parsers, against real recorded payloads
 node scripts/fallbacktest.mjs   # the FRED and stooq.pl fallback paths
 node scripts/calctest.mjs       # all six calculators, 40 assertions
 node scripts/wiretest.mjs   # the feed parser, against recorded RSS and Atom payloads
+node scripts/glossarytest.mjs # 911 checks: one-sentence definitions, resolving links, house style
 ```
 
 ---
@@ -137,6 +138,8 @@ Georgia is on every device already, so the only webfont loaded is Inter for the 
 
 The globe is plain canvas 2D with the projection written out by hand, not WebGL and not a library, which is why it costs a few kilobytes rather than a few hundred.
 
+**A new glossary term.** Add an object to `content/glossary.mjs`. The page, the index entry, the A to Z, the schema markup and the related links all follow. `scripts/glossarytest.mjs` then enforces the part that matters: the definition must be a single self-contained sentence between 80 and 340 characters that does not open with a pronoun, because the whole point of the page is that an answer engine can lift that sentence alone. Every entry also carries a `trap`, the specific way people get that term wrong, which is what makes the page worth reading rather than worth scraping.
+
 **A new calculator.** Add a spec to `CALCULATORS` in `src/templates/calculators.mjs` and the matching maths function to `CALC` in `src/app/calc.js`. Then add assertions to `scripts/calctest.mjs`, because a calculator that is quietly wrong is worse than no calculator.
 
 **Editing a brief.** Briefs are JSON in `content/briefs/`. Edit and rebuild. If you correct a factual error, note the correction at the top of the next issue, as the [disclosure standards](https://investmentsplaybook.com/disclosure/) page promises.
@@ -161,6 +164,7 @@ The globe is plain canvas 2D with the projection written out by hand, not WebGL 
 content/
   site.json          global config, MailerLite IDs, heroGlobe flag, disclaimer text
   playbooks.mjs      the 12 framework articles
+  glossary.mjs       47 defined terms
   wire-sources.mjs   the primary source feeds the wire reads
   wire.json          written by the wire job, every quarter hour
   static.mjs         about, disclosure standards, privacy

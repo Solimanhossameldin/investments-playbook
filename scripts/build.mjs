@@ -10,6 +10,8 @@ import { page } from "../src/templates/layout.mjs";
 import * as P from "../src/templates/pages.mjs";
 import { CALCULATORS, calcIndex, calcPage } from "../src/templates/calculators.mjs";
 import { wirePage, wireStrip } from "../src/templates/wire.mjs";
+import { glossaryIndex, glossaryTerm } from "../src/templates/glossary.mjs";
+import glossary from "../content/glossary.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
 import playbooks from "../content/playbooks.mjs";
 import * as STATIC from "../content/static.mjs";
@@ -80,6 +82,10 @@ function emit(spec) {
 /* ---------- pages ---------- */
 emit(P.home({ site, market, brief: briefs[0], playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }) }));
 emit(wirePage({ site, wire }));
+
+const playbookTitles = Object.fromEntries(playbooks.map((p) => [p.slug, p.title]));
+emit(glossaryIndex({ site, terms: glossary }));
+glossary.forEach((term) => emit(glossaryTerm({ site, term, terms: glossary, playbookTitles })));
 emit(P.briefIndex({ site, briefs }));
 briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1] })));
 emit(P.playbookIndex({ site, playbooks }));

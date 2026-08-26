@@ -38,6 +38,10 @@
       "label": "Calculators"
     },
     {
+      "href": "/glossary/",
+      "label": "Glossary"
+    },
+    {
       "href": "/data/",
       "label": "Market Data"
     },

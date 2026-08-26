@@ -85,6 +85,41 @@
     if (search) search.addEventListener("input", apply);
   }
 
+  /* ---------------- glossary filter ---------------- */
+  var glChips = document.querySelectorAll("#gl-chips .chip");
+  var glSearch = document.getElementById("gl-search");
+  if (glChips.length || glSearch) {
+    var glEmpty = document.getElementById("gl-empty");
+    var glCat = "all";
+    var glApply = function () {
+      var q = glSearch && glSearch.value ? glSearch.value.trim().toLowerCase() : "";
+      var shown = 0;
+      document.querySelectorAll(".glblock .gl").forEach(function (row) {
+        var okCat = glCat === "all" || row.getAttribute("data-cat") === glCat;
+        var text = row.getAttribute("data-text") || row.textContent.toLowerCase();
+        var on = okCat && (!q || text.indexOf(q) > -1);
+        row.style.display = on ? "" : "none";
+        if (on) shown++;
+      });
+      // A letter heading with nothing under it is noise, so it goes too.
+      document.querySelectorAll("[data-letter]").forEach(function (block) {
+        var any = Array.prototype.some.call(block.querySelectorAll(".gl"), function (r) {
+          return r.style.display !== "none";
+        });
+        block.hidden = !any;
+      });
+      if (glEmpty) glEmpty.hidden = shown > 0;
+    };
+    glChips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        glChips.forEach(function (x) { x.setAttribute("aria-pressed", String(x === c)); });
+        glCat = c.getAttribute("data-cat");
+        glApply();
+      });
+    });
+    if (glSearch) glSearch.addEventListener("input", glApply);
+  }
+
   /* ---------------- wire filter ---------------- */
   var wireChips = document.querySelectorAll("#wire-chips .chip");
   if (wireChips.length) {
