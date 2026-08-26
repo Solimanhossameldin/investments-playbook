@@ -165,7 +165,7 @@ export function footer(site) {
     </ul></div>
   </div>
   <div class="ftr__legal">
-    <p><strong style="color:#98a3b3">Data attribution.</strong> ${esc(site.attribution)} Currency rates are provided by <a href="https://www.exchangerate-api.com" rel="noopener">ExchangeRate-API</a>. Index-level data is deliberately not republished: where an equity market is shown, it is shown as an exchange traded fund price, not as a proprietary index level.</p>
+    <p><strong style="color:#98a3b3">Data attribution.</strong> ${esc(site.attribution)} Currency rates are provided by <a href="https://www.exchangerate-api.com" rel="noopener">ExchangeRate-API</a>. Proprietary index levels are deliberately not republished. Case-Shiller and VIX are excluded for the same reason, being S&P and Cboe intellectual property.</p>
     <p><strong style="color:#98a3b3">Risk disclaimer.</strong> ${esc(site.disclaimer)}</p>
     <p>&copy; ${new Date().getFullYear()} ${esc(site.name)}. <a href="/disclosure/">Editorial and disclosure standards</a>. <a href="/privacy/">Privacy</a>.</p>
   </div>

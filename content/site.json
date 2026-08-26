@@ -19,12 +19,27 @@
     "leadFormId": "196852884221986141"
   },
   "disclaimer": "Investments Playbook publishes educational research and general information. Nothing on this site is personal investment advice, a solicitation, or a recommendation to buy or sell any asset. Property and securities can fall in value. Past performance does not predict future returns. Figures shown are indicative and may be delayed. Always take regulated professional advice before acting.",
-  "attribution": "Market figures on this site come from the U.S. Department of the Treasury, ExchangeRate-API, gold-api.com, Kraken and Stooq. Every figure carries its own source and timestamp.",
+  "attribution": "Market figures on this site come from FRED at the Federal Reserve Bank of St. Louis, carrying series published by the U.S. Treasury, the Federal Reserve Board, the Bureau of Labor Statistics, the Energy Information Administration and Freddie Mac, plus ExchangeRate-API, gold-api.com and Kraken. Every figure carries its own source and timestamp.",
   "nav": [
-    { "href": "/brief/", "label": "The Brief" },
-    { "href": "/playbooks/", "label": "Playbooks" },
-    { "href": "/calculators/", "label": "Calculators" },
-    { "href": "/data/", "label": "Market Data" },
-    { "href": "/about/", "label": "About" }
+    {
+      "href": "/brief/",
+      "label": "The Brief"
+    },
+    {
+      "href": "/playbooks/",
+      "label": "Playbooks"
+    },
+    {
+      "href": "/calculators/",
+      "label": "Calculators"
+    },
+    {
+      "href": "/data/",
+      "label": "Market Data"
+    },
+    {
+      "href": "/about/",
+      "label": "About"
+    }
   ]
 }

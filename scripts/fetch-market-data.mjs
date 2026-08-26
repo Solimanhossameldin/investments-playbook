@@ -28,92 +28,77 @@ const rows = [];
 const errors = {};
 const nowIso = () => new Date().toISOString();
 
-/* 1. US TREASURY YIELD CURVE. Public domain. One call returns the month. */
-async function treasury() {
-  const now = new Date();
-  let stamp = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
-  let xml = await get(
-    `https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value_month=${stamp}`,
-    "text"
-  );
-  let entries = xml.split("<entry>").slice(1);
-  if (!entries.length) {
-    // Early in a month the current file can be empty. Fall back to the previous month.
-    const p = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
-    stamp = `${p.getUTCFullYear()}${String(p.getUTCMonth() + 1).padStart(2, "0")}`;
-    xml = await get(
-      `https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value_month=${stamp}`,
-      "text"
-    );
-    entries = xml.split("<entry>").slice(1);
-  }
-  if (!entries.length) throw new Error("no entries");
-
-  const last = entries.at(-1);
-  const prev = entries.length > 1 ? entries.at(-2) : null;
-  const pick = (blob, tag) => {
-    if (!blob) return null;
-    const m = blob.match(new RegExp(`<d:${tag}[^>]*>([^<]*)</d:${tag}>`));
-    return m ? parseFloat(m[1]) : null;
-  };
-  const dateM = last.match(/<d:NEW_DATE[^>]*>([^<]*)</);
-  const asOf = dateM ? new Date(dateM[1]).toISOString() : nowIso();
-
-  for (const [tag, label, symbol, order] of [
-    ["BC_2YEAR", "US 2Y Treasury", "us-2y", 21],
-    ["BC_10YEAR", "US 10Y Treasury", "us-10y", 20],
-    ["BC_30YEAR", "US 30Y Treasury", "us-30y", 22],
-  ]) {
-    const v = pick(last, tag);
-    if (v === null || Number.isNaN(v)) continue;
-    const p = pick(prev, tag);
-    rows.push({
-      symbol, label, category: "rate", value: v, unit: "%",
-      changeAbs: p === null ? null : +(v - p).toFixed(3),
-      changePct: p ? +(((v - p) / p) * 100).toFixed(2) : null,
-      source: "U.S. Department of the Treasury",
-      sourceUrl: "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve",
-      asOf, order, stale: false,
-    });
-  }
-}
-
-
-/* 1b. TREASURY FALLBACK. FRED publishes the same series as a keyless CSV.
-   Used when home.treasury.gov refuses the request, which it does from some
-   datacentre ranges. Same figures, different pipe, credited to FRED. */
-async function treasuryFred() {
-  const from = new Date(Date.now() - 21 * 86400000).toISOString().slice(0, 10);
+/* ---------------------------------------------------------------
+   FRED, the Federal Reserve Bank of St. Louis, is the backbone here.
+   Keyless, reachable from CI, and the series we use are produced by
+   the US Treasury, the Fed, the BLS and the EIA, so there is no index
+   licence to worry about. Deliberately NOT used: Case-Shiller and VIX,
+   which are S&P and Cboe intellectual property.
+----------------------------------------------------------------*/
+async function fredSeries(defs, windowDays = 400) {
+  const ids = defs.map((d) => d.id).join(",");
+  const from = new Date(Date.now() - windowDays * 86400000).toISOString().slice(0, 10);
   const csv = await get(
-    `https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS2,DGS10,DGS30&cosd=${from}`,
+    `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${ids}&cosd=${from}`,
     "text"
   );
   const lines = csv.trim().split("\n");
-  const rowsCsv = lines.slice(1).map((l) => l.split(",")).filter((c) => c.length >= 4);
-  const usable = rowsCsv.filter((c) => c.slice(1, 4).some((v) => v && v !== "."));
-  if (!usable.length) throw new Error("no usable FRED rows");
-  const last = usable.at(-1);
-  const prev = usable.length > 1 ? usable.at(-2) : null;
-  const asOf = new Date(`${last[0]}T00:00:00Z`).toISOString();
+  const header = lines[0].split(",").map((h) => h.trim());
+  const table = lines.slice(1).map((l) => l.split(","));
 
-  for (const [idx, label, symbol, order] of [
-    [1, "US 2Y Treasury", "us-2y", 21],
-    [2, "US 10Y Treasury", "us-10y", 20],
-    [3, "US 30Y Treasury", "us-30y", 22],
-  ]) {
-    const v = parseFloat(last[idx]);
-    if (!Number.isFinite(v)) continue;
-    const p = prev ? parseFloat(prev[idx]) : NaN;
+  for (const def of defs) {
+    const col = header.indexOf(def.id);
+    if (col < 0) continue;
+    // Each series has its own frequency, so walk its own column for the
+    // last two published values rather than assuming aligned rows.
+    const pts = [];
+    for (const row of table) {
+      const v = parseFloat(row[col]);
+      if (Number.isFinite(v)) pts.push([row[0], v]);
+    }
+    if (!pts.length) continue;
+    const [date, value] = pts.at(-1);
+    const prev = pts.length > 1 ? pts.at(-2)[1] : null;
     rows.push({
-      symbol, label, category: "rate", value: v, unit: "%",
-      changeAbs: Number.isFinite(p) ? +(v - p).toFixed(3) : null,
-      changePct: Number.isFinite(p) && p ? +(((v - p) / p) * 100).toFixed(2) : null,
-      source: "FRED, Federal Reserve Bank of St. Louis",
-      sourceUrl: "https://fred.stlouisfed.org/series/DGS10",
-      asOf, order, stale: false,
+      symbol: def.symbol,
+      label: def.label,
+      category: def.category,
+      value: +value.toFixed(def.dp ?? 2),
+      changeAbs: prev === null ? null : +(value - prev).toFixed(3),
+      changePct: prev ? +(((value - prev) / prev) * 100).toFixed(2) : null,
+      unit: def.unit,
+      source: def.source,
+      sourceUrl: `https://fred.stlouisfed.org/series/${def.id}`,
+      asOf: new Date(`${date}T00:00:00Z`).toISOString(),
+      order: def.order,
+      stale: false,
     });
   }
+  if (!rows.some((r) => defs.some((d) => d.symbol === r.symbol))) {
+    throw new Error("no usable FRED rows");
+  }
 }
+
+/* 1. RATES AND THE REAL COST OF MONEY. */
+const RATE_SERIES = [
+  { id: "DGS2", symbol: "us-2y", label: "US 2Y Treasury", category: "rate", unit: "%", order: 1, source: "U.S. Treasury via FRED" },
+  { id: "DGS10", symbol: "us-10y", label: "US 10Y Treasury", category: "rate", unit: "%", order: 2, source: "U.S. Treasury via FRED" },
+  { id: "DGS30", symbol: "us-30y", label: "US 30Y Treasury", category: "rate", unit: "%", order: 3, source: "U.S. Treasury via FRED" },
+  { id: "DFII10", symbol: "us-10y-real", label: "US 10Y Real Yield", category: "rate", unit: "%", order: 4, source: "U.S. Treasury via FRED" },
+  { id: "T10YIE", symbol: "breakeven-10y", label: "10Y Breakeven Inflation", category: "rate", unit: "%", order: 5, source: "Federal Reserve Bank of St. Louis" },
+  { id: "MORTGAGE30US", symbol: "us-30y-mortgage", label: "US 30Y Mortgage Rate", category: "rate", unit: "%", order: 6, source: "Freddie Mac via FRED" },
+];
+
+/* 5. MACRO AND COMMODITIES, the property-relevant series. */
+const MACRO_SERIES = [
+  { id: "DCOILWTICO", symbol: "wti", label: "Crude Oil WTI", category: "commodity", unit: "USD", order: 32, source: "U.S. Energy Information Administration via FRED" },
+  { id: "DTWEXBGS", symbol: "dxy-broad", label: "US Dollar, Broad Index", category: "fx", unit: "index", order: 46, source: "Federal Reserve Board via FRED" },
+  { id: "CPIAUCSL", symbol: "us-cpi", label: "US CPI, All Items", category: "rate", unit: "index", order: 7, source: "U.S. Bureau of Labor Statistics via FRED" },
+];
+
+const rates = () => fredSeries(RATE_SERIES, 120);
+const macro = () => fredSeries(MACRO_SERIES, 500);
+
 
 /* 2. FX INCLUDING AED. One call, 160 currencies.
    Attribution to exchangerate-api.com is required by their terms and is in the footer. */
@@ -138,18 +123,19 @@ async function fx() {
 
 /* 3. GOLD AND SILVER. */
 async function metals() {
+  let got = 0;
   for (const [sym, label, order] of [["XAU", "Gold", 30], ["XAG", "Silver", 31]]) {
-    try {
-      const d = await get(`https://api.gold-api.com/price/${sym}`);
-      if (typeof d.price !== "number") continue;
-      rows.push({
-        symbol: sym.toLowerCase(), label, category: "commodity",
-        value: +d.price.toFixed(2), changePct: null, changeAbs: null, unit: "USD/oz",
-        source: "gold-api.com", sourceUrl: "https://api.gold-api.com",
-        asOf: d.updatedAt || nowIso(), order, stale: false,
-      });
-    } catch (e) { errors[`metal-${sym}`] = String(e.message || e); }
+    const d = await get(`https://api.gold-api.com/price/${sym}`);
+    if (typeof d.price !== "number") continue;
+    got++;
+    rows.push({
+      symbol: sym.toLowerCase(), label, category: "commodity",
+      value: +d.price.toFixed(2), changePct: null, changeAbs: null, unit: "USD/oz",
+      source: "gold-api.com", sourceUrl: "https://api.gold-api.com",
+      asOf: d.updatedAt || nowIso(), order, stale: false,
+    });
   }
+  if (!got) throw new Error("no metal prices");
 }
 
 /* 4. CRYPTO. One call for both. Parse by RESPONSE key, not request string. */
@@ -157,11 +143,11 @@ async function crypto() {
   const d = await get("https://api.kraken.com/0/public/Ticker?pair=XBTUSD,ETHUSD");
   if (d.error?.length) throw new Error(d.error.join(","));
   const map = { XXBTZUSD: ["btc-usd", "Bitcoin", 50], XETHZUSD: ["eth-usd", "Ethereum", 51] };
-  for (const [key, t] of Object.entries(d.result || {})) {
+  for (const [key, tick] of Object.entries(d.result || {})) {
     const meta = map[key];
     if (!meta) continue;
-    const last = parseFloat(t.c[0]);
-    const open = parseFloat(t.o);
+    const last = parseFloat(tick.c[0]);
+    const open = parseFloat(tick.o);
     rows.push({
       symbol: meta[0], label: meta[1], category: "crypto",
       value: +last.toFixed(2),
@@ -173,58 +159,13 @@ async function crypto() {
   }
 }
 
-/* 5. EQUITY ETF PROXIES, REITs AND OIL. One multi-symbol Stooq call.
-   Deliberately ETF prices, never proprietary index levels: republishing
-   S&P 500 or FTSE index levels requires a licence we do not hold. */
-async function stooq() {
-  const defs = {
-    "SPY.US": ["spy", "US Large Cap (SPY)", "equity", 1],
-    "QQQ.US": ["qqq", "US Tech (QQQ)", "equity", 2],
-    "IWM.US": ["iwm", "US Small Cap (IWM)", "equity", 3],
-    "EWU.US": ["ewu", "UK Equity (EWU)", "equity", 4],
-    "EWG.US": ["ewg", "Germany Equity (EWG)", "equity", 5],
-    "EEM.US": ["eem", "Emerging Markets (EEM)", "equity", 6],
-    "VNQ.US": ["vnq", "US REITs (VNQ)", "property", 60],
-    "VNQI.US": ["vnqi", "Global ex-US REITs (VNQI)", "property", 61],
-    "CL.F": ["wti", "Crude Oil WTI", "commodity", 32],
-  };
-  const syms = Object.keys(defs).map((s) => s.toLowerCase()).join(",");
-  let csv;
-  try {
-    csv = await get(`https://stooq.com/q/l/?s=${syms}&f=sd2t2ohlcv&h&e=csv`, "text");
-  } catch (e) {
-    csv = await get(`https://stooq.pl/q/l/?s=${syms}&f=sd2t2ohlcv&h&e=csv`, "text");
-  }
-  const lines = csv.trim().split("\n").slice(1);
-  let got = 0;
-  for (const line of lines) {
-    const p = line.split(",");
-    if (p.length < 8) continue;
-    const meta = defs[p[0].toUpperCase()];
-    if (!meta) continue;
-    const open = parseFloat(p[3]);
-    const close = parseFloat(p[6]);
-    if (!Number.isFinite(close) || close <= 0) continue;
-    got++;
-    rows.push({
-      symbol: meta[0], label: meta[1], category: meta[2], value: +close.toFixed(2),
-      changeAbs: Number.isFinite(open) ? +(close - open).toFixed(2) : null,
-      changePct: Number.isFinite(open) && open ? +(((close - open) / open) * 100).toFixed(2) : null,
-      unit: "USD", source: "Stooq", sourceUrl: "https://stooq.com",
-      asOf: p[1] ? new Date(`${p[1]}T${p[2] || "00:00:00"}Z`).toISOString() : nowIso(),
-      order: meta[3], stale: false,
-    });
-  }
-  if (!got) throw new Error("no usable rows");
-}
-
 /* ---------------- run ---------------- */
-const withFallback = (primary, backup) => async () => {
-  try { await primary(); } catch (e) { errors[`${primary.name}-primary`] = String(e.message || e); await backup(); }
-};
 const tasks = [
-  ["treasury", withFallback(treasury, treasuryFred)],
-  ["fx", fx], ["metals", metals], ["crypto", crypto], ["stooq", stooq],
+  ["rates", rates],
+  ["macro", macro],
+  ["fx", fx],
+  ["metals", metals],
+  ["crypto", crypto],
 ];
 await Promise.all(
   tasks.map(async ([name, fn]) => {
@@ -238,11 +179,16 @@ try { prev = JSON.parse(fs.readFileSync(MARKET, "utf8")); } catch {}
 // Merge: fresh rows win, previous rows survive as stale.
 const bySymbol = new Map();
 for (const q of prev.quotes || []) bySymbol.set(q.symbol, { ...q, stale: true });
-for (const q of rows) bySymbol.set(q.symbol, q);
+for (const q of rows) bySymbol.set(q.symbol, { ...q, fetched_at: nowIso() });
 
-const merged = [...bySymbol.values()].sort(
-  (a, b) => (a.order ?? 99) - (b.order ?? 99)
-);
+// A row that has not refreshed in a fortnight is either a dead provider or a
+// series we retired. Either way it stops being a figure worth publishing, so
+// it is dropped rather than left on the page wearing a stale badge forever.
+const RETIRE_AFTER_DAYS = 14;
+const cutoff = Date.now() - RETIRE_AFTER_DAYS * 86400000;
+const merged = [...bySymbol.values()]
+  .filter((q) => !q.stale || new Date(q.fetched_at || q.asOf || 0).getTime() > cutoff)
+  .sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
 
 fs.writeFileSync(MARKET, JSON.stringify({ asOf: nowIso(), quotes: merged }, null, 1));
 

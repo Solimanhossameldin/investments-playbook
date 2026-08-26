@@ -165,17 +165,24 @@ scripts/
 
 ## Data providers and their terms
 
-| Source | Used for | Licence |
+| Source | Used for | Notes |
 |---|---|---|
-| U.S. Department of the Treasury | 2Y, 10Y and 30Y yields | Public domain (falls back to FRED, which GitHub Actions can always reach) |
+| FRED, Federal Reserve Bank of St. Louis | 2Y, 10Y, 30Y Treasury yields, the 10Y real yield, the 10Y breakeven, the US 30Y mortgage rate, CPI, WTI crude, the broad dollar index | Keyless CSV, reachable from CI. The underlying series are published by the U.S. Treasury, the Federal Reserve Board, the Bureau of Labor Statistics, the Energy Information Administration and Freddie Mac |
 | ExchangeRate-API | EUR, GBP, JPY, AED, CHF, INR | Free commercial, **attribution link required**, it is in the footer |
 | gold-api.com | Gold and silver | No published terms, display only, treat as best effort |
 | Kraken | Bitcoin and Ethereum | Public exchange data |
-| Stooq | ETF proxies and WTI crude | Indicative, delayed |
 
-Eleven HTTP calls a day, every one at well under one percent of its free-tier ceiling. The binding constraint on this pipeline is licensing, not rate limits, which is why the ETF-proxy rule exists.
+Five HTTP calls a day.
 
----
+### What is deliberately not published
+
+**No proprietary index levels.** Not the S&P 500, FTSE, DAX or Dow. Not Case-Shiller, which is S&P and CoreLogic intellectual property. Not the VIX, which is Cboe's. Republishing any of them needs a licence this site does not hold, and free availability through a data pipe is not the same as redistribution rights. `scripts/selftest.mjs` asserts this and fails the build if such a label ever appears.
+
+The first production run made the reason concrete: Stooq, the usual keyless source for equity prices, refuses GitHub's datacentre ranges outright. Rather than reach for an unofficial endpoint with no redistribution permission, the equity tiles were replaced with the FRED macro series above, which are licence-clean, more reliable, and frankly more useful on a site about property and portfolio arithmetic than a QQQ price.
+
+### Resilience
+
+Every fetch is wrapped in a timeout. When a source fails, the previous value is kept and flagged stale rather than blanked, and the failure is written to the public automation status panel. A row that has not refreshed in fourteen days is dropped entirely, so a retired series does not sit on the page forever wearing a stale badge.
 
 ## The next things worth building
 

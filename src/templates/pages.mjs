@@ -422,10 +422,9 @@ export function playbookPage({ site, pb, calcName, related = [] }) {
 /* ============================ DATA ============================ */
 
 const GROUPS = [
-  ["equity", "Equities", "Shown as exchange traded fund prices. Index levels are not republished."],
-  ["rate", "Rates", "Daily par yield curve, published by the U.S. Treasury."],
-  ["commodity", "Commodities", "Spot and futures reference prices."],
-  ["fx", "Currencies", "Rates per one US dollar."],
+  ["rate", "Rates and inflation", "Treasury yields, the real yield, the market's inflation expectation, the US mortgage rate and CPI."],
+  ["commodity", "Commodities", "Spot and reference prices."],
+  ["fx", "Currencies", "Rates per one US dollar, plus the Federal Reserve's broad dollar index."],
   ["crypto", "Crypto", "Last traded price on a public exchange."],
   ["property", "Property", "Listed property proxies and published indices."],
 ];
