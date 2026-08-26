@@ -1062,4 +1062,639 @@ The comparison worth making
       { name: "Bank for International Settlements, property price statistics", url: "https://www.bis.org/statistics/pp.htm" },
     ],
   },
+  /* ==================== BATCH TWO ==================== */
+  {
+    slug: "mortgage-vs-cash",
+    title: "Mortgage versus cash",
+    category: "property",
+    tier: 1,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "Borrowing to buy a property raises the return on your own money whenever the net yield exceeds the mortgage rate and lowers it whenever it does not, so the decision is not about affordability, it is about whether the spread between those two numbers is wide enough to pay you for the risk.",
+    body: `Most buyers frame this as can I afford to pay cash. That is the wrong question, because paying cash is always affordable if you have the cash. The right question is what each dirham of borrowing earns you, and what it costs you when the assumptions fail.
+
+## The arithmetic in one line
+
+If the property's net yield is above the mortgage rate, leverage lifts the return on your own money. If it is below, leverage lowers it. That is the whole mechanism, and everything else is a refinement of it.
+
+Take a unit at one and a half million dirhams with a 4.3 percent net yield, so about sixty five thousand of net operating income.
+
+**Cash.** You put in roughly 1.6 million including acquisition costs and receive 65,000. Your money earns 4.1 percent.
+
+**Seventy five percent mortgage at 4.0 percent.** You borrow 1,125,000 and put in about 471,000 of your own. Interest costs 45,000, leaving 20,000. Your money earns 4.2 percent, and you control an asset four times the size.
+
+**The same mortgage at 6.0 percent.** Interest costs 67,500 against 65,000 of income. The property no longer covers its own debt. You now fund it out of salary, and the return on your own money is negative before any price movement.
+
+Two percentage points on the rate turns the same building from a modest income asset into a monthly bill. That sensitivity is the point.
+
+## What the rules allow
+
+The UAE Central Bank caps how far you can take this. For an expatriate buying a first completed property under five million dirhams the ceiling is generally seventy five percent, dropping to sixty five percent above five million and sixty percent on a second property. Off-plan is capped at fifty percent for everyone. Total debt service is separately limited to half of gross monthly income, and the binding constraint is whichever of the two bites first.
+
+Note that the deposit is not the whole of the cash you need. Acquisition costs are another six to seven percent of price and cannot be borrowed.
+
+## What leverage does that yield tables never show
+
+It multiplies price movements against your equity, not against the price. At seventy five percent loan to value a fifteen percent fall in value removes sixty percent of your equity before selling costs. The building lost fifteen percent. You lost sixty.
+
+It also converts a flexible asset into a fixed obligation. A cash buyer facing a long vacancy has a disappointing year. A leveraged buyer facing the same vacancy has a payment due on the first of the month regardless.
+
+## How to actually decide
+
+Write down three numbers. Your net yield, calculated properly rather than from the listing. The all-in mortgage rate including arrangement and valuation fees. The spread between them.
+
+If the spread is under a point, leverage is being paid for by hope rather than by income, and the case rests entirely on capital growth. That may still be a defensible position, but it should be stated out loud rather than smuggled in through a yield table.
+
+Then stress it. Refinance at three points higher. Twelve months empty. Both at once. If any of those cannot be funded from income you already have, the loan is larger than the position.`,
+    formula: `Return on your own money, cash
+  = Net operating income / (price + acquisition costs)
+
+Return on your own money, leveraged
+  = (Net operating income - annual interest)
+    / (deposit + acquisition costs)
+
+The rule
+  net yield > mortgage rate   ->  leverage lifts the return
+  net yield < mortgage rate   ->  leverage lowers it, and the
+                                  gap is funded from salary
+
+Equity at risk
+  equity wiped out by a price fall of (1 - LTV)
+  at 75% LTV, a 15% fall removes 60% of equity
+
+UAE caps, expatriate, indicative
+  first property, completed, under AED 5m   75%
+  first property, completed, over AED 5m    65%
+  second and subsequent, completed          60%
+  off-plan, anyone                          50%
+  total debt service                        <= 50% of gross income`,
+    failureModes: [
+      "It compares an interest cost against a yield, but a repayment mortgage also returns capital, which is saving rather than cost. Comparing a full repayment instalment against net income overstates the drag and makes leverage look worse than it is.",
+      "Rates are not fixed forever. A three or five year fixed period ending into a higher rate environment is the most common way a comfortable position becomes an uncomfortable one, and it is entirely foreseeable.",
+      "The yield used is almost always the gross one. Run the comparison on net yield or it is meaningless.",
+      "It assumes the loan is available at the size you modelled. The debt burden ratio frequently binds before the loan to value cap does, particularly for buyers with existing obligations.",
+      "Currency matters if income and debt are in different currencies. Dirham debt against dirham rent is matched. Dirham debt against income earned elsewhere is a currency position you did not intend to take.",
+      "Leverage is not a strategy on its own. It amplifies whatever the asset does, and it has no opinion about whether the asset was a good idea.",
+    ],
+    whenToUse:
+      "Before deciding how much to borrow, which is a different question from whether you qualify. Also at every refinancing, because the spread that justified the loan is recalculated at the new rate and may no longer justify it.",
+    sources: [
+      { name: "Central Bank of the UAE, regulations for mortgage loans", url: "https://www.centralbank.ae/en/" },
+      { name: "UAE mortgage LTV caps and debt burden ratio, indicative summary", url: "https://bank-uae.com/uae-mortgage-regulations/" },
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/" },
+    ],
+  },
+
+  {
+    slug: "short-let-vs-long-let",
+    title: "Short let versus long let",
+    category: "property",
+    tier: 1,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "A short let can gross fifty to a hundred percent more than an annual tenancy on the same unit and still net less, because the higher revenue arrives with occupancy risk, platform commission, cleaning, furnishing, utilities, licensing and roughly the workload of a small hospitality business.",
+    body: `The comparison is nearly always made on nightly rate multiplied by three hundred and sixty five, against the annual rent. That calculation has never been true for any property anywhere.
+
+## What actually differs
+
+**Occupancy.** An annual tenancy is occupied one hundred percent of the term by definition. A short let is occupied at whatever the market gives you, and the honest planning figure in most Dubai buildings is somewhere in the sixties to seventies across a full year, with a strong season and a soft one. Revenue is nightly rate times nights actually sold, and the second term is the one nobody models.
+
+**Who pays for what.** On an annual tenancy the tenant pays their own utilities, their own internet, and furnishes the place themselves. On a short let all of that is yours, plus cleaning between every stay, plus consumables, plus replacing what guests break.
+
+**Commission.** Platform fees and management take a meaningful share of gross. Full service short let operators in Dubai typically take a fifth to a quarter of revenue, against five to eight percent for annual letting management.
+
+**Capital.** Furnishing a one bedroom to a standard that photographs well is a real number that has to be earned back before the strategy has made anything, and it depreciates.
+
+**Regulation.** Holiday homes require a permit from the Department of Economy and Tourism, with an annual fee, tourism dirham charges per night, and rules on which buildings allow it. Some owners associations do not.
+
+## The shape of the answer
+
+A unit letting annually for one hundred and five thousand might gross one hundred and sixty thousand as a short let. That looks decisive until the deductions run.
+
+Take twenty percent to management and platform, so 32,000. Utilities, internet and consumables, perhaps 18,000. Cleaning across a hundred and eighty stays, another 20,000 or more. Permit and tourism fees. Furnishing amortised across three years. What began as a fifty five thousand advantage is frequently under fifteen, and sometimes under nothing.
+
+That does not mean short let loses. In the right building, in the right location, run well, it wins clearly. It means the comparison has to be run net, on realistic occupancy, with the furnishing capital counted.
+
+## The part that is not financial
+
+An annual tenancy is one signature and four cheques. A short let is a business: pricing, calendar, reviews, guest messages at midnight, a cleaner who did not show up. Paying an operator to absorb that is exactly what the twenty percent buys, which is why the comparison after paying an operator is the honest one for most owners.`,
+    formula: `Long let, annual
+  Net = rent
+      - service charge
+      - management (5-8% of rent)
+      - maintenance reserve
+      - vacancy allowance
+      - insurance and fixed costs
+
+Short let, annual
+  Gross = nightly rate x nights actually sold
+        (occupancy, not 365)
+
+  Net   = gross
+        - platform and management (typically 18-25% of gross)
+        - cleaning x number of stays
+        - utilities, cooling, internet, consumables
+        - permit, tourism fees, licensing
+        - service charge
+        - maintenance and replacement, which runs higher
+        - furnishing capital / years before refurbishment
+
+Compare the two Net figures. Never the two Gross figures.`,
+    failureModes: [
+      "Occupancy is the assumption that decides the answer and it is the one most often taken from a best month rather than a full year. Model the soft season honestly or do not model at all.",
+      "Furnishing is capital, not a cost of the first year. Spreading it over a realistic refurbishment cycle is what makes year one comparable to year five.",
+      "Building rules and owners association rules can prohibit short letting entirely, and finding out after furnishing is an expensive way to learn it.",
+      "Wear is higher and the reserve should be too. A unit turning over a hundred and eighty times a year does not age like one turning over once.",
+      "It ignores the exit. A furnished short let unit is sold to a narrower pool of buyers than an empty apartment, and the furniture rarely returns what it cost.",
+      "Regulatory treatment can change. A strategy whose margin depends on a current permit regime carries a risk that an annual tenancy does not.",
+    ],
+    whenToUse:
+      "Before furnishing anything. Also before believing a projected short let yield produced by a company that earns a percentage of the gross rather than the net.",
+    sources: [
+      { name: "Dubai Department of Economy and Tourism, holiday homes", url: "https://www.dubaideted.gov.ae/en" },
+      { name: "Dubai Land Department, Ejari and tenancy registration", url: "https://dubailand.gov.ae/en/eservices/" },
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/" },
+    ],
+  },
+
+  {
+    slug: "break-even-occupancy",
+    title: "Break-even occupancy",
+    category: "property",
+    tier: 2,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "Break-even occupancy is the share of the year a property must be let for its income to cover every running cost and every mortgage payment, and it converts a yield into the single question that actually keeps owners awake: how empty can this get before I am funding it.",
+    body: `Yield tells you what a property earns when everything goes right. Break-even occupancy tells you how much has to go wrong before it costs you money. The second is the more useful number and almost nobody calculates it.
+
+## What it is
+
+Take the annual fixed costs that do not stop when the tenant leaves: service charge, insurance, the mortgage, standing utility and administrative charges. Divide by the rent the property earns when fully let, after the costs that do scale with occupancy. The answer is the fraction of the year you must be occupied to break even.
+
+A property with a break-even occupancy of forty percent is robust. One at eighty five percent is a coin flip with a mortgage attached.
+
+## Why it is the number that matters
+
+Vacancy is the risk that actually happens. Prices fall occasionally, tenants leave routinely. A unit that needs to be let eleven months in twelve to stand still has no room for a slow re-letting, a rent renegotiation, or a tenant who stops paying while an eviction runs its course.
+
+It also exposes the real cost of leverage more honestly than a yield does. Adding a mortgage raises fixed costs, which raises break-even occupancy, which shortens the vacancy you can survive. Two owners with the same property and the same rent can have completely different exposures to the same empty month.
+
+## Reading the answer
+
+**Under fifty percent.** The property carries itself through a bad year. Typically an unleveraged unit with a modest service charge.
+
+**Fifty to seventy percent.** Normal for a sensibly leveraged rental. A month or two of vacancy is absorbed by the margin.
+
+**Seventy to eighty five percent.** Thin. A single difficult re-letting or a service charge increase moves you to funding it from elsewhere.
+
+**Above eighty five percent.** The property is not an income asset. It is a leveraged bet on price with a rental subsidy attached, and it should be described that way when deciding whether to keep it.
+
+## The version for a portfolio
+
+Run it across everything you own together rather than unit by unit. Fixed costs from every property against total rent. That number tells you what a market-wide soft patch does to you, which is the case where several units go quiet at once rather than one.`,
+    formula: `Break-even occupancy
+  =        Fixed annual costs
+    ------------------------------------
+     Annual rent at full occupancy
+     - costs that scale with occupancy
+
+  Fixed costs
+    service charge
+    insurance and standing charges
+    mortgage payments
+    any cost you pay whether or not a tenant is present
+
+  Scaling costs
+    management fee (a share of collected rent)
+    utilities where the owner pays them
+    consumables
+
+Worked
+  Rent at full occupancy      105,000
+  Management at 5%             -5,250
+  Effective rent               99,750
+
+  Service charge               16,200
+  Insurance and standing        1,500
+  Mortgage                     45,000
+  Fixed costs                  62,700
+
+  Break-even occupancy = 62,700 / 99,750 = 62.9%
+  which is about 4.5 empty months before it costs you money`,
+    failureModes: [
+      "It assumes the rent stays where it is. A re-letting at a lower rent raises break-even occupancy even if the unit is never empty, which is the quieter version of the same risk.",
+      "It treats a repayment mortgage instalment as pure cost, when part of it is capital repaid to yourself. Using interest only makes the ratio more flattering and arguably more honest, but pick one and be consistent.",
+      "Service charges rise. A ratio calculated on this year's charge is a snapshot, and a special levy for a chiller replacement can move it several points in one letter.",
+      "It says nothing about capital value. A property with excellent break-even occupancy in a falling market is still losing money, just not in cash.",
+      "Portfolio level netting can hide a single bad asset. Run it both ways.",
+      "It does not model the eviction timeline. A non-paying tenant is worse than an empty unit, because you have the costs and no ability to re-let until the process completes.",
+    ],
+    whenToUse:
+      "Before borrowing, and once a year on everything you already own. It is also the right number to quote when someone asks whether a property is risky, because it answers with a month count rather than an adjective.",
+    sources: [
+      { name: "Dubai Land Department, RERA rental index", url: "https://dubailand.gov.ae/en/eservices/rental-index/" },
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/" },
+    ],
+  },
+
+  {
+    slug: "service-charge-and-reserves",
+    title: "The service charge and the reserve fund",
+    category: "property",
+    tier: 2,
+    calculator: "net-rental-yield",
+    reviewed: R,
+    summary:
+      "A service charge pays for this year's running of a building while the reserve fund pays for the replacement of things that fail once a decade, and a building with a low charge and no reserve is not cheap to own, it is deferring a bill that will arrive as a special levy.",
+    body: `Buyers compare service charges the way they compare rents: lower is better. That reasoning is exactly backwards often enough to be dangerous.
+
+## The two halves
+
+The **operating budget** is this year: cleaning, security, insurance, lift maintenance, chiller running costs, the managing agent's fee, landscaping, utilities for common areas. It is broadly predictable and it recurs.
+
+The **reserve fund** is the sinking fund for capital items: lift replacement, chiller overhaul, facade works, waterproofing, fire systems. These fail on a fifteen to twenty five year cycle and cost an order of magnitude more than any annual item.
+
+A responsible association collects for both. A charge that looks unusually low for the building type is often a charge that collects for the first and not the second.
+
+## Why that matters to a buyer
+
+If the reserve is underfunded when a chiller fails, the money has to come from somewhere, and there is only one somewhere: the owners, through a special levy. Levies are assessed on your unit's share and they are not optional.
+
+The buyer who chose the building with the lower charge does not save money. They defer it, and they take on the risk that they will still own the unit on the day the bill arrives.
+
+## What to actually read before buying
+
+Ask the managing agent or the seller for three documents, all of which exist.
+
+**The approved annual budget.** It shows what the charge covers, line by line, and what the association expects next year rather than what it charged last year.
+
+**The reserve fund balance and the reserve study.** The balance alone means nothing without knowing what it is supposed to cover and when. A building ten years old with a negligible reserve is telling you something.
+
+**The last two years of accounts, and any special levies raised.** A history of levies is the most reliable predictor of future levies, because it usually indicates a structural underfunding rather than bad luck.
+
+## Reading the number itself
+
+In Dubai the charge is quoted in dirhams per square foot per year and levied on the area on the title deed. Compare like with like: a tower with a pool, gym, concierge and district cooling infrastructure will and should cost more per foot than a low rise walk-up, and the comparison is only meaningful within a building type.
+
+Note that this is the deduction that turns a seven percent gross yield into a four percent net one on a typical apartment. It is the single most consequential number in the [net rental yield](/playbooks/net-rental-yield/) calculation and the one least often verified before an offer.`,
+    formula: `Annual service charge
+  = area on the title deed (sq ft)
+    x rate per sq ft per year
+
+Where the rate should be going
+  operating budget      recurring, predictable
+  + reserve contribution  for items that fail once a decade
+  = a charge that does not need a levy later
+
+Warning signs
+  charge well below comparable buildings of the same type
+  reserve balance small relative to building age
+  a history of special levies
+  managing agent unable to produce an approved budget
+
+The effect on yield
+  A 900 sq ft unit at AED 18 / sq ft = AED 16,200 a year
+  On rent of AED 105,000 that is 15.4% of gross rent,
+  before management, maintenance, insurance or vacancy.`,
+    failureModes: [
+      "Comparing charges across building types. A serviced tower and a walk-up are not comparable per square foot and never were.",
+      "Assuming the quoted rate is stable. It is set annually by the association and it moves, usually upward.",
+      "Using the brochure area rather than the title deed area. The charge is levied on the deed area and the two are not always the same.",
+      "Treating a fully funded reserve as a cost rather than an asset. You are buying a share of it, and it reduces the probability of a levy landing on you.",
+      "Ignoring who controls the association. In buildings where the developer retains effective control, the budget may reflect their priorities rather than the owners'.",
+      "Forgetting that the charge is payable whether or not the unit is let, which is why it belongs in the fixed cost line of a [break-even occupancy](/playbooks/break-even-occupancy/) calculation.",
+    ],
+    whenToUse:
+      "Before making an offer on any apartment, and annually on anything you own, because the budget is published annually and almost no owner reads it.",
+    sources: [
+      { name: "Dubai Land Department, owners associations and jointly owned property", url: "https://dubailand.gov.ae/en/" },
+      { name: "Dubai Land Department, service charge index", url: "https://dubailand.gov.ae/en/eservices/" },
+    ],
+  },
+
+  {
+    slug: "currency-risk-and-the-peg",
+    title: "Currency risk and the dirham peg",
+    category: "cross-asset",
+    tier: 1,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "The dirham has been pegged to the US dollar at 3.6725 for decades, which means a Gulf resident holding dirham property, dirham salary and dollar denominated funds is not diversified across three currencies but concentrated in one, and the exposure only becomes visible when the money is eventually spent somewhere else.",
+    body: `Currency is the risk that expatriate investors carry by default and almost never size, because it does not feel like a position. It feels like the ground.
+
+## The peg, and what it actually does
+
+The UAE dirham has been fixed against the US dollar at 3.6725 for many years. It is a hard peg, backed by reserves and by policy, and it has held through several cycles.
+
+What it does for you is remove volatility between your dirham assets and the dollar. What it does not do is remove exposure. It converts your dirham holdings into dollar holdings with a fixed conversion rate. That is a simplification of your currency position, not a diversification of it.
+
+## Where this bites
+
+Consider a typical Gulf-based professional. Salary in dirhams. An apartment in Dubai, valued and let in dirhams. Savings in a global equity fund priced in dollars. Retirement expected in the UK, or India, or somewhere the currency is neither dirham nor dollar.
+
+That person believes they hold three things. They hold one currency and a plan to spend a different one. If the dollar weakens materially against their eventual spending currency over the decades between now and then, everything they own falls in purchasing power at once, and no line in their portfolio will show a loss.
+
+## The correct frame
+
+Currency risk is a matching problem, not an investment problem. The question is not which currency will be strong. It is which currency you will spend, and how much of your assets are denominated in it.
+
+If you intend to retire in the UK, sterling assets are not a speculation, they are a liability match. If your children will study in the United States, dollar assets are the match. If you will stay in the Gulf permanently, the peg is doing exactly what you want and there is very little to do.
+
+The mistake is not holding the wrong currency. It is never having asked the question and discovering the answer at sixty.
+
+## Sizing it without over-engineering
+
+Three practical steps, in order.
+
+**Name the spending currency.** For most people it is not one currency but a weighting: some here, some there, some undecided. Write down the weighting rather than a single answer.
+
+**Look at what you actually hold.** Dirham property and a dollar pegged salary are one exposure. A global equity fund is more diversified than it looks in underlying assets but it is still priced in whatever currency you bought it in, and for the long run the underlying assets matter more than the pricing currency.
+
+**Close the largest gap first, gradually.** This is a decades-long mismatch and it does not need to be fixed this quarter. It needs to stop widening.
+
+## The tail risk nobody wants to discuss
+
+A peg is a policy choice, not a law of nature. Pegs have held for decades and pegs have broken. The probability is low and the consequence would be large, which is the definition of a risk worth holding a modest hedge against rather than a risk worth betting on. Anyone who tells you it cannot happen is describing a preference, not an analysis.`,
+    formula: `What you think you hold
+  AED salary        currency 1
+  AED property      currency 2
+  USD funds         currency 3
+
+What you actually hold
+  AED and USD are the same exposure while the peg holds
+  -> one currency, at 3.6725
+
+The matching question
+  Spending currency weighting, by decade
+    next 10 years   AED   x%
+    retirement      GBP / INR / other   y%
+    education       USD   z%
+
+  Asset denomination weighting
+    compare the two lists
+
+  The gap is the position you are carrying by default.
+
+Peg reference
+  AED per USD, fixed at 3.6725`,
+    failureModes: [
+      "It treats currency as a return question. Over long horizons currency is closer to a zero sum wash between developed economies, and the reason to hold a currency is that you will spend it, not that you expect it to rise.",
+      "Hedged share classes solve a different problem. They remove short term volatility at a cost, and for a multi-decade horizon the cost frequently exceeds the benefit.",
+      "It ignores that a global equity fund's underlying earnings are already spread across currencies regardless of the fund's own pricing currency, which makes the exposure smaller than it looks.",
+      "Property cannot be rebalanced. Currency mismatch in an illiquid asset is a decision taken once, at purchase, and expensive to reverse.",
+      "The peg has held for a long time, which is evidence but not a guarantee, and treating a long record as certainty is the same error made about every stable regime before it was not.",
+      "Local mortgage debt in dirhams against a dirham asset is matched and should not be counted as an exposure. Debt in a currency you do not earn is the dangerous version.",
+    ],
+    whenToUse:
+      "Once, properly, when you have both a portfolio and a rough idea where you will end up. Then at any point that answer changes, which for most expatriates is more often than they expect.",
+    sources: [
+      { name: "Central Bank of the UAE", url: "https://www.centralbank.ae/en/" },
+      { name: "Bank for International Settlements, effective exchange rate statistics", url: "https://www.bis.org/statistics/eer.htm" },
+      { name: "International Monetary Fund, exchange rate arrangements", url: "https://www.imf.org/en/Publications/Annual-Report-on-Exchange-Arrangements-and-Exchange-Restrictions" },
+    ],
+  },
+
+  {
+    slug: "fee-drag",
+    title: "Fee drag",
+    category: "portfolio",
+    tier: 1,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "Fee drag is the compounding cost of every percentage charged against a portfolio each year, and because it is deducted from the base that would otherwise have compounded, a one percent annual fee costs far more than one percent of the final result.",
+    body: `A fee is quoted as an annual percentage, which makes it sound like a small annual event. It is not. It is a permanent reduction in the base that everything afterwards compounds on.
+
+## The arithmetic that surprises people
+
+A portfolio compounding at seven percent for thirty years multiplies by roughly 7.6. The same portfolio compounding at six percent, because a one percent fee was deducted, multiplies by roughly 5.7.
+
+The fee was one percent a year. It took about a quarter of the final result.
+
+Extend to forty years and the gap widens again, because the missing money would itself have been compounding for the whole period. This is the same asymmetry as [drawdown recovery](/playbooks/drawdown-recovery-math/), running slowly instead of suddenly.
+
+## Where the layers hide
+
+Most investors know one of their fees. There are usually three or four.
+
+**The fund's own charge**, the expense ratio, deducted inside the fund so it never appears on a statement.
+
+**The platform or custody fee**, charged by whoever holds the account.
+
+**The advice or management fee**, if someone is managing it, which in the offshore expatriate market is frequently the largest layer and the least clearly disclosed.
+
+**Product charges**, on insurance-wrapped savings plans and portfolio bonds: establishment charges, allocation rates, early exit penalties, and structures where the first eighteen to twenty four months of contributions effectively pay for the sale of the plan.
+
+Add them and a portfolio can carry three percent a year against a benchmark that a plain global index fund delivers for a small fraction of one percent. Over a working life that difference is not a detail, it is the majority of the outcome.
+
+## The trade that is worth making
+
+None of this argues that all fees are bad. It argues that a fee has to buy something, and the thing it buys has to be worth more than the compounding it costs.
+
+Genuine tax and structure advice for a globally mobile investor can be worth multiples of what it costs, because [fund domicile](/playbooks/fund-domicile/) alone can outweigh decades of expense ratio optimisation. Someone stopping you from selling everything in a crash may earn their fee several times in one week.
+
+A percentage of assets each year for holding index funds and rebalancing occasionally is a different proposition, and it should be priced accordingly.
+
+## The question to ask
+
+Not what is the fee, but what is the total, and what does it buy. Add every layer, express it as one number, and then ask what that number would have compounded to over your remaining horizon. That is the real price, and it is the only version of the question that produces a decision.`,
+    formula: `Value after n years
+  = Contribution x (1 + r - f)^n
+
+  where r is the gross return and f is the total annual fee.
+
+Worked, 30 years at 7% gross
+  no fee     (1.07)^30  = 7.61x
+  1% fee     (1.06)^30  = 5.74x
+  2% fee     (1.05)^30  = 4.32x
+  3% fee     (1.04)^30  = 3.24x
+
+  One percent costs about 25% of the result.
+  Three percent costs about 57% of it.
+
+Total cost of ownership
+  fund expense ratio
+  + platform or custody
+  + advice or management
+  + product or wrapper charges
+  = the number that belongs in the formula`,
+    failureModes: [
+      "It assumes a constant gross return, which nothing delivers. The direction of the conclusion is robust to that, but the precise multiples are illustrative rather than predictive.",
+      "It says nothing about what the fee buys. A fee that prevents one catastrophic behavioural error over a lifetime may be the cheapest thing in the portfolio.",
+      "Tracking difference, not the expense ratio, is what a fund actually cost you. A cheaper fund with a worse tracking difference is not cheaper.",
+      "Exit costs are not annual and do not fit this arithmetic, but early exit penalties on wrapped products can exceed several years of fees and belong in any decision to move.",
+      "Comparing fees across jurisdictions without comparing tax treatment is comparing the smaller number and ignoring the larger one.",
+      "The lowest fee portfolio you will not stick with is worse than a slightly costlier one you will.",
+    ],
+    whenToUse:
+      "Before signing anything with a multi-year commitment, and once against everything you currently hold, adding every layer into a single number. Most people have never seen that single number.",
+    sources: [
+      { name: "Morningstar, Mind the Gap 2025", url: "https://www.morningstar.com/content/cs-assets/v3/assets/blt9415ea4cc4157833/blt2c5c4d9171638c42/689b424311f3880edc4b4813/US_Mind_the_Gap_2025.pdf" },
+      { name: "US Securities and Exchange Commission, investor bulletin on fees", url: "https://www.sec.gov/investor/alerts/ib_fees_expenses.pdf" },
+    ],
+  },
+
+  {
+    slug: "emergency-liquidity",
+    title: "Emergency liquidity",
+    category: "risk",
+    tier: 1,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "Emergency liquidity is cash held deliberately so that a job loss, a vacancy or a levy never forces the sale of an illiquid asset at the wrong moment, and for a property owner in an expatriate market it needs to be larger than the standard advice because the two risks arrive together.",
+    body: `The usual rule is three to six months of expenses. That rule was written for a salaried employee in their own country with a pension, unemployment insurance and no mortgage on an investment property. Almost nothing about it survives contact with an expatriate property owner's situation.
+
+## Why the standard number is too small here
+
+**Visa linkage.** In much of the Gulf, residency is tied to employment. Losing a job does not only stop income, it starts a clock on the right to remain, which can turn a slow orderly job search into a fast disorderly one.
+
+**No safety net.** There is generally no unemployment benefit to bridge the gap.
+
+**Correlated risks.** A regional downturn produces redundancies and soft rental demand at the same time. The month your salary stops is disproportionately likely to be a month your tenant leaves.
+
+**Illiquid assets that demand cash.** A property is the one asset that can require money from you while producing none. Service charges, mortgage payments and the occasional special levy do not pause for a vacancy.
+
+**Exit costs on the asset you would sell.** Selling property to raise cash costs eight to ten percent of value and takes months, which is precisely why you do not want to be doing it under pressure.
+
+## What to actually hold
+
+Think in three layers rather than one number.
+
+**Layer one, immediate.** Three to six months of household expenses in instant access cash, in the currency you spend. This is for the boiler, the flight, the deposit.
+
+**Layer two, property reserve.** Twelve months of every fixed cost on every property you own: service charges, mortgage payments, insurance. This is what makes a long vacancy a nuisance rather than a crisis, and it is what the [break-even occupancy](/playbooks/break-even-occupancy/) figure tells you the size of.
+
+**Layer three, transition.** For anyone whose residency depends on employment, enough to relocate a household and land somewhere else. That is a larger number than people expect and it is the one nobody holds.
+
+## The objection, answered
+
+Holding cash feels expensive when markets are rising, and the argument against it is always that it earns less than the alternatives. That is true and it is not the point. Emergency liquidity is not an investment, it is what stops your investments being sold at the worst possible time. Its return is measured in the losses it prevents rather than the yield it earns.
+
+The counter-question is the useful one: what would you sell if you needed money in a hurry, and what would that sale cost you against selling calmly? If the answer is a property in a soft market, the cash is cheap.
+
+## Where to keep it
+
+In the currency you actually spend, accessible without penalty, and not in the same institution as your mortgage if that institution has any right of set-off. Money market funds and short term deposits are fine. Anything with a lock-up, a notice period or a market price is not emergency liquidity, whatever it is called.`,
+    formula: `Layer 1, immediate
+  = 3 to 6 months of household expenses
+    instant access, spending currency
+
+Layer 2, property reserve
+  = 12 x monthly fixed costs across all properties
+      service charges
+    + mortgage payments
+    + insurance and standing charges
+
+Layer 3, transition (where residency is tied to employment)
+  = relocation cost + 3 to 6 months of living costs
+    in the destination currency
+
+Sanity check against the alternative
+  cost of raising the same cash by selling a property
+    = 8-10% of value in round trip costs
+    + months of delay
+    + whatever discount a forced sale attracts`,
+    failureModes: [
+      "It is dead money in a rising market and it will feel wrong for years at a time. That is the cost of the option, and the option is only valuable in the years it feels unnecessary.",
+      "Holding it in the wrong currency reintroduces the risk it was meant to remove. Emergency cash should match emergency spending.",
+      "An undrawn credit facility is not the same thing. Facilities are withdrawn precisely when conditions deteriorate, which is when you would need it.",
+      "Too large a reserve has a real cost over decades and can meaningfully reduce the final result. This is a floor, not a target to exceed.",
+      "It cannot be held inside a product with exit penalties or a notice period, however good the rate looks.",
+      "It does not replace insurance. Health, income protection and life cover address different failures and a cash pile is an inefficient substitute for any of them.",
+    ],
+    whenToUse:
+      "Before the next property, not after it. The reserve should be funded from the same pot as the deposit and treated as part of the cost of the purchase rather than as a separate ambition.",
+    sources: [
+      { name: "Central Bank of the UAE, consumer protection", url: "https://www.centralbank.ae/en/" },
+      { name: "Dubai Land Department, fees and charges", url: "https://dubailand.gov.ae/en/" },
+    ],
+  },
+
+  {
+    slug: "concentration-limits",
+    title: "Concentration limits",
+    category: "risk",
+    tier: 2,
+    calculator: "safe-withdrawal-rate",
+    reviewed: R,
+    summary:
+      "A concentration limit is a rule set in advance about how much of your net worth any single asset, building, tenant, employer or currency may represent, and its purpose is to make the decision while you are calm rather than while you are being persuaded.",
+    body: `Nobody sets out to be concentrated. Concentration is what happens when a series of individually reasonable decisions accumulate in the same direction.
+
+## How it happens
+
+An investor buys an apartment in a building they know. It goes well. They buy a second in the same development, because they now understand the building, the agent and the service charge. The third comes from the same developer because the relationship exists.
+
+Every step was defensible. The result is a portfolio exposed to one developer, one owners association, one micro-market and one chiller plant.
+
+Add that their salary comes from a company in the same city and their savings sit in a currency pegged to the same dollar, and the entire balance sheet needs one set of conditions to hold.
+
+## The exposures worth limiting
+
+**Single asset.** What share of net worth is in one property. For most people the honest answer, including the home, is uncomfortably high.
+
+**Single building or development.** Two units in one tower share a service charge regime, a reserve fund, a handover glut and a reputation.
+
+**Single tenant.** Especially for anyone letting to one corporate tenant, where a lease ending and a vacancy are the same event.
+
+**Single employer.** Salary, and in the Gulf frequently residency, and sometimes shares or a bonus scheme. One employer can be three exposures.
+
+**Single currency.** Covered in [currency risk and the peg](/playbooks/currency-risk-and-the-peg/), and worth counting here as a line rather than assuming it is handled elsewhere.
+
+**Single counterparty.** One bank, one broker, one platform.
+
+## Setting a limit that survives
+
+The limit has to be written down before the opportunity appears, because the whole point is that the good opportunity is exactly when you will want to breach it.
+
+Pick numbers you can live with rather than numbers that sound rigorous. Something like: no single property above a stated share of net worth, no more than two units in any one building, no more than a stated share of liquid assets with one institution. The precise figures matter far less than having them at all.
+
+Then write down what you will do when a limit binds, because it will. The useful answer is rarely sell something. It is more often stop adding, and let the rest of the balance sheet grow into the gap.
+
+## The awkward truth
+
+Most wealth is built through concentration and most wealth is lost the same way. A concentration limit does not maximise expected outcomes, and someone who never set one will always be able to point at somebody who did better without one.
+
+It is insurance against the version of events where the concentrated bet does not work, chosen deliberately, priced in foregone upside. That is a trade worth making consciously, and a trade almost nobody makes by accident.`,
+    formula: `Write these down before you need them.
+
+  Single property          <= x% of net worth
+  Single building          <= n units
+  Single tenant            <= x% of total rent
+  Single employer          salary + equity + residency
+                           counted as one exposure
+  Single currency          <= x% of assets, matched to
+                           expected spending
+  Single institution       <= x% of liquid assets
+
+When a limit binds
+  first response   stop adding
+  second response  grow the rest into the gap
+  last response    sell, because selling illiquid assets
+                   costs 8-10% and takes months
+
+The test
+  If one bad event happened, what share of the balance
+  sheet does it touch? That is the real limit, whatever
+  the spreadsheet says.`,
+    failureModes: [
+      "Limits set as percentages of net worth move as net worth moves, which means a falling market can breach a limit without any decision being taken. Decide in advance whether the limit is checked on the way down as well as up.",
+      "It reduces expected return. Concentration is how most large fortunes were made, and a limit is a deliberate trade of upside for survivability.",
+      "The primary residence distorts every ratio and there is no consensus on whether to include it. Pick a treatment and stay with it rather than switching to whichever answer is more comfortable.",
+      "Illiquid assets cannot be trimmed to a limit. For property the only enforceable version is a limit on what you add, which means the limit has to exist before the purchase.",
+      "Counting exposures separately hides the correlation between them. Salary, residency and local property are one exposure wearing three coats.",
+      "A limit you will breach for a good enough opportunity is not a limit. It is a preference, and it will not be there on the day it is needed.",
+    ],
+    whenToUse:
+      "Before the second property in the same building, which is where most concentration begins. Also as a standing annual review, because concentration accumulates without any single decision creating it.",
+    sources: [
+      { name: "Bank for International Settlements, property price statistics", url: "https://www.bis.org/statistics/pp.htm" },
+      { name: "Dubai Land Department, transaction data", url: "https://dubailand.gov.ae/en/open-data/real-estate-data/" },
+    ],
+  },
 ];

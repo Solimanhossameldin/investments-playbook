@@ -110,6 +110,7 @@ node scripts/fallbacktest.mjs   # the FRED and stooq.pl fallback paths
 node scripts/calctest.mjs       # all six calculators, 40 assertions
 node scripts/wiretest.mjs   # the feed parser, against recorded RSS and Atom payloads
 node scripts/glossarytest.mjs # 911 checks: one-sentence definitions, resolving links, house style
+node scripts/playbooktest.mjs # 415 checks: summary format, failure modes present, internal links resolve
 ```
 
 ---
@@ -117,6 +118,8 @@ node scripts/glossarytest.mjs # 911 checks: one-sentence definitions, resolving 
 ## Writing content
 
 **A new framework page.** Add an object to `content/playbooks.mjs`. It appears in the library, the filters, the sitemap and the related links automatically. The fields are `slug, title, category, tier, summary, body, formula, failureModes, whenToUse, calculator, sources, reviewed`.
+
+`scripts/playbooktest.mjs` enforces the shape: a single self-contained summary sentence, at least three failure modes, at least one https source, and every `/playbooks/...` or `/glossary/...` link in the prose resolving to something that exists. That last check is the one that earns its keep, because a broken internal link builds and deploys perfectly and only fails for the reader.
 
 The page order is fixed and deliberate: definition, the rule, the arithmetic, where it breaks, when to use it, sources. That order is built for AI answer engines, which lift a clean one-sentence definition from the top of a page. Do not reorder it.
 
