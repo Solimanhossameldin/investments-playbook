@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-08-26T19:02:31.271Z",
+ "fetchedAt": "2026-08-26T22:08:01.776Z",
  "sourcesTotal": 14,
  "sourcesOk": 7,
  "items": [
@@ -200,15 +200,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "Cook, Outlook for the U.S. and Alaskan Economies",
-   "url": "https://www.federalreserve.gov/newsevents/speech/cook20260805a.htm",
-   "published": "2026-08-05T20:05:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
   }
  ]
 }

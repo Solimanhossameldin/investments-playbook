@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "fetch-wire",
+   "result": "partial",
+   "detail": "22 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); bis (HTTP 404); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
+   "at": "2026-08-26T22:08:01.776Z"
+  },
+  {
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "A brief for 2026-08-26 already exists.",
@@ -233,12 +239,6 @@
    "status": "partial",
    "detail": "10 figures refreshed. Notes: macro no usable FRED rows; rates no usable FRED rows",
    "ranAt": "2026-08-26T11:51:00.635Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "A brief for 2026-08-26 already exists.",
-   "ranAt": "2026-08-26T11:30:28.091Z"
   }
  ]
 }
