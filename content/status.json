@@ -1,6 +1,18 @@
 {
  "runs": [
   {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "A brief for 2026-08-26 already exists.",
+   "ranAt": "2026-08-26T10:01:28.078Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "partial",
+   "detail": "10 figures refreshed, 2 source(s) failed: stooq, treasury",
+   "ranAt": "2026-08-26T10:01:28.008Z"
+  },
+  {
    "job": "fetch-market-data",
    "status": "failed",
    "detail": "0 figures refreshed, 6 source(s) failed: fx, treasury, crypto, metal-XAU, metal-XAG, stooq",
