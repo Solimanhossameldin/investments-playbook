@@ -24,8 +24,13 @@
         entries.forEach(function (e) {
           if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
         });
-      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+      }, { rootMargin: "0px 0px 18% 0px", threshold: 0.01 });
       rises.forEach(function (el) { io.observe(el); });
+      // Nothing on a reading site should ever be stuck invisible. If the
+      // observer has not fired within three seconds, show everything.
+      setTimeout(function () {
+        rises.forEach(function (el) { el.classList.add("in"); });
+      }, 3000);
     }
   }
 
@@ -173,10 +178,18 @@
 
   var CALC = (window.IPCalc || {}).CALC || {};
 
+  var calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   function paint(out) {
     Object.keys(out).forEach(function (k) {
       var el = root.querySelector('[data-o="' + k + '"]');
-      if (el) el.textContent = out[k];
+      if (!el || el.textContent === String(out[k])) return;
+      el.textContent = out[k];
+      if (calm) return;
+      // Re-trigger the animation rather than let a repeated class do nothing.
+      el.classList.remove("bump");
+      void el.offsetWidth;
+      el.classList.add("bump");
     });
   }
 

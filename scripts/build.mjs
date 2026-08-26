@@ -35,7 +35,14 @@ const calcMeta = CALCULATORS.map((c) => ({ slug: c.slug, name: c.name, category:
 const calcName = Object.fromEntries(CALCULATORS.map((c) => [c.slug, c.name]));
 
 /* ---------- writing ---------- */
-fs.rmSync(dist, { recursive: true, force: true });
+// A clean slate is preferable, but some environments mount this tree without
+// delete permission. Overwriting in place is still a correct build, so a
+// failed wipe is a warning rather than the end of the run.
+try {
+  fs.rmSync(dist, { recursive: true, force: true });
+} catch {
+  console.warn("Could not clear dist, overwriting in place.");
+}
 fs.mkdirSync(dist, { recursive: true });
 
 const written = [];
@@ -74,6 +81,7 @@ fs.copyFileSync(path.join(root, "src/styles.css"), path.join(dist, "styles.css")
 
 const app = [
   fs.readFileSync(path.join(root, "src/app/calc.js"), "utf8"),
+  fs.readFileSync(path.join(root, "src/app/motion.js"), "utf8"),
   fs.readFileSync(path.join(root, "src/app/app.js"), "utf8"),
 ]
   .join("\n")

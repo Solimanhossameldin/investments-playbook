@@ -118,6 +118,10 @@ node scripts/calctest.mjs       # all six calculators, 40 assertions
 
 The page order is fixed and deliberate: definition, the rule, the arithmetic, where it breaks, when to use it, sources. That order is built for AI answer engines, which lift a clean one-sentence definition from the top of a page. Do not reorder it.
 
+**The depth and motion layer.** `src/app/motion.js` and the block at the bottom of `src/styles.css` hold every 3D and animation effect: the hero globe, the running ticker, card tilt, scroll reveals, the header condense and the scroll progress bar. It is entirely additive. Delete both and the site renders correctly, just flat. Everything in it is switched off under `prefers-reduced-motion`, and the tilt is gated behind `(hover: hover) and (pointer: fine)` so phones never get it.
+
+The globe is plain canvas 2D with the projection written out by hand, not WebGL and not a library, which is why it costs a few kilobytes rather than a few hundred.
+
 **A new calculator.** Add a spec to `CALCULATORS` in `src/templates/calculators.mjs` and the matching maths function to `CALC` in `src/app/calc.js`. Then add assertions to `scripts/calctest.mjs`, because a calculator that is quietly wrong is worse than no calculator.
 
 **Editing a brief.** Briefs are JSON in `content/briefs/`. Edit and rebuild. If you correct a factual error, note the correction at the top of the next issue, as the [disclosure standards](https://investmentsplaybook.com/disclosure/) page promises.
