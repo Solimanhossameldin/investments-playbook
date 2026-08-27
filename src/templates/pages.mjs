@@ -1,4 +1,4 @@
-import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle } from "../lib.mjs";
+import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus } from "../lib.mjs";
 import { leadBand, authorBand, briefForm } from "./layout.mjs";
 
 const CATS = {
@@ -31,6 +31,22 @@ function itemHtml(it, n) {
       : ""
   }
 </article>`;
+}
+
+
+/* The cadence is advertised in seven places. Where it is promised it is also
+   checked: if the brief has fallen behind, the site says so rather than
+   repeating the claim. Same rule the data page applies to a stale figure. */
+function briefLate(briefs) {
+  const st = briefStatus(briefs);
+  if (!st.behind) return "";
+  const what = st.none
+    ? "No issue has been published yet."
+    : `The last issue was published ${briefLabel(st.latest)}, ${st.weekdaysBehind} weekdays ago.`;
+  return `<div class="callout" style="max-width:var(--prose);margin:0 0 30px">
+    <b>The brief is not currently publishing to schedule</b>
+    ${what} The cadence advertised on this site is every weekday at 7am GST, and it is not being met at the moment. This notice is generated from the issues themselves, so it disappears when publication resumes.
+  </div>`;
 }
 
 export function home({ site, market, brief, playbooks, calculators, wireHtml = "", pathsHtml = "" }) {
@@ -278,6 +294,7 @@ export function briefIndex({ site, briefs }) {
     <p>Three items. Global markets, property, and one number worth knowing. Written from the figures on the market data page, every one of which carries its own source.</p>
     <p style="font-size:14px"><a href="/record/">Every call this brief makes is scored on The Record</a>, including the ones that went wrong, along with every correction issued.</p>
   </div>
+  ${briefLate(briefs)}
   <div class="gate__box" style="max-width:560px;margin-bottom:44px"><h4>Get it in your inbox</h4><p>Free. Unsubscribe in one click.</p>${briefForm(site, "arch-form")}</div>
   <div class="arch">${rows || '<p style="padding:26px 0;color:var(--muted)">The first issue publishes tomorrow morning.</p>'}</div>
 </div></section>`;

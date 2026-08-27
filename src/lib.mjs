@@ -167,3 +167,37 @@ export function clampDescription(text, max = DESC_MAX) {
   const at = cut.lastIndexOf(" ");
   return (at > 40 ? cut.slice(0, at) : cut).replace(/[,;:\-\s]+$/, "");
 }
+
+/* ---------- is the brief actually keeping its promise? ----------
+   The site advertises a brief every weekday at 7am GST in seven places,
+   including the meta description. That claim is only true while issues are
+   actually being published, and on 27 August it was not: one issue existed,
+   dated the 26th, because no model key is configured.
+
+   This is the same problem the data page already solves for market figures.
+   A source that stops answering is flagged stale and the failure is published,
+   rather than the last good number being shown as though it were current. The
+   brief gets the same treatment: when it falls behind, the site says so where
+   the promise is made, instead of repeating a cadence it is not meeting.
+
+   Weekends are excluded, because a weekday cadence is not broken by a Sunday. */
+export function weekdaysBetween(fromISO, toISO) {
+  const a = new Date(fromISO + "T12:00:00Z"), b = new Date(toISO + "T12:00:00Z");
+  if (!(a <= b)) return 0;
+  let n = 0;
+  for (const d = new Date(a); d < b; d.setUTCDate(d.getUTCDate() + 1)) {
+    const day = d.getUTCDay();
+    if (day !== 5 && day !== 6) n++;   // Gulf weekend: Friday and Saturday
+  }
+  return n;
+}
+
+// `behind` is deliberately forgiving: one missed weekday is a late morning,
+// two is a pattern worth admitting to.
+export function briefStatus(briefs = [], nowISO = new Date().toISOString().slice(0, 10)) {
+  const dates = briefs.map((b) => b && b.date).filter(Boolean).sort();
+  const latest = dates[dates.length - 1] || null;
+  if (!latest) return { latest: null, weekdaysBehind: null, behind: true, none: true };
+  const weekdaysBehind = weekdaysBetween(latest, nowISO);
+  return { latest, weekdaysBehind, behind: weekdaysBehind >= 2, none: false };
+}

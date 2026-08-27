@@ -123,6 +123,39 @@ check("logged as partial", JSON.parse(fs.readFileSync(statusPath, "utf8")).runs[
 fs.writeFileSync(marketPath, backup.m);
 fs.writeFileSync(statusPath, backup.s);
 
+/* ---------- the cadence the site advertises ----------
+   "Every weekday at 7am GST" appears in seven places including the meta
+   description. It is a promise, and the site checks it against the issues
+   that actually exist rather than repeating it regardless. Two missed
+   weekdays is the threshold: one is a late morning, two is a pattern. */
+const { briefStatus, weekdaysBetween } = await import(`${new URL("../src/lib.mjs", import.meta.url).href}`);
+const { briefIndex } = await import(`${new URL("../src/templates/pages.mjs", import.meta.url).href}`);
+
+const siteStub = { name: "T", origin: "https://e.com", disclaimer: "Not advice.",
+  mailerlite: { account: "1", briefFormId: "1", leadFormId: "1" } };
+const issue = (date) => ({ date, slug: date, title: "T", subtitle: "S", emoji: "", readMinutes: 3, items: [] });
+
+check("the Gulf weekend does not count against the cadence",
+  weekdaysBetween("2026-08-27", "2026-08-30") === 1, weekdaysBetween("2026-08-27", "2026-08-30"));
+check("one missed weekday is not called a broken promise",
+  briefStatus([issue("2026-08-26")], "2026-08-27").behind === false, null);
+check("two missed weekdays is",
+  briefStatus([issue("2026-08-25")], "2026-08-27").behind === true, null);
+check("no issues at all counts as behind",
+  briefStatus([], "2026-08-27").behind === true, null);
+
+// The page must carry the admission when it is behind, and must not when it
+// is not. A promise that is only checked in one direction is not checked.
+const lateBody = briefIndex({ site: siteStub, briefs: [issue("2026-01-02")] }).body;
+check("a stale brief index admits the cadence is not being met",
+  /not currently publishing to schedule/i.test(lateBody), "no notice on a months-old archive");
+check("the admission names the last issue rather than being vague",
+  /last issue was published/i.test(lateBody), "notice does not name the last issue");
+
+const freshBody = briefIndex({ site: siteStub, briefs: [issue(new Date().toISOString().slice(0, 10))] }).body;
+check("a current brief index carries no such notice",
+  !/not currently publishing to schedule/i.test(freshBody), "notice shown while publishing on time");
+
 /* ---------- layout tripwires ----------
    These assert on the stylesheet source rather than on a rendered page,
    which is weaker than measuring, and they are here anyway because this
