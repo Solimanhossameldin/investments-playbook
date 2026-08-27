@@ -63,11 +63,18 @@ export function chartSentence(s) {
   return parts.join(" ");
 }
 
-export function lineChart(s, { id = s.key } = {}) {
+/* All the geometry of a chart, in one place, so the SVG on the page and
+   the PDF in the chartbook are drawn from the same numbers rather than
+   from two implementations that drift apart. Coordinates are top-left
+   origin in the given box; both renderers below just transcribe them. */
+export function chartGeometry(s, box = {}) {
   const pts = s.points || [];
-  if (pts.length < 2) return "";
+  if (pts.length < 2) return null;
 
-  const x0 = PAD.l, x1 = W - PAD.r, y0 = PAD.t, y1 = H - PAD.b;
+  const w = box.w ?? W, h = box.h ?? H;
+  const pad = { ...PAD, ...(box.pad || {}) };
+  const x0 = pad.l, x1 = w - pad.r, y0 = pad.t, y1 = h - pad.b;
+
   const dLo = days(pts[0][0]), dHi = days(pts.at(-1)[0]);
   const span = dHi - dLo || 1;
 
@@ -78,67 +85,81 @@ export function lineChart(s, { id = s.key } = {}) {
 
   const sx = (iso) => x0 + ((days(iso) - dLo) / span) * (x1 - x0);
   const sy = (v) => y1 - ((v - lo) / (hi - lo || 1)) * (y1 - y0);
-  const r = (n) => Math.round(n * 10) / 10;
-
-  const d = pts.map((p, i) => `${i ? "L" : "M"}${r(sx(p[0]))} ${r(sy(p[1]))}`).join("");
-  const area = `${d}L${r(sx(pts.at(-1)[0]))} ${r(y1)}L${r(sx(pts[0][0]))} ${r(y1)}Z`;
+  const r = (v) => Math.round(v * 10) / 10;
 
   // Decimals are decided once, from the tick step, so an axis never mixes
   // "150" with "0.0". Per-tick formatting is how that happens.
   const step = ticks.length > 1 ? Math.abs(ticks[1] - ticks[0]) : 1;
   const axDp = step >= 1 ? 0 : step >= 0.1 ? 1 : 2;
-  const grid = ticks
-    .map((t) => {
-      const y = r(sy(t));
-      const zero = s.zero && Math.abs(t) < 1e-9;
-      return `<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" class="ch__g${zero ? " ch__g--zero" : ""}"/>
-<text x="${x0 - 8}" y="${y + 4}" class="ch__yl">${t.toFixed(axDp)}</text>`;
-    })
-    .join("");
 
-  const xl = yearTicks(pts[0][0], pts.at(-1)[0])
-    .filter((t) => days(t.iso) >= dLo && days(t.iso) <= dHi)
-    .map((t) => `<text x="${r(sx(t.iso))}" y="${H - 8}" class="ch__xl">${t.y}</text>`)
-    .join("");
+  const line = pts.map((p) => [r(sx(p[0])), r(sy(p[1]))]);
 
   const last = pts.at(-1);
   const lx = r(sx(last[0])), ly = r(sy(last[1]));
   const label = `${s.unit === "USD" ? "$" : ""}${Number(last[1]).toFixed(s.dp)}${
     s.unit === "%" ? "%" : s.unit === "pp" ? "pp" : ""
   }`;
-  // The final label is pinned inside the frame so a long number never clips,
-  // and sits on the side the line is not arriving from. Placing it above a
-  // falling line puts the number on top of the line every time.
-  const anchor = lx > W - 90 ? "end" : "start";
+  // The final label sits on the side the line is not arriving from, and is
+  // pinned inside the frame so a long number never clips. Direction comes
+  // from a short window: on a daily series the last two observations are
+  // noise and decide nothing.
+  const anchor = lx > w - 90 ? "end" : "start";
   const tx = anchor === "end" ? lx - 8 : lx + 8;
-  // Prefer the side the line is not arriving from; fall back to the other
-  // side when the point is hard against an edge; clamp only as a last resort.
-  // Clamping first is what put the label underneath a rising line.
-  // Direction is taken from a short window, not the previous point. On a
-  // daily series the last two observations are noise and decide nothing.
   const tail = pts.slice(-10);
   const mean = tail.reduce((a, p) => a + p[1], 0) / tail.length;
   const rising = last[1] >= mean;
-  const fits = (y) => y >= 14 && y <= y1 - 2;
+  const fits = (v) => v >= 14 && v <= y1 - 2;
   const above = ly - 16, below = ly + 22;
   let ty = rising ? above : below;
   if (!fits(ty)) ty = rising ? below : above;
   if (!fits(ty)) ty = Math.min(y1 - 2, Math.max(14, ly));
 
-  const sentence = chartSentence(s);
+  return {
+    w, h, plot: { x0, x1, y0, y1 },
+    line,
+    grid: ticks.map((t) => ({
+      value: t,
+      y: r(sy(t)),
+      label: t.toFixed(axDp),
+      zero: !!s.zero && Math.abs(t) < 1e-9,
+    })),
+    years: yearTicks(pts[0][0], pts.at(-1)[0])
+      .filter((t) => days(t.iso) >= dLo && days(t.iso) <= dHi)
+      .map((t) => ({ year: t.y, x: r(sx(t.iso)) })),
+    last: { x: lx, y: ly, label, anchor, labelX: tx, labelY: ty },
+    sentence: chartSentence(s),
+  };
+}
+
+export function lineChart(s, { id = s.key } = {}) {
+  const g = chartGeometry(s);
+  if (!g) return "";
+  const { plot, line, grid, years, last } = g;
+
+  const d = line.map((p, i) => `${i ? "L" : "M"}${p[0]} ${p[1]}`).join("");
+  const area = `${d}L${line.at(-1)[0]} ${plot.y1}L${line[0][0]} ${plot.y1}Z`;
+
+  const gridSvg = grid
+    .map(
+      (t) => `<line x1="${plot.x0}" y1="${t.y}" x2="${plot.x1}" y2="${t.y}" class="ch__g${t.zero ? " ch__g--zero" : ""}"/>
+<text x="${plot.x0 - 8}" y="${t.y + 4}" class="ch__yl">${t.label}</text>`
+    )
+    .join("");
+
+  const xl = years.map((t) => `<text x="${t.x}" y="${g.h - 8}" class="ch__xl">${t.year}</text>`).join("");
 
   return `<figure class="ch">
-<svg viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="${esc(id)}-t" preserveAspectRatio="xMidYMid meet">
-<title id="${esc(id)}-t">${esc(sentence)}</title>
+<svg viewBox="0 0 ${g.w} ${g.h}" role="img" aria-labelledby="${esc(id)}-t" preserveAspectRatio="xMidYMid meet">
+<title id="${esc(id)}-t">${esc(g.sentence)}</title>
 <defs><linearGradient id="${esc(id)}-f" x1="0" y1="0" x2="0" y2="1">
 <stop offset="0%" stop-color="var(--gold)" stop-opacity="0.14"/>
 <stop offset="100%" stop-color="var(--gold)" stop-opacity="0"/>
 </linearGradient></defs>
-${grid}
+${gridSvg}
 <path d="${area}" fill="url(#${esc(id)}-f)"/>
 <path d="${d}" class="ch__l"/>
-<circle cx="${lx}" cy="${ly}" r="3.5" class="ch__p"/>
-<text x="${tx}" y="${ty}" text-anchor="${anchor}" class="ch__v">${esc(label)}</text>
+<circle cx="${last.x}" cy="${last.y}" r="3.5" class="ch__p"/>
+<text x="${last.labelX}" y="${last.labelY}" text-anchor="${last.anchor}" class="ch__v">${esc(last.label)}</text>
 ${xl}
 </svg>
 </figure>`;

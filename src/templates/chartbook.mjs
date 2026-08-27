@@ -135,7 +135,7 @@ function section(s, note) {
 </section>`;
 }
 
-export function chartbookPage({ site, data }) {
+export function chartbookPage({ site, data, pdf = {} }) {
   const series = Object.values(data.series || {});
 
   const empty = `<div class="callout" style="max-width:var(--prose)">
@@ -163,6 +163,20 @@ export function chartbookPage({ site, data }) {
       ? `<p class="wire-meta">Data last refreshed ${longDate(
           (data.asOf || "").slice(0, 10)
         )}. Twelve years of history does not move much in a day, so these are pulled weekly rather than daily, and the date above is the real one.</p>`
+      : ""
+  }
+
+  ${
+    series.length
+      ? `<div class="cb__dl">
+    <div>
+      <b>The whole thing as one PDF</b>
+      <span>All ${series.length} charts, the same figures, the same sources.${
+          pdf.pages ? ` ${pdf.pages} pages` : ""
+        }${pdf.kb ? `, ${pdf.kb} kilobytes` : ""}, vector, so it stays sharp at any size and prints properly. No email, no form, no landing page in between.</span>
+    </div>
+    <a class="btn btn--solid btn--sm" href="/chartbook.pdf">Download the PDF</a>
+  </div>`
       : ""
   }
 

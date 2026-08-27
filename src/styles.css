@@ -1104,3 +1104,22 @@ h1, h2, h3, h4 { letter-spacing: -0.018em; line-height: 1.1; }
   .rec { padding: 18px 16px; }
   .rec__score > div { flex-basis: 50%; border-bottom: 1px solid var(--hair-light); }
 }
+
+/* The chartbook download. Deliberately not a gate: no form, no email,
+   no interstitial. The link is the whole interaction. */
+.cb__dl {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 18px;
+  justify-content: space-between;
+  margin: 26px 0 6px; padding: 20px 24px;
+  background: var(--ink-deep); color: var(--ivory);
+  max-width: 900px;
+}
+.cb__dl b {
+  display: block; font-family: var(--serif); font-size: 1.05rem;
+  font-weight: 400; margin-bottom: 5px;
+}
+.cb__dl span {
+  display: block; font-family: var(--sans); font-size: 13px;
+  line-height: 1.5; color: #9c9c9c; max-width: 56ch;
+}
+.cb__dl .btn { flex-shrink: 0; }

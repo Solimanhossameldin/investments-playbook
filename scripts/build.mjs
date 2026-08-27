@@ -14,6 +14,7 @@ import { glossaryIndex, glossaryTerm } from "../src/templates/glossary.mjs";
 import { communityIndex, communityPage } from "../src/templates/communities.mjs";
 import { chartbookPage } from "../src/templates/chartbook.mjs";
 import { recordPage } from "../src/templates/record.mjs";
+import { buildChartbookPdf, pdfPageCount } from "./make-chartbook-pdf.mjs";
 import calls from "../content/calls.mjs";
 import glossary from "../content/glossary.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
@@ -76,6 +77,11 @@ const appText = [
 const hash = (t) => crypto.createHash("sha1").update(t).digest("hex").slice(0, 8);
 const assets = { css: hash(cssText), js: hash(appText) };
 
+// The chartbook PDF is built before the page that links to it, so the page
+// can state its real length and size rather than carrying a typed guess.
+const pdf = buildChartbookPdf(chartbook);
+const pdfMeta = pdf ? { pages: pdfPageCount(chartbook), kb: Math.round(pdf.length / 1024) } : {};
+
 const written = [];
 function emit(spec) {
   const html = page({ site, market, assets, ...spec });
@@ -112,7 +118,7 @@ emit(calcIndex({ site }));
 const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length };
 CALCULATORS.forEach((calc) => emit(calcPage({ site, calc, counts })));
 emit(playbookDoc({ site, playbooks, calculators: calcMeta }));
-emit(chartbookPage({ site, data: chartbook }));
+emit(chartbookPage({ site, data: chartbook, pdf: pdfMeta }));
 emit(recordPage({ site, calls, results: callResults.results || {}, briefs }));
 emit(P.dataPage({ site, market, status }));
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));
@@ -129,6 +135,7 @@ fs.writeFileSync(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#000000"/><rect x="0" y="56" width="64" height="8" fill="#DC0000"/><text x="32" y="44" font-family="Georgia,serif" font-size="36" fill="#FFFFFF" text-anchor="middle">IP</text></svg>`
 );
 
+if (pdf) fs.writeFileSync(path.join(dist, "chartbook.pdf"), pdf);
 fs.writeFileSync(path.join(dist, "CNAME"), `${site.domain}\n`);
 fs.writeFileSync(path.join(dist, ".nojekyll"), "");
 fs.writeFileSync(
@@ -155,5 +162,6 @@ fs.writeFileSync(
 
 console.log(`Built ${written.length} pages into dist.`);
 console.log(`  ${calls.length} calls on record, ${briefs.filter((b) => b.correction).length} corrections.`);
+console.log(`  chartbook.pdf ${pdf ? (pdf.length / 1024).toFixed(0) + 'KB' : 'not built, no data'}.`);
 console.log(`  ${Object.keys(chartbook.series || {}).length} chartbook series, ${(communities.communities || []).length} community pages.`);
 console.log(`  ${playbooks.length} playbooks, ${CALCULATORS.length} calculators, ${briefs.length} briefs, ${(market.quotes || []).length} live quotes.`);
