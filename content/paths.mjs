@@ -25,6 +25,7 @@ export default [
     order: [
       "net-rental-yield",
       "the-one-percent-rule",
+      "mortgage-capacity",
       "transaction-cost-drag",
       "service-charge-and-reserves",
       "due-diligence-before-an-offer",
@@ -87,6 +88,7 @@ export default [
       "asset-allocation-by-horizon",
       "three-fund-portfolio",
       "what-bonds-are-for",
+      "cash-and-short-bonds",
       "fund-domicile",
       "fee-drag",
       "rebalancing-bands",
@@ -115,6 +117,7 @@ export default [
     lede: "Most portfolios that feel diversified are one bet wearing several names: one city, one currency, one employer, one asset class. These frameworks are about measuring that honestly first, because a second holding that moves with the first has not reduced anything.",
     order: [
       "concentration-limits",
+      "position-sizing",
       "what-diversification-does",
       "currency-risk-and-the-peg",
       "property-vs-index-funds",
@@ -145,6 +148,7 @@ export default [
     lede: "Moving countries changes the structure of a portfolio more than its contents. The questions that matter are which currency your liabilities are in, who inherits what under which law, whether assets should sit in your name at all, and how much cash a move genuinely requires.",
     order: [
       "currency-risk-and-the-peg",
+      "residency-and-tax",
       "uae-wills-and-succession",
       "corporate-vs-personal-ownership",
       "fund-domicile",
