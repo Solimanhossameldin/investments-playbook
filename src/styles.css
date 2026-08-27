@@ -1013,3 +1013,94 @@ h1, h2, h3, h4 { letter-spacing: -0.018em; line-height: 1.1; }
 @media (max-width: 359px) {
   .mark { font-size: 16px; letter-spacing: 0.02em; }
 }
+
+/* ============================================================
+   THE RECORD
+   Wrong is not styled smaller, quieter or further down the page
+   than right. The whole argument of the page collapses if it is.
+   ============================================================ */
+
+.rec__score {
+  display: flex; flex-wrap: wrap; gap: 0;
+  margin: 26px 0 18px;
+  border: 1px solid var(--hair-light);
+}
+.rec__score > div {
+  flex: 1 1 130px; padding: 18px 20px;
+  border-right: 1px solid var(--hair-light);
+}
+.rec__score > div:last-child { border-right: 0; }
+.rec__score b {
+  display: block; font-family: var(--mono); font-size: 30px;
+  font-weight: 500; line-height: 1; color: var(--ink);
+}
+.rec__score span {
+  display: block; margin-top: 8px; font-family: var(--sans);
+  font-size: 11.5px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
+}
+.rec__score--bad b { color: var(--gold); }
+
+.rec__rate {
+  max-width: var(--prose); font-family: var(--sans);
+  font-size: 14px; line-height: 1.6; color: var(--muted); margin: 0;
+}
+.rec__rate b { font-family: var(--mono); color: var(--ink); font-size: 16px; }
+
+.rec__sec {
+  font-family: var(--serif); font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  margin: 56px 0 6px; padding-top: 22px; border-top: 2px solid var(--ink);
+}
+.rec__note {
+  max-width: var(--prose); font-family: var(--sans);
+  font-size: 13.5px; color: var(--muted); margin: 0 0 22px;
+}
+
+.rec {
+  max-width: 720px; margin: 0 0 14px;
+  padding: 22px 24px; border: 1px solid var(--hair-light); background: var(--paper);
+}
+.rec__h {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px;
+}
+.rec__v {
+  font-family: var(--sans); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 5px 11px; border: 1px solid currentColor; border-radius: var(--r);
+}
+.rec__v--right { color: var(--pos); }
+.rec__v--wrong { color: var(--gold); }
+.rec__v--partly, .rec__v--void { color: var(--muted); }
+.rec__v--open { color: var(--ink); border-style: dashed; }
+.rec__v--overdue { color: var(--ivory); background: var(--gold); border-color: var(--gold); }
+.rec__v--corr { color: var(--ivory); background: var(--ink-deep); border-color: var(--ink-deep); }
+.rec__d {
+  font-family: var(--sans); font-size: 12px; color: var(--muted);
+}
+.rec > h3 {
+  font-family: var(--serif); font-size: 1.28rem; line-height: 1.3;
+  margin: 0 0 14px; max-width: 46ch;
+}
+.rec__b {
+  font-family: var(--serif); font-size: 15.5px; line-height: 1.6;
+  margin: 0 0 10px; color: var(--ink);
+}
+.rec__b b, .rec__out b { font-family: var(--sans); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+.rec__t {
+  font-family: var(--mono); font-size: 12.5px; color: var(--muted);
+  margin: 14px 0 0; padding: 9px 12px; background: var(--ivory); border: 1px dashed var(--hair-light);
+}
+.rec__out {
+  margin-top: 16px; padding: 14px 16px;
+  background: var(--gold-wash); border-left: 3px solid var(--ink);
+}
+.rec__out p { font-family: var(--serif); font-size: 15px; line-height: 1.55; margin: 0 0 8px; }
+.rec__out p:last-child { margin-bottom: 0; }
+.rec__by { font-family: var(--sans) !important; font-size: 12.5px !important; color: var(--ink-soft); }
+.rec__w { font-family: var(--sans); font-size: 12.5px; margin: 14px 0 0; }
+.rec--corr { background: var(--ivory); }
+.rec--corr .rec__b { font-size: 15px; }
+
+@media (max-width: 640px) {
+  .rec { padding: 18px 16px; }
+  .rec__score > div { flex-basis: 50%; border-bottom: 1px solid var(--hair-light); }
+}

@@ -11,11 +11,13 @@
     "data": "node scripts/fetch-market-data.mjs",
     "brief": "node scripts/generate-brief.mjs",
     "build": "node scripts/build.mjs",
-    "test": "node scripts/selftest.mjs && node scripts/calctest.mjs && node scripts/wiretest.mjs && node scripts/glossarytest.mjs && node scripts/playbooktest.mjs && node scripts/dldtest.mjs && npm run chartbooktest",
+    "test": "node scripts/selftest.mjs && node scripts/calctest.mjs && node scripts/wiretest.mjs && node scripts/glossarytest.mjs && node scripts/playbooktest.mjs && node scripts/dldtest.mjs && npm run chartbooktest && npm run recordtest",
     "daily": "npm run data && npm run brief && npm run build",
     "serve": "node scripts/build.mjs && npx --yes serve dist -l 4173",
     "communities": "node scripts/fetch-dld.mjs",
     "chartbook": "node scripts/fetch-chartbook.mjs",
-    "chartbooktest": "node scripts/chartbooktest.mjs"
+    "chartbooktest": "node scripts/chartbooktest.mjs",
+    "resolve": "node scripts/resolve-calls.mjs",
+    "recordtest": "node scripts/recordtest.mjs"
   }
 }

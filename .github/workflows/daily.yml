@@ -35,6 +35,10 @@ jobs:
         run: node scripts/fetch-market-data.mjs
         continue-on-error: true
 
+      - name: Score any matured calls
+        run: node scripts/resolve-calls.mjs
+        continue-on-error: true
+
       - name: Refresh the chartbook, weekly
         run: node scripts/fetch-chartbook.mjs
         continue-on-error: true

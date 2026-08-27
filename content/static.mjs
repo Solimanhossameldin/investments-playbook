@@ -64,6 +64,8 @@ This is disclosed on every issue. Automated drafting is a production method, not
 
 **Factual errors are corrected at the top of the next brief and annotated on the original page.** The original wording is not deleted. If a figure was wrong, the page says what it said, what it should have said, and when it was fixed.
 
+**Every correction is collected in one place.** [The Record](/record/) carries all of them, alongside every forward-looking call this site has made and how each one turned out. Calls that can be reduced to a number are scored against the published data by a script rather than by anyone here, and a call that matures without being scored is listed there as overdue rather than removed.
+
 **If you find an error, say so.** Corrections improve the site and being right matters more than looking right.
 
 ## Commercial relationships

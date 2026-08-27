@@ -163,6 +163,7 @@ export function footer(site) {
     </ul></div>
     <div><h4>Company</h4><ul>
       <li><a href="/about/">About</a></li>
+      <li><a href="/record/">The Record</a></li>
       <li><a href="/data/">Market data</a></li>
       <li><a href="/disclosure/">Disclosure standards</a></li>
       <li><a href="/privacy/">Privacy</a></li>

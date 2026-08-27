@@ -273,6 +273,7 @@ export function briefIndex({ site, briefs }) {
     <p class="eyebrow">Published every weekday, 7am GST</p>
     <h2>The Brief</h2>
     <p>Three items. Global markets, property, and one number worth knowing. Written from the figures on the market data page, every one of which carries its own source.</p>
+    <p style="font-size:14px"><a href="/record/">Every call this brief makes is scored on The Record</a>, including the ones that went wrong, along with every correction issued.</p>
   </div>
   <div class="gate__box" style="max-width:560px;margin-bottom:44px"><h4>Get it in your inbox</h4><p>Free. Unsubscribe in one click.</p>${briefForm(site, "arch-form")}</div>
   <div class="arch">${rows || '<p style="padding:26px 0;color:var(--muted)">The first issue publishes tomorrow morning.</p>'}</div>

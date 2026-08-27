@@ -13,6 +13,8 @@ import { wirePage, wireStrip } from "../src/templates/wire.mjs";
 import { glossaryIndex, glossaryTerm } from "../src/templates/glossary.mjs";
 import { communityIndex, communityPage } from "../src/templates/communities.mjs";
 import { chartbookPage } from "../src/templates/chartbook.mjs";
+import { recordPage } from "../src/templates/record.mjs";
+import calls from "../content/calls.mjs";
 import glossary from "../content/glossary.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
 import playbooks from "../content/playbooks.mjs";
@@ -28,6 +30,7 @@ const site = read("content/site.json");
 const market = read("content/market.json", { asOf: null, quotes: [] });
 const status = read("content/status.json", { runs: [] });
 const wire = read("content/wire.json", { fetchedAt: null, items: [], sourcesOk: 0, sourcesTotal: 0 });
+const callResults = read("content/call-results.json", { resolvedAt: null, results: {}, errors: {} });
 const chartbook = read("content/chartbook.json", { asOf: null, windowYears: 12, series: {}, errors: {} });
 const communities = read("content/communities.json", { source: "none", communities: [], skipped: [], totalSales: 0, minSales: 30, windowDays: 365 });
 
@@ -110,6 +113,7 @@ const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length }
 CALCULATORS.forEach((calc) => emit(calcPage({ site, calc, counts })));
 emit(playbookDoc({ site, playbooks, calculators: calcMeta }));
 emit(chartbookPage({ site, data: chartbook }));
+emit(recordPage({ site, calls, results: callResults.results || {}, briefs }));
 emit(P.dataPage({ site, market, status }));
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));
 emit(P.staticPage({ site, title: `Editorial and disclosure standards. ${site.name}`, description: "How figures are sourced, how the daily brief is produced, how corrections are handled, and every commercial relationship declared.", path: "/disclosure/", eyebrow: "Editorial standards", heading: "How this is produced, and every conflict declared.", bodyMd: STATIC.disclosure }));
@@ -150,5 +154,6 @@ fs.writeFileSync(
 );
 
 console.log(`Built ${written.length} pages into dist.`);
+console.log(`  ${calls.length} calls on record, ${briefs.filter((b) => b.correction).length} corrections.`);
 console.log(`  ${Object.keys(chartbook.series || {}).length} chartbook series, ${(communities.communities || []).length} community pages.`);
 console.log(`  ${playbooks.length} playbooks, ${CALCULATORS.length} calculators, ${briefs.length} briefs, ${(market.quotes || []).length} live quotes.`);
