@@ -43,8 +43,10 @@ Type a password of at least twelve characters, twice. It is not shown as
 you type and is never saved anywhere. The script prints two values:
 `ADMIN_PASSWORD_HASH` and `SESSION_SECRET`. Keep the window open.
 
-**2. Get a MailerLite token.** MailerLite → Integrations → API →
-generate a token with read access to subscribers. Copy it.
+**2. Optional, and skippable for now.** For the leads tab:
+MailerLite → Integrations → API → a token with read access to
+subscribers. The admin works without it; the leads tab just says it is
+not connected.
 
 **3. Create the Worker.** Cloudflare dashboard → Workers & Pages →
 Create → Worker. Name it `investments-playbook-admin`. Deploy the
@@ -57,15 +59,16 @@ than duplicated; Cloudflare's editor takes one file, and
 `npm run buildadmin` produces it. The tests fail if the bundle is older
 than the source, so it cannot drift.
 
-**4. Add the three variables.** Worker → Settings → Variables and
-Secrets. Add each one as **Secret**, not plain text:
+**4. Add the variables.** Worker → Settings → Variables and Secrets.
+Add each as **Secret**, not plain text. The first three are required;
+the fourth only switches the leads tab on and can wait:
 
 | Name | Value |
 |---|---|
-| `MAILERLITE_API_KEY` | the token from step 2 |
 | `ADMIN_PASSWORD_HASH` | the `pbkdf2$…` line from step 1 |
 | `SESSION_SECRET` | the second line from step 1 |
 | `GITHUB_TOKEN` | see below |
+| `MAILERLITE_API_KEY` | optional, for the leads tab |
 
 For `GITHUB_TOKEN`: github.com → Settings → Developer settings → Personal
 access tokens → Fine-grained tokens → Generate. Give it access to the

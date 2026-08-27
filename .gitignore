@@ -1,9 +1,10 @@
 
-# admin secrets never belong here
-*.log
-.DS_Store
-.dev.vars
 _archive/
+.dev.vars
+.DS_Store
+*.log
+# admin secrets never belong here
+admin-log.txt
 admin.command
 admin/.dev.vars
 content/dld/*.csv

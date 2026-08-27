@@ -113,7 +113,7 @@ const GOOD_ENV = {
 };
 
 await t("a missing secret takes the whole thing offline", async () => {
-  for (const drop of ["SESSION_SECRET", "ADMIN_PASSWORD_HASH", "MAILERLITE_API_KEY", "GITHUB_TOKEN"]) {
+  for (const drop of ["SESSION_SECRET", "ADMIN_PASSWORD_HASH", "GITHUB_TOKEN"]) {
     const env = { ...GOOD_ENV, [drop]: "" };
     const r = await call("/", env);
     assert.equal(r.status, 503, `${drop} missing did not stop it`);
@@ -200,6 +200,17 @@ import { parseEntry, serialiseEntry } from "../src/content/format.mjs";
 
 const EDIT_ENV = GOOD_ENV;
 const signedIn = async () => ({ cookie: `ip_admin=${await makeSession(SECRET)}` });
+
+await t("the admin works before MailerLite is connected", async () => {
+  const r = await call("/api/leads", { ...GOOD_ENV, MAILERLITE_API_KEY: "" }, { headers: await signedIn() });
+  assert.equal(r.status, 200, "a missing MailerLite key should not break the admin");
+  const d = await r.json();
+  assert.deepEqual(d.leads, []);
+  assert.match(d.note, /not connected yet/);
+  // and the rest of the admin still works
+  const s2 = await call("/", { ...GOOD_ENV, MAILERLITE_API_KEY: "" }, { headers: await signedIn() });
+  assert.equal(s2.status, 200);
+});
 
 await t("the editor refuses to run without a GitHub token", async () => {
   const r = await call("/", { ...EDIT_ENV, GITHUB_TOKEN: "" });

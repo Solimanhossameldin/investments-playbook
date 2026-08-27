@@ -586,7 +586,8 @@ function adminPage() {
       if(!d)return;
       var rows=d.leads||[];
       if(!rows.length){
-        main.innerHTML='<h1>Leads</h1><div class="empty">Nobody has signed up yet. When somebody fills in a form on the site they appear here.</div>';
+        main.innerHTML='<h1>Leads</h1><div class="empty">'
+          +esc(d.note||"Nobody has signed up yet. When somebody fills in a form on the site they appear here.")+'</div>';
         return;
       }
       var byIntent={}; rows.forEach(function(r){var k=r.intent||"not stated";byIntent[k]=(byIntent[k]||0)+1;});
@@ -698,7 +699,11 @@ export default {
     const path = url.pathname.replace(/\/+$/, "") || "/";
 
     // Refuse to run at all rather than run without a secret.
-    const missing = ["SESSION_SECRET", "ADMIN_PASSWORD_HASH", "MAILERLITE_API_KEY", "GITHUB_TOKEN"]
+    // MailerLite is deliberately not on this list. Without it the leads
+    // tab says so and everything else works, which means the admin can
+    // be stood up with three values instead of four and the fourth added
+    // whenever. Fewer things to get right on the first attempt.
+    const missing = ["SESSION_SECRET", "ADMIN_PASSWORD_HASH", "GITHUB_TOKEN"]
       .filter((k) => !env[k]);
     if (missing.length) {
       return html(`<h1>Not configured</h1><p>This Worker is missing ${missing.join(", ")}. Add them under Settings, Variables and Secrets, then deploy again.</p>`, 503);
@@ -818,6 +823,12 @@ export default {
 
     if (path === "/api/leads") {
       if (!session) return json({ error: "Not signed in" }, 401);
+      if (!env.MAILERLITE_API_KEY) {
+        return json({
+          leads: [],
+          note: "Leads are not connected yet. Add MAILERLITE_API_KEY to this Worker under Settings, Variables and Secrets, then deploy again.",
+        });
+      }
       try {
         const all = [];
         for (const g of GROUPS) all.push(...(await fetchGroup(env.MAILERLITE_API_KEY, g)));
