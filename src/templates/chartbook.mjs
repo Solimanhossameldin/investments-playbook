@@ -1,4 +1,4 @@
-import { esc, longDate } from "../lib.mjs";
+import { esc, longDate, pageTitle } from "../lib.mjs";
 import { lineChart } from "../charts.mjs";
 
 /* Editorial notes. These explain what a series is and why it moves the things
@@ -152,7 +152,7 @@ export function chartbookPage({ site, data, pdf = {} }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head" style="margin-bottom:8px">
     <p class="eyebrow">Free, ungated, and meant to be linked to</p>
-    <h2>The Chartbook</h2>
+    <h1>The Chartbook</h1>
     <p>${series.length ? series.length : "Seven"} charts covering ${
       data.windowYears || 12
     } years, and what each one actually does to the price of a property and the value of a portfolio. No email required, no download, no form. Every series is public data from a public source, and every chart names it.</p>
@@ -190,6 +190,7 @@ export function chartbookPage({ site, data, pdf = {} }) {
     Everything here is drawn from series produced by agencies of the United States government, which are public domain under 17 U.S.C. §105. Reproduce the charts, quote the figures, put them in a deck. A link back to <a href="${esc(
       site.origin
     )}/chartbook/">this page</a> is appreciated and not required.
+    <p style="margin:12px 0 0">For today's levels rather than the long run, see <a href="/data/">the market data page</a>, where every figure names its own source and timestamp. For what any of it meant on the day, <a href="/brief/">the Brief</a>.
   </div>`
       : ""
   }
@@ -198,7 +199,7 @@ export function chartbookPage({ site, data, pdf = {} }) {
 </div></section>`;
 
   return {
-    title: `The Chartbook. ${data.windowYears || 12} years of the cost of money. ${site.name}`,
+    title: pageTitle(`The Chartbook. ${data.windowYears || 12} years of the cost of money`, site.name),
     description: `Seven long-run charts — the real yield, mortgage rates, the yield curve, inflation expected and realised, the dollar and oil — with what each one does to property and portfolios. Ungated.`,
     path: "/chartbook/",
     body,

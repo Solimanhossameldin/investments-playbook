@@ -21,7 +21,7 @@ export default [
 That makes it useful for one thing only: comparing two properties in the same market on the same basis, quickly. It is not a return, it is not income, and it is not what reaches your account.`,
     trap: "Treating it as the return. In Dubai the gap between gross and net is typically two to three percentage points, which is often more than half of the number.",
     playbook: "net-rental-yield",
-    related: ["net-rental-yield", "service-charge", "cash-on-cash-return"],
+    related: ["net-rental-yield", "service-charge", "void-period"],
   },
   {
     term: "Net rental yield",
@@ -34,7 +34,7 @@ That makes it useful for one thing only: comparing two properties in the same ma
 Both adjustments push in the same direction, which is why the net figure sits so far below the gross one.`,
     trap: "Deducting the costs but forgetting to add the acquisition costs to the denominator. That flatters the answer by roughly the same amount again.",
     playbook: "net-rental-yield",
-    related: ["gross-rental-yield", "service-charge", "transfer-fee"],
+    related: ["gross-rental-yield", "service-charge", "void-period"],
   },
   {
     term: "Service charge",

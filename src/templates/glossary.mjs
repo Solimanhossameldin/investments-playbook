@@ -1,4 +1,4 @@
-import { esc, copy, md } from "../lib.mjs";
+import { esc, copy, md, pageTitle } from "../lib.mjs";
 
 const CATS = { property: "Property", markets: "Markets", tax: "Tax and structure", behaviour: "Behaviour" };
 
@@ -44,7 +44,7 @@ export function glossaryIndex({ site, terms }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head" style="margin-bottom:24px">
     <p class="eyebrow">Plain definitions</p>
-    <h2>Glossary</h2>
+    <h1>Glossary</h1>
     <p>Every term used on this site, defined in one sentence that stands on its own, with the specific way people get it wrong written underneath. ${sorted.length} entries.</p>
   </div>
 
@@ -59,7 +59,7 @@ export function glossaryIndex({ site, terms }) {
 </div></section>`;
 
   return {
-    title: `Glossary. Investing and property terms, defined. ${site.name}`,
+    title: pageTitle("Glossary of investing and property terms", site.name),
     description: `${sorted.length} property, markets and tax terms, each defined in a single sentence, with the common mistake named underneath.`,
     path: "/glossary/",
     body,
@@ -128,7 +128,7 @@ export function glossaryTerm({ site, term, terms, playbookTitles }) {
 </div></section>`;
 
   return {
-    title: `${copy(term.term)}, defined. ${site.name}`,
+    title: pageTitle(`${copy(term.term)}, defined`, site.name),
     description: copy(term.definition),
     path: `/glossary/${term.slug}/`,
     body,

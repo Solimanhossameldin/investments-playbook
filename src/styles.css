@@ -81,7 +81,10 @@ img { max-width: 100%; display: block; }
 .band--ink .eyebrow, .band--ink-deep .eyebrow { color: var(--gold); }
 
 .section-head { margin-bottom: 40px; }
-.section-head h2 { font-size: clamp(2rem, 4vw, 2.9rem); }
+/* An index page's heading is an h1, a heading inside a page is an h2.
+   They are the same size on purpose: the level is for machines. */
+.section-head h1,
+.section-head h2 { font-size: clamp(2rem, 4vw, 2.9rem); margin: 0; }
 .section-head p { max-width: 62ch; color: var(--muted); margin: 14px 0 0; font-size: 15px; }
 .band--ink .section-head p { color: var(--muted-dark); }
 
@@ -631,7 +634,8 @@ a.card:hover .card__f { transform: translateZ(16px); color: var(--gold); }
 
 h1, h2, h3, h4 { letter-spacing: -0.018em; line-height: 1.1; }
 .hero h1 { font-weight: 400; font-size: clamp(2.3rem, 5vw, 4rem); line-height: 1.04; max-width: 19ch; }
-.section-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.6rem); }
+.section-head h1,
+  .section-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.6rem); }
 .brief-title { font-size: clamp(1.8rem, 3.6vw, 2.6rem); }
 .card__t { font-size: 1.35rem; line-height: 1.22; }
 .q__t { font-size: 1.3rem; }

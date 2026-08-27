@@ -129,3 +129,41 @@ export const INTENTS = [
   "Relocate or set up in the UAE",
   "Just learning",
 ];
+
+/* ----------------------------------------------------------------
+   Search result hygiene. Both of these exist because a title or a
+   description that overflows is silently cut mid-word by the search
+   engine, and the cut lands wherever it lands.
+   ---------------------------------------------------------------- */
+
+export const TITLE_MAX = 60;
+export const DESC_MAX = 155;
+
+/* Append the site name only when it fits. A long, specific title with no
+   brand on it beats a truncated one, and the domain is shown next to the
+   result anyway. */
+export function pageTitle(base, siteName, max = TITLE_MAX) {
+  const b = String(base).trim().replace(/\.$/, "");
+  const withBrand = `${b}. ${siteName}`;
+  return withBrand.length <= max ? withBrand : b;
+}
+
+/* Trim to whole sentences where possible, and to a word boundary when a
+   single sentence is already too long. Never cuts mid-word. */
+export function clampDescription(text, max = DESC_MAX) {
+  const t = copy(String(text || "")).trim().replace(/\s+/g, " ");
+  if (t.length <= max) return t;
+
+  const sentences = t.match(/[^.!?]+[.!?]+(\s|$)/g) || [];
+  let out = "";
+  for (const s of sentences) {
+    if ((out + s).trim().length > max) break;
+    out += s;
+  }
+  out = out.trim();
+  if (out.length >= 70) return out;
+
+  const cut = t.slice(0, max);
+  const at = cut.lastIndexOf(" ");
+  return (at > 40 ? cut.slice(0, at) : cut).replace(/[,;:\-\s]+$/, "");
+}

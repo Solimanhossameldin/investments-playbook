@@ -20,6 +20,7 @@ import glossary from "../content/glossary.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
 import playbooks from "../content/playbooks.mjs";
 import * as STATIC from "../content/static.mjs";
+import { pickRelated } from "../src/related.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
@@ -107,12 +108,11 @@ emit(communityIndex({ site, data: communities }));
 emit(P.briefIndex({ site, briefs }));
 briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1] })));
 emit(P.playbookIndex({ site, playbooks }));
+// Related frameworks are levelled so no page is left with nothing pointing
+// at it. See src/related.mjs for why the obvious sort does not do that.
+const { chosen: relatedBySlug } = pickRelated(playbooks);
 playbooks.forEach((pb) => {
-  const related = playbooks
-    .filter((o) => o.slug !== pb.slug)
-    .sort((a, b) => (a.category === pb.category ? -1 : 1) - (b.category === pb.category ? -1 : 1) || a.tier - b.tier)
-    .slice(0, 4);
-  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related }));
+  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug) }));
 });
 emit(calcIndex({ site }));
 const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length };

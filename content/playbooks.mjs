@@ -1737,7 +1737,9 @@ Also adjust for what is included. A furnished unit and an empty one at the same 
 
 Price per square foot values the box. It does not value the income. Two units at the same price per foot with different service charges and different achievable rents have different [net yields](/playbooks/net-rental-yield/), and the yield is what you are buying if you are buying a rental.
 
-Run both. Price per foot tells you whether you are paying a fair price for the asset. Net yield tells you whether the asset is worth owning.`,
+Run both. Price per foot tells you whether you are paying a fair price for the asset. Net yield tells you whether the asset is worth owning.
+
+Recorded transaction prices by community, taken from Dubai Land Department records rather than from asking prices, are published at [Dubai by community](/communities/). A community median is the anchor you compare a specific unit against. It is not a valuation of that unit, and the spread between the middle half of sales is the honest measure of how far a particular property can sit from the middle.`,
     formula: `Price per square foot
   = purchase price / area on the title deed
 

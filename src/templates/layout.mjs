@@ -1,17 +1,20 @@
-import { esc, copy, fmt, pct, dir, glyph, gst, COUNTRIES, DIAL, INTENTS } from "../lib.mjs";
+import { esc, copy, fmt, pct, dir, glyph, gst, clampDescription, COUNTRIES, DIAL, INTENTS } from "../lib.mjs";
 
 export function head({ site, title, description, path, jsonld = [], ogType = "website", noindex = false, assets = {} }) {
   const url = site.origin + path;
+  // Clamped here rather than at every call site, so a long description
+  // written anywhere on the site still ships at a length that survives.
+  const desc = clampDescription(description);
   return `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
-<meta name="description" content="${esc(copy(description))}">
+<meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${esc(url)}">
 ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:type" content="${ogType}">
 <meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="${esc(copy(description))}">
+<meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${esc(url)}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">

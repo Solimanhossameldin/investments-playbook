@@ -1,4 +1,4 @@
-import { esc, copy } from "../lib.mjs";
+import { esc, copy, pageTitle } from "../lib.mjs";
 import { leadBand } from "./layout.mjs";
 
 const n = (id, label, def, opts = {}) => ({ kind: "num", id, label, def, ...opts });
@@ -260,7 +260,7 @@ export function calcIndex({ site }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head">
     <p class="eyebrow">Free, no sign up, nothing stored</p>
-    <h2>Calculators</h2>
+    <h1>Calculators</h1>
     <p>Every framework on this site ends in a number. These produce yours. They run entirely in your browser: nothing you type is sent anywhere.</p>
   </div>
   <div class="grid grid--3">
@@ -274,7 +274,7 @@ export function calcIndex({ site }) {
     ).join("")}
   </div>
 </div></section>`;
-  return { title: `Calculators. Property and portfolio arithmetic. ${site.name}`, description: "Six free calculators for property and portfolio decisions. Net rental yield, rent versus buy, off-plan IRR, withdrawal rate, US estate tax exposure and lump sum versus cost averaging.", path: "/calculators/", body };
+  return { title: pageTitle("Calculators. Property and portfolio arithmetic", site.name), description: "Six free calculators for property and portfolio decisions. Net rental yield, rent versus buy, off-plan IRR, withdrawal rate, US estate tax exposure and lump sum versus cost averaging.", path: "/calculators/", body };
 }
 
 export function calcPage({ site, calc, counts }) {
@@ -317,8 +317,11 @@ export function calcPage({ site, calc, counts }) {
 ${leadBand(site, counts)}`;
 
   return {
-    title: `${calc.name} calculator. ${site.name}`,
-    description: copy(calc.blurb),
+    title: pageTitle(`${calc.name} calculator`, site.name),
+    // The blurb alone is a fragment on some of these. The second sentence
+    // is true of every calculator on the site and is the thing people
+    // actually want to know before typing a number into one.
+    description: `${copy(calc.blurb)} Free, and nothing you enter leaves your browser.`,
     path: `/calculators/${calc.slug}/`,
     body,
     jsonld: [

@@ -1,4 +1,4 @@
-import { esc, fmt } from "../lib.mjs";
+import { esc, fmt, pageTitle } from "../lib.mjs";
 
 const money = (n) => "AED " + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
@@ -45,7 +45,7 @@ export function communityIndex({ site, data }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head" style="margin-bottom:24px">
     <p class="eyebrow">Built from recorded transactions</p>
-    <h2>Dubai by community</h2>
+    <h1>Dubai by community</h1>
     <p>What property actually changed hands for, by community, from Dubai Land Department records. Median price per square foot, the middle half of the range, and the number of sales behind each figure so you can judge how much weight it carries.</p>
   </div>
 
@@ -71,7 +71,7 @@ export function communityIndex({ site, data }) {
 </div></section>`;
 
   return {
-    title: `Dubai property prices by community. ${site.name}`,
+    title: pageTitle("Dubai property prices by community", site.name),
     description:
       "Median price per square foot by Dubai community, built from Dubai Land Department transaction records, with the number of sales behind every figure.",
     path: "/communities/",
@@ -147,7 +147,7 @@ export function communityPage({ site, c, data }) {
 </div></section>`;
 
   return {
-    title: `${c.name} property prices per square foot. ${site.name}`,
+    title: pageTitle(`${c.name} property prices per square foot`, site.name),
     description: `Property in ${c.name} sold at a median of ${money(c.medianPerSqft)} per square foot across ${c.sales} recorded Dubai Land Department transactions.`,
     path: `/communities/${c.slug}/`,
     body,

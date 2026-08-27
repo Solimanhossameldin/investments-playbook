@@ -1,4 +1,4 @@
-import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey } from "../lib.mjs";
+import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle } from "../lib.mjs";
 import { leadBand, authorBand, briefForm } from "./layout.mjs";
 
 const CATS = {
@@ -201,6 +201,7 @@ ${
     <p class="eyebrow">The library</p>
     <h2>Frameworks, not opinions</h2>
     <p>Each page gives you the rule, the arithmetic, and the honest list of where it breaks. If a framework has a known failure mode, it is on the page.</p>
+    <p style="font-size:14px">For the conditions the frameworks are being applied in, <a href="/chartbook/">the Chartbook</a> carries twelve years of the cost of money, ungated. For what property actually changed hands for, <a href="/communities/">Dubai by community</a>.</p>
   </div>
   <div class="chips rise" id="pb-chips">
     <button class="chip" aria-pressed="true" data-cat="all">All</button>
@@ -271,7 +272,7 @@ export function briefIndex({ site, briefs }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head">
     <p class="eyebrow">Published every weekday, 7am GST</p>
-    <h2>The Brief</h2>
+    <h1>The Brief</h1>
     <p>Three items. Global markets, property, and one number worth knowing. Written from the figures on the market data page, every one of which carries its own source.</p>
     <p style="font-size:14px"><a href="/record/">Every call this brief makes is scored on The Record</a>, including the ones that went wrong, along with every correction issued.</p>
   </div>
@@ -279,7 +280,7 @@ export function briefIndex({ site, briefs }) {
   <div class="arch">${rows || '<p style="padding:26px 0;color:var(--muted)">The first issue publishes tomorrow morning.</p>'}</div>
 </div></section>`;
 
-  return { title: `The Brief. Daily markets and property. ${site.name}`, description: "A three minute brief on global markets and property, published every weekday morning at 7am GST.", path: "/brief/", body };
+  return { title: pageTitle("The Brief. Daily markets and property", site.name), description: "A three minute brief on global markets and property, published every weekday morning at 7am GST.", path: "/brief/", body };
 }
 
 export function briefPage({ site, brief, prev, next }) {
@@ -324,7 +325,7 @@ export function briefPage({ site, brief, prev, next }) {
 </div></section>`;
 
   return {
-    title: `${briefLabel(brief.date)} ${copy(brief.title)}. ${site.name}`,
+    title: pageTitle(`${briefLabel(brief.date)} ${copy(brief.title)}`, site.name),
     description: copy(brief.subtitle),
     path: `/brief/${brief.slug}/`,
     ogType: "article",
@@ -351,7 +352,7 @@ export function playbookIndex({ site, playbooks }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head">
     <p class="eyebrow">The library</p>
-    <h2>Playbooks</h2>
+    <h1>Playbooks</h1>
     <p>One framework per page. The rule, the arithmetic, and where it breaks. Nothing here is a recommendation, all of it is a method.</p>
   </div>
   <div class="field" style="max-width:420px"><label for="pb-search">Search the library</label><input id="pb-search" type="text" placeholder="net yield, withdrawal rate, domicile"></div>
@@ -376,7 +377,7 @@ export function playbookIndex({ site, playbooks }) {
   </div>
   <p id="pb-empty" hidden style="padding:30px 0;color:var(--muted)">Nothing matches that. Try a shorter word.</p>
 </div></section>`;
-  return { title: `Playbooks. Investing frameworks with the arithmetic. ${site.name}`, description: "A library of investing frameworks for markets and property. Each page gives the rule, the arithmetic, and where it breaks.", path: "/playbooks/", body };
+  return { title: pageTitle("Investing frameworks, with the arithmetic", site.name), description: "A library of investing frameworks for markets and property. Each page gives the rule, the arithmetic, and where it breaks.", path: "/playbooks/", body };
 }
 
 export function playbookPage({ site, pb, calcName, related = [] }) {
@@ -448,7 +449,7 @@ export function playbookPage({ site, pb, calcName, related = [] }) {
   }));
 
   return {
-    title: `${copy(pb.title)}. ${site.name}`,
+    title: pageTitle(copy(pb.title), site.name),
     description: copy(pb.summary),
     path: `/playbooks/${pb.slug}/`,
     ogType: "article",
@@ -505,10 +506,12 @@ export function dataPage({ site, market, status }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head">
     <p class="eyebrow">Refreshed daily, automatically</p>
-    <h2>Market data</h2>
+    <h1>Market data</h1>
     <p>These figures are indicative and may be delayed. Each row names its own source and its own timestamp, because a number without a provenance is not a number, it is a claim.</p>
     <p style="font-size:13.5px">Gold, silver, Bitcoin and Ethereum carry a <span class="livedot" style="position:relative;top:-1px"></span> and refresh in your browser about once a minute, straight from the provider named in the row. Everything else is rebuilt twice a day, because at source it changes daily, weekly or monthly and a faster clock on this page would not make it any newer.</p>
+    <p style="font-size:13.5px">These are today's levels. Twelve years of most of them, and what each one does to the price of a property, is in <a href="/chartbook/">the Chartbook</a>. What the institutions behind them actually published, unrewritten, is on <a href="/wire/">the Wire</a>, and what any of it meant on the day is in <a href="/brief/">the Brief</a>.</p>
   </div>
+
   ${tables || '<p style="color:var(--muted)">The first data pull runs tonight.</p>'}
 
   <h2 style="font-size:1.8rem;margin:64px 0 6px">Automation status</h2>
@@ -527,7 +530,7 @@ export function dataPage({ site, market, status }) {
   </table></div>
   <p style="font-size:12px;color:var(--muted);margin-top:34px;max-width:var(--prose)">${esc(site.attribution)} ${esc(site.disclaimer)}</p>
 </div></section>`;
-  return { title: `Market data. Live figures with named sources. ${site.name}`, description: "Live market figures for equities, rates, commodities, currencies, crypto and property. Every row names its source and its timestamp.", path: "/data/", body };
+  return { title: pageTitle("Market data, with named sources", site.name), description: "Live market figures for equities, rates, commodities, currencies, crypto and property. Every row names its source and its timestamp.", path: "/data/", body };
 }
 
 /* ============================ STATIC ============================ */
@@ -552,5 +555,5 @@ export function notFound({ site }) {
     <a class="btn btn--ghost" href="/">Home</a>
   </div>
 </div></section>`;
-  return { title: `Not found. ${site.name}`, description: "Page not found.", path: "/404.html", body };
+  return { title: pageTitle("Not found", site.name), description: "Page not found.", path: "/404.html", body };
 }

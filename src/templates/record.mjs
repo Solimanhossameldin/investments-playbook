@@ -1,4 +1,4 @@
-import { esc, longDate } from "../lib.mjs";
+import { esc, longDate, pageTitle } from "../lib.mjs";
 import { classify, scoreboard, daysUntil, describeTest } from "../../scripts/lib/record.mjs";
 
 const VERDICT = {
@@ -102,7 +102,7 @@ export function recordPage({ site, calls, results, briefs }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head" style="margin-bottom:10px">
     <p class="eyebrow">Including the ones that went wrong</p>
-    <h2>The Record</h2>
+    <h1>The Record</h1>
     <p>Every forward-looking claim this site makes, the date it was made, and what actually happened. Plus every correction issued. Most places publishing market opinion do not keep a page like this, for a reason that becomes obvious the moment you keep one.</p>
   </div>
 
@@ -127,14 +127,14 @@ export function recordPage({ site, calls, results, briefs }) {
 
   <div class="callout" style="margin-top:56px;max-width:var(--prose)">
     <b>How to hold this site to it</b>
-    Every figure published here names its source and the moment it was read, on the <a href="/data/">market data page</a>. If a number looks wrong, it is checkable at the source, and if it is wrong it gets a correction on this page with the original still visible. That is the whole standard, and it is written out in full in the <a href="/disclosure/">editorial standards</a>.
+    Every figure published here names its source and the moment it was read, on the <a href="/data/">market data page</a>. If a number looks wrong, it is checkable at the source, and if it is wrong it gets a correction on this page with the original still visible. That is the whole standard, and it is written out in full in the <a href="/disclosure/">editorial standards</a>. The calls themselves are made in <a href="/brief/">the Brief</a>, and <a href="/about/">who is making them</a> is worth knowing before you weigh any of it.
   </div>
 
   <p style="font-size:12px;color:var(--muted);margin-top:40px;max-width:var(--prose)">${esc(site.disclaimer)}</p>
 </div></section>`;
 
   return {
-    title: `The Record. Every call scored, including the wrong ones. ${site.name}`,
+    title: pageTitle("The Record. Every call scored, wrong ones included", site.name),
     description:
       "Every forward-looking claim Investments Playbook makes, the date it was made, what actually happened, and every correction issued. Calls that can be reduced to a number are scored by machine, not by us.",
     path: "/record/",

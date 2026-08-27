@@ -1,4 +1,4 @@
-import { esc, gst } from "../lib.mjs";
+import { esc, gst, pageTitle } from "../lib.mjs";
 
 const CATS = {
   rates: "Rates and policy",
@@ -88,7 +88,7 @@ export function wirePage({ site, wire }) {
   const body = `<section class="band"><div class="wrap">
   <div class="section-head" style="margin-bottom:26px">
     <p class="eyebrow">Primary sources, as they publish</p>
-    <h2>The Wire</h2>
+    <h1>The Wire</h1>
     <p>Central banks, statistical agencies and regulators, in the order they released it. Every headline is the one the institution wrote, and every link goes to the institution. Nothing here is republished, summarised or rewritten.</p>
   </div>
 
@@ -111,7 +111,7 @@ export function wirePage({ site, wire }) {
 </div></section>`;
 
   return {
-    title: `The Wire. Central banks and regulators, as they publish. ${site.name}`,
+    title: pageTitle("The Wire. Central banks, as they publish", site.name),
     description:
       "Releases from the Federal Reserve, the ECB, the Bank of England, the BLS, the SEC and Gulf authorities, in the order they were published, each linking to the source.",
     path: "/wire/",
