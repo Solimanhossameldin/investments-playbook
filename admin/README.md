@@ -1,7 +1,15 @@
 # The admin
 
-`admin.investmentsplaybook.com` — sign in, see every lead, filter them,
-export a CSV.
+`admin.investmentsplaybook.com` — your own back end. Sign in with your
+own password and edit the site: the 40 frameworks, the 47 glossary
+terms, the standing pages. Also see every lead, filter them, export a
+CSV.
+
+You never sign in to GitHub or MailerLite to run this. They sit
+underneath as plumbing; the tokens belong to the Worker, not to you.
+Editing a page here writes a commit and the site rebuilds itself, which
+means every change has an author, a timestamp and a diff — a better
+record than most content systems keep.
 
 ## Why it is a subdomain and not investmentsplaybook.com/admin
 
@@ -41,7 +49,13 @@ generate a token with read access to subscribers. Copy it.
 **3. Create the Worker.** Cloudflare dashboard → Workers & Pages →
 Create → Worker. Name it `investments-playbook-admin`. Deploy the
 starter, then Edit code, delete everything in the editor, and paste the
-whole of `admin/worker.js` from this folder. Deploy.
+whole of **`admin/worker.bundled.js`** from this folder. Deploy.
+
+Paste the bundled file, not `worker.js`. The source is split across
+three modules so the schema is shared with the site's own build rather
+than duplicated; Cloudflare's editor takes one file, and
+`npm run buildadmin` produces it. The tests fail if the bundle is older
+than the source, so it cannot drift.
 
 **4. Add the three variables.** Worker → Settings → Variables and
 Secrets. Add each one as **Secret**, not plain text:
@@ -51,6 +65,12 @@ Secrets. Add each one as **Secret**, not plain text:
 | `MAILERLITE_API_KEY` | the token from step 2 |
 | `ADMIN_PASSWORD_HASH` | the `pbkdf2$…` line from step 1 |
 | `SESSION_SECRET` | the second line from step 1 |
+| `GITHUB_TOKEN` | see below |
+
+For `GITHUB_TOKEN`: github.com → Settings → Developer settings → Personal
+access tokens → Fine-grained tokens → Generate. Give it access to the
+`investments-playbook` repository only, and one permission: **Contents,
+read and write**. Nothing else. Copy the token.
 
 Deploy again so the Worker picks them up.
 
@@ -67,7 +87,7 @@ password.
 
 ## If something is wrong
 
-**"Not configured"** — one of the three variables is missing or
+**"Not configured"** — the page names which variable is missing, or
 `SESSION_SECRET` is under 24 characters. The Worker refuses to serve
 anything rather than run without a secret, which is deliberate.
 
@@ -83,8 +103,16 @@ went into the wrong zone. Nothing about this affects the main site.
 
 ## What it does and does not do
 
-It reads. It cannot edit or delete a subscriber, and it holds no
-database of its own — every load comes from MailerLite live. Sessions
+It edits content: the frameworks, the glossary, the standing pages. It
+cannot change the design, add a new page type, or alter how the site is
+built — those are code, and they still come through Claude.
+
+Leads are read-only. It cannot edit or delete a subscriber, and it holds
+no database of its own — every load comes from MailerLite live.
+
+Nothing you save can break the site quietly. The fields are validated on
+the server before anything is committed, and what gets written is parsed
+back before the commit is accepted. Sessions
 last twelve hours, the cookie is HttpOnly, Secure and SameSite=Strict,
 and the page refuses to be framed or indexed.
 

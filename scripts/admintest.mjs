@@ -109,10 +109,11 @@ const GOOD_ENV = {
   SESSION_SECRET: SECRET,
   ADMIN_PASSWORD_HASH: makeHash("the real password"),
   MAILERLITE_API_KEY: "ml-secret-key-value",
+  GITHUB_TOKEN: "gh-secret-token-value",
 };
 
 await t("a missing secret takes the whole thing offline", async () => {
-  for (const drop of ["SESSION_SECRET", "ADMIN_PASSWORD_HASH", "MAILERLITE_API_KEY"]) {
+  for (const drop of ["SESSION_SECRET", "ADMIN_PASSWORD_HASH", "MAILERLITE_API_KEY", "GITHUB_TOKEN"]) {
     const env = { ...GOOD_ENV, [drop]: "" };
     const r = await call("/", env);
     assert.equal(r.status, 503, `${drop} missing did not stop it`);
@@ -129,7 +130,8 @@ await t("the leads API refuses an unauthenticated request", async () => {
   const r = await call("/api/leads", GOOD_ENV);
   assert.equal(r.status, 401);
   const body = await r.text();
-  assert.ok(!body.includes("ml-secret-key-value"), "the key leaked into a response");
+  assert.ok(!body.includes("ml-secret-key-value"), "the MailerLite key leaked into a response");
+  assert.ok(!body.includes("gh-secret-token-value"), "the GitHub token leaked into a response");
 });
 
 await t("a forged cookie does not open the leads API", async () => {
@@ -192,4 +194,163 @@ await t("every response refuses framing and indexing", async () => {
   }
 });
 
-console.log(`admin: ${n} checks passed.`);
+/* ---------- the editor ---------- */
+import { SECTIONS, validate } from "../admin/content-schema.mjs";
+import { parseEntry, serialiseEntry } from "../src/content/format.mjs";
+
+const EDIT_ENV = GOOD_ENV;
+const signedIn = async () => ({ cookie: `ip_admin=${await makeSession(SECRET)}` });
+
+await t("the editor refuses to run without a GitHub token", async () => {
+  const r = await call("/", { ...EDIT_ENV, GITHUB_TOKEN: "" });
+  assert.equal(r.status, 503);
+  assert.match(await r.text(), /GITHUB_TOKEN/);
+});
+
+await t("the schema is only served to someone signed in", async () => {
+  assert.equal((await call("/api/sections", EDIT_ENV)).status, 401);
+  const r = await call("/api/sections", EDIT_ENV, { headers: await signedIn() });
+  const d = await r.json();
+  assert.deepEqual(d.sections.map((s) => s.key), ["playbooks", "glossary", "pages"]);
+  assert.ok(d.sections[0].fields.length > 5);
+});
+
+await t("every editable section points at a directory that exists", async () => {
+  const fs = await import("node:fs");
+  for (const [key, s] of Object.entries(SECTIONS)) {
+    assert.ok(fs.existsSync(new URL("../" + s.dir, import.meta.url)), `${key} points at ${s.dir}, which is not there`);
+  }
+});
+
+await t("every field the editor offers is one the site actually renders", async () => {
+  // A field in the form that nothing reads is a control that silently
+  // does nothing, which is worse than no control.
+  const playbooks = (await import("../content/playbooks.mjs")).default;
+  const keys = new Set(Object.keys(playbooks[0]));
+  for (const f of SECTIONS.playbooks.fields) {
+    assert.ok(keys.has(f.key), `the form offers "${f.key}", which no framework has`);
+  }
+  const glossary = (await import("../content/glossary.mjs")).default;
+  const gkeys = new Set(Object.keys(glossary[0]));
+  for (const f of SECTIONS.glossary.fields) {
+    assert.ok(gkeys.has(f.key), `the glossary form offers "${f.key}", which no term has`);
+  }
+});
+
+await t("saving is refused when not signed in", async () => {
+  const r = await call("/api/save", EDIT_ENV, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ section: "playbooks", slug: "x", meta: {}, body: "" }),
+  });
+  assert.equal(r.status, 401);
+});
+
+await t("saving validates on the server, not just in the browser", async () => {
+  // The browser can be bypassed entirely by posting here directly, so
+  // an empty required field has to be caught on this side.
+  const r = await call("/api/save", EDIT_ENV, {
+    method: "POST",
+    headers: { "content-type": "application/json", ...(await signedIn()) },
+    body: JSON.stringify({
+      section: "playbooks",
+      slug: "net-rental-yield",
+      meta: { slug: "net-rental-yield", order: 0, title: "", category: "property", tier: 1, reviewed: "x", summary: "", formula: "f", failureModes: [], whenToUse: "w", sources: [] },
+      body: "some body",
+      sha: "abc",
+    }),
+  });
+  assert.equal(r.status, 422);
+  const d = await r.json();
+  assert.match(d.error, /Title cannot be empty/);
+});
+
+await t("a slug that could escape the content directory is refused", async () => {
+  for (const slug of ["../../etc/passwd", "a/b", "UPPER", "", "with space"]) {
+    const r = await call("/api/save", EDIT_ENV, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...(await signedIn()) },
+      body: JSON.stringify({ section: "playbooks", slug, meta: {}, body: "" }),
+    });
+    assert.equal(r.status, 400, `accepted slug ${JSON.stringify(slug)}`);
+  }
+});
+
+await t("an unknown section is refused", async () => {
+  const r = await call("/api/list?section=nope", EDIT_ENV, { headers: await signedIn() });
+  assert.equal(r.status, 400);
+});
+
+await t("validation accepts a real entry unchanged", async () => {
+  const fs = await import("node:fs");
+  const file = fs.readFileSync(new URL("../content/playbooks/net-rental-yield.md", import.meta.url), "utf8");
+  const { meta, body } = parseEntry(file);
+  assert.deepEqual(validate("playbooks", meta, body), []);
+});
+
+await t("validation catches the mistakes an editor would actually make", () => {
+  const fine = { slug: "a-b", order: 1, term: "T", definition: "d", category: "property", trap: "t", related: [] };
+  assert.deepEqual(validate("glossary", fine, "body"), []);
+  assert.match(validate("glossary", { ...fine, category: "invented" }, "b").join(" "), /Category must be one of/);
+  assert.match(validate("glossary", { ...fine, slug: "Not A Slug" }, "b").join(" "), /slug must be lower case/);
+  assert.match(validate("glossary", { ...fine, order: undefined }, "b").join(" "), /order is missing/);
+  assert.match(validate("playbooks", { slug: "a", order: 1, tier: "high" }, "b").join(" "), /Tier has to be a number/);
+});
+
+await t("a source with a link that is not a web address is caught", () => {
+  const base = { slug: "a", order: 1, title: "T", category: "property", tier: 1, reviewed: "r", summary: "s", formula: "f", failureModes: ["x"], whenToUse: "w" };
+  assert.deepEqual(validate("playbooks", { ...base, sources: [{ name: "A", url: "https://example.com" }] }, "b"), []);
+  assert.match(validate("playbooks", { ...base, sources: [{ name: "A", url: "javascript:alert(1)" }] }, "b").join(" "), /not a web address/);
+  assert.match(validate("playbooks", { ...base, sources: [{ name: "", url: "https://example.com" }] }, "b").join(" "), /needs a name/);
+});
+
+await t("what the editor writes can always be read back", () => {
+  // If a saved file cannot be parsed, the site stops building, and the
+  // first anyone knows is a failed deploy.
+  const awkward = {
+    slug: "a", order: 1, title: 'Quotes " and \\ backslashes',
+    category: "property", tier: 1, reviewed: "r",
+    summary: "A summary — with an em dash", formula: "line one\nline two",
+    failureModes: ["one\ntwo", "three"], whenToUse: "w",
+    sources: [{ name: "S", url: "https://x.test" }],
+  };
+  const body = "Body with\n\n---\n\na rule and `code`.";
+  const back = parseEntry(serialiseEntry(awkward, body));
+  assert.deepEqual(back.meta, awkward);
+  assert.equal(back.body, body);
+});
+
+/* ---------- the file that actually gets pasted ---------- */
+await t("the bundle behaves the same as the source", async () => {
+  const bundled = await import("../admin/worker.bundled.js");
+  const r = await bundled.default.fetch(new Request("https://admin.example.com/api/sections"), EDIT_ENV);
+  assert.equal(r.status, 401, "the bundle does not enforce sign-in");
+
+  const ok = await bundled.default.fetch(
+    new Request("https://admin.example.com/api/sections", { headers: await signedIn() }),
+    EDIT_ENV
+  );
+  assert.equal(ok.status, 200);
+  assert.deepEqual((await ok.json()).sections.map((s) => s.key), ["playbooks", "glossary", "pages"]);
+});
+
+await t("the bundle carries no import statement", async () => {
+  const fs = await import("node:fs");
+  const text = fs.readFileSync(new URL("../admin/worker.bundled.js", import.meta.url), "utf8");
+  assert.ok(!/^\s*import\s/m.test(text), "an import survived, so Cloudflare would reject it");
+  assert.ok(/export default\s*\{/.test(text), "no default export");
+});
+
+await t("the bundle is current", async () => {
+  // A stale bundle is the worst kind of bug here: the code is fixed and
+  // the deployed Worker is not.
+  const fs = await import("node:fs");
+  const src = new URL("../admin/worker.js", import.meta.url);
+  const out = new URL("../admin/worker.bundled.js", import.meta.url);
+  assert.ok(
+    fs.statSync(out).mtimeMs >= fs.statSync(src).mtimeMs,
+    "admin/worker.js is newer than the bundle. Run: npm run buildadmin"
+  );
+});
+
+console.log(`admin: ${n} checks passed in total.`);
