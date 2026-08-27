@@ -4,6 +4,18 @@
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-08-27T08:31:14.958Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-08-27T08:31:14.812Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
    "ranAt": "2026-08-27T08:09:41.275Z"
   },
   {
@@ -227,18 +239,6 @@
    "result": "failed",
    "detail": "0 items from 0 of 14 feeds. Down: fed-monetary (fetch failed); fed-all (fetch failed); fed-speeches (fetch failed); bls (fetch failed); bea (fetch failed); treasury (fetch failed); sec (fetch failed); ecb (fetch failed); boe (fetch failed); bis (fetch failed); imf (fetch failed); uae-cb (fetch failed); dubai-media (fetch failed); wam (fetch failed)",
    "at": "2026-08-26T16:21:39.645Z"
-  },
-  {
-   "job": "fetch-wire",
-   "result": "failed",
-   "detail": "0 items from 0 of 14 feeds. Down: fed-monetary (fetch failed); fed-all (fetch failed); fed-speeches (fetch failed); bls (fetch failed); bea (fetch failed); treasury (fetch failed); sec (fetch failed); ecb (fetch failed); boe (fetch failed); bis (fetch failed); imf (fetch failed); uae-cb (fetch failed); dubai-media (fetch failed); wam (fetch failed)",
-   "at": "2026-08-26T16:20:09.069Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "A brief for 2026-08-26 already exists.",
-   "ranAt": "2026-08-26T14:17:24.625Z"
   }
  ]
 }
