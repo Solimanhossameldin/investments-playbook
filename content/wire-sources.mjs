@@ -21,6 +21,10 @@ export default [
   { id: "fed-speeches", name: "Federal Reserve", label: "Speeches", category: "rates",
     url: "https://www.federalreserve.gov/feeds/speeches.xml" },
 
+  // Two sources were removed on 27 August 2026 for the same reason EIA and
+  // Google News are absent: their real feeds are disallowed by robots.txt.
+  //   Bank for International Settlements: configured URL 404s,
+  //     bis.org/doclist/press_rlses.rss is robots-disallowed.
   // Bureau of Economic Analysis was removed on 27 August 2026. Its configured
   // feed returned 404 and its real feed at apps.bea.gov is robots-disallowed,
   // which is the same reason EIA and Google News are absent. Verified, not
@@ -41,8 +45,6 @@ export default [
     url: "https://www.ecb.europa.eu/rss/press.html" },
   { id: "boe", name: "Bank of England", label: "News", category: "rates",
     url: "https://www.bankofengland.co.uk/rss/news" },
-  { id: "bis", name: "Bank for International Settlements", label: "Press releases", category: "markets",
-    url: "https://www.bis.org/list/press_rlses/rss.xml" },
   { id: "imf", name: "International Monetary Fund", label: "News", category: "macro",
     url: "https://www.imf.org/en/News/RSS?Language=ENG" },
 
