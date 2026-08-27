@@ -218,7 +218,7 @@ function loginPage(error = "") {
 </form>`, error ? 401 : 200);
 }
 
-function adminPage() {
+export function adminPage() {
   return html(`<!doctype html><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
