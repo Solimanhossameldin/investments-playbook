@@ -954,3 +954,55 @@ h1, h2, h3, h4 { letter-spacing: -0.018em; line-height: 1.1; }
   .cb__toc { display: none; }
   .cb { break-inside: avoid; border-bottom: 1px solid #ccc; }
 }
+
+
+/* ============================================================
+   HEADER OVERFLOW
+   The nav did not fit beside the wordmark and the button, and
+   flexbox was hiding it by crushing the button rather than
+   wrapping: on a 1440px screen "Get the Playbook" was being
+   squeezed to a sliver. The burger only took over at 720, so
+   everything between 721 and 1149 ran off the edge.
+
+   The fix has three parts: the header spans wider than the
+   article column, which is normal for a business-press
+   masthead; the nav type is a shade tighter; and the button,
+   which is duplicated in the hero, the lead band and the
+   footer, steps aside below 1400.
+
+   Every width here was measured in a real browser with a
+   fallback font wider than Inter, so the live page has more
+   room than these numbers assume. Do not tighten them without
+   measuring again, and do not add a tenth nav item without
+   re-measuring: nine is already the ceiling.
+   ============================================================ */
+.hdr__in { max-width: 1440px; }
+.nav { gap: 14px; overflow: hidden; }
+.nav a { font-size: 11.5px; letter-spacing: 0.03em; white-space: nowrap; }
+/* Only where the nav is actually shown. Pinning the wordmark at every
+   width pushed it off the screen on a 320px phone. */
+@media (min-width: 1150px) { .mark, .hdr .btn { flex-shrink: 0; } }
+
+/* The button is duplicated in the hero and the footer, so it is the
+   first thing to go when the header runs short of room. */
+@media (max-width: 1399px) { .hdr .btn { display: none; } }
+
+@media (max-width: 1149px) {
+  .nav { display: none; }
+  .hdr .btn { display: none; }
+  .burger { display: block; }
+  .nav--open {
+    display: flex; position: absolute; top: 68px; left: 0; right: 0;
+    flex-direction: column; gap: 0; background: var(--ivory);
+    border-bottom: 1px solid var(--hair-light); padding: 8px 24px 20px; z-index: 60;
+  }
+  .nav--open a { padding: 12px 0; border-bottom: 1px solid var(--hair-light); }
+}
+
+/* The wordmark is nowrap at 21px, which is wider than a 320px phone.
+   Pre-existing, found while measuring the nav. Nothing else on the page
+   needs to change; the mark just gets a size that fits the narrowest
+   screens still in use. */
+@media (max-width: 359px) {
+  .mark { font-size: 16px; letter-spacing: 0.02em; }
+}
