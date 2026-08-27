@@ -10,7 +10,16 @@
    holds markets exposure abroad, which is the whole point.
 
    A feed that fails is skipped and reported on the status panel. Add one by
-   appending to this list; nothing else needs to change. */
+   appending to this list; nothing else needs to change.
+
+   `retired` marks a source whose URL has been verified dead rather than
+   temporarily unreachable, with the date and the evidence. A retired source is
+   still fetched, in case the institution restores it, but it is excluded from
+   the "N of M answering" count and named separately. Reporting five permanent
+   404s as though they were today's failures overstates the health of the wire
+   in one direction and understates it in the other: it looks like a flaky
+   pipeline rather than what it is, which is five institutions that stopped
+   publishing RSS. Delete the field the moment a feed answers again. */
 
 export default [
   // ---- US monetary policy and the rate that prices everything ----
@@ -34,7 +43,8 @@ export default [
   { id: "bls", name: "Bureau of Labor Statistics", label: "Economic indicators", category: "macro",
     url: "https://www.bls.gov/feed/bls_latest.rss" },
   { id: "treasury", name: "U.S. Treasury", label: "Press releases", category: "rates",
-    url: "https://home.treasury.gov/news/press-releases/feed" },
+    url: "https://home.treasury.gov/news/press-releases/feed",
+    retired: "27 August 2026: /news/press-releases/feed, /rss and /rss/press.xml all return 404." },
 
   // ---- markets plumbing and enforcement ----
   { id: "sec", name: "Securities and Exchange Commission", label: "Press releases", category: "markets",
@@ -46,13 +56,17 @@ export default [
   { id: "boe", name: "Bank of England", label: "News", category: "rates",
     url: "https://www.bankofengland.co.uk/rss/news" },
   { id: "imf", name: "International Monetary Fund", label: "News", category: "macro",
-    url: "https://www.imf.org/en/News/RSS?Language=ENG" },
+    url: "https://www.imf.org/en/News/RSS?Language=ENG",
+    retired: "27 August 2026: the RSS route serves HTML, not a feed." },
 
   // ---- the Gulf, which is the half nobody else aggregates ----
   { id: "uae-cb", name: "Central Bank of the UAE", label: "News", category: "gulf",
-    url: "https://www.centralbank.ae/en/rss/news" },
+    url: "https://www.centralbank.ae/en/rss/news",
+    retired: "27 August 2026: /en/rss/news returns 404." },
   { id: "dubai-media", name: "Dubai Media Office", label: "News", category: "gulf",
-    url: "https://mediaoffice.ae/en/rss" },
+    url: "https://mediaoffice.ae/en/rss",
+    retired: "27 August 2026: /en/rss returns a 404 page." },
   { id: "wam", name: "Emirates News Agency", label: "Business", category: "gulf",
-    url: "https://www.wam.ae/en/rss/business" },
+    url: "https://www.wam.ae/en/rss/business",
+    retired: "27 August 2026: /en/rss returns 200 and renders the homepage, a soft 404. Their RSS index no longer lists any feed." },
 ];

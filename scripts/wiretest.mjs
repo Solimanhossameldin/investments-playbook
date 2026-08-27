@@ -87,5 +87,38 @@ const trap = parse(CHANNEL_TRAP);
 ok("channel metadata is not emitted as an item",
   trap.length === 1 && trap[0].title === "Real item", trap.map((t) => t.title));
 
+/* ---- a dead feed is not a flaky feed ----
+   Five sources have URLs verified dead: they return 404, or HTML, or a soft
+   404 that renders a homepage. Counting them in "N of M answering" reports a
+   working pipeline as half broken and hides the actual fact, which is that
+   five institutions stopped publishing RSS. They are excluded from the count
+   and named on the page instead. */
+{
+  const SOURCES = (await import(`${new URL("../content/wire-sources.mjs", import.meta.url).href}`)).default;
+  const retired = SOURCES.filter((s) => s.retired);
+  const live = SOURCES.filter((s) => !s.retired);
+
+  ok("every retired source records why and when", retired.length > 0 &&
+    retired.every((s) => typeof s.retired === "string" && /\d{4}/.test(s.retired)),
+    JSON.stringify(retired.filter((s) => !/\d{4}/.test(String(s.retired))).map((s) => s.id)));
+
+  ok("retired sources keep their url so they can be rechecked",
+    retired.every((s) => /^https:\/\//.test(s.url)));
+
+  ok("the live count excludes them", live.length === SOURCES.length - retired.length);
+
+  const { wirePage } = await import(`${new URL("../src/templates/wire.mjs", import.meta.url).href}`);
+  const page = wirePage({
+    site: { name: "T", origin: "https://e.com", disclaimer: "Not advice." },
+    wire: { fetchedAt: new Date().toISOString(), sourcesOk: live.length, sourcesTotal: live.length,
+            retired: retired.map((s) => ({ name: s.name, note: s.retired })), items: [] },
+  });
+  ok("the page names withdrawn sources rather than hiding them in a ratio",
+    retired.every((s) => page.body.includes(s.name)),
+    "a retired source is not named on the page");
+  ok("the page does not present them as today's failures",
+    /withdrawn/i.test(page.body), "no withdrawal wording on the page");
+}
+
 console.log(`\n${fail === 0 ? "All wire parser checks passed." : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);

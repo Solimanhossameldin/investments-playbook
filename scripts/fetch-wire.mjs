@@ -151,10 +151,18 @@ const merged = [...byUrl.values()]
   .sort((a, b) => new Date(b.published) - new Date(a.published))
   .slice(0, KEEP);
 
+// A retired source has a URL verified dead, not a feed having a bad morning.
+// Counting them in the denominator reports five permanent 404s as though they
+// were today's failures, which makes a working pipeline look broken and hides
+// the real problem: five institutions stopped publishing RSS.
+const retired = SOURCES.filter((s) => s.retired);
+const live = SOURCES.filter((s) => !s.retired);
+
 const out = {
   fetchedAt: new Date(now).toISOString(),
-  sourcesTotal: SOURCES.length,
+  sourcesTotal: live.length,
   sourcesOk: ok,
+  retired: retired.map((s) => ({ name: s.name, note: s.retired })),
   items: merged,
 };
 fs.writeFileSync(seenPath, JSON.stringify(out, null, 1) + "\n");

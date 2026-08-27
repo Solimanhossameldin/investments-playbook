@@ -95,6 +95,15 @@ export function wirePage({ site, wire }) {
   <p class="wire-meta"><span class="livedot"></span> Checked ${esc(gst(wire.fetchedAt))} GST, ${
     wire.sourcesOk || 0
   } of ${wire.sourcesTotal || 0} feeds answering. Refreshes through the day. <a href="/data/">Pipeline status</a></p>
+  ${
+    (wire.retired || []).length
+      ? `<p class="wire-meta" style="color:var(--muted)">${(wire.retired || []).length} source${
+          (wire.retired || []).length === 1 ? "" : "s"
+        } withdrawn, and named rather than quietly dropped: ${(wire.retired || [])
+          .map((r) => esc(r.name))
+          .join(", ")}. Each stopped publishing a feed at its own end. They are still checked in case that changes.</p>`
+      : ""
+  }
 
   ${chips}
   ${feed || '<p style="color:var(--muted)">The first pull runs shortly.</p>'}
