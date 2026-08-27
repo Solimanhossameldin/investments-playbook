@@ -21,11 +21,14 @@ export default [
   { id: "fed-speeches", name: "Federal Reserve", label: "Speeches", category: "rates",
     url: "https://www.federalreserve.gov/feeds/speeches.xml" },
 
+  // Bureau of Economic Analysis was removed on 27 August 2026. Its configured
+  // feed returned 404 and its real feed at apps.bea.gov is robots-disallowed,
+  // which is the same reason EIA and Google News are absent. Verified, not
+  // assumed: both URLs were fetched.
+
   // ---- the data prints that move the curve ----
   { id: "bls", name: "Bureau of Labor Statistics", label: "Economic indicators", category: "macro",
     url: "https://www.bls.gov/feed/bls_latest.rss" },
-  { id: "bea", name: "Bureau of Economic Analysis", label: "Releases", category: "macro",
-    url: "https://www.bea.gov/rss.xml" },
   { id: "treasury", name: "U.S. Treasury", label: "Press releases", category: "rates",
     url: "https://home.treasury.gov/news/press-releases/feed" },
 
