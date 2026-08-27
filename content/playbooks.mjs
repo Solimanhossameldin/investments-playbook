@@ -1867,7 +1867,7 @@ Always run it three times
     title: "Rent increase caps and the rental index",
     category: "property",
     tier: 1,
-    calculator: "net-rental-yield",
+    calculator: "dubai-rent-increase",
     reviewed: R,
     summary:
       "Dubai caps how much a landlord may raise rent on renewal according to how far the current rent sits below the RERA rental index, rising in steps from no increase at all up to a maximum of twenty percent, which means a landlord's yield improvement is limited by law rather than by negotiation.",

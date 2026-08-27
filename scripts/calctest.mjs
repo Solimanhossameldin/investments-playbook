@@ -38,6 +38,48 @@ console.log("\nNet rental yield");
   check("cash on cash is negative when yield is under the rate", numOf(lev.coc) < 0, lev.coc);
 }
 
+console.log("\nDubai rent increase, Decree 43 of 2013");
+{
+  const run = (current, index, notice = 90) => CALC["dubai-rent-increase"]({ current, index, notice });
+  const pctIncrease = (current, index) => Math.round((numOf(run(current, index).maxrent) / current - 1) * 100);
+
+  // The boundaries are the whole point of the decree, and they are the values
+  // a landlord and a tenant will each round in their own favour. Each tier is
+  // tested on both sides of its edge.
+  const tiers = [
+    [110000, 120000, 0,  "8.3 percent below, inside the ten percent band"],
+    [108000, 120000, 0,  "exactly ten percent below, still no increase"],
+    [107000, 120000, 5,  "just past ten percent below"],
+    [96000,  120000, 5,  "exactly twenty percent below"],
+    [95000,  120000, 10, "just past twenty percent below"],
+    [84000,  120000, 10, "exactly thirty percent below"],
+    [83000,  120000, 15, "just past thirty percent below"],
+    [72000,  120000, 15, "exactly forty percent below"],
+    [71000,  120000, 20, "just past forty percent below"],
+    [60000,  120000, 20, "fifty percent below, still capped at twenty"],
+  ];
+  for (const [cur, idx, want, why] of tiers) {
+    const got = pctIncrease(cur, idx);
+    check(`${why} gives ${want}%`, got === want, `${got}%`);
+  }
+
+  const above = run(130000, 120000);
+  check("a rent above the index permits no increase", numOf(above.maxrent) === 130000, above.maxrent);
+  check("and says it is above rather than showing a negative", /above the index/.test(above.gap), above.gap);
+
+  check("short notice is called out", /Not satisfied/.test(run(90000, 120000, 45).notice), run(90000, 120000, 45).notice);
+  check("ninety days is enough", /^Satisfied/.test(run(90000, 120000, 90).notice), run(90000, 120000, 90).notice);
+
+  // A missing index must not produce Infinity or NaN on a page about a legal cap.
+  const zero = run(90000, 0);
+  check("a zero index permits nothing rather than breaking", numOf(zero.maxrent) === 90000, zero.maxrent);
+  check("nothing in the output is NaN", !Object.values(zero).some((v) => /NaN|Infinity|undefined/.test(String(v))), zero);
+
+  const mid = run(90000, 120000);
+  check("headroom left after the increase is reported", numOf(mid.headroom) > 0, mid.headroom);
+  check("the tier is named in words", /Up to 10 percent/.test(mid.tier), mid.tier);
+}
+
 console.log("\nRent versus buy");
 {
   const base = { price: 1500000, rent: 90000, sc: 20000, proptax: 0, deposit: 25, rate: 4.5,

@@ -43,6 +43,45 @@
     };
   };
 
+  /* Decree No. 43 of 2013. The permitted increase is a step function of how
+     far the existing rent already sits below the RERA index average, and a
+     rent within ten percent of the index cannot be raised at all. The tiers
+     are the decree's, not an interpretation of it. */
+  CALC["dubai-rent-increase"] = function (v) {
+    var idx = v.index > 0 ? v.index : 0;
+    // A rent at or above the index gives a negative gap, which lands in the
+    // first tier and permits nothing. That is the correct answer, not an edge
+    // case to guard against.
+    var gap = idx > 0 ? ((idx - v.current) / idx) * 100 : 0;
+
+    var tier = 0;
+    if (gap > 40) tier = 20;
+    else if (gap > 30) tier = 15;
+    else if (gap > 20) tier = 10;
+    else if (gap > 10) tier = 5;
+
+    var increase = v.current * (tier / 100);
+    var maxrent = v.current + increase;
+    var headroom = idx - maxrent;
+
+    var tierText = tier === 0
+      ? "None. The rent is within ten percent of the index."
+      : "Up to " + tier + " percent";
+
+    var noticeText = v.notice >= 90
+      ? "Satisfied. Ninety days' written notice or more."
+      : "Not satisfied. A change of terms needs ninety days' written notice before expiry, and " + num(v.notice, 0) + " is short of that.";
+
+    return {
+      gap: gap >= 0 ? pc(gap / 100) + " below" : pc(-gap / 100) + " above the index",
+      tier: tierText,
+      increase: money(increase),
+      headroom: headroom > 0 ? money(headroom) : "Nothing. It would sit at or above the index.",
+      notice: noticeText,
+      maxrent: money(maxrent),
+    };
+  };
+
   CALC["rent-vs-buy"] = function (v) {
     var debt = v.price * (1 - v.deposit / 100);
     var equity = v.price * v.deposit / 100;

@@ -45,6 +45,32 @@ export const CALCULATORS = [
     hero: ["net", "Net yield on total outlay", "pct"],
   },
 
+
+  {
+    slug: "dubai-rent-increase",
+    name: "Dubai Rent Increase",
+    category: "Property",
+    blurb: "What a landlord may lawfully raise the rent to on renewal, under Decree 43 of 2013.",
+    playbook: "rent-increase-caps",
+    intro:
+      "In Dubai a landlord cannot raise the rent by whatever the market will bear. Decree No. 43 of 2013 sets a ceiling, and the ceiling depends on one thing only: how far the current rent already sits below the average for comparable units in the RERA rental index. A rent close to the index cannot be raised at all, however long the tenant has been there and whatever has happened to the market.",
+    note:
+      "This applies to residential renewals in Dubai. The RERA rental index is the authority on the market average, and this calculator uses whatever figure you enter for it — it does not look the index up for you, and it is not a substitute for the official RERA calculator. A change of terms also requires ninety days' written notice before expiry, under Law No. 26 of 2007 as amended by Law No. 33 of 2008. Nothing you type leaves your browser.",
+    fields: [
+      n("current", "Current annual rent", 90000, { prefix: "AED" }),
+      n("index", "RERA index average for a comparable unit", 120000, { prefix: "AED" }),
+      n("notice", "Days of written notice given before expiry", 90),
+    ],
+    outputs: [
+      ["gap", "How far the current rent sits below the index", "pct"],
+      ["tier", "Permitted increase under Decree 43", "text"],
+      ["increase", "The increase, in money", "cur"],
+      ["headroom", "Still below the index after the increase", "cur"],
+      ["notice", "Notice requirement", "text"],
+    ],
+    hero: ["maxrent", "Maximum lawful rent on renewal", "cur"],
+  },
+
   {
     slug: "rent-vs-buy",
     name: "Rent versus Buy",
@@ -208,6 +234,13 @@ const FAQ = {
     { q: "Why does the calculator divide by more than the purchase price?", a: "Because you spent more than the purchase price. The transfer fee, the commission, the VAT on the commission and the trustee fee are real money you will never see again. Dividing income by price alone flatters the return by roughly the size of those costs, which in Dubai is around six to seven percent." },
     { q: "How much should I assume for service charges?", a: "Service charges are quoted per square foot per year and vary enormously by building, from around twelve dirhams in a simple mid-market tower to over thirty in a serviced or waterfront development. Get the actual figure from the owners association before you buy. It is the single most under-modelled cost in Dubai property." },
     { q: "What is break-even occupancy?", a: "The share of the year the property must be let for the income to cover the running costs and any mortgage. Above it you are profitable, below it you are funding the asset from your salary. It is the number that tells you how much bad luck the deal can absorb." },
+  ],
+  "dubai-rent-increase": [
+    { q: "My rent has not gone up in four years. Can the landlord catch up all at once?", a: "No. The cap depends only on where the rent sits against the index today, not on how long it has been unchanged. If four flat years have left the rent more than forty percent below the index, the ceiling is twenty percent at this renewal and the rest has to wait for the next one." },
+    { q: "What counts as the market rent for a comparable unit?", a: "The RERA rental index, which is built from tenancy contracts actually registered through Ejari rather than from asking prices. Advertised rents for similar flats are not the test, and they are usually higher than what has been registered." },
+    { q: "The landlord told me about the increase two weeks before renewal. Does that stand?", a: "Changing the terms of a tenancy, the rent included, requires ninety days' written notice before the contract expires under Law No. 26 of 2007 as amended by Law No. 33 of 2008, unless both sides agree otherwise. Short notice does not make an otherwise lawful increase enforceable." },
+    { q: "What if we cannot agree?", a: "The Rental Disputes Centre at the Dubai Land Department hears rental disputes, and the index is what it works from. Bring the Ejari contract and the index figure for the unit rather than an argument about what the market is doing." },
+    { q: "Does this apply outside Dubai?", a: "No. Decree No. 43 of 2013 is a Dubai instrument. The other emirates set their own rules, and several have introduced, changed and removed caps over the years, so check the current position for the emirate you are actually in." },
   ],
   "rent-vs-buy": [
     { q: "Is renting really throwing money away?", a: "No. Renting buys you shelter and flexibility, and the rent is the whole cost. Owning also has costs you never get back: the interest, the service charge, the maintenance, the opportunity cost of your deposit, and the transaction costs spread over your hold. The honest comparison is unrecoverable cost against unrecoverable cost." },
