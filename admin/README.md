@@ -27,11 +27,13 @@ page only one person ever opens.
 
 ## What you need
 
-- A free Cloudflare account. **Create it yourself** — Claude does not
-  create accounts or type passwords, and you would not want an assistant
-  that did.
-- A MailerLite API token with read access.
+- A free Cloudflare account. **You create it** — Claude does not create
+  accounts or type passwords, and an assistant that would do either is
+  one that can be talked into doing it somewhere it should not.
 - Ten minutes.
+
+Claude can watch your screen and tell you exactly what to click at each
+step. Ask, and do the steps together rather than from this page.
 
 ## Steps
 
@@ -97,9 +99,18 @@ anything rather than run without a secret, which is deliberate.
 **"Could not load leads. The server returned 502"** — the MailerLite
 token is wrong, expired, or lacks read access. Generate a new one.
 
-**No leads, but no error** — there are genuinely none yet. Both groups
-were empty when this was built. Submit the form on the live site with
-your own address and refresh.
+**No leads, but no error** — there are genuinely none yet. Checked again
+on 27 August: `IP: Daily Brief` and `IP: Playbook Download` both hold
+zero subscribers. Submit the form on the live site with your own address
+and refresh.
+
+The account is not empty, though. `Newsletter - Market Insights` holds
+230 subscribers from the existing business, opening at about 31 percent.
+They are not in either IP group and they have no `Investor Intent` value
+set, so **switching on the six IP automations will not mail them**: two
+of the six trigger on joining an IP group, and the other four on joining
+an intent segment, and those 230 match neither. That was worth checking
+before assuming activation was riskier than it is.
 
 **The subdomain does not resolve** — the CNAME has not propagated, or it
 went into the wrong zone. Nothing about this affects the main site.

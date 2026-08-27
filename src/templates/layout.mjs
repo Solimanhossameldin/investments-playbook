@@ -1,4 +1,5 @@
 import { esc, copy, fmt, pct, dir, glyph, gst, clampDescription, COUNTRIES, DIAL, INTENTS } from "../lib.mjs";
+import { primaryCta } from "./contact.mjs";
 
 export function head({ site, title, description, path, jsonld = [], ogType = "website", noindex = false, assets = {} }) {
   const url = site.origin + path;
@@ -133,7 +134,7 @@ export function authorBand(site) {
       <p style="max-width:56ch">${esc(copy(a.bio))}</p>
       <div class="btn-row" style="margin-top:20px">
         <a class="btn btn--ghost btn--sm" href="${esc(a.linkedin)}" rel="noopener">Connect on LinkedIn</a>
-        <a class="btn btn--ghost btn--sm" href="/#playbook">Book a call</a>
+        ${(() => { const c = primaryCta(site); return `<a class="btn btn--ghost btn--sm" href="${esc(c.href)}"${c.external ? ' rel="noopener"' : ""}>${esc(c.label)}</a>`; })()}
       </div>
     </div>
   </div>
@@ -153,6 +154,7 @@ export function footer(site) {
       <li><a href="/#playbook">Subscribe</a></li>
     </ul></div>
     <div><h4>Playbooks</h4><ul>
+      <li><a href="/start/">Where to start</a></li>
       <li><a href="/playbooks/">All frameworks</a></li>
       <li><a href="/playbooks/net-rental-yield/">Net rental yield</a></li>
       <li><a href="/playbooks/off-plan-irr/">Off-plan IRR</a></li>
@@ -166,6 +168,7 @@ export function footer(site) {
     </ul></div>
     <div><h4>Company</h4><ul>
       <li><a href="/about/">About</a></li>
+      <li><a href="/contact/">Contact</a></li>
       <li><a href="/record/">The Record</a></li>
       <li><a href="/data/">Market data</a></li>
       <li><a href="/disclosure/">Disclosure standards</a></li>

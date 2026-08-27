@@ -198,7 +198,12 @@ img { max-width: 100%; display: block; }
 .tbl tbody tr:last-child td { border-bottom: none; }
 .tbl .note { color: var(--muted); font-size: 12.5px; }
 .tbl a { color: var(--gold-muted); }
-.table-scroll { overflow-x: auto; }
+/* The wrapper must be allowed to be narrower than the table, or the
+   overflow never engages and the page widens instead. */
+.table-scroll { overflow-x: auto; max-width: 100%; }
+/* Inside prose, a table squeezed to phone width is unreadable before it
+   is unusable. Give it a floor and let it scroll. */
+.article .table-scroll .tbl { min-width: 26rem; }
 
 /* ---------- matrix ---------- */
 .matrix-wrap { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: stretch; }
@@ -303,7 +308,12 @@ input[type="range"] { width: 100%; accent-color: var(--gold); padding: 0; border
 .rail ol a:hover { color: var(--gold-muted); }
 .rail__box { border: 1px solid var(--hair-light); padding: 18px; border-radius: var(--r); background: var(--paper); }
 .rail__box p { margin: 0 0 12px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
-@media (max-width: 980px) { .doc { grid-template-columns: 1fr; gap: 40px; } .rail { position: static; } }
+/* minmax(0, 1fr) rather than 1fr. A bare 1fr is minmax(auto, 1fr), and an
+   auto minimum means the column refuses to shrink below its widest
+   content, so a wide table pushed the whole page sideways instead of
+   scrolling inside its own wrapper. The desktop rule above already had
+   the minmax(0, ...); this override had lost it. */
+@media (max-width: 980px) { .doc { grid-template-columns: minmax(0, 1fr); gap: 40px; } .rail { position: static; } }
 
 /* ---------- calculator ---------- */
 .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--hair-light); border: 1px solid var(--hair-light); }
@@ -1010,11 +1020,13 @@ h1, h2, h3, h4 { letter-spacing: -0.018em; line-height: 1.1; }
   .nav--open a { padding: 12px 0; border-bottom: 1px solid var(--hair-light); }
 }
 
-/* The wordmark is nowrap at 21px, which is wider than a 320px phone.
-   Pre-existing, found while measuring the nav. Nothing else on the page
-   needs to change; the mark just gets a size that fits the narrowest
-   screens still in use. */
-@media (max-width: 359px) {
+/* The wordmark is nowrap at 21px, which is wider than the header has room
+   for on a phone. This was first measured at 320px and capped at 359px,
+   which was one boundary too low: 360px and 365px still overflowed by 14
+   and 9 pixels, and 360 is the single most common Android width there is.
+   Measured again across 300 to 430 in five pixel steps; 375 is the first
+   width that fits at full size, so that is where the rule ends. */
+@media (max-width: 374px) {
   .mark { font-size: 16px; letter-spacing: 0.02em; }
 }
 
@@ -1127,3 +1139,47 @@ h1, h2, h3, h4 { letter-spacing: -0.018em; line-height: 1.1; }
   line-height: 1.5; color: #9c9c9c; max-width: 56ch;
 }
 .cb__dl .btn { flex-shrink: 0; }
+
+/* ---------- the path pages ----------
+   A reader arriving at a library of forty frameworks needs an order, not a
+   filter. These are numbered steps rather than cards, because the number is
+   the instruction: read this one first. */
+.pth { list-style: none; margin: 0 0 56px; padding: 0; max-width: 780px; }
+.pth__i {
+  display: grid; grid-template-columns: 56px 1fr; gap: 20px;
+  padding: 22px 0; border-top: 1px solid var(--hair-light);
+}
+.pth__i:last-child { border-bottom: 1px solid var(--hair-light); }
+.pth__n { font-size: 13px; color: var(--gold); padding-top: 4px; letter-spacing: 0; }
+.pth__t {
+  font-family: var(--serif); font-size: 1.22rem; color: var(--ink);
+  text-decoration: none; display: inline-block; line-height: 1.3;
+}
+.pth__t:hover { color: var(--gold-muted); }
+.pth__d { font-size: 14.5px; line-height: 1.65; color: var(--muted); margin: 7px 0 0; max-width: 62ch; }
+.pth__h { font-size: 1.5rem; margin: 0 0 6px; }
+.pth__lead { font-size: 13.5px; color: var(--muted); margin: 0 0 22px; max-width: var(--prose); }
+.pth__h + .pth__lead + .grid, .pth__h + .pth__lead + .pth { margin-top: 0; }
+.grid + .pth__h, .pth__terms + .pth__h { margin-top: 56px; }
+.pth__terms { display: flex; flex-wrap: wrap; gap: 8px; }
+.pth__term {
+  font-family: var(--sans); font-size: 12.5px; color: var(--ink);
+  text-decoration: none; padding: 8px 14px;
+  border: 1px solid var(--hair-light); border-radius: var(--r);
+  background: var(--ivory);
+}
+.pth__term:hover { border-color: var(--gold); color: var(--gold-muted); }
+@media (max-width: 640px) {
+  .pth__i { grid-template-columns: 34px 1fr; gap: 12px; }
+}
+
+/* ---------- contact routes ---------- */
+.cx { margin: 18px 0 0; }
+.cx dt {
+  font-family: var(--sans); font-size: 12.5px; font-weight: 600;
+  color: var(--ink); margin-top: 14px;
+}
+.cx dd {
+  margin: 3px 0 0; font-family: var(--serif); font-size: 15.5px;
+  line-height: 1.6; color: var(--muted); max-width: 58ch;
+}

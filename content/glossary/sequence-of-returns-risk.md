@@ -6,7 +6,7 @@
   "category": "behaviour",
   "definition": "Sequence of returns risk is the danger that poor returns arriving early in retirement permanently damage a portfolio, because withdrawals during a fall sell more units and leave less to recover with.",
   "trap": "Planning on averages. The average is fine. The order is what ruins people, and the order is unknowable in advance.",
-  "playbook": "safe-withdrawal-rate",
+  "playbook": "sequence-of-returns",
   "related": [
     "safe-withdrawal-rate",
     "volatility-drag",

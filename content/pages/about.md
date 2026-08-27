@@ -41,4 +41,6 @@ And it is not a stock tip service. There are no picks here, no price targets, an
 
 ## Get in touch
 
-The fastest way to start a conversation is to [download the Playbook](/#playbook). It comes with the framework library in one document, and it puts you on the daily brief.
+Every route to the desk is on the [contact page](/contact/), including the one for corrections. If a figure on this site is wrong, that is the page to use, and the correction gets published whether or not anyone else noticed.
+
+If you would rather start by reading, [download the Playbook](/#playbook). It comes with the framework library in one document, and it puts you on the daily brief.

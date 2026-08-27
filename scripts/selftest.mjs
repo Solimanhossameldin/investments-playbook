@@ -123,5 +123,32 @@ check("logged as partial", JSON.parse(fs.readFileSync(statusPath, "utf8")).runs[
 fs.writeFileSync(marketPath, backup.m);
 fs.writeFileSync(statusPath, backup.s);
 
+/* ---------- layout tripwires ----------
+   These assert on the stylesheet source rather than on a rendered page,
+   which is weaker than measuring, and they are here anyway because this
+   exact class of bug has now shipped twice. Both were invisible on a
+   desktop and broke every page on a phone: a wordmark breakpoint set from
+   a single measured width, and a grid column that silently refused to
+   shrink. Layout is verified by measuring across a range of widths in a
+   real browser; these lines exist so that a later edit cannot quietly undo
+   the fix between one measurement and the next. */
+const css = fs.readFileSync(path.join(root, "src/styles.css"), "utf8");
+
+check(
+  "the mobile article column can shrink below its content",
+  /@media \(max-width: 980px\) \{ \.doc \{ grid-template-columns: minmax\(0, 1fr\)/.test(css),
+  "a bare 1fr is minmax(auto, 1fr); wide tables then widen the page instead of scrolling"
+);
+check(
+  "a table wrapper cannot be wider than what contains it",
+  /\.table-scroll \{[^}]*max-width: 100%/.test(css),
+  "without this the overflow-x never engages"
+);
+check(
+  "the wordmark breakpoint covers every phone width it fails at",
+  /@media \(max-width: 374px\) \{\s*\.mark \{/.test(css),
+  "measured: it overflows up to 374px, so a lower cap leaves 360 and 365 broken"
+);
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 process.exit(fails ? 1 : 0);

@@ -58,5 +58,11 @@
       "label": "About"
     }
   ],
-  "heroGlobe": false
+  "heroGlobe": false,
+  "contact": {
+    "email": "hello@investmentsplaybook.com",
+    "whatsapp": "",
+    "booking": "",
+    "responseHours": 48
+  }
 }

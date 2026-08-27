@@ -33,7 +33,7 @@ function itemHtml(it, n) {
 </article>`;
 }
 
-export function home({ site, market, brief, playbooks, calculators, wireHtml = "" }) {
+export function home({ site, market, brief, playbooks, calculators, wireHtml = "", pathsHtml = "" }) {
   const cards = playbooks.slice(0, 9);
   const briefBlock = brief
     ? `<div class="brief-head">
@@ -116,6 +116,8 @@ export function home({ site, market, brief, playbooks, calculators, wireHtml = "
     <div class="stat"><div class="stat__v">Daily</div><div class="stat__c">Data and brief refresh</div></div>
   </div>
 </div></section>
+
+${pathsHtml}
 
 ${
   wireHtml

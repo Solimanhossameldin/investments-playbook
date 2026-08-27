@@ -14,11 +14,14 @@ import { glossaryIndex, glossaryTerm } from "../src/templates/glossary.mjs";
 import { communityIndex, communityPage } from "../src/templates/communities.mjs";
 import { chartbookPage } from "../src/templates/chartbook.mjs";
 import { recordPage } from "../src/templates/record.mjs";
+import { pathIndex, pathPage, pathBand } from "../src/templates/paths.mjs";
+import { contactPage } from "../src/templates/contact.mjs";
 import { buildChartbookPdf, pdfPageCount } from "./make-chartbook-pdf.mjs";
 import calls from "../content/calls.mjs";
 import glossary from "../content/glossary.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
 import playbooks from "../content/playbooks.mjs";
+import paths from "../content/paths.mjs";
 import * as STATIC from "../content/static.mjs";
 import { pickRelated } from "../src/related.mjs";
 
@@ -94,7 +97,7 @@ function emit(spec) {
 }
 
 /* ---------- pages ---------- */
-emit(P.home({ site, market, brief: briefs[0], playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }) }));
+emit(P.home({ site, market, brief: briefs[0], playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }), pathsHtml: pathBand({ paths }) }));
 emit(wirePage({ site, wire }));
 
 const playbookTitles = Object.fromEntries(playbooks.map((p) => [p.slug, p.title]));
@@ -107,6 +110,8 @@ emit(communityIndex({ site, data: communities }));
 (communities.communities || []).forEach((c) => emit(communityPage({ site, c, data: communities })));
 emit(P.briefIndex({ site, briefs }));
 briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1] })));
+emit(pathIndex({ site, paths, playbooks, calculators: calcMeta }));
+paths.forEach((p) => emit(pathPage({ site, p, paths, playbooks, calculators: calcMeta, glossary })));
 emit(P.playbookIndex({ site, playbooks }));
 // Related frameworks are levelled so no page is left with nothing pointing
 // at it. See src/related.mjs for why the obvious sort does not do that.
@@ -124,6 +129,7 @@ emit(P.dataPage({ site, market, status }));
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));
 emit(P.staticPage({ site, title: `Editorial and disclosure standards. ${site.name}`, description: "How figures are sourced, how the daily brief is produced, how corrections are handled, and every commercial relationship declared.", path: "/disclosure/", eyebrow: "Editorial standards", heading: "How this is produced, and every conflict declared.", bodyMd: STATIC.disclosure }));
 emit(P.staticPage({ site, title: `Privacy. ${site.name}`, description: "What this site collects, where it goes, and what the calculators never send anywhere.", path: "/privacy/", eyebrow: "Privacy", heading: "What is collected, and what never leaves your browser.", bodyMd: STATIC.privacy }));
+emit(contactPage({ site }));
 emit(P.notFound({ site }));
 
 /* ---------- assets ---------- */
@@ -164,4 +170,5 @@ console.log(`Built ${written.length} pages into dist.`);
 console.log(`  ${calls.length} calls on record, ${briefs.filter((b) => b.correction).length} corrections.`);
 console.log(`  chartbook.pdf ${pdf ? (pdf.length / 1024).toFixed(0) + 'KB' : 'not built, no data'}.`);
 console.log(`  ${Object.keys(chartbook.series || {}).length} chartbook series, ${(communities.communities || []).length} community pages.`);
+console.log(`  ${paths.length} starting paths.`);
 console.log(`  ${playbooks.length} playbooks, ${CALCULATORS.length} calculators, ${briefs.length} briefs, ${(market.quotes || []).length} live quotes.`);

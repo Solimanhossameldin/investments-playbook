@@ -59,4 +59,4 @@ Property and securities can fall in value. Past performance does not predict fut
 
 ## Contacting the desk
 
-For corrections, questions about sourcing, or anything on this page, use the contact route on the [about page](/about/).
+For corrections, questions about sourcing, or anything on this page, every route is listed on the [contact page](/contact/).

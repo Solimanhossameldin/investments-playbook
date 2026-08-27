@@ -196,6 +196,22 @@
     });
   });
 
+  /* ---------------- intent carried in from a path page ----------------
+     A reader who arrived from /start/<path>/ has already told us what they
+     are trying to do. Pre-selecting it saves them a choice and, more to the
+     point, it is what routes them into the right email track. The value is
+     only accepted if it matches an option the select already offers, so a
+     crafted query string cannot write an arbitrary value into MailerLite. */
+  (function () {
+    var want = new URLSearchParams(location.search).get("intent");
+    if (!want) return;
+    document.querySelectorAll('form[data-ml="lead"] [name=intent]').forEach(function (sel) {
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === want) { sel.selectedIndex = i; return; }
+      }
+    });
+  })();
+
   document.querySelectorAll('form[data-ml="lead"]').forEach(function (form) {
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
