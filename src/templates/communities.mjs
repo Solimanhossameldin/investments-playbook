@@ -9,8 +9,23 @@ function period(c) {
   return a === b ? a : `${a} to ${b}`;
 }
 
+// windowDays is what was requested; spanFrom/spanTo are what the data holds.
+// The DLD export form only serves the current calendar year, so a file loaded
+// in August covers eight months however the window is configured. Every phrase
+// describing the period is derived from the data, never from the setting.
+function span(data) {
+  if (!data.spanFrom || !data.spanTo) return null;
+  const f = new Date(data.spanFrom + "T12:00:00Z"), t = new Date(data.spanTo + "T12:00:00Z");
+  const months = Math.max(1, Math.round((t - f) / 2629800000));
+  const o = { month: "long", year: "numeric" };
+  const a = f.toLocaleDateString("en-GB", o), b = t.toLocaleDateString("en-GB", o);
+  return { months, from: a, to: b, label: a === b ? a : `${a} to ${b}` };
+}
+
 export function communityIndex({ site, data }) {
   const cs = data.communities || [];
+  const sp = span(data);
+  const covers = sp ? `${sp.label}` : "the loaded period";
 
   const empty = `<div class="callout" style="max-width:var(--prose)">
     <b>Nothing published yet</b>
@@ -19,7 +34,7 @@ export function communityIndex({ site, data }) {
 
   const table = cs.length
     ? `<div class="table-scroll"><table class="tbl">
-    <caption>Median price per square foot, last twelve months</caption>
+    <caption>Median price per square foot, ${esc(covers)}</caption>
     <thead><tr><th>Community</th><th class="n">Median per sq ft</th><th class="n">Middle half</th><th class="n">Sales</th></tr></thead>
     <tbody>${cs
       .map(
@@ -53,9 +68,9 @@ export function communityIndex({ site, data }) {
     cs.length
       ? `<p class="wire-meta"><span class="livedot"></span> ${data.totalSales.toLocaleString(
           "en-US"
-        )} recorded sales across ${cs.length} communities, last ${Math.round(
-          (data.windowDays || 365) / 30
-        )} months. Source: ${esc(data.source || "Dubai Land Department")}.</p>`
+        )} recorded sales across ${cs.length} communities, ${esc(covers)}. Source: ${esc(
+          data.source || "Dubai Land Department"
+        )}.</p>`
       : ""
   }
 

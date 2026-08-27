@@ -178,11 +178,21 @@ export function aggregate(sales, opts = {}) {
   communities.sort((a, b) => b.sales - a.sales);
   skipped.sort((a, b) => b.sales - a.sales);
 
+  // The window is what was asked for. The span is what the data actually
+  // covers, and they are not the same thing: the DLD export form only serves
+  // the current calendar year, so a file dropped in during August carries
+  // eight months whatever windowDays says. The page must describe the span,
+  // or it publishes "last twelve months" over eight months of sales, which is
+  // exactly the kind of claim this site exists not to make.
+  const inWindow = sales.filter((s) => s && s.date >= cutoff).map((s) => s.date).sort();
+
   return {
     generatedAt: now.toISOString(),
     windowDays,
     minSales,
-    totalSales: sales.filter((s) => s && s.date >= cutoff).length,
+    totalSales: inWindow.length,
+    spanFrom: inWindow[0] || null,
+    spanTo: inWindow[inWindow.length - 1] || null,
     communities,
     skipped,
   };

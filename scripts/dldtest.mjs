@@ -6,6 +6,7 @@
    median looks exactly like a right one. */
 
 import { parseCsv, normalise, aggregate, median, slugify } from "./lib/dld.mjs";
+import { communityIndex } from "../src/templates/communities.mjs";
 
 let pass = 0, fail = 0;
 const ok = (name, cond, got) => {
@@ -98,6 +99,39 @@ ok("sale count is reported", marina.sales === 40, marina.sales);
 /* ---------- slugs ---------- */
 ok("slug is url safe", slugify("Jumeirah Village, Circle") === "jumeirah-village-circle", slugify("Jumeirah Village, Circle"));
 ok("ampersand becomes a word", slugify("Al Barsha & Heights") === "al-barsha-and-heights", slugify("Al Barsha & Heights"));
+
+/* ---- the period on the page is the data's, not the setting's ----
+   The DLD export form only serves the current calendar year. A file loaded in
+   August therefore carries eight months of sales however windowDays is set,
+   and the page must say eight rather than twelve. Checked with a synthetic
+   part-year export, because that is the file this site will actually get. */
+{
+  const rows = [];
+  for (let i = 0; i < 40; i++) {
+    const month = String((i % 8) + 1).padStart(2, "0");
+    rows.push({
+      community: "Testville",
+      date: `2026-${month}-15`,
+      amount: 1000000 + i * 1000,
+      sqft: 900,
+      perSqft: 1100 + i,
+      propertyType: "Apartment",
+    });
+  }
+  const agg = aggregate(rows, { minSales: 30, windowDays: 365, now: "2026-08-28" });
+  ok("a part-year export reports its real span", !!agg.spanFrom && !!agg.spanTo, `${agg.spanFrom} -> ${agg.spanTo}`);
+  ok("the span starts at the first sale, not the window", agg.spanFrom === "2026-01-15", agg.spanFrom);
+  ok("the span ends at the last sale", agg.spanTo === "2026-08-15", agg.spanTo);
+
+  const page = communityIndex({
+    site: { name: "T", origin: "https://e.com", disclaimer: "Not advice." },
+    data: { ...agg, source: "Test" },
+  });
+  ok("the page does not claim twelve months over eight",
+    !/twelve months/i.test(page.body), "the page still says twelve months");
+  ok("the page names the months the data covers",
+    /January 2026 to August 2026/.test(page.body), "span not printed on the page");
+}
 
 console.log(`\n${fail === 0 ? `All ${pass} DLD checks passed.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);
