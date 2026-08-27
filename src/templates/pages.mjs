@@ -17,9 +17,9 @@ function beat(label, text) {
   return `<div class="beat"><div class="beat__l">${label}</div><p>${esc(copy(text))}</p></div>`;
 }
 
-function itemHtml(it, n) {
+function itemHtml(it, n, lvl = 3) {
   return `<article class="item">
-  <h3>${n}. ${esc(copy(it.heading))}</h3>
+  <h${lvl}>${n}. ${esc(copy(it.heading))}</h${lvl}>
   ${beat("What happened", it.what_happened)}
   ${beat("What it means", it.what_it_means)}
   ${beat("What it means for your portfolio", it.what_it_means_for_you)}
@@ -295,7 +295,7 @@ export function briefIndex({ site, briefs }) {
     <p style="font-size:14px"><a href="/record/">Every call this brief makes is scored on The Record</a>, including the ones that went wrong, along with every correction issued.</p>
   </div>
   ${briefLate(briefs)}
-  <div class="gate__box" style="max-width:560px;margin-bottom:44px"><h4>Get it in your inbox</h4><p>Free. Unsubscribe in one click.</p>${briefForm(site, "arch-form")}</div>
+  <div class="gate__box" style="max-width:560px;margin-bottom:44px"><h2>Get it in your inbox</h2><p>Free. Unsubscribe in one click.</p>${briefForm(site, "arch-form")}</div>
   <div class="arch">${rows || '<p style="padding:26px 0;color:var(--muted)">The first issue publishes tomorrow morning.</p>'}</div>
 </div></section>`;
 
@@ -333,9 +333,9 @@ export function briefPage({ site, brief, prev, next }) {
   ${correction}
   ${numbers}
   <p style="font-size:12px;color:var(--muted);max-width:var(--prose)">Every figure above is drawn from the live table on the <a href="/data/" style="color:var(--gold-muted)">market data page</a>, where each row names its own source and timestamp.</p>
-  ${brief.items.map((it, i) => itemHtml(it, i + 1)).join("")}
+  ${brief.items.map((it, i) => itemHtml(it, i + 1, 2)).join("")}
   ${cal}
-  <div class="gate__box" style="max-width:560px;margin-top:44px"><h4>Get tomorrow's brief</h4><p>Free, every weekday at 7am GST.</p>${briefForm(site, "post-form")}</div>
+  <div class="gate__box" style="max-width:560px;margin-top:44px"><h2>Get tomorrow's brief</h2><p>Free, every weekday at 7am GST.</p>${briefForm(site, "post-form")}</div>
   <nav style="display:flex;justify-content:space-between;gap:20px;margin-top:44px;border-top:1px solid var(--hair-light);padding-top:22px;font-size:13px">
     <span>${prev ? `<a href="/brief/${esc(prev.slug)}/" style="color:var(--gold-muted)">Previous: ${esc(briefLabel(prev.date))}</a>` : ""}</span>
     <span>${next ? `<a href="/brief/${esc(next.slug)}/" style="color:var(--gold-muted)">Next: ${esc(briefLabel(next.date))}</a>` : ""}</span>
@@ -409,19 +409,19 @@ export function playbookPage({ site, pb, calcName, related = [] }) {
   ].filter(Boolean);
 
   const rail = `<aside class="rail">
-  <h5>On this page</h5>
+  <h2>On this page</h2>
   <ol>${jump.map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`).join("")}</ol>
   ${
     pb.calculator
-      ? `<div class="rail__box" style="margin-bottom:22px"><h5>Run the numbers</h5><p>The ${esc(calcName || "calculator")} does this arithmetic on your own figures.</p><a class="btn btn--ghost btn--sm" href="/calculators/${esc(pb.calculator)}/">Open it</a></div>`
+      ? `<div class="rail__box" style="margin-bottom:22px"><h2>Run the numbers</h2><p>The ${esc(calcName || "calculator")} does this arithmetic on your own figures.</p><a class="btn btn--ghost btn--sm" href="/calculators/${esc(pb.calculator)}/">Open it</a></div>`
       : ""
   }
   ${
     related.length
-      ? `<h5>Related frameworks</h5><ol>${related.map((r) => `<li><a href="/playbooks/${esc(r.slug)}/">${esc(copy(r.title))}</a></li>`).join("")}</ol>`
+      ? `<h2>Related frameworks</h2><ol>${related.map((r) => `<li><a href="/playbooks/${esc(r.slug)}/">${esc(copy(r.title))}</a></li>`).join("")}</ol>`
       : ""
   }
-  <div class="rail__box"><h5>The daily brief</h5><p>Three minutes on global markets and property, every weekday at 7am GST.</p><a class="btn btn--ghost btn--sm" href="/#playbook">Subscribe free</a></div>
+  <div class="rail__box"><h2>The daily brief</h2><p>Three minutes on global markets and property, every weekday at 7am GST.</p><a class="btn btn--ghost btn--sm" href="/#playbook">Subscribe free</a></div>
 </aside>`;
 
   const body = `<section class="band"><div class="wrap">

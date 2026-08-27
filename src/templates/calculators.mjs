@@ -276,7 +276,7 @@ const FAQ = {
 for (const c of CALCULATORS) c.faq = FAQ[c.slug];
 
 function field(f) {
-  if (f.kind === "head") return `<h4 style="font-family:var(--serif);font-size:1.3rem;margin:30px 0 14px;padding-top:18px;border-top:1px solid var(--hair-light)">${esc(f.label)}</h4>`;
+  if (f.kind === "head") return `<h2 style="font-family:var(--serif);font-size:1.3rem;margin:30px 0 14px;padding-top:18px;border-top:1px solid var(--hair-light)">${esc(f.label)}</h2>`;
   if (f.kind === "range")
     return `<div class="field">
     <label for="f-${f.id}">${esc(f.label)}<span class="slider-val" id="v-${f.id}">${f.def}${f.suffix || ""}</span></label>
@@ -322,7 +322,7 @@ export function calcPage({ site, calc, counts }) {
       ${calc.fields.map(field).join("")}
     </div>
     <div class="calc__out">
-      <h3>Result</h3>
+      <h2>Result</h2>
       <div class="res res--hero"><span class="res__l">${esc(calc.hero[1])}</span><span class="res__v" data-o="${esc(calc.hero[0])}">&nbsp;</span></div>
       <div style="margin-top:22px">
       ${calc.outputs

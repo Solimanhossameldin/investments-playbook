@@ -1,5 +1,13 @@
 import { esc, copy, md } from "../lib.mjs";
 
+// In the compendium every framework sits under an <h3> title inside an <h2>
+// part, and its own section labels below are <h4>. The body is the same
+// markdown the standalone page uses, so its headings start at <h2> and would
+// jump the outline backwards mid-article. Push them down two levels so the
+// printed book reads h2 part -> h3 framework -> h4 throughout.
+const demote = (html) =>
+  html.replace(/<(\/?)h([1-4])\b/g, (_, slash, n) => `<${slash}h${Math.min(6, Number(n) + 2)}`);
+
 const CATS = {
   portfolio: "Portfolio construction",
   property: "Property arithmetic",
@@ -41,7 +49,7 @@ export function playbookDoc({ site, playbooks, calculators }) {
     <p class="doc-ch__n">Framework ${numbered.get(p.slug)}</p>
     <h3>${esc(copy(p.title))}</h3>
     <div class="definition">${esc(copy(p.summary))}</div>
-    <div class="article">${md(p.body)}</div>
+    <div class="article">${demote(md(p.body))}</div>
     ${p.formula ? `<h4>The arithmetic</h4><div class="formula">${esc(copy(p.formula))}</div>` : ""}
     ${
       (p.failureModes || []).length

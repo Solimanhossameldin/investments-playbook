@@ -129,7 +129,7 @@ export function authorBand(site) {
     <div class="author__img" aria-hidden="true">${esc(a.initials)}</div>
     <div>
       <p class="eyebrow">Who writes this</p>
-      <h3>${esc(a.name)}</h3>
+      <h2>${esc(a.name)}</h2>
       <p class="author__role">${esc(a.role)}. ${esc(a.years)}.</p>
       <p style="max-width:56ch">${esc(copy(a.bio))}</p>
       <div class="btn-row" style="margin-top:20px">
@@ -148,25 +148,25 @@ export function footer(site) {
       <a class="mark" href="/" style="color:#ffffff">Investments <b>Playbook</b></a>
       <p style="font-size:13.5px;color:#8c8c8c;margin-top:14px;max-width:34ch">${esc(copy(site.description))}</p>
     </div>
-    <div><h4>The Brief</h4><ul>
+    <div><h2>The Brief</h2><ul>
       <li><a href="/brief/">Latest issue</a></li>
       <li><a href="/brief/">Archive</a></li>
       <li><a href="/#playbook">Subscribe</a></li>
     </ul></div>
-    <div><h4>Playbooks</h4><ul>
+    <div><h2>Playbooks</h2><ul>
       <li><a href="/start/">Where to start</a></li>
       <li><a href="/playbooks/">All frameworks</a></li>
       <li><a href="/playbooks/net-rental-yield/">Net rental yield</a></li>
       <li><a href="/playbooks/off-plan-irr/">Off-plan IRR</a></li>
       <li><a href="/playbooks/fund-domicile/">Fund domicile</a></li>
     </ul></div>
-    <div><h4>Calculators</h4><ul>
+    <div><h2>Calculators</h2><ul>
       <li><a href="/calculators/">All calculators</a></li>
       <li><a href="/calculators/net-rental-yield/">Net rental yield</a></li>
       <li><a href="/calculators/rent-vs-buy/">Rent versus buy</a></li>
       <li><a href="/calculators/safe-withdrawal-rate/">Withdrawal rate</a></li>
     </ul></div>
-    <div><h4>Company</h4><ul>
+    <div><h2>Company</h2><ul>
       <li><a href="/about/">About</a></li>
       <li><a href="/contact/">Contact</a></li>
       <li><a href="/record/">The Record</a></li>

@@ -64,6 +64,7 @@ for (const file of walk(dist)) {
     canonical: pick(/<link rel="canonical" href="([^"]*)"/i),
     noindex: /name="robots" content="noindex/.test(html),
     h1s: [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map((m) => m[1].replace(/<[^>]+>/g, "").trim()),
+    headings: [...html.matchAll(/<h([1-6])\b/gi)].map((m) => Number(m[1])),
     jsonld: [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map((m) => {
       try { return JSON.parse(m[1])["@type"]; } catch { return "INVALID"; }
     }),
@@ -108,6 +109,21 @@ for (const p of indexable) {
   if (p.h1s.length > 1) note("warn", "multiple h1", `${p.h1s.length} on ${p.url}`);
   if (p.jsonld.includes("INVALID")) note("error", "broken json-ld", p.url);
   if (p.words < 120) note("warn", "thin page", `${p.words} words: ${p.url}`);
+}
+
+// A screen reader announces the outline, not the type size. A heading that
+// skips a level (h1 straight to h3) reads as a missing section, so every jump
+// is a real navigation defect even though the page looks right. This runs over
+// every page including 404, which is not indexable but is still read aloud.
+for (const p of pages.values()) {
+  let prev = null;
+  for (const h of p.headings) {
+    if (prev !== null && h > prev + 1) {
+      note("error", "heading jump", `${p.url} goes h${prev} -> h${h}`);
+      break;
+    }
+    prev = h;
+  }
 }
 
 const dupe = (field) => {
