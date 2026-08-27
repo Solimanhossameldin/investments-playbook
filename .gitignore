@@ -1,13 +1,13 @@
+
 _archive/
+.dev.vars
 .DS_Store
 *.log
+# admin secrets never belong here
+admin/.dev.vars
 content/dld/*.csv
 dist/
 go-live.command
 node_modules/
 preview.command
 push.command
-
-# admin secrets never belong here
-admin/.dev.vars
-.dev.vars
