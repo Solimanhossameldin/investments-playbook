@@ -9,7 +9,7 @@ import { esc } from "./lib.mjs";
 const W = 760;
 const H = 250;
 // Top padding leaves room for the final value label above the line.
-const PAD = { t: 28, r: 14, b: 26, l: 52 };
+const PAD = { t: 34, r: 14, b: 26, l: 52 };
 
 /* A step a human would have chosen: 1, 2, 2.5, 5 or 10 times a power of ten. */
 export function niceStep(range, target = 5) {
@@ -114,9 +114,13 @@ export function lineChart(s, { id = s.key } = {}) {
   // Prefer the side the line is not arriving from; fall back to the other
   // side when the point is hard against an edge; clamp only as a last resort.
   // Clamping first is what put the label underneath a rising line.
-  const rising = pts.length > 1 && last[1] >= pts.at(-2)[1];
+  // Direction is taken from a short window, not the previous point. On a
+  // daily series the last two observations are noise and decide nothing.
+  const tail = pts.slice(-10);
+  const mean = tail.reduce((a, p) => a + p[1], 0) / tail.length;
+  const rising = last[1] >= mean;
   const fits = (y) => y >= 14 && y <= y1 - 2;
-  const above = ly - 11, below = ly + 18;
+  const above = ly - 16, below = ly + 22;
   let ty = rising ? above : below;
   if (!fits(ty)) ty = rising ? below : above;
   if (!fits(ty)) ty = Math.min(y1 - 2, Math.max(14, ly));

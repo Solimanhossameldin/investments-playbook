@@ -942,6 +942,13 @@ h1, h2, h3, h4 { letter-spacing: -0.018em; line-height: 1.1; }
   font-size: 13px;
   font-weight: 600;
   fill: var(--gold);
+  /* A daily series wobbles, so no amount of clever placement keeps the
+     final figure off the line every time. The halo means it stays
+     readable when it does land on it. */
+  paint-order: stroke fill;
+  stroke: var(--ivory);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
 }
 
 @media (max-width: 640px) {
