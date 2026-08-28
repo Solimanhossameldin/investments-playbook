@@ -65,6 +65,24 @@ jobs:
       - name: Build the site
         run: node scripts/build.mjs
 
+      # Every structural guard on this site runs from `npm test` and `npm run
+      # audit`, which nobody runs on a schedule, so until now none of them
+      # watched production. A bot commit or a hand edit could break a promise
+      # and deploy it, and the first anybody would know is a reader finding it.
+      #
+      # Deliberately non-blocking. A failing audit means something is wrong
+      # with the site's structure, not with today's market figures, and
+      # stopping the deploy would also stop the data page refreshing, which
+      # trades a real cost for a structural one. The failure is printed in the
+      # run log instead.
+      #
+      # To make it blocking, delete the continue-on-error line below. Do that
+      # once there is enough traffic that shipping a broken promise costs more
+      # than a day of stale figures.
+      - name: Structural audit
+        run: node scripts/seoaudit.mjs --strict
+        continue-on-error: true
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
