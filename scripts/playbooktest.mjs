@@ -7,6 +7,7 @@
 import playbooks from "../content/playbooks.mjs";
 import glossary from "../content/glossary.mjs";
 import { CALCULATORS } from "../src/templates/calculators.mjs";
+import { isoDate, longDate } from "../src/lib.mjs";
 
 let pass = 0, fail = 0;
 const ok = (name, cond, got) => {
@@ -27,6 +28,13 @@ for (const p of playbooks) {
   ok(`${id}: has every required field`,
     !!(p.slug && p.title && p.category && p.tier && p.summary && p.body && p.formula &&
        p.failureModes && p.whenToUse && p.sources && p.reviewed));
+
+  // reviewed is printed as written and also ships as schema.org dateModified,
+  // where it has to be ISO. Round-tripping catches both a format the parser
+  // rejects and a date that does not exist: "31 September 2026" would
+  // otherwise pass a parse and silently become 1 October.
+  ok(`${id}: reviewed date parses and round-trips`,
+    !!isoDate(p.reviewed) && longDate(isoDate(p.reviewed)) === p.reviewed, p.reviewed);
 
   ok(`${id}: slug is unique`, !seen.has(p.slug), p.slug);
   seen.add(p.slug);

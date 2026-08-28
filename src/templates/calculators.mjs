@@ -356,6 +356,7 @@ ${leadBand(site, counts)}`;
     // actually want to know before typing a number into one.
     description: `${copy(calc.blurb)} Free, and nothing you enter leaves your browser.`,
     path: `/calculators/${calc.slug}/`,
+    crumb: calc.name,
     body,
     jsonld: [
       {

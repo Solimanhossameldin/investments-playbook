@@ -165,6 +165,7 @@ export function communityPage({ site, c, data }) {
     title: pageTitle(`${c.name} property prices per square foot`, site.name),
     description: `Property in ${c.name} sold at a median of ${money(c.medianPerSqft)} per square foot across ${c.sales} recorded Dubai Land Department transactions.`,
     path: `/communities/${c.slug}/`,
+    crumb: c.name,
     body,
     jsonld: [
       {

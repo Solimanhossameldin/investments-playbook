@@ -145,6 +145,7 @@ fs.writeFileSync(
 // missing file is four platforms rendering a blank card and nobody noticing.
 // seoaudit fails if it is not here.
 fs.copyFileSync(path.join(root, "content", "og.png"), path.join(dist, "og.png"));
+fs.copyFileSync(path.join(root, "content", "icon-512.png"), path.join(dist, "icon-512.png"));
 
 if (pdf) fs.writeFileSync(path.join(dist, "chartbook.pdf"), pdf);
 fs.writeFileSync(path.join(dist, "CNAME"), `${site.domain}\n`);

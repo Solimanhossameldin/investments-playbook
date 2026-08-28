@@ -1,5 +1,14 @@
-import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus } from "../lib.mjs";
+import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus, isoDate } from "../lib.mjs";
 import { leadBand, authorBand, briefForm } from "./layout.mjs";
+
+// Google's Article guidance asks for a publisher logo as an ImageObject with a
+// real raster behind it. The SVG favicon is the same mark but scrapers vary on
+// SVG, so this points at the 512px render.
+const PUBLISHER = (site) => ({
+  "@type": "Organization",
+  name: site.name,
+  logo: { "@type": "ImageObject", url: `${site.origin}/icon-512.png`, width: 512, height: 512 },
+});
 
 const CATS = {
   portfolio: "Portfolio",
@@ -347,6 +356,7 @@ export function briefPage({ site, brief, prev, next }) {
     title: pageTitle(`${briefLabel(brief.date)} ${copy(brief.title)}`, site.name),
     description: copy(brief.subtitle),
     path: `/brief/${brief.slug}/`,
+    crumb: copy(brief.title),
     ogType: "article",
     body,
     jsonld: [
@@ -357,8 +367,9 @@ export function briefPage({ site, brief, prev, next }) {
         description: copy(brief.subtitle),
         datePublished: brief.publishedAt || brief.date,
         dateModified: brief.publishedAt || brief.date,
+        image: `${site.origin}/og.png`,
         author: { "@type": "Person", name: brief.author || site.author.name },
-        publisher: { "@type": "Organization", name: site.name },
+        publisher: PUBLISHER(site),
         mainEntityOfPage: `${site.origin}/brief/${brief.slug}/`,
       },
     ],
@@ -471,6 +482,7 @@ export function playbookPage({ site, pb, calcName, related = [] }) {
     title: pageTitle(copy(pb.title), site.name),
     description: copy(pb.summary),
     path: `/playbooks/${pb.slug}/`,
+    crumb: copy(pb.title),
     ogType: "article",
     body,
     jsonld: [
@@ -479,9 +491,13 @@ export function playbookPage({ site, pb, calcName, related = [] }) {
         "@type": "Article",
         headline: copy(pb.title),
         description: copy(pb.summary),
-        dateModified: pb.reviewed,
+        // pb.reviewed is the printed form, "27 August 2026". schema.org wants a
+        // Date, and Google discards anything else, so it ships as ISO or not at
+        // all. playbooktest fails on a reviewed date that will not parse.
+        ...(isoDate(pb.reviewed) ? { dateModified: isoDate(pb.reviewed) } : {}),
+        image: `${site.origin}/og.png`,
         author: { "@type": "Person", name: site.author.name },
-        publisher: { "@type": "Organization", name: site.name },
+        publisher: PUBLISHER(site),
         mainEntityOfPage: `${site.origin}/playbooks/${pb.slug}/`,
       },
       ...(faqs.length ? [{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs }] : []),

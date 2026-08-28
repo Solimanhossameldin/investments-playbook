@@ -158,6 +158,7 @@ export function pathPage({ site, p, paths, playbooks, calculators, glossary }) {
     title: pageTitle(p.title, site.name),
     description: clampDescription(copy(p.blurb)),
     path: `/start/${p.slug}/`,
+    crumb: p.label,
     body,
     jsonld: [
       {

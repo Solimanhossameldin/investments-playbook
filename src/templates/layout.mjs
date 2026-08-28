@@ -1,7 +1,36 @@
 import { esc, copy, fmt, pct, dir, glyph, gst, clampDescription, COUNTRIES, DIAL, INTENTS } from "../lib.mjs";
 import { primaryCta } from "./contact.mjs";
 
-export function head({ site, title, description, path, jsonld = [], ogType = "website", noindex = false, assets = {} }) {
+// Breadcrumbs are derived from the URL rather than declared per page, because
+// the URL is the hierarchy: /playbooks/price-to-rent/ has exactly one parent
+// and it is /playbooks/. Only the leaf needs a name a person would recognise,
+// and only the caller knows it, so a page without `crumb` emits no trail
+// rather than a trail ending in a slug.
+const SECTIONS = {
+  playbooks: "Playbooks",
+  calculators: "Calculators",
+  glossary: "Glossary",
+  brief: "The Brief",
+  start: "Where to start",
+  communities: "Communities",
+  chartbook: "Chartbook",
+};
+
+function breadcrumbs(site, path, crumb) {
+  const parts = path.split("/").filter(Boolean);
+  if (!crumb || parts.length < 2 || !SECTIONS[parts[0]]) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: site.name, item: `${site.origin}/` },
+      { "@type": "ListItem", position: 2, name: SECTIONS[parts[0]], item: `${site.origin}/${parts[0]}/` },
+      { "@type": "ListItem", position: 3, name: crumb, item: site.origin + path },
+    ],
+  };
+}
+
+export function head({ site, title, description, path, jsonld = [], ogType = "website", noindex = false, assets = {}, crumb = "" }) {
   const url = site.origin + path;
   // Clamped here rather than at every call site, so a long description
   // written anywhere on the site still ships at a length that survives.
@@ -24,11 +53,14 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${esc(site.origin)}/og.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/icon-512.png">
+<meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/styles.css${assets.css ? `?v=${assets.css}` : ""}">
-${jsonld.map((j) => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join("\n")}`;
+${[...jsonld, breadcrumbs(site, path, crumb)].filter(Boolean).map((j) => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join("\n")}`;
 }
 
 export function header(site, path) {
@@ -188,11 +220,11 @@ export function footer(site) {
 </div></footer>`;
 }
 
-export function page({ site, market, title, description, path, body, jsonld, ogType, noindex, assets = {} }) {
+export function page({ site, market, title, description, path, body, jsonld, ogType, noindex, assets = {}, crumb = "" }) {
   return `<!doctype html>
 <html lang="en">
 <head>
-${head({ site, title, description, path, jsonld, ogType, noindex, assets })}
+${head({ site, title, description, path, jsonld, ogType, noindex, assets, crumb })}
 </head>
 <body>
 ${header(site, path)}

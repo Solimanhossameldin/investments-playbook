@@ -71,6 +71,9 @@ for (const file of walk(dist)) {
     jsonld: [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map((m) => {
       try { return JSON.parse(m[1])["@type"]; } catch { return "INVALID"; }
     }),
+    jsonldRaw: [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map((m) => {
+      try { return JSON.parse(m[1]); } catch { return null; }
+    }),
     bodyLinks: [...new Set(links(body))],
     allLinks: [...new Set(links(html))],
     words: body.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length,
@@ -142,6 +145,39 @@ for (const p of pages.values()) {
       const f = path.join(dist, v.slice(site.origin.length).replace(/^\//, ""));
       if (!fs.existsSync(f)) note("error", kind + " missing from build", `${v} on ${p.url}`);
     }
+  }
+}
+
+// A date in structured data has to be ISO 8601. Anything else is discarded by
+// the consumer without complaint, so a page ships looking annotated and is not.
+// This shipped for weeks as "27 August 2026" on every framework page.
+const ISO = /^\d{4}-\d{2}-\d{2}(T|$)/;
+for (const p of pages.values()) {
+  for (const node of p.jsonldRaw) {
+    if (!node) continue;
+    for (const field of ["datePublished", "dateModified"]) {
+      const v = node[field];
+      if (v !== undefined && !ISO.test(String(v))) {
+        note("error", `${field} not ISO 8601`, `"${v}" on ${p.url}`);
+      }
+    }
+  }
+}
+
+// A leaf page under a known section owes a breadcrumb trail, and that trail's
+// last item has to be the page itself. The failure this guards is a new
+// section shipping without a label: the trail then silently disappears from
+// every page under it rather than showing a wrong one.
+const CRUMBED = ["playbooks", "calculators", "glossary", "brief", "start", "communities"];
+for (const p of indexable) {
+  const seg = p.url.split("/").filter(Boolean);
+  const leaf = seg.length === 2 && CRUMBED.includes(seg[0]);
+  const bc = p.jsonldRaw.find((n) => n && n["@type"] === "BreadcrumbList");
+  if (leaf && !bc) { note("error", "no breadcrumb", p.url); continue; }
+  if (!bc) continue;
+  const last = bc.itemListElement[bc.itemListElement.length - 1];
+  if (last.item !== site.origin + p.url) {
+    note("error", "breadcrumb does not end at the page", `${last.item} on ${p.url}`);
   }
 }
 

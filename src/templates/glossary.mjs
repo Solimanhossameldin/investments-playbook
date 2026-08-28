@@ -131,6 +131,7 @@ export function glossaryTerm({ site, term, terms, playbookTitles }) {
     title: pageTitle(`${copy(term.term)}, defined`, site.name),
     description: copy(term.definition),
     path: `/glossary/${term.slug}/`,
+    crumb: term.term,
     body,
     jsonld: [
       {

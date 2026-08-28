@@ -29,6 +29,27 @@ export function longDate(iso) {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 }
 
+// The inverse of longDate. Framework frontmatter stores "27 August 2026",
+// the form a person writes and the page prints, but schema.org dateModified
+// is a Date and Google discards anything that is not ISO 8601. Returns "" on
+// anything it cannot parse, so a caller emits no date rather than a bad one.
+export function isoDate(display = "") {
+  const m = String(display).trim().match(/^(\d{1,2}) ([A-Za-z]+) (\d{4})$/);
+  if (!m) return "";
+  const i = MONTH_NAMES.indexOf(m[2]);
+  if (i < 0) return "";
+  const d = new Date(Date.UTC(Number(m[3]), i, Number(m[1])));
+  // Round-trip guards the overflow that makes "31 September" quietly become
+  // 1 October rather than an error.
+  if (d.getUTCDate() !== Number(m[1]) || d.getUTCMonth() !== i) return "";
+  return d.toISOString().slice(0, 10);
+}
+
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
 export function gst(iso) {
   if (!iso) return "n/a";
   const d = new Date(iso);
