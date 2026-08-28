@@ -60,7 +60,7 @@ Combine the two effects and the picture is clear. A bad sequence early in drawdo
 
 The exposure is not spread evenly across a retirement. It is concentrated at the start, for a simple reason: that is when the balance is largest, so a given percentage fall destroys the largest absolute number of units, and there is the longest remaining period over which their absence compounds.
 
-A poor decade at the end of a thirty year drawdown is survivable, because the portfolio has already done most of its work. The same decade at the beginning is not. This is why the last few years before drawing and the first few years after are treated as one continuous window of elevated risk, and why decisions taken during it matter more than decisions taken at any other point.
+A poor decade at the end of a thirty year drawdown is survivable, because the portfolio has already done most of its work. The same decade at the beginning is not. This is why the last few years before drawing and the first few years after are treated as one continuous window of elevated risk, and why decisions taken during it matter more than decisions taken at any other point. What the allocation should do across that window is contested, and [glide paths](/playbooks/glide-paths/) sets out both sides of the argument.
 
 ## What actually reduces it
 

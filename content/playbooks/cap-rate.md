@@ -57,13 +57,15 @@ They are frequently used as synonyms. They are not.
 | Net yield on outlay | Price plus all costs | No | What the purchase earns |
 | Cash on cash | Cash you put in | Yes | What your money earns |
 
-Read down that column and the cap rate's position is clear: it is one step better than a gross yield and two steps short of an answer. The step from cap rate to [net rental yield](/playbooks/net-rental-yield/) is the acquisition cost, which in Dubai is the four percent transfer fee plus agency, trustee and registration. The step from there to [cash on cash return](/playbooks/cash-on-cash/) is the mortgage.
+Read down that column and the cap rate's position is clear: it is one step better than a gross yield and two steps short of an answer. It is also only the first of the three terms that make up a return, which [the decomposition](/playbooks/expected-return-decomposition/) sets out in full. The step from cap rate to [net rental yield](/playbooks/net-rental-yield/) is the acquisition cost, which in Dubai is the four percent transfer fee plus agency, trustee and registration. The step from there to [cash on cash return](/playbooks/cash-on-cash/) is the mortgage.
 
 ## The part that gets people hurt
 
 Rearrange the definition and the cap rate stops being a measure and becomes a price.
 
 Value equals net operating income divided by the cap rate. Income in the numerator, and a rate in the denominator that is set by the market rather than by the building. When money is cheap, buyers accept lower rates, and the same income supports a higher price. When rates rise, buyers demand more, and the same income supports less.
+
+That relationship is real, and it is also the source of the most common bad argument in property research: that cap rates look attractive against government bond yields. [The Fed model](/playbooks/the-fed-model/) is why that particular comparison does less work than it appears to.
 
 The arithmetic is unforgiving and it is not symmetrical in the way people expect. A move from six percent to seven, which sounds small, takes fourteen percent off the value of a building whose rent has not changed by a single dirham. A leveraged buyer at eighty percent loan to value has lost most of their equity in that move without anything at all happening to the asset.
 

@@ -61,4 +61,4 @@ Which means property should be funded from the long bucket, and buying it should
 
 ## The part people skip
 
-Write down the actual dates. Not "retirement", a year. Not "the children's education", the year the first one starts. Most people discover when they do this that their horizons are shorter and more clustered than they assumed, and that changes the allocation before any market view does.
+Write down the actual dates. Not "retirement", a year. Not "the children's education", the year the first one starts. Most people discover when they do this that their horizons are shorter and more clustered than they assumed, and that changes the allocation before any market view does. How the buckets should be re-weighted as those dates approach is the [glide path](/playbooks/glide-paths/) question, and the research on it does not agree with itself.

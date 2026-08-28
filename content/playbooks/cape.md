@@ -77,4 +77,6 @@ If the starting valuation is high, assume less. That flows into what a plan requ
 
 And apply the discipline in [reverse the assumption](/playbooks/reverse-the-assumption/) before leaning on it: ask what would have to be true for this level to be justified. Sometimes the answer is nothing plausible, and that is informative. Sometimes it is a change in the composition of the market that has already happened, and that is informative too.
 
+The other thing it should never be combined with is a bond yield, in the hope that the pair of them produce a signal neither has on its own. That is [the Fed model](/playbooks/the-fed-model/), and the spread has no forecasting record the plain ratio did not already have.
+
 What the ratio should never produce is an action this quarter. A measure built by averaging ten years of earnings is not a signal about the next three months, and using it as one is a misreading of the tool rather than a fault in it.
