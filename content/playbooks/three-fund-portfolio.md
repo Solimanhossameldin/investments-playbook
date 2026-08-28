@@ -29,7 +29,7 @@
 }
 ---
 
-The Bogleheads three fund portfolio is the most defensible default in investing. Own the whole domestic stock market, the whole international stock market, and the whole domestic bond market. Weight by market capitalisation inside each. Never add a fourth fund. Rebalance on a rule rather than a view.
+The Bogleheads three fund portfolio is the most defensible default in investing. Own the whole domestic stock market, the whole international stock market, and the whole domestic bond market. Weight by market capitalisation inside each. Never add a fourth fund, or if a fourth is going in, put it somewhere [bounded and named](/playbooks/core-and-satellite/) rather than beside the other three. Rebalance on a rule rather than a view.
 
 It works because it removes every decision that reliably destroys returns: stock selection, market timing, manager selection, and the constant tinkering that follows from having options. The total cost should sit under fifteen basis points a year, which over thirty years is worth more than almost any active decision you were likely to make.
 

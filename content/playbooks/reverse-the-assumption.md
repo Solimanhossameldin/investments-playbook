@@ -69,6 +69,8 @@ Frequently the answer is that it has, occasionally, in a particular period, and 
 
 This does not tell you the price is wrong. Markets price in things a spreadsheet cannot, and an implied rate that looks demanding is sometimes exactly right.
 
+This is the seller's number being interrogated. Your own estimate needs the same treatment from the other side, which is what a [margin of safety](/playbooks/margin-of-safety/) is for.
+
 What it does is move the assumption from something you were handed to something you have to defend. That single change kills a large share of bad purchases, and the ones it does not kill you enter with your eyes open, which is the most any framework can offer.
 
 ## The sentence to use

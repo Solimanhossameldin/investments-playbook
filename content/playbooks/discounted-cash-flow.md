@@ -67,4 +67,4 @@ NPV answers is this worth doing at my hurdle. IRR answers what does this actuall
 
 A discounted cash flow model is an opinion dressed as arithmetic. The arithmetic is exact and the inputs are guesses: future rent, future service charges, the exit price, the discount rate. Changing the exit price assumption by ten percent can change the answer completely.
 
-That is not an argument against the method. It is an argument for running the model three times, at pessimistic, expected and optimistic assumptions, and making the decision on the range rather than on the single number that came out first.
+That is not an argument against the method. It is an argument for running the model three times, at pessimistic, expected and optimistic assumptions, and making the decision on the range rather than on the single number that came out first. And then for buying at a discount to that range rather than at it, which is [margin of safety](/playbooks/margin-of-safety/) and which has a cost of its own worth understanding.

@@ -69,7 +69,7 @@ That is not a flaw in the framework so much as its boundary, and knowing where a
 
 ## The practical part
 
-If gold is going in, it goes in sized, like anything else. [Position sizing](/playbooks/position-sizing/) applies, and gold has a particular tendency to be bought at the moment of loudest agreement, which is when it is most crowded and most expensive.
+If gold is going in, it goes in sized, like anything else. A permanent quarter of the portfolio, which is what [the permanent portfolio](/playbooks/permanent-portfolio/) asks for, is a very large standing bet on the argument above being right. [Position sizing](/playbooks/position-sizing/) applies, and gold has a particular tendency to be bought at the moment of loudest agreement, which is when it is most crowded and most expensive.
 
 Then decide what you are actually buying. The metal, a fund that holds the metal, and a mining equity are three different assets. A miner is an operating business with costs, debt, jurisdictions and management, and it will not track the metal in the way a buyer expects. Read what any vehicle holds and what it is permitted to do with those holdings, which is the same scrutiny [fund domicile](/playbooks/fund-domicile/) applies to everything else on a fund factsheet.
 

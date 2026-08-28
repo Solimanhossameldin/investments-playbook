@@ -42,7 +42,7 @@ Economic surprises, the ones that actually move asset prices, resolve into growt
 | **Inflation rising** | Commodities, emerging market debt, real assets | Inflation linked bonds, commodities, gold |
 | **Inflation falling** | Equities, corporate credit | Government bonds, long duration |
 
-The conclusion follows directly. If you cannot reliably predict which box the next five years lands in, and the evidence that anyone can is thin, then hold something that wins in each, sized so that each box contributes a similar amount of risk rather than a similar amount of money.
+The conclusion follows directly. If you cannot reliably predict which box the next five years lands in, and the evidence that anyone can is thin, then hold something that wins in each, sized so that each box contributes a similar amount of risk rather than a similar amount of money. The [permanent portfolio](/playbooks/permanent-portfolio/) reached the same conclusion two decades earlier and stopped at four equal quarters, which is the same idea without the risk weighting and with all of its costs on the surface.
 
 That last clause is what makes it different from ordinary diversification. A [sixty forty portfolio](/playbooks/sixty-forty/) looks balanced in money and is not balanced in risk: equities are roughly three times as volatile as bonds, so it takes about ninety percent of its risk from equities. It is a growth bet wearing a diversified costume.
 

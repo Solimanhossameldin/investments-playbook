@@ -70,6 +70,6 @@ That is not an argument against borrowing. It is an argument for sizing the posi
 
 A holding that doubles has doubled its weight. Nobody rebalances into a limit they set three years ago and never looked at again, which is how a sensible eight percent position becomes an unsensible twenty two percent one without a single decision being taken.
 
-[Rebalancing bands](/playbooks/rebalancing-bands/) is the mechanism for that, and [concentration limits](/playbooks/concentration-limits/) is the same idea applied at the level of a whole category rather than a single holding.
+[Rebalancing bands](/playbooks/rebalancing-bands/) is the mechanism for that, and [concentration limits](/playbooks/concentration-limits/) is the same idea applied at the level of a whole category rather than a single holding. [Core and satellite](/playbooks/core-and-satellite/) is where the limit gets a structure to sit in, so that a bet which has done well has somewhere to be trimmed back to.
 
 The discipline is unglamorous: write the limits down while nothing is happening, and check them on a date rather than on a feeling. A rule you only consult when worried is a rule that arrives too late to help.
