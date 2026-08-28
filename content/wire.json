@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-08-27T23:54:24.989Z",
+ "fetchedAt": "2026-08-28T09:56:12.917Z",
  "sourcesTotal": 14,
  "sourcesOk": 7,
  "items": [
@@ -218,15 +218,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "ECB publishes consolidated banking data for end-March 2026",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260807~58eb5109ce.en.html",
-   "published": "2026-08-07T08:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
