@@ -17,7 +17,12 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${esc(url)}">
+<meta property="og:image" content="${esc(site.origin)}/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(site.name)}. ${esc(site.tagline)}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${esc(site.origin)}/og.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

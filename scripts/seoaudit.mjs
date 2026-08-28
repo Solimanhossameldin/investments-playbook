@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
 const STRICT = process.argv.includes("--strict");
+const site = JSON.parse(fs.readFileSync(path.join(root, "content", "site.json"), "utf8"));
 
 if (!fs.existsSync(dist)) {
   console.error("No dist. Run the build first.");
@@ -65,6 +66,8 @@ for (const file of walk(dist)) {
     noindex: /name="robots" content="noindex/.test(html),
     h1s: [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map((m) => m[1].replace(/<[^>]+>/g, "").trim()),
     headings: [...html.matchAll(/<h([1-6])\b/gi)].map((m) => Number(m[1])),
+    ogImage: (html.match(/<meta property="og:image" content="([^"]*)"/i) || [])[1] || "",
+    twImage: (html.match(/<meta name="twitter:image" content="([^"]*)"/i) || [])[1] || "",
     jsonld: [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map((m) => {
       try { return JSON.parse(m[1])["@type"]; } catch { return "INVALID"; }
     }),
@@ -123,6 +126,22 @@ for (const p of pages.values()) {
       break;
     }
     prev = h;
+  }
+}
+
+// A link card is the one part of this site nobody sees until it is broken, and
+// it is broken silently: LinkedIn, X, WhatsApp and Slack render a blank box and
+// report nothing. Every page declares summary_large_image, so every page owes
+// an image that is absolute (relative og:image URLs are not resolved by every
+// scraper) and actually present in the build.
+for (const p of pages.values()) {
+  for (const [kind, v] of [["og:image", p.ogImage], ["twitter:image", p.twImage]]) {
+    if (!v) { note("error", "no " + kind, p.url); continue; }
+    if (!v.startsWith("https://")) note("error", kind + " not absolute", `${v} on ${p.url}`);
+    else if (v.startsWith(site.origin)) {
+      const f = path.join(dist, v.slice(site.origin.length).replace(/^\//, ""));
+      if (!fs.existsSync(f)) note("error", kind + " missing from build", `${v} on ${p.url}`);
+    }
   }
 }
 

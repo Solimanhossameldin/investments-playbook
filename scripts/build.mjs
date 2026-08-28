@@ -141,6 +141,11 @@ fs.writeFileSync(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#000000"/><rect x="0" y="56" width="64" height="8" fill="#DC0000"/><text x="32" y="44" font-family="Georgia,serif" font-size="36" fill="#FFFFFF" text-anchor="middle">IP</text></svg>`
 );
 
+// The link preview card. Declared absolutely in every page's head, so a
+// missing file is four platforms rendering a blank card and nobody noticing.
+// seoaudit fails if it is not here.
+fs.copyFileSync(path.join(root, "content", "og.png"), path.join(dist, "og.png"));
+
 if (pdf) fs.writeFileSync(path.join(dist, "chartbook.pdf"), pdf);
 fs.writeFileSync(path.join(dist, "CNAME"), `${site.domain}\n`);
 fs.writeFileSync(path.join(dist, ".nojekyll"), "");

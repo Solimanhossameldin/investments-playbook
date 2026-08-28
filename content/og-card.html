@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  Source of dist/og.png, the link preview card. 1200x630.
+
+  This file is the design; og.png is the render. Nothing in the build reads
+  this file, because rasterising HTML needs a browser and this site's build has
+  no dependencies. Re-render it by hand when the card changes:
+
+    open it at exactly 1200x630 and screenshot the page, or
+    npx playwright screenshot --viewport-size=1200,630 og-card.html og.png
+
+  and drop the result at content/og.png. Two rules for whatever replaces it:
+  keep it 1200x630, and put no counts on it. Counts on this site are rendered
+  from the arrays and never typed, and a PNG cannot be re-rendered by a build.
+
+  Georgia is the site's headline face and is present on macOS and Windows. On a
+  Linux renderer it falls back, so the committed og.png was rendered with
+  Gelasio, which carries Georgia's metrics.
+-->
+<html><head><meta charset="utf-8"><title>Investments Playbook link card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gelasio:wght@400&family=Inter:wght@400;600&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1200px;height:630px}
+body{background:#FFFFFF;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.card{position:relative;width:1200px;height:630px;display:flex;flex-direction:column}
+.rule{height:10px;background:#DC0000;flex:none}
+.body{flex:1;padding:64px 80px 0;display:flex;flex-direction:column}
+.mark{font-size:20px;font-weight:600;letter-spacing:.30em;text-transform:uppercase;color:#171717}
+.mark span{color:#DC0000}
+.h{font-family:Georgia,Gelasio,serif;font-weight:400;font-size:76px;line-height:1.06;letter-spacing:-.018em;color:#171717;margin-top:44px;max-width:16ch}
+.hair{height:1px;background:#E3E3E1;margin-top:auto}
+.sub{font-size:25px;color:#6B6B6B;letter-spacing:-.005em;padding:30px 0 34px}
+.foot{flex:none;height:104px;background:#000000;display:flex;align-items:center;justify-content:space-between;padding:0 80px}
+.dom{font-size:23px;font-weight:600;letter-spacing:.20em;text-transform:uppercase;color:#FFFFFF}
+.tag{font-size:19px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a8a}
+</style></head><body>
+<div class="card">
+  <div class="rule"></div>
+  <div class="body">
+    <div class="mark">Investments Playbook<span>.</span></div>
+    <div class="h">The arithmetic behind every investment decision.</div>
+    <div class="hair"></div>
+    <div class="sub">A daily brief on global markets and property, the frameworks that actually work, and the calculators that turn them into your number.</div>
+  </div>
+  <div class="foot">
+    <div class="dom">investmentsplaybook.com</div>
+    <div class="tag">Markets &middot; Property</div>
+  </div>
+</div>
+</body></html>
