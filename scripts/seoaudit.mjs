@@ -66,6 +66,10 @@ for (const file of walk(dist)) {
     noindex: /name="robots" content="noindex/.test(html),
     h1s: [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map((m) => m[1].replace(/<[^>]+>/g, "").trim()),
     headings: [...html.matchAll(/<h([1-6])\b/gi)].map((m) => Number(m[1])),
+    pageDate: (html.match(/<time datetime="(\d{4}-\d{2}-\d{2})"/i) || [])[1] || "",
+    feedLink: /<link rel="alternate" type="application\/atom\+xml"[^>]*href="\/feed\.xml"/i.test(html),
+    skipHref: (html.match(/<a class="skip" href="#([^"]+)"/i) || [])[1] || "",
+    mainId: (html.match(/<main[^>]*\bid="([^"]+)"/i) || [])[1] || "",
     ogImage: (html.match(/<meta property="og:image" content="([^"]*)"/i) || [])[1] || "",
     twImage: (html.match(/<meta name="twitter:image" content="([^"]*)"/i) || [])[1] || "",
     jsonld: [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map((m) => {
@@ -178,6 +182,53 @@ for (const p of indexable) {
   const last = bc.itemListElement[bc.itemListElement.length - 1];
   if (last.item !== site.origin + p.url) {
     note("error", "breadcrumb does not end at the page", `${last.item} on ${p.url}`);
+  }
+}
+
+// Sitemap lastmod. Google drops lastmod across a whole site once it stops
+// believing it, so the failure to guard against is a date the build cannot
+// justify -- which is what stamping the build date on all 124 URLs was.
+// Where a page states its own date in a <time datetime>, the sitemap has to
+// agree with it; nothing may be dated in the future; and a sitemap where
+// every single URL carries one identical date is the old bug returning.
+{
+  const raw = fs.existsSync(path.join(dist, "sitemap.xml"))
+    ? fs.readFileSync(path.join(dist, "sitemap.xml"), "utf8")
+    : "";
+  const entries = [...raw.matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]*)<\/lastmod>)?<\/url>/g)]
+    .map((m) => ({ url: m[1].slice(site.origin.length) || "/", lastmod: m[2] || "" }));
+  const dated = entries.filter((e) => e.lastmod);
+  const nowISO = new Date().toISOString().slice(0, 10);
+
+  for (const e of dated) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(e.lastmod)) note("error", "lastmod not a date", `${e.lastmod} on ${e.url}`);
+    else if (e.lastmod > nowISO) note("error", "lastmod in the future", `${e.lastmod} on ${e.url}`);
+    const p = pages.get(e.url);
+    if (p && p.pageDate && p.pageDate !== e.lastmod) {
+      note("error", "lastmod disagrees with the page", `sitemap ${e.lastmod}, page ${p.pageDate}, ${e.url}`);
+    }
+  }
+  if (entries.length > 10 && dated.length === entries.length && new Set(dated.map((e) => e.lastmod)).size === 1) {
+    note("error", "every url shares one lastmod", `${entries.length} urls all dated ${dated[0].lastmod}`);
+  }
+}
+
+// The feed is only useful if a reader's app can find it, which it does by
+// reading the alternate link out of whatever page they happen to be on. A feed
+// that exists and is announced nowhere is a file nobody will ever request.
+if (!fs.existsSync(path.join(dist, "feed.xml"))) note("error", "no feed", "/feed.xml is not in the build");
+for (const p of indexable) {
+  if (!p.feedLink) note("error", "feed not announced", p.url);
+}
+
+// Thirteen links sit in front of the content on every page. Without a skip
+// link a keyboard user tabs all of them, on every page, forever. The link is
+// only worth anything if its target exists, so both halves are checked: a
+// working link pointing at an id nobody renders is the same as no link.
+for (const p of pages.values()) {
+  if (!p.skipHref) note("error", "no skip link", p.url);
+  else if (p.skipHref !== p.mainId) {
+    note("error", "skip link points nowhere", `#${p.skipHref} but main is "${p.mainId || "unset"}" on ${p.url}`);
   }
 }
 

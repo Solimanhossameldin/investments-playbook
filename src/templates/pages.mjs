@@ -462,7 +462,7 @@ export function playbookPage({ site, pb, calcName, related = [] }) {
             .join("")}</ol>`
         : ""
     }
-    <p class="reviewed">Last reviewed ${esc(pb.reviewed)}. ${
+    <p class="reviewed">Last reviewed <time datetime="${esc(isoDate(pb.reviewed))}">${esc(pb.reviewed)}</time>. ${
       pb.category === "property"
         ? "Commercial relationship disclosure: the author works in Dubai real estate brokerage. See the disclosure standards."
         : "Educational research, not personal advice."

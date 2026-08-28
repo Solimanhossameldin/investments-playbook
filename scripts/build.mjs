@@ -16,6 +16,7 @@ import { chartbookPage } from "../src/templates/chartbook.mjs";
 import { recordPage } from "../src/templates/record.mjs";
 import { pathIndex, pathPage, pathBand } from "../src/templates/paths.mjs";
 import { contactPage } from "../src/templates/contact.mjs";
+import { feed } from "../src/templates/feed.mjs";
 import { buildChartbookPdf, pdfPageCount } from "./make-chartbook-pdf.mjs";
 import calls from "../content/calls.mjs";
 import glossary from "../content/glossary.mjs";
@@ -24,6 +25,7 @@ import playbooks from "../content/playbooks.mjs";
 import paths from "../content/paths.mjs";
 import * as STATIC from "../content/static.mjs";
 import { pickRelated } from "../src/related.mjs";
+import { isoDate } from "../src/lib.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
@@ -86,19 +88,33 @@ const assets = { css: hash(cssText), js: hash(appText) };
 const pdf = buildChartbookPdf(chartbook);
 const pdfMeta = pdf ? { pages: pdfPageCount(chartbook), kb: Math.round(pdf.length / 1024) } : {};
 
+// Sitemap lastmod. Google discards lastmod across a whole site once it finds
+// it unreliable, so a page gets a date only where the build can point at the
+// thing that dates it: a framework's reviewed date, a brief's publication
+// date, or DAILY for the handful of pages that genuinely carry new figures on
+// every run. Everything else ships no lastmod at all, which is what the spec
+// is for. Stamping the build date on all 124 URLs, which is what this did
+// until now, told Google every page changed twice a day and taught it to stop
+// believing the field.
+const DAILY = new Date().toISOString().slice(0, 10);
+const latest = (dates) => dates.filter(Boolean).sort().pop() || "";
+
 const written = [];
-function emit(spec) {
+function emit(spec, lastmod = "") {
   const html = page({ site, market, assets, ...spec });
   const out = spec.path === "/404.html" ? "404.html" : path.join(spec.path.replace(/^\/|\/$/g, ""), "index.html");
   const full = path.join(dist, out);
   fs.mkdirSync(path.dirname(full), { recursive: true });
   fs.writeFileSync(full, html);
-  if (spec.path !== "/404.html" && !spec.noindex) written.push(spec.path);
+  if (spec.path !== "/404.html" && !spec.noindex) written.push({ path: spec.path, lastmod });
 }
 
+// The library index and the compendium both change when any framework does.
+const libraryReviewed = latest(playbooks.map((pb) => isoDate(pb.reviewed)));
+
 /* ---------- pages ---------- */
-emit(P.home({ site, market, brief: briefs[0], playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }), pathsHtml: pathBand({ paths }) }));
-emit(wirePage({ site, wire }));
+emit(P.home({ site, market, brief: briefs[0], playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }), pathsHtml: pathBand({ paths }) }), DAILY);
+emit(wirePage({ site, wire }), DAILY);
 
 const playbookTitles = Object.fromEntries(playbooks.map((p) => [p.slug, p.title]));
 emit(glossaryIndex({ site, terms: glossary }));
@@ -106,26 +122,26 @@ glossary.forEach((term) => emit(glossaryTerm({ site, term, terms: glossary, play
 
 // A community page exists only where the data supports one. The generator
 // withholds the rest, so there is nothing here to guard against.
-emit(communityIndex({ site, data: communities }));
-(communities.communities || []).forEach((c) => emit(communityPage({ site, c, data: communities })));
-emit(P.briefIndex({ site, briefs }));
-briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1] })));
+emit(communityIndex({ site, data: communities }), (communities.generatedAt || "").slice(0, 10));
+(communities.communities || []).forEach((c) => emit(communityPage({ site, c, data: communities }), (communities.generatedAt || "").slice(0, 10)));
+emit(P.briefIndex({ site, briefs }), latest(briefs.map((b) => b.date)));
+briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1] }), b.date));
 emit(pathIndex({ site, paths, playbooks, calculators: calcMeta }));
 paths.forEach((p) => emit(pathPage({ site, p, paths, playbooks, calculators: calcMeta, glossary })));
-emit(P.playbookIndex({ site, playbooks }));
+emit(P.playbookIndex({ site, playbooks }), libraryReviewed);
 // Related frameworks are levelled so no page is left with nothing pointing
 // at it. See src/related.mjs for why the obvious sort does not do that.
 const { chosen: relatedBySlug } = pickRelated(playbooks);
 playbooks.forEach((pb) => {
-  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug) }));
+  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug) }), isoDate(pb.reviewed));
 });
 emit(calcIndex({ site }));
 const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length };
 CALCULATORS.forEach((calc) => emit(calcPage({ site, calc, counts })));
-emit(playbookDoc({ site, playbooks, calculators: calcMeta }));
-emit(chartbookPage({ site, data: chartbook, pdf: pdfMeta }));
+emit(playbookDoc({ site, playbooks, calculators: calcMeta }), libraryReviewed);
+emit(chartbookPage({ site, data: chartbook, pdf: pdfMeta }), (chartbook.asOf || "").slice(0, 10));
 emit(recordPage({ site, calls, results: callResults.results || {}, briefs }));
-emit(P.dataPage({ site, market, status }));
+emit(P.dataPage({ site, market, status }), DAILY);
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));
 emit(P.staticPage({ site, title: `Editorial and disclosure standards. ${site.name}`, description: "How figures are sourced, how the daily brief is produced, how corrections are handled, and every commercial relationship declared.", path: "/disclosure/", eyebrow: "Editorial standards", heading: "How this is produced, and every conflict declared.", bodyMd: STATIC.disclosure }));
 emit(P.staticPage({ site, title: `Privacy. ${site.name}`, description: "What this site collects, where it goes, and what the calculators never send anywhere.", path: "/privacy/", eyebrow: "Privacy", heading: "What is collected, and what never leaves your browser.", bodyMd: STATIC.privacy }));
@@ -148,6 +164,7 @@ fs.copyFileSync(path.join(root, "content", "og.png"), path.join(dist, "og.png"))
 fs.copyFileSync(path.join(root, "content", "icon-512.png"), path.join(dist, "icon-512.png"));
 
 if (pdf) fs.writeFileSync(path.join(dist, "chartbook.pdf"), pdf);
+fs.writeFileSync(path.join(dist, "feed.xml"), feed({ site, briefs }));
 fs.writeFileSync(path.join(dist, "CNAME"), `${site.domain}\n`);
 fs.writeFileSync(path.join(dist, ".nojekyll"), "");
 fs.writeFileSync(
@@ -155,11 +172,10 @@ fs.writeFileSync(
   `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`
 );
 
-const today = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(
   path.join(dist, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${written
-    .map((u) => `  <url><loc>${site.origin}${u}</loc><lastmod>${today}</lastmod></url>`)
+    .map(({ path: u, lastmod }) => `  <url><loc>${site.origin}${u}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}</url>`)
     .join("\n")}\n</urlset>\n`);
 
 // Machine readable feed of the library, for anyone who wants to cite it.

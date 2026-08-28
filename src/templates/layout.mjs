@@ -52,6 +52,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <meta property="og:image:alt" content="${esc(site.name)}. ${esc(site.tagline)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${esc(site.origin)}/og.png">
+<link rel="alternate" type="application/atom+xml" title="${esc(site.name)}. The Brief" href="/feed.xml">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/icon-512.png">
@@ -189,6 +190,7 @@ export function footer(site) {
       <li><a href="/brief/">Latest issue</a></li>
       <li><a href="/brief/">Archive</a></li>
       <li><a href="/#playbook">Subscribe</a></li>
+      <li><a href="/feed.xml">RSS feed</a></li>
     </ul></div>
     <div><h2>Playbooks</h2><ul>
       <li><a href="/start/">Where to start</a></li>
@@ -227,9 +229,10 @@ export function page({ site, market, title, description, path, body, jsonld, ogT
 ${head({ site, title, description, path, jsonld, ogType, noindex, assets, crumb })}
 </head>
 <body>
+<a class="skip" href="#main">Skip to the content</a>
 ${header(site, path)}
 ${ticker(market)}
-<main>
+<main id="main" tabindex="-1">
 ${body}
 </main>
 ${footer(site)}
