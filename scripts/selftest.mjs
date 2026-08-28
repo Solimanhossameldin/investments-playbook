@@ -172,6 +172,41 @@ check(
   /@media \(max-width: 980px\) \{ \.doc \{ grid-template-columns: minmax\(0, 1fr\)/.test(css),
   "a bare 1fr is minmax(auto, 1fr); wide tables then widen the page instead of scrolling"
 );
+// The auto-minimum grid bug, third appearance. .doc had it, .calc had it
+// latently until a calculator arrived with longer strings, and a bare 1fr is
+// minmax(auto, 1fr) every time. Assert the shape rather than the symptom.
+check(
+  "no grid column can refuse to shrink below its content",
+  !/\.lead, \.calc, \.grid--3, \.ftr__cols \{ grid-template-columns: 1fr; \}/.test(css),
+  "a bare 1fr is minmax(auto, 1fr) and will push the page sideways"
+);
+check(
+  "the calculator grid uses an explicit zero minimum",
+  /\.calc \{ display: grid; grid-template-columns: minmax\(0, 1fr\) minmax\(0, 1fr\)/.test(css),
+  "the result panel is the widest thing on the page and needs to be shrinkable"
+);
+// A result row is a label and a value, and the hero value is 32px mono. On a
+// 300px phone that does not fit on one line and must be allowed a second.
+check(
+  "a result row can wrap",
+  /\.res \{ display: flex; flex-wrap: wrap;/.test(css),
+  "without this a long verdict pushes the whole page sideways"
+);
+
+// Adding a signup form to 122 pages put conversion furniture into every
+// printed page. .btn was already hidden in print, so what remained was an
+// orphaned text input with no button, on paper, forever.
+check(
+  "the capture block does not print",
+  /@media print \{[\s\S]{0,400}?\.cap[\s\S]{0,80}?display: none/.test(css),
+  "a form that cannot be filled in with a pen should not be on the page"
+);
+check(
+  "the live band stops being black when printed",
+  /@media print[\s\S]*?\.cx-live \{[^}]*background: #fff/.test(css),
+  "an ink-heavy panel printed as-is burns a cartridge"
+);
+
 check(
   "a table wrapper cannot be wider than what contains it",
   /\.table-scroll \{[^}]*max-width: 100%/.test(css),
