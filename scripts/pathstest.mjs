@@ -280,6 +280,47 @@ t("a value the form does not offer is ignored rather than written through", () =
 });
 
 
+/* ---------------- the document a path promises ----------------
+   One path offers a file in exchange for an email address. The promise is
+   made by the page and kept by the build, so the two have to be checked
+   against each other: a magnet whose file the build does not produce is the
+   worst kind of broken, because the reader has already paid before they find
+   out. The audit separately fails on the missing file as a broken link; this
+   catches the declaration going wrong before a build is even made. */
+
+const magnets = paths.filter((p) => p.magnet);
+
+t("a magnet declares a file, a title and a blurb", () => {
+  for (const p of magnets) {
+    assert.ok(p.magnet.file && p.magnet.title && p.magnet.blurb, `${p.slug} has an incomplete magnet`);
+    assert.match(p.magnet.file, /^\/[a-z0-9-]+\.pdf$/, `${p.slug} magnet file is not a site-root pdf`);
+  }
+});
+
+t("every magnet file is produced by the build", () => {
+  const build = readFileSync(new URL("../scripts/build.mjs", import.meta.url), "utf8");
+  for (const p of magnets) {
+    const name = p.magnet.file.replace(/^\//, "");
+    assert.ok(
+      build.includes(`"${name}"`),
+      `${p.slug} promises ${p.magnet.file} and nothing in build.mjs writes it`
+    );
+  }
+});
+
+t("a magnet is offered only where the path page can render it", () => {
+  const tpl = readFileSync(new URL("../src/templates/paths.mjs", import.meta.url), "utf8");
+  assert.ok(tpl.includes("if (!m || !m.file || !m.title) return \"\";"),
+    "the magnet block no longer refuses to render an incomplete magnet");
+  assert.ok(tpl.includes("data-unlock") || tpl.includes("m.file"),
+    "the magnet block no longer passes the file to the form");
+});
+
+t("the runtime hands the file over itself rather than waiting on an email", () => {
+  assert.match(runtimeSrc, /data-unlock/,
+    "app.js no longer reads data-unlock, so a magnet promise depends on the mail automation");
+});
+
 console.log(
   `paths: ${n} checks passed across ${paths.length} paths, ${paths.reduce((a, p) => a + p.order.length, 0)} referenced frameworks.`
 );

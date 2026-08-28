@@ -1,4 +1,5 @@
 import { esc, copy, pageTitle, clampDescription } from "../lib.mjs";
+import { briefForm } from "./layout.mjs";
 
 // The path pages route a reader, and route a subscriber. Nothing on them is
 // written here: every framework, calculator and term is looked up by slug in
@@ -13,6 +14,24 @@ const byKey = (arr, k) => new Map(arr.map((x) => [x[k], x]));
 // round the browser reads the whole of "?intent=..." as part of the hash
 // and location.search is empty, so the form silently stays unset.
 export const playbookHref = (p) => `/?intent=${encodeURIComponent(p.intent)}#playbook`;
+
+// A path may offer a document in exchange for an email. Only one does, and the
+// block renders only where `magnet` is set, so no page can promise a file that
+// was never declared. The download is revealed by the page itself on submit
+// rather than posted out later: the reader gets what they were promised even
+// on a day the mail automation is not running, which is the only version of
+// this that is honest.
+function magnetBlock(site, p) {
+  const m = p.magnet;
+  if (!m || !m.file || !m.title) return "";
+  return `<div class="gate__box" id="get" style="max-width:var(--prose);margin-top:56px">
+    <h2>${esc(m.title)}</h2>
+    <p>${esc(copy(m.blurb || ""))}</p>
+    ${briefForm(site, "magnet-form", "Your download is below.", m.file)}
+    <noscript><p style="font-size:13px;margin:14px 0 0">The subscribe form needs JavaScript. <a href="${esc(m.file)}">Download the checklist directly</a> instead.</p></noscript>
+    <p style="font-size:12px;color:var(--muted);margin:14px 0 0">Free. Unsubscribe in one click. The frameworks it points at are ungated and always will be.</p>
+  </div>`;
+}
 
 function steps(p, pbBySlug) {
   const items = p.order.map((s) => pbBySlug.get(s)).filter(Boolean);
@@ -95,8 +114,12 @@ export function pathIndex({ site, paths, playbooks, calculators }) {
 
   return {
     title: pageTitle("Where to start", site.name),
+    // Rendered, because adding a seventh path made "six" wrong here and
+    // nothing but a person reading it would have caught that.
     description: clampDescription(
-      "Six ordered routes through the framework library, one for each situation: a first property, a growing portfolio, global markets, diversifying, relocating to the UAE, or starting from the beginning."
+      `${paths.length} ordered routes through the framework library, one for each situation: ${paths
+        .map((p) => copy(p.label).toLowerCase())
+        .join(", ")}.`
     ),
     path: "/start/",
     body,
@@ -142,6 +165,8 @@ export function pathPage({ site, p, paths, playbooks, calculators, glossary }) {
     <b>One thing worth reading twice</b>
     ${esc(copy(p.close))}
   </div>
+
+  ${magnetBlock(site, p)}
 
   <div class="btn-row" style="margin-top:40px">
     <a class="btn btn--solid" href="${playbookHref(p)}">Get all ${playbooks.length} frameworks as one document</a>

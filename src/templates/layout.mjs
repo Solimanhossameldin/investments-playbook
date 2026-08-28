@@ -105,8 +105,8 @@ ${sorted
 // promising a brief tomorrow while publication was stopped, and the worst one
 // to be wrong in, so it is rendered from the same derived phrase as the rest
 // rather than hard-coded in app.js.
-export function briefForm(site, id = "brief-form", next = "") {
-  return `<form class="inline-form" data-ml="brief" id="${id}"${next ? ` data-next="${esc(next)}"` : ""}>
+export function briefForm(site, id = "brief-form", next = "", unlock = "") {
+  return `<form class="inline-form" data-ml="brief" id="${id}"${next ? ` data-next="${esc(next)}"` : ""}${unlock ? ` data-unlock="${esc(unlock)}"` : ""}>
   <label class="sr-only" for="${id}-email" style="position:absolute;left:-9999px">Email address</label>
   <input id="${id}-email" name="email" type="email" required placeholder="your@email.com" autocomplete="email">
   <button class="btn btn--solid" type="submit">Continue</button>

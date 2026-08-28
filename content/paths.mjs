@@ -198,4 +198,44 @@ export default [
     ],
     close: "The last one is a habit rather than a formula, and it is the most useful thing on this page.",
   },
+  {
+    slug: "crypto-to-property",
+    intent: "Move crypto gains into property",
+    label: "Move crypto gains into property",
+    title: "Moving crypto gains into property",
+    blurb: "What the conversion costs, what the paperwork requires, and what the resulting portfolio actually looks like.",
+    lede: "You do not buy Dubai property with cryptocurrency. You sell cryptocurrency and buy Dubai property with dirhams, and almost everything that decides what the purchase costs you happens in the gap between those two sentences. These are in the order the decisions actually arrive, which matters here more than on any other path: the tax question is settled by the date you sell, and it cannot be reopened afterwards.",
+    order: [
+      "the-year-you-sell",
+      "proving-the-source-of-crypto-funds",
+      "settling-a-property-purchase-from-crypto",
+      "crypto-concentration-and-property",
+      "funding-a-payment-plan-from-a-volatile-asset",
+      "net-rental-yield",
+      "transaction-cost-drag",
+      "tokenised-property",
+      "position-sizing",
+      "currency-risk-and-the-peg",
+    ],
+    calculators: ["off-plan-irr", "net-rental-yield"],
+    terms: [
+      "off-plan",
+      "payment-plan",
+      "escrow-account",
+      "title-deed",
+      "transfer-fee",
+      "drawdown",
+      "volatility-drag",
+      "tax-residency",
+    ],
+    close: "Read the first one before you do anything else. It is the only step in this sequence that cannot be taken retrospectively.",
+    // The only path that offers a document in exchange for an email. The file
+    // is produced by the build, and the audit fails if it is not in dist, so
+    // the form cannot end up promising something that does not exist.
+    magnet: {
+      file: "/crypto-to-property-checklist.pdf",
+      title: "The crypto to property checklist",
+      blurb: "The five stages in the order they actually happen, with the questions to ask at each one. It downloads the moment you subscribe, on this page, rather than arriving by email later.",
+    },
+  },
 ];

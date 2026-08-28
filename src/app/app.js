@@ -162,6 +162,18 @@
   }
   try { if (localStorage.getItem("ip_subscribed") === "1") openGate(); } catch (e) {}
 
+  // Somebody who already subscribed gets the document back without being
+  // asked for an address a second time.
+  try {
+    if (localStorage.getItem("ip_subscribed") === "1") {
+      document.querySelectorAll("form[data-unlock]").forEach(function (f) {
+        var u = f.getAttribute("data-unlock");
+        f.innerHTML = '<a class="btn btn--solid" href="' + u + '" download>Download the checklist</a>' +
+          '<p style="margin:12px 0 0;font-size:13px;color:var(--muted)">You are already on the list.</p>';
+      });
+    }
+  } catch (e) {}
+
   /* ---------------- MailerLite ---------------- */
   function mlPost(formId, fields) {
     var fd = new FormData();
@@ -189,7 +201,18 @@
       busy(form, true);
       mlPost(ML.brief, { email: email, lead_source: "investmentsplaybook.com brief" }).then(function () {
         try { localStorage.setItem("ip_subscribed", "1"); } catch (e) {}
-        form.innerHTML = '<p style="margin:0;font-size:14px">You are on the list. Check your inbox to confirm.</p>';
+        // Where a form promised a document, the page hands it over itself.
+        // Waiting on an email would make the promise depend on a mail
+        // automation being switched on, and the reader has already paid.
+        var unlock = form.getAttribute("data-unlock");
+        if (unlock) {
+          try { localStorage.setItem("ip_unlocked", "1"); } catch (e) {}
+          form.innerHTML =
+            '<p style="margin:0 0 12px;font-size:14px">You are on the list. Check your inbox to confirm.</p>' +
+            '<a class="btn btn--solid" href="' + unlock + '" download>Download the checklist</a>';
+        } else {
+          form.innerHTML = '<p style="margin:0;font-size:14px">You are on the list. Check your inbox to confirm.</p>';
+        }
         openGate();
       }).catch(function () {
         busy(form, false);

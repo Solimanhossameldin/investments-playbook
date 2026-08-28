@@ -18,6 +18,7 @@ import { pathIndex, pathPage, pathBand } from "../src/templates/paths.mjs";
 import { contactPage } from "../src/templates/contact.mjs";
 import { feed } from "../src/templates/feed.mjs";
 import { buildChartbookPdf, pdfPageCount } from "./make-chartbook-pdf.mjs";
+import { buildCryptoChecklistPdf, checklistPageCount, checklistQuestionCount } from "./make-crypto-checklist-pdf.mjs";
 import calls from "../content/calls.mjs";
 import glossary from "../content/glossary.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
@@ -164,6 +165,11 @@ fs.copyFileSync(path.join(root, "content", "og.png"), path.join(dist, "og.png"))
 fs.copyFileSync(path.join(root, "content", "icon-512.png"), path.join(dist, "icon-512.png"));
 
 if (pdf) fs.writeFileSync(path.join(dist, "chartbook.pdf"), pdf);
+
+// The crypto path's form promises this document in exchange for an email
+// address, so the build produces it rather than trusting somebody to upload
+// one. seoaudit fails if it is not here.
+fs.writeFileSync(path.join(dist, "crypto-to-property-checklist.pdf"), buildCryptoChecklistPdf(site));
 fs.writeFileSync(path.join(dist, "feed.xml"), feed({ site, briefs }));
 fs.writeFileSync(path.join(dist, "CNAME"), `${site.domain}\n`);
 fs.writeFileSync(path.join(dist, ".nojekyll"), "");

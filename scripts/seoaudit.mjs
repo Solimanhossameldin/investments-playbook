@@ -72,6 +72,7 @@ for (const file of walk(dist)) {
     headings: [...html.matchAll(/<h([1-6])\b/gi)].map((m) => Number(m[1])),
     pageDate: (html.match(/<time datetime="(\d{4}-\d{2}-\d{2})"/i) || [])[1] || "",
     feedLink: /<link rel="alternate" type="application\/atom\+xml"[^>]*href="\/feed\.xml"/i.test(html),
+    unlocks: [...html.matchAll(/data-unlock="([^"]+)"/gi)].map((m) => m[1]),
     skipHref: (html.match(/<a class="skip" href="#([^"]+)"/i) || [])[1] || "",
     mainId: (html.match(/<main[^>]*\bid="([^"]+)"/i) || [])[1] || "",
     ogImage: (html.match(/<meta property="og:image" content="([^"]*)"/i) || [])[1] || "",
@@ -250,6 +251,19 @@ for (const p of pages.values()) {
     const body = html.replace(/<div class="callout"[\s\S]*?<\/div>/g, "");
     if (body.includes(stale)) {
       note("error", "cadence claim does not match the cadence", `"${stale}" on ${p.url}`);
+    }
+  }
+}
+
+// A file a page promises in exchange for an email has to exist. The broken
+// link check does not reach this one, because the promise is carried in a
+// data attribute and the anchor is only created after a reader has already
+// handed over their address. That is the worst possible moment to find out,
+// so it is checked here instead.
+for (const p of pages.values()) {
+  for (const u of p.unlocks) {
+    if (!fs.existsSync(path.join(dist, u.replace(/^\//, "")))) {
+      note("error", "promised file missing from build", `${u} on ${p.url}`);
     }
   }
 }

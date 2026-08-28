@@ -148,6 +148,7 @@ export const INTENTS = [
   "Build a global markets portfolio",
   "Diversify out of a single market",
   "Relocate or set up in the UAE",
+  "Move crypto gains into property",
   "Just learning",
 ];
 
