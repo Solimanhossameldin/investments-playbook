@@ -49,7 +49,7 @@ The same machinery answers [rent versus buy](/playbooks/rent-vs-buy/): both are 
 
 This is where the judgement sits and where most analyses quietly cheat.
 
-The rate should reflect what the money would otherwise earn at comparable risk. For a cash buyer that might be the [real yield](/glossary/real-yield/) plus a risk premium. For a leveraged buyer the mortgage rate is a reasonable floor, because money not spent on the property could repay debt.
+The rate should reflect what the money would otherwise earn at comparable risk. For a cash buyer that might be the [real yield](/glossary/real-yield/) plus a risk premium. For a leveraged buyer the mortgage rate is a reasonable floor, because money not spent on the property could repay debt, which is where [the order of debt repayment](/playbooks/order-of-debt-repayment/) starts. For anyone whose real alternative is a global equity fund, the honest floor is what that fund is likely to return from today's prices rather than what it returned from the last decade's, which is the one job [CAPE](/playbooks/cape/) is actually suited to.
 
 A rate that is too low makes distant payments look nearly as valuable as immediate ones, which flatters long payment plans. A rate that is too high does the opposite. The discipline is to pick the rate before running the numbers, not after seeing which answer you preferred.
 

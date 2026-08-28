@@ -44,7 +44,7 @@ It has since been revised in both directions, by serious people, and the honest 
 | 4.0% | Bengen, original 1994 | US stocks and bonds, thirty year horizon, worst historical start |
 | 3.9% | Morningstar, 2026 | Forward looking, starting from current valuations and current bond yields |
 
-The spread is not academic disagreement for its own sake. It reflects a real question: should the number come from history, or from where prices are today. Morningstar's lower figure exists because they start from present conditions, and with the cyclically adjusted price to earnings ratio around 42 against a long run mean near 17, the forward looking case for caution is not unreasonable.
+The spread is not academic disagreement for its own sake. It reflects a real question: should the number come from history, or from where prices are today. Morningstar's lower figure exists because they start from present conditions, and with the [cyclically adjusted price to earnings ratio](/playbooks/cape/) around 42 against a long run mean near 17, the forward looking case for caution is not unreasonable.
 
 ## What the rate is actually protecting you from
 

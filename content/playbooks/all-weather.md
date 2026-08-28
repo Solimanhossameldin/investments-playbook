@@ -44,7 +44,7 @@ Economic surprises, the ones that actually move asset prices, resolve into growt
 
 The conclusion follows directly. If you cannot reliably predict which box the next five years lands in, and the evidence that anyone can is thin, then hold something that wins in each, sized so that each box contributes a similar amount of risk rather than a similar amount of money.
 
-That last clause is what makes it different from ordinary diversification. A sixty forty portfolio looks balanced in money and is not balanced in risk: equities are roughly three times as volatile as bonds, so a sixty forty portfolio takes about ninety percent of its risk from equities. It is a growth bet wearing a diversified costume.
+That last clause is what makes it different from ordinary diversification. A [sixty forty portfolio](/playbooks/sixty-forty/) looks balanced in money and is not balanced in risk: equities are roughly three times as volatile as bonds, so it takes about ninety percent of its risk from equities. It is a growth bet wearing a diversified costume.
 
 ## What it is not
 

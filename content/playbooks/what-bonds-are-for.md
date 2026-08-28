@@ -53,7 +53,7 @@ A portfolio described as safe because it holds bonds is safe from the first risk
 
 **Dry powder.** A holding that has not fallen is what funds a [rebalance](/playbooks/rebalancing-bands/) into equities after they have.
 
-None of those is about return. Bonds should be expected to return less than equities over long periods, and if they did not, nobody would hold equities.
+None of those is about return. Bonds should be expected to return less than equities over long periods, and if they did not, nobody would hold equities. The [sixty forty](/playbooks/sixty-forty/) split is the oldest expression of that trade, and the long argument about whether it still works is an argument about this paragraph.
 
 ## Matching duration to purpose
 
@@ -63,7 +63,7 @@ Holding a long duration bond fund as a cash substitute is a rates bet wearing a 
 
 ## Where the correlation assumption fails
 
-The diversification argument rests on bonds and equities moving apart, and they do not always. In an inflation shock both fall together, because rising rates hurt bond prices and compress equity valuations at the same time. That is the case the [all-weather](/playbooks/all-weather/) framework exists to address, and it is why inflation linked bonds and real assets sit alongside conventional bonds rather than being replaced by them.
+The diversification argument rests on bonds and equities moving apart, and they do not always. In an inflation shock both fall together, because rising rates hurt bond prices and compress equity valuations at the same time. That is the case the [all-weather](/playbooks/all-weather/) framework exists to address, and it is why inflation linked bonds and real assets sit alongside conventional bonds rather than being replaced by them. [Gold](/playbooks/gold-and-real-rates/) is the other asset usually offered for that box, and its record is a good deal more conditional than the pitch for it suggests.
 
 ## The practical version
 

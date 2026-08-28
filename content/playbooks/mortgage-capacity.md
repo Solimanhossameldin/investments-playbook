@@ -66,7 +66,7 @@ It is the same discipline the [cash on cash return](/playbooks/cash-on-cash/) fr
 
 ## What this changes about how you search
 
-Work out both numbers first, take the lower, subtract the acquisition costs from your cash, and search below that. It takes an afternoon and it removes an entire category of disappointment.
+Work out both numbers first, take the lower, subtract the acquisition costs from your cash, and search below that. It takes an afternoon and it removes an entire category of disappointment. Everything after that point is [due diligence on the specific unit](/playbooks/due-diligence-before-an-offer/).
 
 It also reframes what a mortgage is for. The two tests together describe how much risk a bank is willing to take on the pair of you, the asset and the borrower. That is useful information about the purchase, not just an obstacle to it. When the income test is binding, the bank is saying the property is fine and you are stretched. When the loan to value test binds, it is saying you are fine and the asset carries more risk than it will fully fund.
 

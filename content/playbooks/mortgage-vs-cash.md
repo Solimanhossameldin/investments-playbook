@@ -55,7 +55,7 @@ Two percentage points on the rate turns the same building from a modest income a
 
 The UAE Central Bank caps how far you can take this. For an expatriate buying a first completed property under five million dirhams the ceiling is generally seventy five percent, dropping to sixty five percent above five million and sixty percent on a second property. Off-plan is capped at fifty percent for everyone. Total debt service is separately limited to half of gross monthly income, and the binding constraint is whichever of the two bites first.
 
-Note that the deposit is not the whole of the cash you need. Acquisition costs are another six to seven percent of price and cannot be borrowed.
+Note that the deposit is not the whole of the cash you need. Acquisition costs are another six to seven percent of price and cannot be borrowed. How much you can borrow at all is a separate test the bank runs before any of this, which [mortgage capacity](/playbooks/mortgage-capacity/) sets out.
 
 ## What leverage does that yield tables never show
 

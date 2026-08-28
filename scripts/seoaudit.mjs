@@ -62,6 +62,26 @@ for (const file of walk(dist)) {
     .replace(/<header[\s\S]*?<\/header>/gi, "")
     .replace(/<footer[\s\S]*?<\/footer>/gi, "");
 
+  // The inbound-link graph is meant to answer one question: has a human
+  // writing one page ever had reason to point at another? Every template
+  // block inside <main> answers it falsely. The market band links /data/
+  // from all 139 pages, the breadcrumb links /playbooks/, the review line
+  // links /disclosure/, the capture block links the brief, and the rail's
+  // "Related frameworks" list is generated from the category rather than
+  // written. Counting those, the orphan check cannot fail: it reported
+  // zero orphans on a build where five frameworks had no prose link at
+  // all pointing at them. Prose is what is left once they are removed.
+  // Start from <main> rather than from `body`: the market ticker sits
+  // between the masthead and <main>, is nested three divs deep, and is not
+  // reliably removable with a non-greedy tag match. Every page has exactly
+  // one <main>, which is checked below, so anything outside it is chrome by
+  // construction and no regex has to be trusted for that part.
+  const prose = (html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i) || ["", ""])[1]
+    .replace(/<aside class="rail"[\s\S]*?<\/aside>/gi, "")
+    .replace(/<aside class="cap"[\s\S]*?<\/aside>/gi, "")
+    .replace(/<p class="eyebrow"[\s\S]*?<\/p>/gi, "")
+    .replace(/<p class="reviewed"[\s\S]*?<\/p>/gi, "");
+
   const links = (part) =>
     [...part.matchAll(/<a\b[^>]*href="([^"]+)"/gi)]
       .map((m) => m[1])
@@ -98,6 +118,7 @@ for (const file of walk(dist)) {
       try { return JSON.parse(m[1]); } catch { return null; }
     }),
     bodyLinks: [...new Set(links(body))],
+    proseLinks: [...new Set(links(prose))],
     allLinks: [...new Set(links(html))],
     words: body.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length,
   });
@@ -113,7 +134,7 @@ for (const p of pages.values()) {
   for (const href of p.allLinks) {
     if (!exists(href)) broken.push({ from: p.url, href });
   }
-  for (const href of p.bodyLinks) {
+  for (const href of p.proseLinks) {
     if (href !== p.url && inbound.has(href)) inbound.get(href).add(p.url);
   }
 }
@@ -364,6 +385,66 @@ const sitemap = fs.existsSync(path.join(dist, "sitemap.xml"))
   : [];
 const inMap = new Set(sitemap);
 for (const p of indexable) if (!inMap.has(p.url)) note("error", "missing from sitemap", p.url);
+
+/* ---------- frameworks nobody cites ---------- */
+// The orphan check above counts a link from any page's <main>, and the
+// /playbooks/ index lists every framework inside its own <main>. So the check
+// cannot fail for a framework: the index always links it. That is fine for
+// reachability and useless for the question that matters here, which is
+// whether writing one framework ever gave a reason to point at another.
+//
+// Five frameworks shipped with no framework citing them at all, and nothing
+// caught it, because a page reachable from a directory listing looks exactly
+// like a page somebody found worth mentioning. This check separates them:
+// index pages are excluded as sources, so only a sentence counts.
+{
+  const isFw = (u) => /^\/playbooks\/[^/]+\/$/.test(u);
+  const cited = new Map([...pages.keys()].filter(isFw).map((u) => [u, new Set()]));
+  for (const p of pages.values()) {
+    if (!isFw(p.url)) continue;               // the index is not a citation
+    for (const href of p.proseLinks) {
+      if (href !== p.url && cited.has(href)) cited.get(href).add(p.url);
+    }
+  }
+  for (const [url, from] of cited) {
+    if (from.size === 0) note("error", "uncited framework", `${url} is not linked from any other framework's prose`);
+  }
+  console.log(`\nFrameworks: ${cited.size}, all cited by at least one other framework's prose.`);
+}
+
+/* ---------- counts stated in prose ---------- */
+// The about page said "Six tools" for as long as there were eight, because a
+// number typed into prose has nothing holding it to the thing it counts. The
+// pages themselves are the source of truth, so the prose is checked against a
+// directory listing rather than against a constant.
+{
+  const WORD = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
+    "nine", "ten", "eleven", "twelve"];
+  const spell = (n) => {
+    if (n <= 12) return WORD[n];
+    const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+    const teens = { 11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen",
+      16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen" };
+    if (n < 20) return teens[n];
+    const t = Math.floor(n / 10), u = n % 10;
+    return u ? `${tens[t]}-${WORD[u]}` : tens[t];
+  };
+  const under = (prefix) =>
+    [...pages.keys()].filter((u) => u.startsWith(prefix) && u !== prefix).length;
+
+  const about = pages.get("/about/");
+  const STATED = [
+    ["calculators", under("/calculators/"), /\b([a-z-]+) tools that run the arithmetic/i],
+    ["glossary terms", under("/glossary/"), /\b([A-Za-z-]+) terms this industry uses/i],
+  ];
+  if (!about) note("error", "about missing", "/about/ was not built");
+  else for (const [what, actual, re] of STATED) {
+    const said = (fs.readFileSync(about.file, "utf8").match(re) || [])[1];
+    if (!said) note("error", "count not stated", `/about/ no longer states how many ${what} there are`);
+    else if (said.toLowerCase() !== spell(actual))
+      note("error", "stale count", `/about/ says "${said}" ${what}, there are ${actual} (${spell(actual)})`);
+  }
+}
 for (const u of inMap) if (!pages.has(u)) note("error", "sitemap lists a page that is not built", u);
 for (const p of pages.values()) if (p.noindex && inMap.has(p.url)) note("error", "noindex page in sitemap", p.url);
 

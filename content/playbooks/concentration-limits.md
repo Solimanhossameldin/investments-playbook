@@ -45,7 +45,7 @@ Add that their salary comes from a company in the same city and their savings si
 
 **Single asset.** What share of net worth is in one property. For most people the honest answer, including the home, is uncomfortably high.
 
-**Single building or development.** Two units in one tower share a service charge regime, a reserve fund, a handover glut and a reputation.
+**Single building or development.** Two units in one tower share a service charge regime, a reserve fund, a [handover glut](/playbooks/off-plan-vs-ready/) and a reputation.
 
 **Single tenant.** Especially for anyone letting to one corporate tenant, where a lease ending and a vacancy are the same event.
 
@@ -57,7 +57,7 @@ Add that their salary comes from a company in the same city and their savings si
 
 ## Setting a limit that survives
 
-The limit has to be written down before the opportunity appears, because the whole point is that the good opportunity is exactly when you will want to breach it.
+The limit has to be written down before the opportunity appears, alongside the rest of your [investment policy statement](/playbooks/investment-policy-statement/), because the whole point is that the good opportunity is exactly when you will want to breach it.
 
 Pick numbers you can live with rather than numbers that sound rigorous. Something like: no single property above a stated share of net worth, no more than two units in any one building, no more than a stated share of liquid assets with one institution. The precise figures matter far less than having them at all.
 

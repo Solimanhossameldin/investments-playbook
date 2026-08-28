@@ -90,7 +90,7 @@ export function pathIndex({ site, paths, playbooks, calculators }) {
   <div class="section-head rise" style="margin-bottom:34px">
     <p class="eyebrow">Where to start</p>
     <h1>${playbooks.length} frameworks is too many to start with.</h1>
-    <p>So start with one of these instead. Each is an ordered route through the library built for one situation, using the same frameworks, the same ${calculators.length} calculators and the same glossary as everything else on the site. Pick the one that describes you this year.</p>
+    <p>So start with one of these instead. Each is an ordered route through the library built for one situation, using the same frameworks, the same ${calculators.length} calculators and the same <a href="/glossary/">glossary</a> as everything else on the site. Pick the one that describes you this year.</p>
   </div>
 
   <div class="grid grid--3 rise">${paths

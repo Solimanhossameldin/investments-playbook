@@ -51,12 +51,12 @@ They also act when it matters. A calendar rebalance in a quiet year does nothing
 
 Not returns. The evidence that rebalancing improves returns is thin and depends heavily on the period examined. It controls risk.
 
-An unrebalanced portfolio does not stay where you put it. A sixty forty portfolio left through a long equity bull market becomes eighty twenty, which is a different portfolio with a different [drawdown](/playbooks/drawdown-recovery-math/) profile, adopted by nobody.
+An unrebalanced portfolio does not stay where you put it. A [sixty forty portfolio](/playbooks/sixty-forty/) left through a long equity bull market becomes eighty twenty, which is a different portfolio with a different [drawdown](/playbooks/drawdown-recovery-math/) profile, adopted by nobody.
 
 The discomfort is the point. Rebalancing means selling what has done well and buying what has not, which is the opposite of what the [behaviour gap](/playbooks/the-behaviour-gap/) says investors actually do. That is precisely why it should be a rule rather than a judgement.
 
 ## Making it work
 
-Write the bands down with the allocation. Check quarterly, act only when a band is breached. Where new money is going in, direct it at the underweight holding first, because that rebalances without selling anything.
+Write the bands down with the allocation, in the [investment policy statement](/playbooks/investment-policy-statement/) where the rest of the rules belong. Check quarterly, act only when a band is breached. Where new money is going in, direct it at the underweight holding first, because that rebalances without selling anything.
 
 And distinguish drift from a decision. If the allocation itself no longer suits your horizon, change the target deliberately. Do not let the market change it for you and then justify it afterwards.

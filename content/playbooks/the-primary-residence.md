@@ -37,7 +37,7 @@ The sentence people say is that their home is their biggest investment. It is us
 
 An investment produces cash or can be sold for cash you get to keep. A home does neither.
 
-It produces no rent, because you are the tenant. It costs money every year in service charges, maintenance and insurance. And when you sell it, you have to live somewhere, so the proceeds are largely committed before they arrive. Selling into a rising market means buying into the same rising market.
+It produces no rent, because you are the tenant. It costs money every year in service charges, maintenance and [insurance](/playbooks/insurance-and-its-gaps/). And when you sell it, you have to live somewhere, so the proceeds are largely committed before they arrive. Selling into a rising market means buying into the same rising market.
 
 What it does produce is imputed rent: the rent you no longer pay. That is real and it belongs in the [rent versus buy](/playbooks/rent-vs-buy/) calculation. But it is consumption, not income, and it never appears in a bank account.
 

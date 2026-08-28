@@ -57,7 +57,7 @@ That last part is the real cost: opportunity. Capital tied to a unit yielding tw
 
 It is not an argument for selling whenever something falls. Applied honestly it will frequently say keep, because a sound asset in a soft market is exactly the thing worth holding through, and the [drawdown recovery](/playbooks/drawdown-recovery-math/) arithmetic favours patience for assets that still work.
 
-The test separates two cases that feel identical from the inside. Holding because the asset is good, and holding because selling would confirm a mistake. Only the first is a decision.
+The test separates two cases that feel identical from the inside. Holding because the asset is good, and holding because selling would confirm a mistake. Only the first is a decision. Once the decision is to sell, [selling well](/playbooks/selling-well/) is a separate skill from deciding to.
 
 ## Doing it before you need to
 

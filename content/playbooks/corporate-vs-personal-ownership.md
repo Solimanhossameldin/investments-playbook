@@ -63,7 +63,7 @@ Not tax, usually, in this jurisdiction. The real reasons are these.
 
 **Scale.** At a certain portfolio size the administration, financing and governance are simply easier inside an entity.
 
-Against those, count the costs: formation, annual licensing, audit and filing, potentially different mortgage terms and rates, transfer costs on moving property into the structure, and the tax that was not payable before.
+Against those, count the costs: formation, annual licensing, audit and filing, potentially different mortgage terms and rates, transfer costs on moving property into the structure, and the tax that was not payable before. Timing matters here as much as structure: moving a property into an entity is a disposal under some systems, which makes it a decision for [the year you sell](/playbooks/the-year-you-sell/) rather than the year after.
 
 ## The rule of thumb
 

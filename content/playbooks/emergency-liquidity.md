@@ -43,7 +43,7 @@ The usual rule is three to six months of expenses. That rule was written for a s
 
 **Illiquid assets that demand cash.** A property is the one asset that can require money from you while producing none. Service charges, mortgage payments and the occasional special levy do not pause for a vacancy.
 
-**Exit costs on the asset you would sell.** Selling property to raise cash costs eight to ten percent of value and takes months, which is precisely why you do not want to be doing it under pressure.
+**Exit costs on the asset you would sell.** Selling property to raise cash costs eight to ten percent of value and takes months, which is precisely why you do not want to be doing it under pressure. The gap between the value you would quote and what a forced sale actually realises is [liquidity risk](/playbooks/liquidity-risk/), and cash is what stops you paying it.
 
 ## What to actually hold
 

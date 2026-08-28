@@ -46,7 +46,7 @@ Take a one bedroom at one and a half million dirhams renting for one hundred and
 
 - Gross yield: 105,000 divided by 1,500,000, which is **7.0 percent**. This is the number in the advertisement.
 - Service charge at eighteen dirhams on nine hundred square feet: 16,200.
-- Management at five percent of collected rent, a four week vacancy allowance, a five percent maintenance reserve and fifteen hundred of insurance: roughly 22,000 more.
+- Management at five percent of collected rent, a four week vacancy allowance, a five percent maintenance reserve and fifteen hundred of [insurance](/playbooks/insurance-and-its-gaps/): roughly 22,000 more.
 - Net operating income: about **66,800**.
 - Acquisition costs: 4 percent of 1,500,000 is 60,000, agency at 2 percent plus VAT is 31,500, trustee and admin about 4,600. Total **96,100**.
 - Net yield: 66,800 divided by 1,596,100, which is **4.2 percent**.
@@ -55,6 +55,6 @@ Seven percent became four point two. Nothing dishonest happened. The advertised 
 
 ## Why this is the first page on this site
 
-Because every other property decision is downstream of it. Whether to buy at all, whether to borrow, whether one building beats another, whether to sell: all of them are comparisons between net yields, and a comparison between gross yields is a comparison between two pieces of marketing.
+Because every other property decision is downstream of it. Whether to buy at all, whether to borrow, whether one building beats another, whether to sell: all of them are comparisons between net yields, and a comparison between gross yields is a comparison between two pieces of marketing. The [cap rate](/playbooks/cap-rate/) sits between the two: better than gross, still short of describing your position, and useful mainly for ranking buildings.
 
 It is also the number that turns "Dubai yields beat London" from a slogan into a testable claim. Dubai's gross yields genuinely are higher. Dubai's service charges are also genuinely higher, and in some waterfront and serviced towers they are high enough to close most of the gap. You cannot know which until you run it.

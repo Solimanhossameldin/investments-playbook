@@ -39,7 +39,7 @@ The portfolio was designed by and for American investors, and it has "domestic" 
 
 **There is no domestic bond market.** The dirham is pegged to the dollar, so US Treasuries are the closest thing to a home government bond you have, but calling them domestic is a stretch and treating them as risk free depends on the peg holding.
 
-**"Domestic equity" is undefined.** An Egyptian passport holder living in Dubai investing for a retirement that might happen in Portugal has no domestic. The honest answer is to drop the distinction entirely and hold one global equity fund at world market weight, currently about sixty two percent United States and thirty eight percent everything else.
+**"Domestic equity" is undefined.** An Egyptian passport holder living in Dubai investing for a retirement that might happen in Portugal has no domestic. The honest answer is to drop the distinction entirely and hold one global equity fund at world market weight, currently about sixty two percent United States and thirty eight percent everything else. Whether to hold that instead of a second property is [a comparison of its own](/playbooks/property-vs-index-funds/), and it is not settled by whichever returned more last decade.
 
 **Domicile matters more than allocation.** This is the part almost nobody gets right. The American three fund portfolio names US domiciled funds. For a non-US person those funds carry thirty percent dividend withholding and US estate tax exposure above sixty thousand dollars. The same three funds, in Irish domiciled UCITS form, generally carry fifteen percent withholding and no US estate tax exposure. Same index, same cost, different jurisdiction, materially different outcome. That is covered in its own [playbook](/playbooks/fund-domicile/) and it deserves the separate page.
 
@@ -49,4 +49,4 @@ The portfolio was designed by and for American investors, and it has "domestic" 
 - One short to intermediate government bond fund, in the currency of the liability you are actually funding.
 - Cash or short Treasury bills, in the currency you spend.
 
-Three funds, same discipline, none of them called domestic. The bond allocation is the one that needs thought: the right question is not your age, it is which currency you will spend the money in, and whether you know yet.
+Three funds, same discipline, none of them called domestic. The bond allocation is the one that needs thought: the right question is not your age, it is which currency you will spend the money in, and whether you know yet. That is also the honest objection to [sixty forty](/playbooks/sixty-forty/) as a default: it fixes the proportion without asking what the bonds are for or which currency they are denominated in.

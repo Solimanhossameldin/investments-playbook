@@ -63,6 +63,8 @@ Those two numbers give you a hurdle. If the ten year real yield is 2.38 percent,
 
 **Equities** do it well over long horizons and badly over short ones, because companies can raise prices but margins compress before they do.
 
+**Gold** does it unreliably, and its record is better explained by [real rates](/playbooks/gold-and-real-rates/) than by inflation itself. It was a poor hedge through most of the high inflation of the 1980s and a good one in the years when real yields fell.
+
 **Cash** does not, ever, except briefly when rates exceed inflation.
 
 ## The practical instruction

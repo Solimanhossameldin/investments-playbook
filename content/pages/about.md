@@ -17,13 +17,15 @@ This site publishes the second number, and the method for getting to it.
 
 ## What is here
 
-**The Brief.** Every weekday morning at 7am Gulf time, three items on global markets and property. Each one follows the same structure: what happened, what it means, and what it means for your portfolio. Three minutes. Free.
+**[The Brief](/brief/).** Every weekday morning at 7am Gulf time, three items on global markets and property. Each one follows the same structure: what happened, what it means, and what it means for your portfolio. Three minutes. Free.
 
-**The Playbooks.** A library of the frameworks that survive contact with reality. Each page gives you the rule, the arithmetic, and an honest list of where the framework breaks. That last section is the one most sites leave out and the one that stops you misapplying a good idea.
+**[The Playbooks](/playbooks/).** A library of the frameworks that survive contact with reality. Each page gives you the rule, the arithmetic, and an honest list of where the framework breaks. That last section is the one most sites leave out and the one that stops you misapplying a good idea.
 
-**The Calculators.** Six tools that run the arithmetic on your own numbers, in your browser. Nothing you type is sent anywhere, nothing is stored, and there is no sign up.
+**[The Calculators](/calculators/).** Eight tools that run the arithmetic on your own numbers, in your browser. Nothing you type is sent anywhere, nothing is stored, and there is no sign up.
 
-**The Data.** Live figures for equities, rates, commodities, currencies, crypto and property, refreshed daily by an automated pipeline that publishes its own health record. Every figure names its source and its timestamp.
+**[The Glossary](/glossary/).** Forty-seven terms this industry uses loosely and expensively, each defined in the way that matters for a decision rather than the way that matters for a brochure.
+
+**[The Data](/data/).** Live figures for equities, rates, commodities, currencies, crypto and property, refreshed daily by an automated pipeline that publishes its own health record. Every figure names its source and its timestamp.
 
 ## Who writes it
 

@@ -67,7 +67,7 @@ Apply that and most first drafts shrink by half. "Stay the course" fails. "Rebal
 
 The most common gap is not a bad rule, it is an incomplete inventory.
 
-Employer equity is a position. A pension is a position. The home you live in is a position, and so is the currency your salary is paid in. For most people those are the largest holdings they own and the most correlated with each other, and a statement covering only the brokerage account is describing a corner of the portfolio while believing it describes the whole. [Concentration limits](/playbooks/concentration-limits/) and [position sizing](/playbooks/position-sizing/) are the arithmetic; the statement is where the answer gets written down.
+Employer equity is a position. A pension is a position. The [home you live in](/playbooks/the-primary-residence/) is a position, and so is the currency your salary is paid in. For most people those are the largest holdings they own and the most correlated with each other, and a statement covering only the brokerage account is describing a corner of the portfolio while believing it describes the whole. [Concentration limits](/playbooks/concentration-limits/) and [position sizing](/playbooks/position-sizing/) are the arithmetic; the statement is where the answer gets written down.
 
 ## Why this belongs in a library of arithmetic
 

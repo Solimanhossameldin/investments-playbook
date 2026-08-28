@@ -44,7 +44,7 @@ Money needed within days belongs in a current account, earning nothing, and that
 
 Money needed in weeks or months belongs in something that pays close to the policy rate and can be sold any day without a loss. Money needed inside two years belongs in short dated government bills held to maturity, where the return is known at purchase and the only way to lose is to sell early.
 
-Money with no date attached is not cash at all. It is an allocation decision wearing a cash label, and it should be answered by [allocation by horizon](/playbooks/asset-allocation-by-horizon/) rather than left to drift.
+Money with no date attached is not cash at all. It is an allocation decision wearing a cash label, and it should be answered by [allocation by horizon](/playbooks/asset-allocation-by-horizon/) rather than left to drift. A lump left in cash because deploying it feels frightening is the same evasion, and [lump sum versus averaging in](/playbooks/lump-sum-vs-dca/) is the answer to it.
 
 ## What the drift actually costs
 
@@ -58,7 +58,7 @@ And the real return is worse than the nominal one suggests. An account paying ha
 
 The failure mode of people who have read the above is reaching for yield until the cash stops being cash.
 
-An instrument that can be worth less on the day you need it has failed at the only job cash has. That is the whole test. A bond fund with a longer maturity pays more and can fall; a corporate credit fund pays more again and can fall further exactly when everything else is falling, which is when the emergency fund gets used. The yield was never the point.
+An instrument that can be worth less on the day you need it has failed at the only job cash has. That is the whole test, and [liquidity risk](/playbooks/liquidity-risk/) is the general form of the failure: the distance between what a holding is worth and what it is worth today, in a hurry. A bond fund with a longer maturity pays more and can fall; a corporate credit fund pays more again and can fall further exactly when everything else is falling, which is when the emergency fund gets used. The yield was never the point.
 
 This is the same asymmetry [what bonds are for](/playbooks/what-bonds-are-for/) describes: the reason to hold the safe thing is not its return, it is having something that has not fallen, to spend from while the other things recover. It is also why [emergency liquidity](/playbooks/emergency-liquidity/) treats the size of the reserve and the safety of the reserve as one decision rather than two.
 

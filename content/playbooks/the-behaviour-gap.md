@@ -47,8 +47,8 @@ The defensible position after both sets of evidence is narrower and still useful
 
 ## The antidotes, in order of effect
 
-1. **Write an investment policy statement before you need one.** One page. What you own, in what proportions, why, when you will rebalance, and what would have to be true for you to change it. Written in calm, read in panic. Nothing else on this list works without it.
-2. **Automate contributions.** A decision made once cannot be unmade weekly.
+1. **Write an [investment policy statement](/playbooks/investment-policy-statement/) before you need one.** One page. What you own, in what proportions, why, when you will rebalance, and what would have to be true for you to change it. Written in calm, read in panic. Nothing else on this list works without it.
+2. **Automate contributions.** A decision made once cannot be unmade weekly. That is not the same thing as feeding a lump in slowly, which is [a different question with a different answer](/playbooks/lump-sum-vs-dca/).
 3. **Rebalance on a rule, not a feeling.** Bands rather than dates: act when an allocation drifts by more than a fifth of its target weight. This forces selling what has risen and buying what has fallen, which is the opposite of the behaviour gap by construction.
 4. **Reduce the frequency you look.** Checking a volatile portfolio daily guarantees you will see more losses than gains, because the ratio of down days to up days is far worse than the ratio of down years to up years. This is myopic loss aversion and the cure is a calendar.
 5. **Write down the reason for every trade before you place it.** Most bad trades do not survive being written down.

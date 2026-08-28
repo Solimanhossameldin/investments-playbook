@@ -56,6 +56,6 @@ The discount rate matters as much as the schedule. Use what your money would gen
 
 ## What this calculation deliberately does not cover
 
-Handover risk. That is the actual risk in off plan, and no discount rate captures it. A plan that looks cheaper in present value is worthless if the tower completes two years late or the developer restructures. Escrow account protections in Dubai are real and materially better than they were before 2008, but they protect the project's funds, not your timeline and not your opportunity cost.
+Handover risk. That is the actual risk in off plan, and no discount rate captures it. It is also the whole of the case for [buying ready instead](/playbooks/off-plan-vs-ready/), which deserves to be priced rather than waved at. A plan that looks cheaper in present value is worthless if the tower completes two years late or the developer restructures. Escrow account protections in Dubai are real and materially better than they were before 2008, but they protect the project's funds, not your timeline and not your opportunity cost.
 
 Nor does it include the costs that arrive with the keys: service charges that start at handover whether or not you have a tenant, the leasing lag before the first rent, and the possibility that the market price at handover is below what you contracted to pay.
