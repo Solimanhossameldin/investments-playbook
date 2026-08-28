@@ -141,7 +141,7 @@ ${captureBlock(site, { source: "start-index", heading: "Not sure which route", b
   };
 }
 
-export function pathPage({ site, p, paths, playbooks, calculators, glossary }) {
+export function pathPage({ site, p, paths, playbooks, calculators, glossary, liveBand = "" }) {
   const pbBySlug = byKey(playbooks, "slug");
   const calcBySlug = byKey(calculators, "slug");
   const termBySlug = byKey(glossary, "slug");
@@ -153,6 +153,8 @@ export function pathPage({ site, p, paths, playbooks, calculators, glossary }) {
     <h1>${esc(p.title)}</h1>
     <p>${esc(copy(p.lede))}</p>
   </div>
+
+  ${liveBand}
 
   <div class="rise">
   <h2 class="pth__h">Read these in this order</h2>

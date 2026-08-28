@@ -422,7 +422,7 @@ ${captureBlock(site, { source: "playbooks-index", heading: "Take the whole libra
   return { title: pageTitle("Investing frameworks, with the arithmetic", site.name), description: "A library of investing frameworks for markets and property. Each page gives the rule, the arithmetic, and where it breaks.", path: "/playbooks/", body };
 }
 
-export function playbookPage({ site, pb, calcName, related = [], briefs = [] }) {
+export function playbookPage({ site, pb, calcName, related = [], briefs = [], liveBand = "" }) {
   const cad = cadence(briefs);
   const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
   const jump = [
@@ -481,6 +481,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [] }) 
         ? "Commercial relationship disclosure: the author works in Dubai real estate brokerage. See the disclosure standards."
         : "Educational research, not personal advice."
     } <a href="/disclosure/" style="color:var(--gold-muted)">Disclosure standards</a>.</p>
+    ${liveBand}
     ${captureBlock(site, {
       source: `playbooks/${pb.slug}`,
       heading: "There are more where this came from",

@@ -200,6 +200,35 @@ main:focus { outline: none; }
 .gate { position: relative; }
 .gate__fade { position: relative; max-height: 108px; overflow: hidden; }
 .gate__fade::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,0) 10%, var(--ivory) 92%); }
+/* The live crypto band. Ink, because it carries market figures and the rest
+   of this site puts market figures on ink. The caption is part of the
+   component rather than an afterthought: a figure without its source and its
+   time is not publishable here. */
+.cx-live {
+  background: var(--ink-deep);
+  color: #ffffff;
+  border-radius: var(--r);
+  padding: 30px 32px;
+  margin: 0 0 44px;
+  max-width: var(--prose);
+}
+.cx-live h2 { color: #ffffff; font-size: 1.45rem; margin: 0 0 14px; }
+.cx-live .cx-lede { color: #ffffff; font-size: 15px; line-height: 1.6; margin: 0 0 18px; max-width: 52ch; }
+.cx-live .cx-lede b { color: var(--gold); font-weight: 400; }
+.cx-live .tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+.cx-live .tbl th, .cx-live .tbl td { border-bottom: 1px solid var(--hair-dark); padding: 9px 10px 9px 0; text-align: left; }
+.cx-live .tbl thead th { font-family: var(--sans); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-dark); font-weight: 600; }
+.cx-live .tbl .num { text-align: right; font-family: var(--mono); font-size: 13.5px; white-space: nowrap; }
+.cx-live .tbl tbody th { font-weight: 400; color: #ffffff; }
+.cx-live .cx-note { color: var(--muted-dark); font-size: 12.5px; padding-left: 14px; }
+.cx-live .cx-cap { color: var(--muted-dark); font-size: 12px; line-height: 1.6; margin: 16px 0 0; }
+.cx-live .cx-cap a { color: var(--gold); }
+.cx-live--stale { opacity: 0.82; }
+@media (max-width: 560px) {
+  .cx-live { padding: 24px 20px; }
+  .cx-live .cx-note { display: none; }
+}
+
 /* The end-of-page capture. Restrained on purpose: it sits after an article
    a reader has just finished, so it reads as the next step rather than as an
    interruption. Cream, one hairline, no shouting. */

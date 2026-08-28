@@ -27,6 +27,7 @@ import paths from "../content/paths.mjs";
 import * as STATIC from "../content/static.mjs";
 import { pickRelated } from "../src/related.mjs";
 import { isoDate } from "../src/lib.mjs";
+import { cryptoBand } from "../src/templates/crypto.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
@@ -113,6 +114,20 @@ function emit(spec, lastmod = "") {
 // The library index and the compendium both change when any framework does.
 const libraryReviewed = latest(playbooks.map((pb) => isoDate(pb.reviewed)));
 
+// The live crypto figures, built once and handed to the pages that earn them.
+// Only the crypto path and the frameworks that are actually about crypto: a
+// live price band on a page about bond duration would be decoration.
+const CRYPTO_PAGES = new Set([
+  "settling-a-property-purchase-from-crypto",
+  "proving-the-source-of-crypto-funds",
+  "funding-a-payment-plan-from-a-volatile-asset",
+  "crypto-concentration-and-property",
+  "tokenised-property",
+  "the-year-you-sell",
+]);
+const cryptoLive = cryptoBand(market, communities);
+const cryptoLiveCompact = cryptoBand(market, communities, { compact: true });
+
 /* ---------- pages ---------- */
 emit(P.home({ site, market, brief: briefs[0], briefs, playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }), pathsHtml: pathBand({ paths }) }), DAILY);
 emit(wirePage({ site, wire }), DAILY);
@@ -128,13 +143,13 @@ emit(communityIndex({ site, data: communities }), (communities.generatedAt || ""
 emit(P.briefIndex({ site, briefs }), latest(briefs.map((b) => b.date)));
 briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1], briefs }), b.date));
 emit(pathIndex({ site, paths, playbooks, calculators: calcMeta }));
-paths.forEach((p) => emit(pathPage({ site, p, paths, playbooks, calculators: calcMeta, glossary })));
+paths.forEach((p) => emit(pathPage({ site, p, paths, playbooks, calculators: calcMeta, glossary, liveBand: p.slug === "crypto-to-property" ? cryptoLive : "" })));
 emit(P.playbookIndex({ site, playbooks }), libraryReviewed);
 // Related frameworks are levelled so no page is left with nothing pointing
 // at it. See src/related.mjs for why the obvious sort does not do that.
 const { chosen: relatedBySlug } = pickRelated(playbooks);
 playbooks.forEach((pb) => {
-  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug), briefs }), isoDate(pb.reviewed));
+  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug), briefs, liveBand: CRYPTO_PAGES.has(pb.slug) ? cryptoLiveCompact : "" }), isoDate(pb.reviewed));
 });
 emit(calcIndex({ site }));
 const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length };
