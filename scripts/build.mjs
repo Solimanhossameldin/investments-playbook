@@ -179,6 +179,14 @@ fs.writeFileSync(
 fs.copyFileSync(path.join(root, "content", "og.png"), path.join(dist, "og.png"));
 fs.copyFileSync(path.join(root, "content", "icon-512.png"), path.join(dist, "icon-512.png"));
 
+// The typefaces, served from this origin. Copied rather than listed one by
+// one so adding a weight is a matter of dropping the file in and adding the
+// @font-face rule, with nothing to forget here.
+fs.mkdirSync(path.join(dist, "fonts"), { recursive: true });
+for (const f of fs.readdirSync(path.join(root, "content", "fonts"))) {
+  fs.copyFileSync(path.join(root, "content", "fonts", f), path.join(dist, "fonts", f));
+}
+
 if (pdf) fs.writeFileSync(path.join(dist, "chartbook.pdf"), pdf);
 
 // The crypto path's form promises this document in exchange for an email

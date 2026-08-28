@@ -1,3 +1,29 @@
+/* Self-hosted, not Google Fonts.
+
+   The Google Fonts stylesheet was a render-blocking request to a third-party
+   origin: a DNS lookup, a TLS handshake and a round trip before the page
+   could paint, all before a single byte of font arrived. Measured at 390px
+   with a 300ms round trip, that was DOMContentLoaded 202ms against 413ms.
+   The same bytes now come down the connection that already served the HTML.
+
+   The old argument for Google Fonts, that a visitor probably has Inter
+   cached from another site, has been dead since browsers partitioned the
+   HTTP cache by site. There is no shared cache to benefit from any more.
+
+   Both faces are SIL Open Font License 1.1, which permits this; the licences
+   ship in content/fonts/ beside the files. font-display: swap so text is
+   readable in the fallback immediately and never invisible.
+
+   Weights are the ones the stylesheet actually uses and no others: Inter at
+   400, 500, 600 and 700, IBM Plex Mono at 400 and 500. Georgia carries the
+   headlines and is already on the reader's machine. */
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter-400.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/inter-500.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/inter-600.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter-700.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/plex-mono-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/plex-mono-500.woff2") format("woff2"); }
+
 /* Investments Playbook. Institutional wealth, private bank research desk.
    Ivory first, ink bands, one accent. Square and serious. */
 

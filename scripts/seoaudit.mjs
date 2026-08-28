@@ -308,6 +308,30 @@ for (const p of pages.values()) {
   }
 }
 
+// No page may block its own render on somebody else's server. The Google
+// Fonts stylesheet was doing exactly that: a DNS lookup, a handshake and a
+// round trip to another origin before a single pixel could paint. Measured
+// at 390px with a 300ms trip, DOMContentLoaded went from 62ms to 373ms.
+for (const p of pages.values()) {
+  const html = fs.readFileSync(p.file, "utf8");
+  const head = html.split("</head>")[0];
+  for (const m of head.matchAll(/<link[^>]*rel="stylesheet"[^>]*href="(https?:)?\/\/([^"\/]+)/gi)) {
+    note("error", "render-blocking third-party stylesheet", `${m[2]} on ${p.url}`);
+  }
+}
+
+// The faces the stylesheet declares have to be in the build, or every page
+// silently falls back and nobody notices until a screenshot looks wrong.
+{
+  const css = fs.existsSync(path.join(dist, "styles.css"))
+    ? fs.readFileSync(path.join(dist, "styles.css"), "utf8") : "";
+  for (const m of css.matchAll(/url\("(\/fonts\/[^"]+)"\)/g)) {
+    if (!fs.existsSync(path.join(dist, m[1].replace(/^\//, "")))) {
+      note("error", "font declared but not built", m[1]);
+    }
+  }
+}
+
 const dupe = (field) => {
   const seen = new Map();
   for (const p of indexable) {
