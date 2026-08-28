@@ -1,8 +1,44 @@
 {
- "fetchedAt": "2026-08-28T09:56:12.917Z",
+ "fetchedAt": "2026-08-28T21:08:28.610Z",
  "sourcesTotal": 14,
  "sourcesOk": 7,
  "items": [
+  {
+   "title": "SEC Proposes Amendments to Exchange Act Rule 3a12-8 to Add European Union Debt Obligations",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-79-sec-proposes-amendments-exchange-act-rule-3a12-8-add-european-union-debt-obligations",
+   "published": "2026-08-28T17:33:00.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
+  {
+   "title": "Isabel Schnabel: Central banks on-chain",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260828~fe9afc86e8.en.html",
+   "published": "2026-08-28T16:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-08-28T14:00:33.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
+  {
+   "title": "Warsh, In Our Time",
+   "url": "https://www.federalreserve.gov/newsevents/speech/warsh20260828a.htm",
+   "published": "2026-08-28T14:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
+  },
   {
    "title": "SEC: 38 Entities Feigned Legitimacy as U.S. Advisers Through False Filings to Lure Retail Investors",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-78-sec-38-entities-feigned-legitimacy-us-advisers-through-false-filings-lure-retail-investors",
@@ -53,9 +89,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260825a.htm",
    "published": "2026-08-25T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Piero Cipollone: Interview with ilsussidiario.net",
@@ -65,15 +101,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-08-21T14:01:35.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "ECB Consumer Expectations Survey results – July 2026",
@@ -116,9 +143,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260819a.htm",
    "published": "2026-08-19T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Christine Lagarde: Panel remarks about the European economy during a discussion on the global economic outlook at the World Economic Forum",
