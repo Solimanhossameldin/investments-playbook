@@ -216,6 +216,12 @@ main:focus { outline: none; }
 .byline { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 14px; }
 
 .item { border-top: 1px solid var(--hair-light); padding-top: 30px; margin-top: 40px; max-width: var(--prose); }
+/* The one link an item earns. Restrained: a reader has just finished a beat
+   and this is the next step, not an advertisement. */
+.item__fw { margin: 18px 0 0; font-size: 13.5px; }
+.item__fw span { font-family: var(--sans); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-right: 10px; }
+.item__fw a { color: var(--gold-muted); font-weight: 500; }
+
 .item h2, .item h3 { font-size: 1.7rem; margin-bottom: 22px; }
 .beat { margin-bottom: 22px; }
 .beat__l { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-muted); margin-bottom: 7px; }

@@ -4,6 +4,7 @@
 // Grounded only: the model is forbidden from inventing a figure.
 // Needs GEMINI_API_KEY (free tier at aistudio.google.com) or OPENAI_API_KEY.
 
+import BRIEF_FRAMEWORKS from "../content/brief-frameworks.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -103,6 +104,12 @@ what_it_means: the mechanism. Why this moved and what actually drives it. Three 
 what_it_means_for_you: the reader consequence, framed as trade-offs and questions to check, never as instructions. Three to four sentences. Where one of the site's frameworks applies, name it in plain words, for example "this is the net yield question, not the gross yield question", or "this is the sequence of returns problem".
 
 Each item is 300 to 350 words across the three beats.
+
+tags: two to four, and take them from this list wherever one fits. Each item's
+first matching tag decides which framework the published item links to, so a
+tag outside this list costs the reader that link. Add a tag of your own only
+when nothing here describes the item.
+${Object.keys(BRIEF_FRAMEWORKS).join(", ")}
 
 Also produce:
 title: two to four words, a hook, no colon, no full stop.

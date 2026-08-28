@@ -141,7 +141,7 @@ glossary.forEach((term) => emit(glossaryTerm({ site, term, terms: glossary, play
 emit(communityIndex({ site, data: communities }), (communities.generatedAt || "").slice(0, 10));
 (communities.communities || []).forEach((c) => emit(communityPage({ site, c, data: communities }), (communities.generatedAt || "").slice(0, 10)));
 emit(P.briefIndex({ site, briefs }), latest(briefs.map((b) => b.date)));
-briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1], briefs }), b.date));
+briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1], briefs, playbooks }), b.date));
 emit(pathIndex({ site, paths, playbooks, calculators: calcMeta }));
 paths.forEach((p) => emit(pathPage({ site, p, paths, playbooks, calculators: calcMeta, glossary, liveBand: p.slug === "crypto-to-property" ? cryptoLive : "" })));
 emit(P.playbookIndex({ site, playbooks }), libraryReviewed);

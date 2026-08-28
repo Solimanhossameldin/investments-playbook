@@ -1,5 +1,6 @@
 import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus, isoDate, cadence } from "../lib.mjs";
 import { leadBand, authorBand, briefForm, captureBlock } from "./layout.mjs";
+import BRIEF_FRAMEWORKS from "../../content/brief-frameworks.mjs";
 
 // Google's Article guidance asks for a publisher logo as an ImageObject with a
 // real raster behind it. The SVG favicon is the same mark but scrapers vary on
@@ -26,12 +27,32 @@ function beat(label, text) {
   return `<div class="beat"><div class="beat__l">${label}</div><p>${esc(copy(text))}</p></div>`;
 }
 
-function itemHtml(it, n, lvl = 3) {
+// The framework behind an item, resolved from its own tags. First tag that
+// maps wins, and a tag nobody has mapped produces nothing rather than a guess.
+// `slugs` is passed in so a mapping that points at a framework which no longer
+// exists renders no link instead of a dead one, the same rule the paths use.
+function itemFramework(it, slugs) {
+  for (const tag of it.tags || []) {
+    const slug = BRIEF_FRAMEWORKS[String(tag).toLowerCase().trim()];
+    if (slug && (!slugs || slugs.has(slug))) return slug;
+  }
+  return "";
+}
+
+function itemHtml(it, n, lvl = 3, playbooks = null) {
+  const slugs = playbooks ? new Set(playbooks.map((p) => p.slug)) : null;
+  const fw = itemFramework(it, slugs);
+  const title = fw && playbooks ? (playbooks.find((p) => p.slug === fw) || {}).title : "";
   return `<article class="item">
   <h${lvl}>${n}. ${esc(copy(it.heading))}</h${lvl}>
   ${beat("What happened", it.what_happened)}
   ${beat("What it means", it.what_it_means)}
   ${beat("What it means for your portfolio", it.what_it_means_for_you)}
+  ${
+    fw
+      ? `<p class="item__fw"><span>The arithmetic behind this</span> <a href="/playbooks/${esc(fw)}/">${esc(copy(title || fw))}</a></p>`
+      : ""
+  }
   ${
     (it.sources || []).length
       ? `<p class="item__src">Sources: ${it.sources
@@ -41,6 +62,8 @@ function itemHtml(it, n, lvl = 3) {
   }
 </article>`;
 }
+
+export { itemFramework };
 
 
 /* The cadence is advertised in seven places. Where it is promised it is also
@@ -80,7 +103,7 @@ export function home({ site, market, brief, briefs = [], playbooks, calculators,
     <h2 class="brief-title">${esc(copy(brief.title))}</h2>
     <p class="brief-sub">${esc(copy(brief.subtitle))}</p>
     <p class="byline">By ${esc(brief.author || site.author.name)}</p>
-    ${brief.items[0] ? itemHtml(brief.items[0], 1) : ""}
+    ${brief.items[0] ? itemHtml(brief.items[0], 1, 3, playbooks) : ""}
     ${
       brief.items[1]
         ? `<div class="gate" id="gate">
@@ -328,7 +351,7 @@ export function briefIndex({ site, briefs }) {
   return { title: pageTitle("The Brief. Daily markets and property", site.name), description: `A three minute brief on global markets and property, ${cad.phrase}.`, path: "/brief/", body };
 }
 
-export function briefPage({ site, brief, prev, next, briefs = [] }) {
+export function briefPage({ site, brief, prev, next, briefs = [], playbooks = [] }) {
   const cad = cadence(briefs, undefined, site.brief);
   const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
   const numbers = (brief.numbers || []).length
@@ -361,7 +384,7 @@ export function briefPage({ site, brief, prev, next, briefs = [] }) {
   ${correction}
   ${numbers}
   <p style="font-size:12px;color:var(--muted);max-width:var(--prose)">Every figure above is drawn from the live table on the <a href="/data/" style="color:var(--gold-muted)">market data page</a>, where each row names its own source and timestamp.</p>
-  ${brief.items.map((it, i) => itemHtml(it, i + 1, 2)).join("")}
+  ${brief.items.map((it, i) => itemHtml(it, i + 1, 2, playbooks)).join("")}
   ${cal}
   <div class="gate__box" style="max-width:560px;margin-top:44px"><h2>Get tomorrow's brief</h2><p>Free, ${esc(cad.phrase)}.</p>${briefForm(site, "post-form", nextLine, "", "brief-issue")}</div>
   <nav style="display:flex;justify-content:space-between;gap:20px;margin-top:44px;border-top:1px solid var(--hair-light);padding-top:22px;font-size:13px">
