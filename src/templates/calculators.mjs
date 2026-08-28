@@ -144,6 +144,38 @@ export const CALCULATORS = [
   },
 
   {
+    slug: "crypto-conversion",
+    name: "Crypto to Dirhams",
+    category: "Property",
+    blurb: "The one cost in a crypto-funded purchase that never appears on a statement.",
+    playbook: "settling-a-property-purchase-from-crypto",
+    intro:
+      "The Dubai Land Department settles in dirhams, so a purchase funded from cryptocurrency has a conversion in front of it. That conversion has a spread, the spread is not a line item, and nobody adds it up. This does, and puts it beside the four percent transfer fee, which is the only cost of that size a buyer already knows about.",
+    note:
+      "The spread is a rate you have to ask for rather than one that gets quoted. If nobody will put it in writing before you commit, that is the answer. The price move is the other half: between agreeing a price and settling it a volatile asset moves, and whoever did not fix the terms in writing carries it.",
+    fields: [
+      n("coins", "Coins you are converting", 1),
+      n("price", "Price per coin today, US dollars", 80000, { prefix: "$" }),
+      n("rate", "Dirhams per US dollar", 3.6725),
+      rng("spread", "Conversion spread against mid-market", 2.5, 0, 6, 0.1),
+      n("fees", "Fixed fees on top", 0, { prefix: "AED" }),
+      n("target", "Property price you are funding", 2000000, { prefix: "AED" }),
+      rng("move", "Price move between agreeing and settling", 0, -70, 70, 1, "%"),
+    ],
+    outputs: [
+      ["mid", "Worth at mid-market", "cur"],
+      ["net", "Dirhams actually delivered", "cur"],
+      ["cost", "What the conversion takes", "cur"],
+      ["costPct", "That cost as a share of the purchase", "pct"],
+      ["vsFee", "Set against the 4 percent transfer fee", "text"],
+      ["afterMove", "Delivered after the price move", "cur"],
+      ["coversPct", "Share of the purchase covered", "pct"],
+      ["needCoins", "Coins needed to cover it in full", "text"],
+    ],
+    hero: ["verdict", "What the conversion costs you", "text"],
+  },
+
+  {
     slug: "safe-withdrawal-rate",
     name: "Safe Withdrawal Rate",
     category: "Portfolio",
@@ -229,6 +261,13 @@ export const CALCULATORS = [
 ];
 
 const FAQ = {
+  "crypto-conversion": [
+    { q: "Can I actually buy Dubai property with Bitcoin?", a: "You can fund a purchase from it, which is not the same sentence. The Dubai Land Department registers and settles in dirhams, so something converts between your wallet and the register. In October 2025 the department and Dubai Finance ran an initial technical implementation in which a government service fee was paid using digital assets, in a closed environment, for a single service, with the value settled in dirhams. That is a careful pilot on one fee rather than a registry that takes coins for a transfer." },
+    { q: "Why does the spread matter more than the fees?", a: "Because a fee appears on a statement and a spread does not. A spread is simply a worse price, and nothing itemises it. On a two million dirham purchase, two and a half percent is fifty thousand dirhams, which is the same order of money as the transfer fee everybody knows about and budgets for." },
+    { q: "What should I ask the developer or the exchange?", a: "Four things, in writing, before anything is signed. Which venue's rate, at which timestamp. What spread against it. Who the licensed counterparty holding the funds during conversion is. And whether the contract fixes a dirham price or a quantity of coins, because that decides who carries the movement in between. A reluctance to put those in writing is itself an answer." },
+    { q: "What does the price move slider actually show?", a: "What happens to a purchase when a contract fixes a coin quantity and the market moves before settlement. Drop it forty percent and the same coins cover far less of the property, and the coins needed to cover it in full rise accordingly. If the contract fixes a dirham price instead, you carry that risk in a different shape rather than avoiding it." },
+    { q: "Does selling first avoid the paperwork?", a: "No. Under the Ministry of Economy's rules a broker must report a transaction where the funds used were transferred from a virtual asset into cash, alongside payments made in virtual assets and cash transactions at or above fifty five thousand dirhams. Converting first is one of the things that triggers the reporting requirement rather than a way around it." },
+  ],
   "net-rental-yield": [
     { q: "What is a good net rental yield?", a: "In Dubai, gross yields of six to nine percent are common and net yields of four to six percent are realistic once the service charge, management, vacancy and acquisition costs are taken out. The gap between the two is usually two to three percentage points. If a listing quotes a yield without saying which one it is, assume gross." },
     { q: "Why does the calculator divide by more than the purchase price?", a: "Because you spent more than the purchase price. The transfer fee, the commission, the VAT on the commission and the trustee fee are real money you will never see again. Dividing income by price alone flatters the return by roughly the size of those costs, which in Dubai is around six to seven percent." },

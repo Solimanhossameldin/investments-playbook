@@ -184,6 +184,72 @@
     };
   };
 
+  /* Crypto to dirhams. The step nobody prices.
+
+     The arithmetic is not hard, which is the point of putting it here: a
+     conversion spread is the one cost in a Dubai purchase funded from
+     cryptocurrency that never appears on a statement, so nobody adds it up.
+     Beside a four percent transfer fee that everybody knows about, a two and
+     a half percent spread that nobody mentions is the same order of money.
+
+     `move` is the other half. Between agreeing a price and settling it, a
+     volatile asset moves, and whoever did not fix the terms carries that. */
+  CALC["crypto-conversion"] = function (v) {
+    var coins = Math.max(0, v.coins);
+    var rate = Math.max(0, v.rate);
+    var spread = Math.min(100, Math.max(0, v.spread)) / 100;
+    var fees = Math.max(0, v.fees);
+    var target = Math.max(0, v.target);
+
+    // Mid-market: what the coins are worth before anybody takes a turn.
+    var mid = coins * Math.max(0, v.price) * rate;
+    var net = mid * (1 - spread) - fees;
+    if (net < 0) net = 0;
+    var cost = mid - net;
+
+    // The same coins, converted after the market moved between agreeing and
+    // settling. A quantity of coins fixed in a contract is a bet on this.
+    var moved = mid * (1 + v.move / 100);
+    var netMoved = moved * (1 - spread) - fees;
+    if (netMoved < 0) netMoved = 0;
+
+    // What it takes to still cover the purchase after that move.
+    var perCoin = coins > 0 ? netMoved / coins : 0;
+    var need = perCoin > 0 ? target / perCoin : 0;
+
+    var costPct = target > 0 ? cost / target : 0;
+    // The Dubai Land Department transfer fee is four percent of the price,
+    // which is the number every buyer already knows. It is the only useful
+    // yardstick for a cost that has no line item of its own.
+    var feeAed = target * 0.04;
+    var ratio = feeAed > 0 ? cost / feeAed : 0;
+
+    return {
+      verdict:
+        cost <= 0
+          ? "No conversion cost at these settings"
+          : money(cost) + ", or " + pc(costPct) + " of the purchase",
+      mid: money(mid),
+      net: money(net),
+      cost: money(cost),
+      costPct: pc(costPct),
+      vsFee:
+        target <= 0
+          ? "Set a property price to compare"
+          : ratio >= 1
+            ? num(ratio, 2) + "x the 4% transfer fee"
+            : pc(ratio) + " of the 4% transfer fee",
+      afterMove: money(netMoved),
+      coversPct: target > 0 ? pc(netMoved / target) : "n/a",
+      needCoins:
+        target <= 0
+          ? "n/a"
+          : perCoin <= 0
+            ? "No amount covers it at this price"
+            : num(need, 3) + " coins",
+    };
+  };
+
   CALC["lump-sum-vs-dca"] = function (v) {
     var N = Math.max(1, Math.round(v.months));
     var T = Math.max(N / 12, v.horizon);

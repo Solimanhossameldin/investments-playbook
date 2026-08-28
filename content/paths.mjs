@@ -217,7 +217,7 @@ export default [
       "position-sizing",
       "currency-risk-and-the-peg",
     ],
-    calculators: ["off-plan-irr", "net-rental-yield"],
+    calculators: ["crypto-conversion", "off-plan-irr", "net-rental-yield"],
     terms: [
       "off-plan",
       "payment-plan",

@@ -153,5 +153,59 @@ console.log("\nLump sum versus cost averaging");
   check("if cash out-earns the market, averaging wins", cashBeats.verdict === "Cost averaging wins", cashBeats.verdict);
 }
 
+console.log("\nCrypto to dirhams");
+{
+  const base = { coins: 1, price: 80000, rate: 3.6725, spread: 2.5, fees: 0, target: 2000000, move: 0 };
+  const r = CALC["crypto-conversion"](base);
+
+  check("mid-market is coins times price times the rate",
+    numOf(r.mid) === Math.round(1 * 80000 * 3.6725), r.mid);
+
+  // The whole reason this calculator exists: the gap between what the coins
+  // are worth and what arrives is real money, and nothing itemises it.
+  check("what arrives is the mid-market less the spread",
+    Math.abs(numOf(r.net) - 80000 * 3.6725 * 0.975) < 1, r.net);
+  check("the cost is the difference between the two",
+    Math.abs(numOf(r.cost) - 80000 * 3.6725 * 0.025) < 1, r.cost);
+
+  const free = CALC["crypto-conversion"]({ ...base, spread: 0 });
+  check("no spread means no cost, and the arithmetic says so rather than rounding to it",
+    numOf(free.cost) === 0, free.cost);
+  check("with no spread the delivered amount is the mid-market",
+    numOf(free.net) === numOf(free.mid), free.net);
+
+  const fee = CALC["crypto-conversion"]({ ...base, fees: 5000 });
+  check("a fixed fee comes off after the spread, not before",
+    Math.abs(numOf(fee.net) - (80000 * 3.6725 * 0.975 - 5000)) < 1, fee.net);
+
+  // A conversion cost has no line item, so the only useful yardstick is the
+  // one cost of that size every buyer already budgets for.
+  check("the cost is set against the four percent transfer fee",
+    /transfer fee/.test(r.vsFee), r.vsFee);
+  const big = CALC["crypto-conversion"]({ ...base, spread: 6, target: 200000 });
+  check("a conversion larger than the transfer fee is expressed as a multiple",
+    /x the 4% transfer fee/.test(big.vsFee), big.vsFee);
+
+  // The price move is the framework's actual warning, made interactive.
+  const down = CALC["crypto-conversion"]({ ...base, move: -50 });
+  check("a fifty percent fall halves what the same coins deliver",
+    Math.abs(numOf(down.afterMove) - numOf(r.afterMove) / 2) < 2, down.afterMove);
+  check("and roughly doubles the coins needed to cover the purchase",
+    Math.abs(numOf(down.needCoins) - numOf(r.needCoins) * 2) < 0.01, down.needCoins);
+  check("a rise reduces the coins needed",
+    numOf(CALC["crypto-conversion"]({ ...base, move: 50 }).needCoins) < numOf(r.needCoins));
+
+  // Nonsense in must not produce confident nonsense out.
+  const zero = CALC["crypto-conversion"]({ ...base, price: 0 });
+  check("a zero price cannot deliver anything", numOf(zero.net) === 0, zero.net);
+  check("and says so rather than reporting infinite coins",
+    /No amount covers it/.test(zero.needCoins), zero.needCoins);
+  const huge = CALC["crypto-conversion"]({ ...base, spread: 100, fees: 999999 });
+  check("delivered never goes negative", numOf(huge.net) === 0, huge.net);
+  const noTarget = CALC["crypto-conversion"]({ ...base, target: 0 });
+  check("with no property price it asks for one instead of dividing by zero",
+    /Set a property price/.test(noTarget.vsFee), noTarget.vsFee);
+}
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll calculator checks passed.\n");
 process.exit(fails ? 1 : 0);

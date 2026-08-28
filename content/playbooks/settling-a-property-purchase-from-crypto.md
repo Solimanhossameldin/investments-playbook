@@ -5,7 +5,7 @@
   "title": "Settling a property purchase from crypto",
   "category": "property",
   "tier": 1,
-  "calculator": "off-plan-irr",
+  "calculator": "crypto-conversion",
   "reviewed": "28 August 2026",
   "summary": "A Dubai property purchase funded from cryptocurrency is a conversion followed by a dirham transaction, not a crypto transaction, and the arithmetic that decides what the buyer actually pays sits entirely inside the conversion step that the advertisement does not describe.",
   "formula": "What the headline says\n  Price: 2,000,000 AED, payable in BTC\n\nWhat reaches the seller\n  Registry settles in AED. Always.\n  So something must convert. The only\n  questions are who, when, and at what rate.\n\nThe conversion arithmetic\n  Dirhams delivered\n    = Coins sent x Rate used x (1 - Spread) - Fees\n\n  Effective price paid\n    = Coins sent x Market rate at the moment of sending\n\n  The gap between those two lines is\n  the cost of the conversion, and it is\n  paid by whoever did not set the rate.\n\nWorked, at 2,000,000 AED\n  Spread 1.0%          20,000 AED\n  Spread 2.5%          50,000 AED\n  Spread 4.0%          80,000 AED\n\n  For comparison, the DLD transfer fee\n  on the same purchase is 4 percent.\n  A quiet conversion spread can cost\n  as much as the registry does.\n\nThe three questions that price the deal\n  1. Which rate, from which venue,\n     at which timestamp?\n  2. Who bears movement between\n     agreement and settlement?\n  3. Who is the counterparty holding\n     the coins during conversion?",
