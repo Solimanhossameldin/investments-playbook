@@ -146,15 +146,36 @@ check("no issues at all counts as behind",
 
 // The page must carry the admission when it is behind, and must not when it
 // is not. A promise that is only checked in one direction is not checked.
-const lateBody = briefIndex({ site: siteStub, briefs: [issue("2026-01-02")] }).body;
-check("a stale brief index admits the cadence is not being met",
-  /not currently publishing to schedule/i.test(lateBody), "no notice on a months-old archive");
-check("the admission names the last issue rather than being vague",
-  /last issue was published/i.test(lateBody), "notice does not name the last issue");
+// Two different failures, and naming the wrong one is worse than saying
+// nothing. The brief went out by email every weekday for weeks while this
+// archive held one issue, and 52 pages said publication was paused. That was
+// false. site.brief.byEmail separates "is it published" from "is the archive
+// current", and both branches are checked here, in both directions.
+const stale = [issue("2026-01-02")];
+const stopped = briefIndex({ site: siteStub, briefs: stale }).body;
+const lagging = briefIndex({ site: { ...siteStub, brief: { byEmail: true } }, briefs: stale }).body;
 
-const freshBody = briefIndex({ site: siteStub, briefs: [issue(new Date().toISOString().slice(0, 10))] }).body;
-check("a current brief index carries no such notice",
-  !/not currently publishing to schedule/i.test(freshBody), "notice shown while publishing on time");
+check("a stale archive with no email going out admits publication has stopped",
+  /not currently publishing to schedule/i.test(stopped), "no notice on a months-old archive");
+check("that admission names the date rather than being vague",
+  /02\.01\.26/.test(stopped), "notice does not name the last issue");
+
+check("a stale archive while the email still goes out blames the archive",
+  /archive here is behind/i.test(lagging), "no archive notice");
+check("and does not claim publication has stopped",
+  !/not currently publishing to schedule/i.test(lagging),
+  "the site told readers the brief had stopped while it was still arriving in their inbox");
+check("the lagging notice names the date too",
+  /02\.01\.26/.test(lagging), "notice does not name the last archived issue");
+check("and tells a reader how to get the issues on time",
+  /Subscrib/i.test(lagging), "the notice states a problem and no remedy");
+
+const today = new Date().toISOString().slice(0, 10);
+for (const [label, st] of [["by email", { byEmail: true }], ["not by email", undefined]]) {
+  const fresh = briefIndex({ site: { ...siteStub, brief: st }, briefs: [issue(today)] }).body;
+  check(`a current archive carries no notice, ${label}`,
+    !/not currently publishing|archive here is behind/i.test(fresh), "notice shown while up to date");
+}
 
 /* ---------- layout tripwires ----------
    These assert on the stylesheet source rather than on a rendered page,

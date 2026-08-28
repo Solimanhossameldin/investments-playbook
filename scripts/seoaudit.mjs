@@ -20,7 +20,15 @@ const site = JSON.parse(fs.readFileSync(path.join(root, "content", "site.json"),
 const briefDir = path.join(root, "content", "briefs");
 const briefFiles = fs.existsSync(briefDir) ? fs.readdirSync(briefDir).filter((f) => f.endsWith(".json")) : [];
 const { cadence } = await import("../src/lib.mjs");
-const cad = cadence(briefFiles.map((f) => JSON.parse(fs.readFileSync(path.join(briefDir, f), "utf8"))));
+// site.brief.byEmail is the ground truth about whether the brief publishes at
+// all, as opposed to whether this site's archive of it is current. The check
+// has to read the same input the pages do, or it fails the site for telling
+// the truth.
+const cad = cadence(
+  briefFiles.map((f) => JSON.parse(fs.readFileSync(path.join(briefDir, f), "utf8"))),
+  undefined,
+  site.brief
+);
 
 if (!fs.existsSync(dist)) {
   console.error("No dist. Run the build first.");

@@ -64,5 +64,9 @@
     "whatsapp": "",
     "booking": "",
     "responseHours": 48
+  },
+  "brief": {
+    "byEmail": true,
+    "note": "The brief is published every weekday by email. Set byEmail to false if that ever stops. The web archive lags whenever the drafting pipeline is not running, and the site says so separately."
   }
 }

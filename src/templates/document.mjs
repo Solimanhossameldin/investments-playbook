@@ -130,7 +130,7 @@ ${chapters}
 </section>
 
 <footer class="doc-end">
-  <p>The daily brief publishes ${esc(cadence(briefs).phrase.replace("GST", "Gulf time"))}.<br><a href="${site.origin}/">${esc(site.domain)}</a></p>
+  <p>The daily brief publishes ${esc(cadence(briefs, undefined, site.brief).phrase.replace("GST", "Gulf time"))}.<br><a href="${site.origin}/">${esc(site.domain)}</a></p>
 </footer>
 
 </article>`;

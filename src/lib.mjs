@@ -214,7 +214,17 @@ export function clampDescription(text, max = DESC_MAX) {
    So the phrase is generated from the issues. Every sentence that advertises
    the brief takes it from here, and all of them change together the moment
    publication resumes or stops. */
-export function cadence(briefs = [], nowISO) {
+export function cadence(briefs = [], nowISO, opts = {}) {
+  // Two different claims that were being collapsed into one. Whether the brief
+  // is published, and whether this site's archive of it is current. It went
+  // out by email every weekday for weeks while the archive here held a single
+  // issue, so "paused at the moment" was on 52 pages and was false.
+  //
+  // byEmail is the ground truth about publication. The archive lagging is a
+  // separate fact, stated separately, on the page where the archive lives.
+  if (opts.byEmail) {
+    return { live: true, phrase: "every weekday at 7am GST", short: "every weekday at 7am GST" };
+  }
   const st = briefStatus(briefs, nowISO);
   return st.behind
     ? { live: false, phrase: "weekday mornings at 7am GST, paused at the moment", short: "paused at the moment" }
