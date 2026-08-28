@@ -200,6 +200,22 @@ main:focus { outline: none; }
 .gate { position: relative; }
 .gate__fade { position: relative; max-height: 108px; overflow: hidden; }
 .gate__fade::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,0) 10%, var(--ivory) 92%); }
+/* The end-of-page capture. Restrained on purpose: it sits after an article
+   a reader has just finished, so it reads as the next step rather than as an
+   interruption. Cream, one hairline, no shouting. */
+.cap {
+  margin: 56px 0 0;
+  max-width: var(--prose);
+  background: var(--gold-wash);
+  border-left: 3px solid var(--gold);
+  padding: 26px 28px;
+  border-radius: 0 var(--r) var(--r) 0;
+}
+.cap h2 { font-size: 1.35rem; margin: 0 0 8px; }
+.cap p { font-size: 13.5px; color: var(--muted); margin: 0 0 16px; line-height: 1.6; max-width: 46ch; }
+.article .cap h2 { margin: 0 0 8px; }
+@media (max-width: 560px) { .cap { padding: 22px 20px; } }
+
 .gate__box { border: 1px solid var(--gold); background: var(--paper); padding: 26px; margin-top: -10px; position: relative; border-radius: var(--r); }
 .gate__box h2, .gate__box h4 { font-size: 1.5rem; margin-bottom: 6px; }
 .gate__box p { font-size: 13px; color: var(--muted); margin: 8px 0 0; }

@@ -1,5 +1,5 @@
 import { esc, copy, pageTitle, clampDescription } from "../lib.mjs";
-import { briefForm } from "./layout.mjs";
+import { briefForm, captureBlock } from "./layout.mjs";
 
 // The path pages route a reader, and route a subscriber. Nothing on them is
 // written here: every framework, calculator and term is looked up by slug in
@@ -27,7 +27,7 @@ function magnetBlock(site, p) {
   return `<div class="gate__box" id="get" style="max-width:var(--prose);margin-top:56px">
     <h2>${esc(m.title)}</h2>
     <p>${esc(copy(m.blurb || ""))}</p>
-    ${briefForm(site, "magnet-form", "Your download is below.", m.file)}
+    ${briefForm(site, "magnet-form", "Your download is below.", m.file, `start/${p.slug}`, p.intent)}
     <noscript><p style="font-size:13px;margin:14px 0 0">The subscribe form needs JavaScript. <a href="${esc(m.file)}">Download the checklist directly</a> instead.</p></noscript>
     <p style="font-size:12px;color:var(--muted);margin:14px 0 0">Free. Unsubscribe in one click. The frameworks it points at are ungated and always will be.</p>
   </div>`;
@@ -110,6 +110,8 @@ export function pathIndex({ site, paths, playbooks, calculators }) {
   </div>
 
   <p style="font-size:12px;color:var(--muted);margin-top:34px;max-width:var(--prose)">${esc(site.disclaimer)}</p>
+
+${captureBlock(site, { source: "start-index", heading: "Not sure which route", blurb: "Take the whole library instead: every framework as one document, free. One email address, unsubscribe in one click." })}
 </div></section>`;
 
   return {
@@ -166,7 +168,17 @@ export function pathPage({ site, p, paths, playbooks, calculators, glossary }) {
     ${esc(copy(p.close))}
   </div>
 
-  ${magnetBlock(site, p)}
+  ${
+    p.magnet
+      ? magnetBlock(site, p)
+      : captureBlock(site, {
+          source: `start/${p.slug}`,
+          intent: p.intent,
+          heading: `Get all of these as one document`,
+          blurb: "Every framework on this path, and the other forty odd, in a single file. Your answer above is carried with it, so what arrives is the part that applies to you.",
+          id: `cap-start-${p.slug}`,
+        })
+  }
 
   <div class="btn-row" style="margin-top:40px">
     <a class="btn btn--solid" href="${playbookHref(p)}">Get all ${playbooks.length} frameworks as one document</a>

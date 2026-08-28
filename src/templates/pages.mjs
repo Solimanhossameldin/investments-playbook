@@ -1,5 +1,5 @@
 import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus, isoDate, cadence } from "../lib.mjs";
-import { leadBand, authorBand, briefForm } from "./layout.mjs";
+import { leadBand, authorBand, briefForm, captureBlock } from "./layout.mjs";
 
 // Google's Article guidance asks for a publisher logo as an ImageObject with a
 // real raster behind it. The SVG favicon is the same mark but scrapers vary on
@@ -86,7 +86,7 @@ export function home({ site, market, brief, briefs = [], playbooks, calculators,
       <div class="gate__box" data-gate-box>
         <h4>Keep reading, free</h4>
         <p>The full brief in your inbox, ${cad.phrase}. No spam, unsubscribe in one click.</p>
-        ${briefForm(site, "brief-form", nextLine)}
+        ${briefForm(site, "brief-form", nextLine, "", "home-gate")}
       </div>
     </div>`
         : ""
@@ -98,7 +98,7 @@ export function home({ site, market, brief, briefs = [], playbooks, calculators,
            ? "Subscribe and the first issue lands at 7am GST."
            : "Subscribe and you will get the first issue when publication starts."
        }</p>
-       <div class="gate__box" style="max-width:520px;margin-top:24px"><h2>Get the brief</h2><p>${esc(cad.phrase[0].toUpperCase() + cad.phrase.slice(1))}.</p>${briefForm(site, "gate-form", nextLine)}</div>`;
+       <div class="gate__box" style="max-width:520px;margin-top:24px"><h2>Get the brief</h2><p>${esc(cad.phrase[0].toUpperCase() + cad.phrase.slice(1))}.</p>${briefForm(site, "gate-form", nextLine, "", "home-no-issue")}</div>`;
 
   // The typographic hero fills its second column with real figures rather than
   // decoration. Four rows, each carrying its own source, straight off the same
@@ -312,7 +312,7 @@ export function briefIndex({ site, briefs }) {
     <p style="font-size:14px"><a href="/record/">Every call this brief makes is scored on The Record</a>, including the ones that went wrong, along with every correction issued.</p>
   </div>
   ${briefLate(briefs)}
-  <div class="gate__box" style="max-width:560px;margin-bottom:44px"><h2>Get it in your inbox</h2><p>Free. Unsubscribe in one click.</p>${briefForm(site, "arch-form", nextLine)}</div>
+  <div class="gate__box" id="get" style="max-width:560px;margin-bottom:44px"><h2>Get it in your inbox</h2><p>Free. Unsubscribe in one click.</p>${briefForm(site, "arch-form", nextLine, "", "brief-index")}</div>
   <div class="arch">${rows || '<p style="padding:26px 0;color:var(--muted)">The first issue publishes tomorrow morning.</p>'}</div>
 </div></section>`;
 
@@ -354,7 +354,7 @@ export function briefPage({ site, brief, prev, next, briefs = [] }) {
   <p style="font-size:12px;color:var(--muted);max-width:var(--prose)">Every figure above is drawn from the live table on the <a href="/data/" style="color:var(--gold-muted)">market data page</a>, where each row names its own source and timestamp.</p>
   ${brief.items.map((it, i) => itemHtml(it, i + 1, 2)).join("")}
   ${cal}
-  <div class="gate__box" style="max-width:560px;margin-top:44px"><h2>Get tomorrow's brief</h2><p>Free, ${esc(cad.phrase)}.</p>${briefForm(site, "post-form", nextLine)}</div>
+  <div class="gate__box" style="max-width:560px;margin-top:44px"><h2>Get tomorrow's brief</h2><p>Free, ${esc(cad.phrase)}.</p>${briefForm(site, "post-form", nextLine, "", "brief-issue")}</div>
   <nav style="display:flex;justify-content:space-between;gap:20px;margin-top:44px;border-top:1px solid var(--hair-light);padding-top:22px;font-size:13px">
     <span>${prev ? `<a href="/brief/${esc(prev.slug)}/" style="color:var(--gold-muted)">Previous: ${esc(briefLabel(prev.date))}</a>` : ""}</span>
     <span>${next ? `<a href="/brief/${esc(next.slug)}/" style="color:var(--gold-muted)">Next: ${esc(briefLabel(next.date))}</a>` : ""}</span>
@@ -416,6 +416,8 @@ export function playbookIndex({ site, playbooks }) {
       .join("")}
   </div>
   <p id="pb-empty" hidden style="padding:30px 0;color:var(--muted)">Nothing matches that. Try a shorter word.</p>
+
+${captureBlock(site, { source: "playbooks-index", heading: "Take the whole library with you", blurb: "All of it as one document, free. One email address, no card, unsubscribe in one click." })}
 </div></section>`;
   return { title: pageTitle("Investing frameworks, with the arithmetic", site.name), description: "A library of investing frameworks for markets and property. Each page gives the rule, the arithmetic, and where it breaks.", path: "/playbooks/", body };
 }
@@ -444,7 +446,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [] }) 
       ? `<h2>Related frameworks</h2><ol>${related.map((r) => `<li><a href="/playbooks/${esc(r.slug)}/">${esc(copy(r.title))}</a></li>`).join("")}</ol>`
       : ""
   }
-  <div class="rail__box"><h2>The daily brief</h2><p>Three minutes on global markets and property, ${esc(cad.phrase)}.</p><a class="btn btn--ghost btn--sm" href="/#playbook">Subscribe free</a></div>
+  <div class="rail__box"><h2>The daily brief</h2><p>Three minutes on global markets and property, ${esc(cad.phrase)}.</p><a class="btn btn--ghost btn--sm" href="/brief/">Read the latest issue</a></div>
 </aside>`;
 
   const body = `<section class="band"><div class="wrap">
@@ -479,6 +481,11 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [] }) 
         ? "Commercial relationship disclosure: the author works in Dubai real estate brokerage. See the disclosure standards."
         : "Educational research, not personal advice."
     } <a href="/disclosure/" style="color:var(--gold-muted)">Disclosure standards</a>.</p>
+    ${captureBlock(site, {
+      source: `playbooks/${pb.slug}`,
+      heading: "There are more where this came from",
+      blurb: "Every framework on this site as one document, free, plus the brief. One email address, no card, unsubscribe in one click.",
+    })}
   </div>
   ${rail}
   </div>

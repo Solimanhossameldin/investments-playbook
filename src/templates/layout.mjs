@@ -105,8 +105,13 @@ ${sorted
 // promising a brief tomorrow while publication was stopped, and the worst one
 // to be wrong in, so it is rendered from the same derived phrase as the rest
 // rather than hard-coded in app.js.
-export function briefForm(site, id = "brief-form", next = "", unlock = "") {
-  return `<form class="inline-form" data-ml="brief" id="${id}"${next ? ` data-next="${esc(next)}"` : ""}${unlock ? ` data-unlock="${esc(unlock)}"` : ""}>
+// `source` is the page that earned the signup and `intent` is the track it
+// should land in. Both are rendered into the form rather than inferred at
+// runtime, because the page knows and the runtime does not: a framework page
+// knows which framework it is, and a path page knows which of the seven
+// intents its reader just told us about by being there.
+export function briefForm(site, id = "brief-form", next = "", unlock = "", source = "", intent = "") {
+  return `<form class="inline-form" data-ml="brief" id="${id}"${next ? ` data-next="${esc(next)}"` : ""}${unlock ? ` data-unlock="${esc(unlock)}"` : ""}${source ? ` data-source="${esc(source)}"` : ""}${intent ? ` data-intent="${esc(intent)}"` : ""}>
   <label class="sr-only" for="${id}-email" style="position:absolute;left:-9999px">Email address</label>
   <input id="${id}-email" name="email" type="email" required placeholder="your@email.com" autocomplete="email">
   <button class="btn btn--solid" type="submit">Continue</button>
@@ -165,6 +170,32 @@ export function leadBand(site, counts = {}) {
 </div></section>`;
 }
 
+/* The capture that lives where the reading happens.
+
+   The library is the part of this site search actually lands people on, and
+   until now the 55 framework pages and 48 glossary pages had no form on them
+   at all. Their only call to action navigated to the homepage, which asks a
+   reader who has just finished one page to start a second journey before they
+   can act. Almost nobody does that.
+
+   Deliberately the light form. Email only, one field, at the moment a reader
+   has just been given something. The six-field lead form still exists and
+   still gates the compendium on the homepage; this is the top of that funnel
+   rather than a replacement for it, and a reader who gives an email here can
+   be asked for the rest later, having received something first.
+
+   `source` is what makes it worth having: every signup names the page that
+   earned it, so it is possible to find out which frameworks convert instead
+   of guessing. */
+export function captureBlock(site, { source, intent = "", heading = "", blurb = "", id = "" } = {}) {
+  const formId = id || `cap-${String(source).replace(/[^a-z0-9]+/gi, "-")}`;
+  return `<aside class="cap" aria-label="Get the framework library">
+  <h2>${esc(heading || "Get every framework as one document")}</h2>
+  <p>${esc(blurb || "The whole library in a single file, free, and the daily brief with it. One email address, no card, unsubscribe in one click.")}</p>
+  ${briefForm(site, formId, "", "", source, intent)}
+</aside>`;
+}
+
 export function authorBand(site) {
   const a = site.author;
   return `<section class="band band--tight"><div class="wrap">
@@ -194,7 +225,7 @@ export function footer(site) {
     <div><h2>The Brief</h2><ul>
       <li><a href="/brief/">Latest issue</a></li>
       <li><a href="/brief/">Archive</a></li>
-      <li><a href="/#playbook">Subscribe</a></li>
+      <li><a href="/brief/#get">Subscribe</a></li>
       <li><a href="/feed.xml">RSS feed</a></li>
     </ul></div>
     <div><h2>Playbooks</h2><ul>

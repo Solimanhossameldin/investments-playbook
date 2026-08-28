@@ -1,5 +1,5 @@
 import { esc, copy, pageTitle } from "../lib.mjs";
-import { leadBand } from "./layout.mjs";
+import { leadBand, captureBlock } from "./layout.mjs";
 
 const n = (id, label, def, opts = {}) => ({ kind: "num", id, label, def, ...opts });
 const rng = (id, label, def, min, max, step, suffix = "%") => ({ kind: "range", id, label, def, min, max, step, suffix });
@@ -306,6 +306,8 @@ export function calcIndex({ site }) {
     </a>`
     ).join("")}
   </div>
+
+${captureBlock(site, { source: "calculators-index", heading: "The frameworks behind the calculators", blurb: "Every calculator here comes from a framework that shows the arithmetic and where it breaks. Get all of them as one document." })}
 </div></section>`;
   return { title: pageTitle("Calculators. Property and portfolio arithmetic", site.name), description: "Six free calculators for property and portfolio decisions. Net rental yield, rent versus buy, off-plan IRR, withdrawal rate, US estate tax exposure and lump sum versus cost averaging.", path: "/calculators/", body };
 }

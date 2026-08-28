@@ -1,4 +1,5 @@
 import { esc, copy, md, pageTitle } from "../lib.mjs";
+import { captureBlock } from "./layout.mjs";
 
 const CATS = { property: "Property", markets: "Markets", tax: "Tax and structure", behaviour: "Behaviour" };
 
@@ -56,6 +57,8 @@ export function glossaryIndex({ site, terms }) {
   ${jump}
   ${groups}
   <p id="gl-empty" hidden style="color:var(--muted);padding:26px 0">No term matches that.</p>
+
+${captureBlock(site, { source: "glossary-index", heading: "Definitions are the easy half", blurb: "The frameworks that use these terms, as one document. Free, one email address, unsubscribe in one click." })}
 </div></section>`;
 
   return {
@@ -123,6 +126,12 @@ export function glossaryTerm({ site, term, terms, playbookTitles }) {
   </div>`
       : ""
   }
+
+  ${captureBlock(site, {
+    source: `glossary/${term.slug}`,
+    heading: "A definition is the start of it",
+    blurb: "The frameworks that use this term, and every other one on the site, as a single document. Free, one email address, unsubscribe in one click.",
+  })}
 
   <p style="font-size:12px;color:var(--muted);margin-top:40px;max-width:var(--prose)">${esc(site.disclaimer)}</p>
 </div></section>`;

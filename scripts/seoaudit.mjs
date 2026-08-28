@@ -73,6 +73,12 @@ for (const file of walk(dist)) {
     pageDate: (html.match(/<time datetime="(\d{4}-\d{2}-\d{2})"/i) || [])[1] || "",
     feedLink: /<link rel="alternate" type="application\/atom\+xml"[^>]*href="\/feed\.xml"/i.test(html),
     unlocks: [...html.matchAll(/data-unlock="([^"]+)"/gi)].map((m) => m[1]),
+    forms: [...html.matchAll(/<form\b[^>]*data-ml="([^"]*)"[^>]*>/gi)].map((m) => m[0]),
+    // "Subscribe" that navigates to a six-field lead form is the "Book a call"
+    // bug in another costume, so the label and its destination are collected
+    // together and checked against each other.
+    ctas: [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]{0,60})<\/a>/gi)]
+      .map((m) => ({ href: m[1], label: m[2].trim() })),
     skipHref: (html.match(/<a class="skip" href="#([^"]+)"/i) || [])[1] || "",
     mainId: (html.match(/<main[^>]*\bid="([^"]+)"/i) || [])[1] || "",
     ogImage: (html.match(/<meta property="og:image" content="([^"]*)"/i) || [])[1] || "",
@@ -264,6 +270,40 @@ for (const p of pages.values()) {
   for (const u of p.unlocks) {
     if (!fs.existsSync(path.join(dist, u.replace(/^\//, "")))) {
       note("error", "promised file missing from build", `${u} on ${p.url}`);
+    }
+  }
+}
+
+// Every page a reader can land on from search should let them act where they
+// are. The library is what search finds, and until this was added the 55
+// framework pages and 48 glossary pages had no form at all: the only call to
+// action navigated to the homepage and asked them to start again.
+const NO_CAPTURE = new Set([
+  "/404.html", "/about/", "/contact/", "/disclosure/", "/privacy/",
+  "/data/", "/wire/", "/record/", "/communities/", "/playbook/", "/chartbook/",
+]);
+for (const p of indexable) {
+  if (NO_CAPTURE.has(p.url)) continue;
+  if (!p.forms.length) note("error", "no way to convert", p.url);
+}
+
+// A signup that cannot be traced to the page that earned it is a signup you
+// cannot learn anything from.
+for (const p of pages.values()) {
+  for (const f of p.forms) {
+    if (/data-ml="brief"/.test(f) && !/data-source="/.test(f)) {
+      note("error", "form does not name its source", p.url);
+    }
+  }
+}
+
+// A label is a promise. "Subscribe" must not land on the compendium gate, and
+// nothing offering the brief may point at a form for a different product.
+for (const p of pages.values()) {
+  for (const c of p.ctas) {
+    const label = c.label.toLowerCase();
+    if (/^subscribe\b/.test(label) && c.href.includes("#playbook")) {
+      note("error", "cta promises the brief and opens the lead form", `"${c.label}" -> ${c.href} on ${p.url}`);
     }
   }
 }

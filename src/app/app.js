@@ -199,7 +199,15 @@
       var email = form.querySelector('input[name=email]').value.trim();
       if (!email) return;
       busy(form, true);
-      mlPost(ML.brief, { email: email, lead_source: "investmentsplaybook.com brief" }).then(function () {
+      // A constant lead_source made every signup look identical, so nothing
+      // could be traced to the page that earned it. The page now says.
+      var src = form.getAttribute("data-source");
+      var intent = form.getAttribute("data-intent");
+      mlPost(ML.brief, {
+        email: email,
+        lead_source: "investmentsplaybook.com" + (src ? " / " + src : " / brief"),
+        investor_intent: intent || ""
+      }).then(function () {
         try { localStorage.setItem("ip_subscribed", "1"); } catch (e) {}
         // Where a form promised a document, the page hands it over itself.
         // Waiting on an email would make the promise depend on a mail
@@ -252,7 +260,9 @@
         phone: g("dial") + " " + g("phone"),
         country: g("country"),
         investor_intent: g("intent"),
-        lead_source: "investmentsplaybook.com" + (params.get("utm_source") ? " / " + params.get("utm_source") : ""),
+        lead_source: "investmentsplaybook.com"
+          + (form.getAttribute("data-source") ? " / " + form.getAttribute("data-source") : "")
+          + (params.get("utm_source") ? " / " + params.get("utm_source") : ""),
         lead_status: "New",
       }).then(function () {
         var wrap = form.parentNode;
