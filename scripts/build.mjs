@@ -19,6 +19,7 @@ import { contactPage } from "../src/templates/contact.mjs";
 import { feed } from "../src/templates/feed.mjs";
 import { buildChartbookPdf, pdfPageCount } from "./make-chartbook-pdf.mjs";
 import { buildCryptoChecklistPdf, checklistPageCount, checklistQuestionCount } from "./make-crypto-checklist-pdf.mjs";
+import { buildFirstPropertyPdf } from "./make-first-property-pdf.mjs";
 import calls from "../content/calls.mjs";
 import glossary from "../content/glossary.mjs";
 import { playbookDoc } from "../src/templates/document.mjs";
@@ -193,6 +194,7 @@ if (pdf) fs.writeFileSync(path.join(dist, "chartbook.pdf"), pdf);
 // address, so the build produces it rather than trusting somebody to upload
 // one. seoaudit fails if it is not here.
 fs.writeFileSync(path.join(dist, "crypto-to-property-checklist.pdf"), buildCryptoChecklistPdf(site));
+fs.writeFileSync(path.join(dist, "first-property-checklist.pdf"), buildFirstPropertyPdf(site));
 fs.writeFileSync(path.join(dist, "feed.xml"), feed({ site, briefs }));
 fs.writeFileSync(path.join(dist, "CNAME"), `${site.domain}\n`);
 fs.writeFileSync(path.join(dist, ".nojekyll"), "");

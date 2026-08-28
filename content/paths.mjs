@@ -45,6 +45,11 @@ export default [
       "snagging",
     ],
     close: "If you read one of these, read the first. It is the calculation most owners have never run on a property they already hold.",
+    magnet: {
+      file: "/first-property-checklist.pdf",
+      title: "The first property checklist",
+      blurb: "The five stages in the order the decisions arrive, with the questions to ask at each one, including the costs that are never in the listing. It downloads the moment you subscribe, on this page, rather than arriving by email later.",
+    },
   },
   {
     slug: "growing-a-portfolio",
