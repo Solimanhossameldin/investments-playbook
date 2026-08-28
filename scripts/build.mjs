@@ -113,7 +113,7 @@ function emit(spec, lastmod = "") {
 const libraryReviewed = latest(playbooks.map((pb) => isoDate(pb.reviewed)));
 
 /* ---------- pages ---------- */
-emit(P.home({ site, market, brief: briefs[0], playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }), pathsHtml: pathBand({ paths }) }), DAILY);
+emit(P.home({ site, market, brief: briefs[0], briefs, playbooks, calculators: calcMeta, wireHtml: wireStrip({ wire }), pathsHtml: pathBand({ paths }) }), DAILY);
 emit(wirePage({ site, wire }), DAILY);
 
 const playbookTitles = Object.fromEntries(playbooks.map((p) => [p.slug, p.title]));
@@ -125,7 +125,7 @@ glossary.forEach((term) => emit(glossaryTerm({ site, term, terms: glossary, play
 emit(communityIndex({ site, data: communities }), (communities.generatedAt || "").slice(0, 10));
 (communities.communities || []).forEach((c) => emit(communityPage({ site, c, data: communities }), (communities.generatedAt || "").slice(0, 10)));
 emit(P.briefIndex({ site, briefs }), latest(briefs.map((b) => b.date)));
-briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1] }), b.date));
+briefs.forEach((b, i) => emit(P.briefPage({ site, brief: b, prev: briefs[i + 1], next: briefs[i - 1], briefs }), b.date));
 emit(pathIndex({ site, paths, playbooks, calculators: calcMeta }));
 paths.forEach((p) => emit(pathPage({ site, p, paths, playbooks, calculators: calcMeta, glossary })));
 emit(P.playbookIndex({ site, playbooks }), libraryReviewed);
@@ -133,12 +133,12 @@ emit(P.playbookIndex({ site, playbooks }), libraryReviewed);
 // at it. See src/related.mjs for why the obvious sort does not do that.
 const { chosen: relatedBySlug } = pickRelated(playbooks);
 playbooks.forEach((pb) => {
-  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug) }), isoDate(pb.reviewed));
+  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug), briefs }), isoDate(pb.reviewed));
 });
 emit(calcIndex({ site }));
 const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length };
 CALCULATORS.forEach((calc) => emit(calcPage({ site, calc, counts })));
-emit(playbookDoc({ site, playbooks, calculators: calcMeta }), libraryReviewed);
+emit(playbookDoc({ site, playbooks, calculators: calcMeta, briefs }), libraryReviewed);
 emit(chartbookPage({ site, data: chartbook, pdf: pdfMeta }), (chartbook.asOf || "").slice(0, 10));
 emit(recordPage({ site, calls, results: callResults.results || {}, briefs }));
 emit(P.dataPage({ site, market, status }), DAILY);

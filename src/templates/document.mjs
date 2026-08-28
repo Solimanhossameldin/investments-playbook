@@ -1,4 +1,4 @@
-import { esc, copy, md } from "../lib.mjs";
+import { esc, copy, md, cadence } from "../lib.mjs";
 
 // In the compendium every framework sits under an <h3> title inside an <h2>
 // part, and its own section labels below are <h4>. The body is the same
@@ -20,7 +20,7 @@ const CATS = {
 
 const ORDER = ["property", "portfolio", "risk", "tax", "behavioural", "valuation", "cross-asset"];
 
-export function playbookDoc({ site, playbooks, calculators }) {
+export function playbookDoc({ site, playbooks, calculators, briefs = [] }) {
   const grouped = ORDER.map((cat) => ({
     cat,
     label: CATS[cat],
@@ -130,7 +130,7 @@ ${chapters}
 </section>
 
 <footer class="doc-end">
-  <p>The daily brief publishes every weekday at 7am Gulf time.<br><a href="${site.origin}/">${esc(site.domain)}</a></p>
+  <p>The daily brief publishes ${esc(cadence(briefs).phrase.replace("GST", "Gulf time"))}.<br><a href="${site.origin}/">${esc(site.domain)}</a></p>
 </footer>
 
 </article>`;

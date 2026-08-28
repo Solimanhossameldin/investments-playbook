@@ -202,6 +202,24 @@ export function clampDescription(text, max = DESC_MAX) {
    the promise is made, instead of repeating a cadence it is not meeting.
 
    Weekends are excluded, because a weekday cadence is not broken by a Sunday. */
+/* The cadence phrase itself, derived rather than typed.
+
+   briefLate() put an honest notice on /brief/. It did not touch the other
+   fifty-one pages that assert the cadence as current fact, including the rail
+   box on every framework page and the copy beside the form that takes a
+   reader's email address. That is the "Book a call" shape exactly: true in one
+   place, false in the most visible fifty.
+
+   So the phrase is generated from the issues. Every sentence that advertises
+   the brief takes it from here, and all of them change together the moment
+   publication resumes or stops. */
+export function cadence(briefs = [], nowISO) {
+  const st = briefStatus(briefs, nowISO);
+  return st.behind
+    ? { live: false, phrase: "weekday mornings at 7am GST, paused at the moment", short: "paused at the moment" }
+    : { live: true, phrase: "every weekday at 7am GST", short: "every weekday at 7am GST" };
+}
+
 export function weekdaysBetween(fromISO, toISO) {
   const a = new Date(fromISO + "T12:00:00Z"), b = new Date(toISO + "T12:00:00Z");
   if (!(a <= b)) return 0;

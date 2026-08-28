@@ -153,7 +153,12 @@
     var box = document.querySelector("[data-gate-box]");
     if (fade) fade.removeAttribute("data-gate-fade"), fade.classList.remove("gate__fade");
     if (rest) rest.hidden = false;
-    if (box) box.innerHTML = '<h4>You are on the list</h4><p>The next brief lands at 7am GST. Check your inbox for a confirmation email.</p>';
+    // The cadence line is rendered into the form by the build, because only the
+    // build knows whether the brief is actually publishing. Falling back to a
+    // sentence that promises nothing is the safe direction to be wrong in.
+    var form = document.querySelector("form[data-ml='brief'][data-next]");
+    var next = (form && form.getAttribute("data-next")) || "You will get the next issue when it publishes.";
+    if (box) box.innerHTML = '<h2>You are on the list</h2><p>' + next + ' Check your inbox for a confirmation email.</p>';
   }
   try { if (localStorage.getItem("ip_subscribed") === "1") openGate(); } catch (e) {}
 

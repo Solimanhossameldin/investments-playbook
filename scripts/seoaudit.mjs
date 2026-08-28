@@ -17,6 +17,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
 const STRICT = process.argv.includes("--strict");
 const site = JSON.parse(fs.readFileSync(path.join(root, "content", "site.json"), "utf8"));
+const briefDir = path.join(root, "content", "briefs");
+const briefFiles = fs.existsSync(briefDir) ? fs.readdirSync(briefDir).filter((f) => f.endsWith(".json")) : [];
+const { cadence } = await import("../src/lib.mjs");
+const cad = cadence(briefFiles.map((f) => JSON.parse(fs.readFileSync(path.join(briefDir, f), "utf8"))));
 
 if (!fs.existsSync(dist)) {
   console.error("No dist. Run the build first.");
@@ -229,6 +233,24 @@ for (const p of pages.values()) {
   if (!p.skipHref) note("error", "no skip link", p.url);
   else if (p.skipHref !== p.mainId) {
     note("error", "skip link points nowhere", `#${p.skipHref} but main is "${p.mainId || "unset"}" on ${p.url}`);
+  }
+}
+
+// The cadence the site advertises has to match the cadence it is keeping. Not
+// on one page: on all of them. "Book a call" pointed at an email form for
+// weeks because it was checked for resolving rather than for being true, and
+// this is the same claim shape - "every weekday at 7am GST" appeared on 52
+// pages while one issue existed and publication was stopped.
+{
+  const stale = cad.live ? "paused at the moment" : "every weekday at 7am GST";
+  for (const p of pages.values()) {
+    const html = fs.readFileSync(p.file, "utf8");
+    // The /brief/ notice explains the situation in full and is allowed to name
+    // the advertised cadence while saying it is not being met.
+    const body = html.replace(/<div class="callout"[\s\S]*?<\/div>/g, "");
+    if (body.includes(stale)) {
+      note("error", "cadence claim does not match the cadence", `"${stale}" on ${p.url}`);
+    }
   }
 }
 

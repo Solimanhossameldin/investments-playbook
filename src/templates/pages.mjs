@@ -1,4 +1,4 @@
-import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus, isoDate } from "../lib.mjs";
+import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus, isoDate, cadence } from "../lib.mjs";
 import { leadBand, authorBand, briefForm } from "./layout.mjs";
 
 // Google's Article guidance asks for a publisher logo as an ImageObject with a
@@ -58,7 +58,9 @@ function briefLate(briefs) {
   </div>`;
 }
 
-export function home({ site, market, brief, playbooks, calculators, wireHtml = "", pathsHtml = "" }) {
+export function home({ site, market, brief, briefs = [], playbooks, calculators, wireHtml = "", pathsHtml = "" }) {
+  const cad = cadence(briefs);
+  const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
   const cards = playbooks.slice(0, 9);
   const briefBlock = brief
     ? `<div class="brief-head">
@@ -83,16 +85,20 @@ export function home({ site, market, brief, playbooks, calculators, wireHtml = "
       </div>
       <div class="gate__box" data-gate-box>
         <h4>Keep reading, free</h4>
-        <p>The full brief in your inbox every weekday morning at 7am GST. No spam, unsubscribe in one click.</p>
-        ${briefForm(site)}
+        <p>The full brief in your inbox, ${cad.phrase}. No spam, unsubscribe in one click.</p>
+        ${briefForm(site, "brief-form", nextLine)}
       </div>
     </div>`
         : ""
     }
     <p style="margin-top:34px"><a class="btn btn--ghost btn--sm" href="/brief/${esc(brief.slug)}/">Read the full issue</a> <a class="btn btn--ghost btn--sm" href="/brief/">Archive</a></p>`
-    : `<h2 class="brief-title">The first brief publishes tomorrow morning</h2>
-       <p class="brief-sub">The daily pipeline is live. Subscribe and the first issue lands at 7am GST.</p>
-       <div class="gate__box" style="max-width:520px;margin-top:24px"><h4>Get the brief</h4><p>Every weekday morning at 7am GST.</p>${briefForm(site)}</div>`;
+    : `<h2 class="brief-title">The first issue has not been published yet</h2>
+       <p class="brief-sub">${
+         cad.live
+           ? "Subscribe and the first issue lands at 7am GST."
+           : "Subscribe and you will get the first issue when publication starts."
+       }</p>
+       <div class="gate__box" style="max-width:520px;margin-top:24px"><h2>Get the brief</h2><p>${esc(cad.phrase[0].toUpperCase() + cad.phrase.slice(1))}.</p>${briefForm(site, "gate-form", nextLine)}</div>`;
 
   // The typographic hero fills its second column with real figures rather than
   // decoration. Four rows, each carrying its own source, straight off the same
@@ -282,6 +288,8 @@ ${authorBand(site)}`;
 /* ============================ BRIEF ============================ */
 
 export function briefIndex({ site, briefs }) {
+  const cad = cadence(briefs);
+  const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
   let lastMonth = "";
   const rows = briefs
     .map((b) => {
@@ -298,20 +306,22 @@ export function briefIndex({ site, briefs }) {
 
   const body = `<section class="band"><div class="wrap">
   <div class="section-head">
-    <p class="eyebrow">Published every weekday, 7am GST</p>
+    <p class="eyebrow">${esc(cad.live ? "Published every weekday, 7am GST" : "Weekday mornings, 7am GST. Paused at the moment")}</p>
     <h1>The Brief</h1>
     <p>Three items. Global markets, property, and one number worth knowing. Written from the figures on the market data page, every one of which carries its own source.</p>
     <p style="font-size:14px"><a href="/record/">Every call this brief makes is scored on The Record</a>, including the ones that went wrong, along with every correction issued.</p>
   </div>
   ${briefLate(briefs)}
-  <div class="gate__box" style="max-width:560px;margin-bottom:44px"><h2>Get it in your inbox</h2><p>Free. Unsubscribe in one click.</p>${briefForm(site, "arch-form")}</div>
+  <div class="gate__box" style="max-width:560px;margin-bottom:44px"><h2>Get it in your inbox</h2><p>Free. Unsubscribe in one click.</p>${briefForm(site, "arch-form", nextLine)}</div>
   <div class="arch">${rows || '<p style="padding:26px 0;color:var(--muted)">The first issue publishes tomorrow morning.</p>'}</div>
 </div></section>`;
 
-  return { title: pageTitle("The Brief. Daily markets and property", site.name), description: "A three minute brief on global markets and property, published every weekday morning at 7am GST.", path: "/brief/", body };
+  return { title: pageTitle("The Brief. Daily markets and property", site.name), description: `A three minute brief on global markets and property, ${cad.phrase}.`, path: "/brief/", body };
 }
 
-export function briefPage({ site, brief, prev, next }) {
+export function briefPage({ site, brief, prev, next, briefs = [] }) {
+  const cad = cadence(briefs);
+  const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
   const numbers = (brief.numbers || []).length
     ? `<div class="table-scroll" style="margin:34px 0 10px;max-width:var(--prose)"><table class="tbl"><caption>The numbers</caption>
     <thead><tr><th>Measure</th><th class="n">Level</th><th>Context</th></tr></thead>
@@ -344,7 +354,7 @@ export function briefPage({ site, brief, prev, next }) {
   <p style="font-size:12px;color:var(--muted);max-width:var(--prose)">Every figure above is drawn from the live table on the <a href="/data/" style="color:var(--gold-muted)">market data page</a>, where each row names its own source and timestamp.</p>
   ${brief.items.map((it, i) => itemHtml(it, i + 1, 2)).join("")}
   ${cal}
-  <div class="gate__box" style="max-width:560px;margin-top:44px"><h2>Get tomorrow's brief</h2><p>Free, every weekday at 7am GST.</p>${briefForm(site, "post-form")}</div>
+  <div class="gate__box" style="max-width:560px;margin-top:44px"><h2>Get tomorrow's brief</h2><p>Free, ${esc(cad.phrase)}.</p>${briefForm(site, "post-form", nextLine)}</div>
   <nav style="display:flex;justify-content:space-between;gap:20px;margin-top:44px;border-top:1px solid var(--hair-light);padding-top:22px;font-size:13px">
     <span>${prev ? `<a href="/brief/${esc(prev.slug)}/" style="color:var(--gold-muted)">Previous: ${esc(briefLabel(prev.date))}</a>` : ""}</span>
     <span>${next ? `<a href="/brief/${esc(next.slug)}/" style="color:var(--gold-muted)">Next: ${esc(briefLabel(next.date))}</a>` : ""}</span>
@@ -410,7 +420,9 @@ export function playbookIndex({ site, playbooks }) {
   return { title: pageTitle("Investing frameworks, with the arithmetic", site.name), description: "A library of investing frameworks for markets and property. Each page gives the rule, the arithmetic, and where it breaks.", path: "/playbooks/", body };
 }
 
-export function playbookPage({ site, pb, calcName, related = [] }) {
+export function playbookPage({ site, pb, calcName, related = [], briefs = [] }) {
+  const cad = cadence(briefs);
+  const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
   const jump = [
     ["the-rule", "The rule"],
     pb.formula ? ["the-arithmetic", "The arithmetic"] : null,
@@ -432,7 +444,7 @@ export function playbookPage({ site, pb, calcName, related = [] }) {
       ? `<h2>Related frameworks</h2><ol>${related.map((r) => `<li><a href="/playbooks/${esc(r.slug)}/">${esc(copy(r.title))}</a></li>`).join("")}</ol>`
       : ""
   }
-  <div class="rail__box"><h2>The daily brief</h2><p>Three minutes on global markets and property, every weekday at 7am GST.</p><a class="btn btn--ghost btn--sm" href="/#playbook">Subscribe free</a></div>
+  <div class="rail__box"><h2>The daily brief</h2><p>Three minutes on global markets and property, ${esc(cad.phrase)}.</p><a class="btn btn--ghost btn--sm" href="/#playbook">Subscribe free</a></div>
 </aside>`;
 
   const body = `<section class="band"><div class="wrap">

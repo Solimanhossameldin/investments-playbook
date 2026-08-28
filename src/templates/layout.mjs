@@ -100,8 +100,13 @@ ${sorted
 </div></div></div>`;
 }
 
-export function briefForm(site, id = "brief-form") {
-  return `<form class="inline-form" data-ml="brief" id="${id}">
+// `next` is what the page will tell someone the moment after they hand over
+// their email address. It is the last place on the site that was still
+// promising a brief tomorrow while publication was stopped, and the worst one
+// to be wrong in, so it is rendered from the same derived phrase as the rest
+// rather than hard-coded in app.js.
+export function briefForm(site, id = "brief-form", next = "") {
+  return `<form class="inline-form" data-ml="brief" id="${id}"${next ? ` data-next="${esc(next)}"` : ""}>
   <label class="sr-only" for="${id}-email" style="position:absolute;left:-9999px">Email address</label>
   <input id="${id}-email" name="email" type="email" required placeholder="your@email.com" autocomplete="email">
   <button class="btn btn--solid" type="submit">Continue</button>
