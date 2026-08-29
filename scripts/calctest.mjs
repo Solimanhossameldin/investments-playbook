@@ -38,6 +38,53 @@ console.log("\nNet rental yield");
   check("cash on cash is negative when yield is under the rate", numOf(lev.coc) < 0, lev.coc);
 }
 
+/* ---------- the flagship worked example must survive its own calculator ----------
+   The net rental yield page is the one the site calls its first page, and its
+   worked example said seven percent became 4.2. The calculator, given the same
+   property and the same stated assumptions, said 4.3, and so did three other
+   frameworks quoting the figure. The page's own components did not add up to
+   its own subtotal either: the four operating items it lists come to about
+   19,700 and it claimed roughly 22,000.
+
+   A reader who reads the page and then runs the tool would have found that.
+   Nothing else would have, because the tool and the prose had never been asked
+   the same question. They are now, from the page itself rather than from a
+   copy of its numbers. */
+console.log("\nThe flagship worked example against the calculator");
+{
+  const page = fs.readFileSync(path.join(root, "content/playbooks/net-rental-yield.md"), "utf8");
+  const stated = (re, what) => {
+    const m = page.match(re);
+    if (!m) { check(`the page still states ${what}`, false, null); return NaN; }
+    return parseFloat(m[1].replace(/,/g, ""));
+  };
+  // The property and assumptions exactly as the page sets them out.
+  const r = CALC["net-rental-yield"]({
+    price: 1500000, rent: 105000, size: 900, sc: 18, mgmt: 5, vac: (4 / 52) * 100,
+    maint: 5, insur: 1500, dld: 4, agency: 2, vat: 5, closing: 4600, ltv: 0, rate: 0, term: 25,
+  });
+
+  const noiSaid = stated(/Net operating income: about \*\*([\d,]+)\*\*/, "a net operating income");
+  // Anchored on the net yield line: an unanchored match found the gross
+  // yield first and compared 7.0 against 4.33, which is a check failing for
+  // the wrong reason and would have been read as the page being wrong.
+  const netSaid = stated(/- Net yield: [\d,]+ divided by [\d,]+, which is \*\*([\d.]+) percent\*\*/, "a net yield");
+  const acqSaid = stated(/Total \*\*([\d,]+)\*\*/, "an acquisition total");
+
+  check("the page's net operating income matches the calculator",
+    Math.abs(noiSaid - numOf(r.noi)) < 100, [noiSaid, r.noi]);
+  check("the page's acquisition total matches the calculator",
+    Math.abs(acqSaid - numOf(r.acq)) < 1, [acqSaid, r.acq]);
+  check("the page's net yield matches the calculator to one decimal",
+    Math.abs(netSaid - numOf(r.net)) < 0.05, [netSaid, r.net]);
+
+  // And the components it lists must add up to the subtotal it claims.
+  const opexSaid = stated(/reserve and fifteen hundred of \[insurance\]\([^)]*\): roughly ([\d,]+) more/, "an operating subtotal");
+  const fourItems = numOf(r.opex) - 900 * 18;
+  check("the four operating items add up to the subtotal the page claims",
+    Math.abs(opexSaid - fourItems) < 200, [opexSaid, Math.round(fourItems)]);
+}
+
 console.log("\nDubai rent increase, Decree 43 of 2013");
 {
   const run = (current, index, notice = 90) => CALC["dubai-rent-increase"]({ current, index, notice });

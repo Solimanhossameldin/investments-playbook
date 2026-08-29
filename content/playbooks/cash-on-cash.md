@@ -32,7 +32,7 @@
 
 Net yield tells you what the asset earns. Cash on cash tells you what you earn, which is a different question the moment you borrow.
 
-Put one and a half million of your own money into a property producing sixty seven thousand of net operating income and you have made 4.2 percent on your outlay. Put down four hundred and seventy five thousand, borrow the rest at 4.5 percent over twenty five years, and the picture changes completely: the debt costs about seventy five thousand a year in payments, the net operating income is still sixty seven thousand, and your cash flow is now negative.
+Put one and a half million of your own money into a property producing sixty nine thousand of net operating income and you have made 4.3 percent on your outlay. Put down four hundred and seventy five thousand, borrow the rest at 4.5 percent over twenty five years, and the picture changes completely: the debt costs about seventy five thousand a year in payments, the net operating income is still sixty nine thousand, and your cash flow is now negative.
 
 That is not automatically bad. Part of that mortgage payment is principal, which is your own equity accumulating. But it is a very different investment from the unleveraged one, with a very different risk profile, and gross yield will not tell you which one you are holding.
 

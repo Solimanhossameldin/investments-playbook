@@ -63,7 +63,7 @@ This is worth sitting with. A Dubai apartment and a global index fund are usuall
 
 A number quoted as an expected return can be built from any mix of the three, and the mix is what decides whether it is credible.
 
-A projection that produces twelve percent from a five percent net yield and seven percent of annual price growth is a projection resting almost entirely on repricing, presented as though it rested on the building. A projection that produces seven percent from a four point two percent [net yield](/playbooks/net-rental-yield/) and modest rent growth, with nothing in the repricing term, is a much smaller claim and a much more defensible one.
+A projection that produces twelve percent from a five percent net yield and seven percent of annual price growth is a projection resting almost entirely on repricing, presented as though it rested on the building. A projection that produces seven percent from a four point three percent [net yield](/playbooks/net-rental-yield/) and modest rent growth, with nothing in the repricing term, is a much smaller claim and a much more defensible one.
 
 Both are called an expected return. They are not the same kind of statement.
 

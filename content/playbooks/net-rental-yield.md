@@ -46,12 +46,12 @@ Take a one bedroom at one and a half million dirhams renting for one hundred and
 
 - Gross yield: 105,000 divided by 1,500,000, which is **7.0 percent**. This is the number in the advertisement.
 - Service charge at eighteen dirhams on nine hundred square feet: 16,200.
-- Management at five percent of collected rent, a four week vacancy allowance, a five percent maintenance reserve and fifteen hundred of [insurance](/playbooks/insurance-and-its-gaps/): roughly 22,000 more.
-- Net operating income: about **66,800**.
+- Management at five percent of collected rent, a four week vacancy allowance, a five percent maintenance reserve and fifteen hundred of [insurance](/playbooks/insurance-and-its-gaps/): roughly 19,700 more.
+- Net operating income: about **69,100**.
 - Acquisition costs: 4 percent of 1,500,000 is 60,000, agency at 2 percent plus VAT is 31,500, trustee and admin about 4,600. Total **96,100**.
-- Net yield: 66,800 divided by 1,596,100, which is **4.2 percent**.
+- Net yield: 69,100 divided by 1,596,100, which is **4.3 percent**.
 
-Seven percent became four point two. Nothing dishonest happened. The advertised number simply answered a different question from the one you were asking.
+Seven percent became four point three. Nothing dishonest happened. The advertised number simply answered a different question from the one you were asking.
 
 ## Why this is the first page on this site
 
