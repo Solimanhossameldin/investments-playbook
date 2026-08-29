@@ -99,13 +99,13 @@ export function playbookDoc({ site, playbooks, calculators, briefs = [] }) {
 <section class="doc-matrix">
   <h2>The Playbook Matrix</h2>
   <p>The two axes that decide almost everything are not risk and return. They are what an asset pays you while you hold it, and how quickly you can stop holding it.</p>
-  <table class="tbl">
+  <div class="table-scroll"><table class="tbl">
     <thead><tr><th></th><th>Liquid</th><th>Illiquid</th></tr></thead>
     <tbody>
       <tr><th>Growth</th><td>Global equity index funds, quality compounders, growth ETFs</td><td>Off-plan property, private equity, land, founder equity</td></tr>
       <tr><th>Income</th><td>Treasury bills, investment grade bonds, listed REITs, dividend equity</td><td>Ready rental property, direct lending, private credit</td></tr>
     </tbody>
-  </table>
+  </table></div>
   <p>Name the box each of your holdings sits in, then count how many share one. That count is your real concentration, and it is usually higher than you expect.</p>
 </section>
 
@@ -114,12 +114,12 @@ ${chapters}
 <section class="doc-part">
   <h2 class="doc-part__h">The calculators</h2>
   <p>Each of these runs entirely in your browser. Nothing you type is sent anywhere or stored.</p>
-  <table class="tbl">
+  <div class="table-scroll"><table class="tbl">
     <thead><tr><th>Calculator</th><th>What it answers</th></tr></thead>
     <tbody>${calculators
       .map((c) => `<tr><td><a href="${site.origin}/calculators/${esc(c.slug)}/">${esc(c.name)}</a></td><td>${esc(copy(c.blurb))}</td></tr>`)
       .join("")}</tbody>
-  </table>
+  </table></div>
 </section>
 
 <section class="doc-part">

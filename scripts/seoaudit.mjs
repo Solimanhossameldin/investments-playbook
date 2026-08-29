@@ -412,6 +412,37 @@ for (const p of indexable) if (!inMap.has(p.url)) note("error", "missing from si
   console.log(`\nFrameworks: ${cited.size}, all cited by at least one other framework's prose.`);
 }
 
+/* ---------- every table can get out of the way ---------- */
+// `.tbl` is width:100%, so a table too wide for a phone does not overflow, it
+// squashes: the measurement passes and the cells turn to mush. `.table-scroll`
+// is the fix and the markdown renderer adds it to every table it produces.
+// Two tables were written by hand in document.mjs instead, and missed it. One
+// of them was the Playbook Matrix, which the blueprint calls the single named
+// framework this brand owns.
+//
+// Same shape as the arithmetic block: content whose meaning is its layout,
+// silently reflowed, with nothing failing because nothing overflowed.
+{
+  let tables = 0;
+  const bare = new Map();
+  for (const p of pages.values()) {
+    const html = fs.readFileSync(p.file, "utf8");
+    let i = 0;
+    while ((i = html.indexOf('<table class="tbl">', i)) !== -1) {
+      tables++;
+      const before = html.slice(Math.max(0, i - 160), i);
+      if (!/<div class="table-scroll"[^>]*>\s*$/.test(before)) {
+        bare.set(p.url, (bare.get(p.url) || 0) + 1);
+      }
+      i++;
+    }
+  }
+  for (const [url, n] of bare) {
+    note("error", "table cannot scroll", `${url} has ${n} table(s) outside a .table-scroll, so they squash rather than scroll on a phone`);
+  }
+  console.log(`\nTables: ${tables}, all inside a scrolling wrapper.`);
+}
+
 /* ---------- third parties the privacy page names ---------- */
 // The privacy page said "Fonts are served by Google Fonts, which will see
 // your IP address" for a week after the fonts were self-hosted and Google
