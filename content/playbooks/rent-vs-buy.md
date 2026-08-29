@@ -62,7 +62,7 @@ Run it on a one and a half million dirham apartment:
 | Opportunity cost on 25% deposit at 6% | 22,500 | 1.50% |
 | Total unrecoverable | 93,125 | **6.21%** |
 
-Six point two percent, not five. The zero property tax is more than absorbed by service charges that run well above the one percent maintenance assumption, and by a cost of capital that is high while rates are where they are. If the same apartment rents for ninety thousand a year, renting is marginally cheaper on cash flow, and the case for buying has to be made on capital growth, on the Golden Visa, or on wanting to own [the place you live in](/playbooks/the-primary-residence/). All three are legitimate. None of them is a cash flow argument, and it is worth being honest about which argument you are making.
+Six point two percent, not five. The zero property tax is more than absorbed by service charges that run well above the one percent maintenance assumption, and by a cost of capital that is high while rates are where they are. If the same apartment rents for ninety thousand a year, renting is marginally cheaper on cash flow, and the case for buying has to be made on capital growth, on [the Golden Visa](/playbooks/golden-visa-vs-portugal-d7/), or on wanting to own [the place you live in](/playbooks/the-primary-residence/). All three are legitimate. None of them is a cash flow argument, and it is worth being honest about which argument you are making.
 
 ## The part everyone skips
 

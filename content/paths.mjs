@@ -137,6 +137,7 @@ export default [
       "property-vs-index-funds",
       "price-to-rent",
       "dubai-vs-london",
+      "dubai-vs-singapore",
       "drawdown-recovery-math",
       "inflation-and-real-returns",
       "liquidity-risk",
@@ -164,6 +165,7 @@ export default [
     order: [
       "currency-risk-and-the-peg",
       "residency-and-tax",
+      "golden-visa-vs-portugal-d7",
       "uae-wills-and-succession",
       "corporate-vs-personal-ownership",
       "fund-domicile",

@@ -87,4 +87,4 @@ Three things, and they are real.
 
 **Debt.** UK mortgage markets for non residents are narrower than for residents but they exist, and long fixed rate money in a low yielding market behaves differently from short money in a high yielding one.
 
-None of those three is a yield argument. That is the point. If the case for London is diversification, say so and size it as diversification. If the case is income, the arithmetic above is the case against.
+None of those three is a yield argument. That is the point. The same test applied to [Singapore](/playbooks/dubai-vs-singapore/) reaches the same conclusion by a much blunter route, because there the entry cost settles the yield question before it is asked. If the case for London is diversification, say so and size it as diversification. If the case is income, the arithmetic above is the case against.

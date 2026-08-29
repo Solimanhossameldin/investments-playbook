@@ -76,6 +76,8 @@ A home that remains available to you, a family who stayed, a business you still 
 
 ## What no income tax does not mean
 
+It also does not mean residency arrives with the property. What a two million dirham purchase does and does not buy, and how that compares with the European routes people weigh it against, is [its own framework](/playbooks/golden-visa-vs-portugal-d7/).
+
 It does not mean no tax administration. Corporate tax applies to some structures and activities, which matters for anyone considering [corporate versus personal ownership](/playbooks/corporate-vs-personal-ownership/). A residency certificate has to be applied for and maintained if it is to be relied on. Filing obligations in the country you left may continue for years.
 
 None of which undoes the advantage. It just means the advantage is specific rather than total, and worth understanding at the level of the four questions rather than the shorthand.

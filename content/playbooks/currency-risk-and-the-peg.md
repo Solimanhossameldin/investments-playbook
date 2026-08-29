@@ -45,6 +45,8 @@ What it does for you is remove volatility between your dirham assets and the dol
 
 ## Where this bites
 
+The cleanest way to hold non-dollar property exposure is a market whose currency is managed rather than pegged, which is most of the real case for [Singapore over Dubai](/playbooks/dubai-vs-singapore/) and almost none of the case usually made for it.
+
 Consider a typical Gulf-based professional. Salary in dirhams. An apartment in Dubai, valued and let in dirhams. Savings in a global equity fund priced in dollars. Retirement expected in the UK, or India, or somewhere the currency is neither dirham nor dollar.
 
 That person believes they hold three things. They hold one currency and a plan to spend a different one. If the dollar weakens materially against their eventual spending currency over the decades between now and then, everything they own falls in purchasing power at once, and no line in their portfolio will show a loss.
