@@ -4,6 +4,12 @@
    "job": "fetch-wire",
    "result": "partial",
    "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
+   "at": "2026-08-29T21:15:18.629Z"
+  },
+  {
+   "job": "fetch-wire",
+   "result": "partial",
+   "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
    "at": "2026-08-29T18:30:38.935Z"
   },
   {
@@ -233,12 +239,6 @@
    "result": "partial",
    "detail": "22 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
    "at": "2026-08-27T03:18:58.734Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-27T00:45:40.950Z"
   }
  ]
 }
