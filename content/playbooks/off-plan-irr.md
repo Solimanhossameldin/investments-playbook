@@ -7,7 +7,7 @@
   "tier": 1,
   "calculator": "off-plan-irr",
   "reviewed": "26 August 2026",
-  "summary": "Two off-plan payment plans quoted at the same headline price are not the same price, because money paid later costs less in present value, and the gap between a front loaded plan and a post handover plan is commonly eight to fifteen percent of the headline figure.",
+  "summary": "Two off-plan payment plans quoted at the same headline price are not the same price, because money paid later costs less in present value, and the gap between a front loaded plan and a post handover plan is commonly five to fifteen percent of the headline figure.",
   "formula": "Monthly discount rate\n  m = (1 + annual discount rate) ^ (1/12) - 1\n\nPresent value of a plan\n  = down payment\n  + sum over k of (construction instalment / (1 + m)^k)\n  + handover payment / (1 + m)^months\n  + sum over j of (post-handover instalment / (1 + m)^(months + j))\n\nEffective discount to headline\n  = 1 - (present value / headline price)\n\nThe cheaper plan is the one with the lower\npresent value, not the lower headline price.",
   "failureModes": [
     "It assumes both plans are available on the same unit at the same headline price. They usually are not. Price the plans as actually offered or the comparison is fictional.",

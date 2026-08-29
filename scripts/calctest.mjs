@@ -78,6 +78,15 @@ console.log("\nThe flagship worked example against the calculator");
   check("the page's net yield matches the calculator to one decimal",
     Math.abs(netSaid - numOf(r.net)) < 0.05, [netSaid, r.net]);
 
+  // The summary promises a size for the gross-to-net gap. The worked example
+  // is the only evidence on the page for it, so they have to agree.
+  const gapRange = page.match(/typically ([a-z]+) to ([a-z]+) percentage points lower/);
+  const W = { one: 1, two: 2, three: 3, four: 4, five: 5 };
+  const grossSaid = stated(/Gross yield: [\d,]+ divided by [\d,]+, which is \*\*([\d.]+) percent\*\*/, "a gross yield");
+  check("the summary's gross-to-net gap contains what the example shows",
+    !!gapRange && (grossSaid - netSaid) >= W[gapRange[1]] && (grossSaid - netSaid) <= W[gapRange[2]],
+    [gapRange && gapRange.slice(1, 3), (grossSaid - netSaid).toFixed(1)]);
+
   // And the components it lists must add up to the subtotal it claims.
   const opexSaid = stated(/reserve and fifteen hundred of \[insurance\]\([^)]*\): roughly ([\d,]+) more/, "an operating subtotal");
   const fourItems = numOf(r.opex) - 900 * 18;
@@ -121,6 +130,17 @@ console.log("\nThe off-plan worked example against the calculator");
   check("the gap the prose claims matches the two figures above",
     /roughly one hundred and six thousand/.test(page) && Math.abs(numOf(r.gap) - 106000) < 1000,
     [r.gap]);
+  // The summary is the sentence answer engines lift, and it claimed a range
+  // the page's own example fell outside of the moment the example was
+  // corrected: 8 to 15 percent, against a worked gap of 7.1.
+  const range = page.match(/commonly ([a-z]+) to ([a-z]+) percent of the headline figure/);
+  const WORD = { three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+    twelve: 12, fifteen: 15, twenty: 20 };
+  const gapPoints = numOf(r.bEff) - numOf(r.aEff);
+  check("the summary's range contains the gap the worked example produces",
+    !!range && gapPoints >= WORD[range[1]] && gapPoints <= WORD[range[2]],
+    [range && range.slice(1, 3), gapPoints.toFixed(1)]);
+
   // The instalment timing has to stay stated, or the numbers stop being
   // reproducible and the check above is testing a coincidence.
   check("the page still states the instalment timing",
