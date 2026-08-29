@@ -69,6 +69,7 @@ export function everyEmail({ campaigns = [], automations = [] } = {}) {
       from_name: e.from_name,
       subject: e.subject || c.name,
       is_designed: e.is_designed,
+      content: e.content,
     });
   }
   for (const a of automations) {
@@ -83,6 +84,7 @@ export function everyEmail({ campaigns = [], automations = [] } = {}) {
         from_name: s.from_name ?? e.from_name,
         subject: s.subject || s.name,
         is_designed: e.is_designed,
+        content: e.content,
       });
     }
   }
@@ -104,6 +106,7 @@ export function auditAccount({ site, counts, campaigns = [], automations = [] })
   const wantName = String((site.mailerlite && site.mailerlite.fromName) || "");
   const wantFrom = String((site.mailerlite && site.mailerlite.from) || "");
   const phrase = String((site.brief && site.brief.phrase) || "");
+  const domain = String(site.domain || "");
   const phraseNamesATime = CLOCK.test(phrase);
 
   const emails = everyEmail({ campaigns, automations });
@@ -144,6 +147,17 @@ export function auditAccount({ site, counts, campaigns = [], automations = [] })
     if (!phraseNamesATime && CLOCK.test(subject))
       note("error", "cadence overclaimed", e.where,
         `names a time, and the site says only "${phrase}"`);
+
+    /* The whole thesis of the project is that a newsletter with nowhere to send
+       people is a newsletter that converts nothing: 228 subscribers, thirty
+       percent opens, and under one percent clicks. The daily brief that has
+       been going out carries exactly one link and it is a WhatsApp number, so
+       the list has never once been pointed at the site it is meant to feed.
+       An email we send that offers no way back is the defect, not an
+       omission. Only checked when the body was actually fetched. */
+    if (domain && typeof e.content === "string" && e.content && !e.content.includes(domain))
+      note("error", "no way back to the site", e.where,
+        `the body links nowhere on ${domain} (${live})`);
   }
 
   for (const a of automations) {

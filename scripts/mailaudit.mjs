@@ -65,7 +65,14 @@ async function everyAutomation() {
   return out;
 }
 
-const campaigns = (await ml("/campaigns?limit=100")).data || [];
+/* The campaigns list omits each email's body, and the body is where the most
+   expensive defect lives, so each one is read on its own. */
+const campaignList = (await ml("/campaigns?limit=100")).data || [];
+const campaigns = [];
+for (const c of campaignList) {
+  const r = await ml(`/campaigns/${c.id}`);
+  campaigns.push(r.data || r);
+}
 const automations = await everyAutomation();
 
 const { findings, examined } = auditAccount({ site, counts, campaigns, automations });

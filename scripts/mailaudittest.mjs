@@ -24,9 +24,12 @@ const ok = (name, cond, detail = "") => {
 };
 
 const SITE = {
+  domain: "investmentsplaybook.com",
   mailerlite: { from: "soliman.hossameldin.aly@gmail.com", fromName: "The Dubai Signal" },
   brief: { phrase: "most weekday mornings" },
 };
+
+const LINKED = '<a href="https://investmentsplaybook.com/playbooks/cap-rate/">Read it</a>';
 const COUNTS = { frameworks: 67, calculators: 8 };
 
 const email = (subject, over = {}) => ({
@@ -41,6 +44,7 @@ const email = (subject, over = {}) => ({
     from_name: "The Dubai Signal",
     subject,
     is_designed: true,
+    content: `<p>${subject}</p>${LINKED}`,
   },
   ...over,
 });
@@ -63,6 +67,7 @@ const campaign = (name, over = {}) => ({
     from_name: "The Dubai Signal",
     subject: name,
     is_designed: true,
+    content: `<p>${name}</p>${LINKED}`,
   }],
   ...over,
 });
@@ -229,6 +234,50 @@ ok("spell(40) is forty", spell(40) === "forty");
   ok("and the skip is written to status.json",
     after.runs[0].job === "mail-audit" && after.runs[0].status === "skipped");
   fs.writeFileSync(path.join(root, "content/status.json"), before);
+}
+
+
+/* ---------------- the email that leads nowhere ----------------
+
+   The daily brief that has actually been going out to 228 people carries one
+   link and it is a WhatsApp number. Thirty percent open it; under one percent
+   click anything; the site it is meant to feed has never once been named in
+   it. That is the defect this project exists to fix, so it is a finding. */
+{
+  const a = clean();
+  a.automations[0].steps[1].email.content =
+    '<p>Ask me what your unit would resell for</p><a href="https://wa.me/971507795060">WhatsApp</a>';
+  const f = auditAccount(a).findings.find((x) => x.kind === "no way back to the site");
+  ok("an email that links nowhere on the site is caught", !!f);
+  ok("and it names the domain it looked for", f && f.detail.includes("investmentsplaybook.com"));
+}
+
+{
+  const a = clean();
+  a.campaigns[0].emails[0].content =
+    '<p>Read the Playbook</p><a href="https://investmentsplaybook.com/playbook">Go</a>';
+  ok("one link home is enough", !kinds(a).includes("no way back to the site"));
+}
+
+/* Both sides. Removing the campaign body from the flattened rows left every
+   assertion above still passing, because nothing here had ever asked a
+   campaign the question. */
+{
+  const a = clean();
+  a.campaigns[0].emails[0].content = '<p>Ask me</p><a href="https://wa.me/971507795060">WhatsApp</a>';
+  const f = auditAccount(a).findings.find((x) => x.kind === "no way back to the site");
+  ok("a campaign that links nowhere is caught too", !!f);
+  ok("and it is reported as the campaign, not an automation", f && f.where.startsWith("campaign"));
+}
+
+/* Bodies are not in the campaigns list, only in the per-campaign fetch. A
+   missing body must not read as an email that links nowhere. */
+{
+  const a = clean();
+  delete a.automations[0].steps[1].email.content;
+  ok("an unfetched body is not treated as a failure", !kinds(a).includes("no way back to the site"));
+  a.automations[0].steps[1].email.content = "";
+  ok("and neither is an empty one", !kinds(a).includes("no way back to the site"));
 }
 
 console.log(`mailaudittest: ${pass} passed, ${fails.length} failed`);
