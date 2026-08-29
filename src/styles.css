@@ -36,6 +36,11 @@
   --ink-soft: #262626;
   --gold: #dc0000;
   --gold-muted: #b00000;
+  /* The brand red clears AA on paper at 5.01 and fails on the dark surfaces:
+     3.45 on the ticker and 4.04 on black, and the muted red used for the
+     footer attribution link came to 2.85. This is the same hue lifted until
+     it is legible on ink, for links sitting on dark ground only. */
+  --gold-on-dark: #ff4d4d;
   --gold-wash: rgba(236, 229, 192, 0.55);
   --cream: #ece5c0;
   --blue: #007ac8;
@@ -190,7 +195,7 @@ main:focus { outline: none; }
   gap: 14px; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #8c8c8c;
   border-left: 1px solid rgba(255, 255, 255, 0.14);
 }
-.ticker__meta a { color: var(--gold); text-decoration: none; }
+.ticker__meta a { color: var(--gold-on-dark); text-decoration: none; }
 
 /* ---------- hero ---------- */
 .hero { padding: 108px 0 84px; }
@@ -453,14 +458,14 @@ input[type="range"] { width: 100%; accent-color: var(--gold); padding: 0; border
 /* ---------- footer ---------- */
 .ftr { padding: 68px 0 34px; }
 .ftr__cols { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 34px; }
-.ftr h2, .ftr h3, .ftr h4 { font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+.ftr h2, .ftr h3, .ftr h4 { font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-on-dark); margin-bottom: 14px; }
 .ftr ul { list-style: none; padding: 0; margin: 0; }
 .ftr li { margin-bottom: 9px; }
 .ftr a { color: #a8a8a8; text-decoration: none; font-size: 13.5px; }
-.ftr a:hover { color: var(--gold); }
+.ftr a:hover { color: var(--gold-on-dark); }
 .ftr__legal { border-top: 1px solid var(--hair-dark); margin-top: 44px; padding-top: 26px; font-size: 12px; color: #8c8c8c; line-height: 1.75; }
 .ftr__legal p { margin: 0 0 12px; max-width: 92ch; }
-.ftr__legal a { color: var(--gold-muted); }
+.ftr__legal a { color: var(--gold-on-dark); }
 
 /* ---------- motion ---------- */
 .rise { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
@@ -808,9 +813,14 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.018em; line-height: 1.1; }
 .beat__l { color: var(--gold); letter-spacing: 0.16em; }
 
 /* ---------- buttons, square and decided ---------- */
+/* Written as `a.btn--solid` rather than `.btn--solid` deliberately. `.article a`
+   sets link colour and outranks a single class, so the primary call to action
+   inside every framework article was rendering its own dark red on its own red
+   background at a contrast ratio of 1.42, which is very close to invisible.
+   Matching that specificity and coming later in the file is what fixes it. */
 .btn { letter-spacing: 0.1em; font-size: 11.5px; }
-.btn--solid { background: var(--gold); border-color: var(--gold); color: #ffffff; }
-.btn--ghost { border-color: var(--ink); color: var(--ink); }
+.btn--solid, a.btn--solid { background: var(--gold); border-color: var(--gold); color: #ffffff; }
+.btn--ghost, a.btn--ghost { border-color: var(--ink); color: var(--ink); }
 .btn--ghost:hover { background: var(--ink); color: #ffffff; border-color: var(--ink); }
 .band--ink .btn--ghost { border-color: rgba(255, 255, 255, 0.5); color: #ffffff; }
 .band--ink .btn--ghost:hover { background: #ffffff; color: #000000; border-color: #ffffff; }

@@ -323,5 +323,55 @@ check("both emitters make the scrolling block focusable and labelled",
   /class="formula" tabindex="0" role="region" aria-label=/.test(docSrc),
   null);
 
+/* ---------- colours that have to be readable ----------
+   Measured on the rendered pages, not inferred from the stylesheet, and three
+   things failed. The worst by a distance: `.article a` sets link colour and
+   outranks a single class, so `.btn--solid` lost its own white and the primary
+   call to action on 137 pages rendered its dark red on its red background at a
+   contrast ratio of 1.42. Near enough invisible, and it had been shipping.
+
+   The other two were the brand red on dark ground: the ticker's Sources link
+   at 3.45 and the footer's required attribution link at 2.85.
+
+   These guard the tokens and the specificity, which is where both bugs lived. */
+{
+  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const lum = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  const ratio = (a, b) => { const x = lum(hex(a)), y = lum(hex(b));
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  // Scan the palette once with a literal regex. Building one from a string
+  // needed four levels of backslash escaping and silently matched nothing,
+  // which read as the token being missing rather than the regex being wrong.
+  const TOKENS = {};
+  for (const m of css.matchAll(/--([a-z-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)) TOKENS[m[1]] = m[2].toLowerCase();
+  const token = (name) => TOKENS[name];
+
+  const PAPER = token("paper"), INK = token("ink"), ONDARK = token("gold-on-dark"), GOLD = token("gold");
+  check("the palette still defines a red for dark surfaces", !!ONDARK, ONDARK);
+  check("that red is readable on the ticker and the footer",
+    ONDARK && ratio(ONDARK, INK) >= 4.5 && ratio(ONDARK, "#000000") >= 4.5,
+    ONDARK && [ratio(ONDARK, INK).toFixed(2), ratio(ONDARK, "#000000").toFixed(2)]);
+  check("the brand red is still readable on paper, where it is used for links",
+    ratio(GOLD, PAPER) >= 4.5, ratio(GOLD, PAPER).toFixed(2));
+  check("body text on paper is comfortably readable",
+    ratio(token("ink"), PAPER) >= 7, ratio(token("ink"), PAPER).toFixed(2));
+  check("muted text on paper still clears the threshold",
+    ratio(token("muted"), PAPER) >= 4.5, ratio(token("muted"), PAPER).toFixed(2));
+
+  // The specificity half. `.btn--solid` alone loses to `.article a`.
+  check("the solid button's colour outranks the article link rule",
+    /a\.btn--solid[^{]*\{[^}]*color:\s*#ffffff/.test(css) ||
+    /\.btn--solid,\s*a\.btn--solid[^{]*\{[^}]*color:\s*#ffffff/.test(css),
+    (css.match(/[^\n]*a\.btn--solid[^\n]*/) || [])[0]);
+
+  // The ticker and footer links must not fall back to the paper reds.
+  check("links on dark ground use the dark-surface red",
+    /\.ticker__meta a \{ color: var\(--gold-on-dark\)/.test(css) &&
+    /\.ftr__legal a \{ color: var\(--gold-on-dark\)/.test(css) &&
+    /\.ftr h2, \.ftr h3, \.ftr h4 \{[^}]*color: var\(--gold-on-dark\)/.test(css),
+    null);
+}
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 process.exit(fails ? 1 : 0);
