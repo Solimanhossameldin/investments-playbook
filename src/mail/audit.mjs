@@ -103,7 +103,18 @@ export function auditAccount({ site, counts, campaigns = [], automations = [] })
   const findings = [];
   const note = (level, kind, where, detail) => findings.push({ level, kind, where, detail });
 
-  const wantName = String((site.mailerlite && site.mailerlite.fromName) || "");
+  const ml = site.mailerlite || {};
+  const wantName = String(ml.fromName || "");
+  /* An account mid-rename legitimately carries two names at once: the daily
+     brief still goes out as the old one, while everything that cannot reach a
+     subscriber before the announcement already uses the new one. A check that
+     insisted on a single name would fire on the intended state, which is how a
+     check stops being read. senderNames is the set that is allowed; fromName,
+     what the mailer itself sends as, must be one of them. Delete the old entry
+     on the day the announcement goes and this tightens by itself. */
+  const allowed = Array.isArray(ml.senderNames) && ml.senderNames.length
+    ? ml.senderNames.map(String)
+    : (wantName ? [wantName] : []);
   const wantFrom = String((site.mailerlite && site.mailerlite.from) || "");
   const phrase = String((site.brief && site.brief.phrase) || "");
   const domain = String(site.domain || "");
@@ -113,13 +124,16 @@ export function auditAccount({ site, counts, campaigns = [], automations = [] })
 
   if (!wantName) note("error", "no sender configured",
     "content/site.json", "mailerlite.fromName is empty, so nothing can be checked against it");
+  else if (allowed.length && !allowed.includes(wantName))
+    note("error", "sender not in the allowed set", "content/site.json",
+      `mailerlite.fromName is "${wantName}", which is not one of ${JSON.stringify(allowed)}`);
 
   for (const e of emails) {
     const live = e.live ? "live" : "not live";
 
-    if (wantName && e.from_name !== wantName)
+    if (allowed.length && !allowed.includes(e.from_name))
       note("error", "wrong sender name", e.where,
-        `sends as "${e.from_name}", should be "${wantName}" (${live})`);
+        `sends as "${e.from_name}", should be one of ${allowed.map((n) => `"${n}"`).join(" or ")} (${live})`);
 
     if (wantFrom && e.from && e.from !== wantFrom)
       note("error", "wrong sender address", e.where,

@@ -20,6 +20,8 @@
   "leadFormId": "196852884221986141",
   "from": "soliman.hossameldin.aly@gmail.com",
   "fromName": "The Dubai Signal",
+  "fromNameNote": "The name the daily brief sends as today. The account is mid-rename: the announcement campaign and all sixteen automation emails already say Investments Playbook, because none of them can reach anyone before the announcement goes out. On the day it is sent, change fromName to Investments Playbook and drop The Dubai Signal from senderNames, and the audit tightens by itself.",
+  "senderNames": ["The Dubai Signal", "Investments Playbook"],
   "briefGroups": [
    "194150618195035167",
    "196852856803821437"

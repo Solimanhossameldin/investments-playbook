@@ -280,6 +280,65 @@ ok("spell(40) is forty", spell(40) === "forty");
   ok("and neither is an empty one", !kinds(a).includes("no way back to the site"));
 }
 
+
+/* ---------------- an account in the middle of a rename ----------------
+
+   On 29 August the account legitimately held two sender names at once: the
+   daily brief still going out as The Dubai Signal, and every automation plus
+   the announcement already saying Investments Playbook, because none of those
+   can reach a subscriber before the announcement does. A check insisting on
+   one name would have fired on the intended state, and a check that fires on
+   the intended state stops being read. */
+const RENAMING = {
+  ...SITE,
+  mailerlite: { ...SITE.mailerlite, senderNames: ["The Dubai Signal", "Investments Playbook"] },
+};
+
+{
+  const a = clean();
+  a.site = RENAMING;
+  a.automations[0].steps[1].from_name = "Investments Playbook";
+  a.automations[0].steps[1].email.from_name = "Investments Playbook";
+  ok("either name in the set is accepted while renaming", !kinds(a).includes("wrong sender name"));
+}
+
+{
+  const a = clean();
+  a.site = RENAMING;
+  a.automations[0].steps[1].from_name = "TOP MASTERS REAL ESTATE L. L. C";
+  a.automations[0].steps[1].email.from_name = "TOP MASTERS REAL ESTATE L. L. C";
+  const f = auditAccount(a).findings.find((x) => x.kind === "wrong sender name");
+  ok("a third name is still caught while renaming", !!f);
+  ok("and the finding lists both permitted names",
+    f && f.detail.includes("The Dubai Signal") && f.detail.includes("Investments Playbook"));
+}
+
+{
+  const a = clean();
+  a.site = { ...SITE, mailerlite: { ...SITE.mailerlite, fromName: "Something Else", senderNames: ["A", "B"] } };
+  ok("the mailer's own name must be in the set it permits",
+    kinds(a).includes("sender not in the allowed set"));
+}
+
+{
+  const a = clean();
+  ok("with no set configured the single name still governs",
+    !kinds(a).includes("wrong sender name"));
+  a.automations[0].steps[1].from_name = "Investments Playbook";
+  a.automations[0].steps[1].email.from_name = "Investments Playbook";
+  ok("and a second name is rejected when no set permits it",
+    kinds(a).includes("wrong sender name"));
+}
+
+/* The repository's own configuration, not a fixture. */
+{
+  const real = JSON.parse(fs.readFileSync(path.join(root, "content/site.json"), "utf8"));
+  const names = real.mailerlite.senderNames;
+  ok("site.json lists the names the account is allowed to send as", Array.isArray(names) && names.length > 0);
+  ok("and the name the mailer uses is one of them", names.includes(real.mailerlite.fromName),
+    `${real.mailerlite.fromName} not in ${JSON.stringify(names)}`);
+}
+
 console.log(`mailaudittest: ${pass} passed, ${fails.length} failed`);
 for (const f of fails) console.log(`  FAIL ${f}`);
 process.exit(fails.length ? 1 : 0);
