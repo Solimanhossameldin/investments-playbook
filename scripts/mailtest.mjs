@@ -15,6 +15,7 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { renderBriefEmail, subjectFor, frameworkFor, esc } from "../src/mail/brief-email.mjs";
+import { isTodaysIssue, dateForms } from "../src/mail/issues.mjs";
 import playbooks from "../content/playbooks.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -167,6 +168,41 @@ t("the preview is never written into the deployed output", () => {
 t("both lists are configured: the existing readers and the site's own signups", () => {
   assert.equal(site.mailerlite.briefGroups.length, 2);
   for (const g of site.mailerlite.briefGroups) assert.match(String(g), /^\d{15,}$/);
+});
+
+
+/* ---------------- not sending the same day twice ----------------
+
+   Something outside this repository drops a draft named "The Dubai Signal –
+   Daily Brief · 29 Aug 2026" into the account each morning. The guard used to
+   match our own exact name and would have walked straight past it. */
+
+t("today's issue is recognised in either spelling of the date", () => {
+  const iso = "2026-08-29";
+  assert.equal(isTodaysIssue({ name: "The Dubai Signal – Daily Brief · 2026-08-29" }, iso), true);
+  assert.equal(isTodaysIssue({ name: "The Dubai Signal – Daily Brief · 29 Aug 2026" }, iso), true);
+  assert.deepEqual(dateForms(iso), ["2026-08-29", "29 Aug 2026"]);
+});
+
+t("a brief made today counts even if its name says nothing about the date", () => {
+  assert.equal(isTodaysIssue({ name: "Daily Brief", created_at: "2026-08-29 04:48:58" }, "2026-08-29"), true);
+  assert.equal(isTodaysIssue({ name: "Daily Brief", created_at: "2026-08-28 04:48:58" }, "2026-08-29"), false);
+});
+
+t("yesterday's issue is not today's", () => {
+  assert.equal(isTodaysIssue({ name: "The Dubai Signal – Daily Brief · 28 Aug 2026" }, "2026-08-29"), false);
+  assert.equal(isTodaysIssue({ name: "The Dubai Signal – Daily Brief · 2026-08-28" }, "2026-08-29"), false);
+});
+
+t("a campaign that is not the brief is never mistaken for it", () => {
+  assert.equal(isTodaysIssue({ name: "Rename and site announcement", created_at: "2026-08-29 10:00:00" }, "2026-08-29"), false);
+  assert.equal(isTodaysIssue({ name: "", created_at: "2026-08-29 10:00:00" }, "2026-08-29"), false);
+  assert.equal(isTodaysIssue({}, "2026-08-29"), false);
+});
+
+t("the month spelling is right at both ends of the year", () => {
+  assert.deepEqual(dateForms("2026-01-01"), ["2026-01-01", "1 Jan 2026"]);
+  assert.deepEqual(dateForms("2026-12-31"), ["2026-12-31", "31 Dec 2026"]);
 });
 
 console.log(`\nmail: ${n} checks passed. Email renders ${brief.items.length} items, all linked to a framework.`);

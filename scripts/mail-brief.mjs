@@ -35,6 +35,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderBriefEmail, subjectFor } from "../src/mail/brief-email.mjs";
+import { isTodaysIssue } from "../src/mail/issues.mjs";
 import playbooks from "../content/playbooks.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -118,15 +119,24 @@ if (!groups.length) stop("failed", "No mailerlite.briefGroups configured in site
 
 const name = `The Dubai Signal – Daily Brief · ${today}`;
 
-const existing = await ml("GET", `/campaigns?filter[status]=draft&limit=50`)
-  .then((r) => (r.data || []).find((c) => c.name === name))
-  .catch(() => null);
-const alreadySent = await ml("GET", `/campaigns?filter[status]=sent&limit=25`)
-  .then((r) => (r.data || []).find((c) => c.name === name))
-  .catch(() => null);
+/* Today's issue is recognised by what it is, not by what we would have called
+   it: see src/mail/issues.mjs for why. Ours we update. Anyone else's we leave
+   alone and stop, because overwriting a draft a person may be part way through
+   editing is worse than not sending. */
+const drafts = await ml("GET", `/campaigns?filter[status]=draft&limit=50`)
+  .then((r) => r.data || []).catch(() => []);
+const sent = await ml("GET", `/campaigns?filter[status]=sent&limit=25`)
+  .then((r) => r.data || []).catch(() => []);
 
+const alreadySent = sent.find((c) => isTodaysIssue(c, today));
 if (alreadySent) {
-  stop("skipped", `An issue named "${name}" has already been sent. Not sending it twice.`);
+  stop("skipped", `"${alreadySent.name}" has already been sent today. Not sending a second issue.`);
+}
+
+const existing = drafts.find((c) => c.name === name);
+const foreign = drafts.find((c) => c.name !== name && isTodaysIssue(c, today));
+if (foreign) {
+  stop("skipped", `A draft for today already exists as "${foreign.name}", made by something other than this job. Leaving it alone rather than sending twice.`);
 }
 
 const html = renderBriefEmail({ brief, site, slugs });

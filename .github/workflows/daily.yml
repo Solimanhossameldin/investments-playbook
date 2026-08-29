@@ -64,6 +64,17 @@ jobs:
         run: node scripts/mail-brief.mjs
         continue-on-error: true
 
+      # The site will not let itself publish a stale count or a cadence it is
+      # not keeping. The mailing list had no such guard, and on 29 August every
+      # one of the sixteen automation emails was set to send from a different
+      # company's name. Read-only: it reports and never edits the account,
+      # because sender identity is not the build's to change.
+      - name: Audit the mailing list
+        env:
+          MAILERLITE_API_KEY: ${{ secrets.MAILERLITE_API_KEY }}
+        run: node scripts/mailaudit.mjs
+        continue-on-error: true
+
       - name: Commit the day's content
         run: |
           git config user.name "Investments Playbook bot"
