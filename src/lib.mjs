@@ -222,13 +222,34 @@ export function cadence(briefs = [], nowISO, opts = {}) {
   //
   // byEmail is the ground truth about publication. The archive lagging is a
   // separate fact, stated separately, on the page where the archive lives.
+  // The phrase itself is configuration, because the site cannot observe the
+  // mail account and must not assert a precision it has no way to check.
+  //
+  // It said "every weekday at 7am GST" on 140 pages on the strength of a
+  // verbal report that it went out daily. The campaign record showed three
+  // issues in that week, at 06:48, 17:58 and 12:03. The weaker sentence is
+  // true today; strengthen it in site.json on the day the mailer is switched
+  // from draft to schedule, and not before.
   if (opts.byEmail) {
-    return { live: true, phrase: "every weekday at 7am GST", short: "every weekday at 7am GST" };
+    const phrase = opts.phrase || "most weekday mornings";
+    return { live: true, phrase, short: phrase, next: nextLine(phrase) };
   }
   const st = briefStatus(briefs, nowISO);
   return st.behind
-    ? { live: false, phrase: "weekday mornings at 7am GST, paused at the moment", short: "paused at the moment" }
-    : { live: true, phrase: "every weekday at 7am GST", short: "every weekday at 7am GST" };
+    ? { live: false, phrase: "weekday mornings at 7am GST, paused at the moment",
+        short: "paused at the moment", next: "You will get the next issue when publication resumes." }
+    : { live: true, phrase: "every weekday at 7am GST", short: "every weekday at 7am GST",
+        next: nextLine("every weekday at 7am GST") };
+}
+
+/* The sentence a reader sees the instant after handing over an email address.
+   It was hard coded to "The next brief lands at 7am GST" in four templates,
+   which is a precise promise made in the worst possible place to be wrong.
+   It now takes its precision from the advertised phrase: name a time only
+   where the site is claiming one. */
+export function nextLine(phrase) {
+  const at = String(phrase).match(/\b(\d{1,2}(?::\d{2})?\s*(?:am|pm)\s*\w*)/i);
+  return at ? `The next brief lands at ${at[1]}.` : "The next issue goes out on a weekday morning.";
 }
 
 export function weekdaysBetween(fromISO, toISO) {

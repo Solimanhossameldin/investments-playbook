@@ -82,17 +82,17 @@ function briefLate(briefs, site) {
   return byEmail
     ? `<div class="callout" style="max-width:var(--prose);margin:0 0 30px">
     <b>The archive here is behind the email</b>
-    ${what} The brief itself goes out every weekday morning as usual; what lags is this page, because the archive is written by a pipeline that is not currently running. Subscribing gets you the issues on time. This notice is generated from the issues themselves and disappears when the archive catches up.
+    ${what} The brief itself goes out ${esc(cadence(briefs, undefined, site.brief).phrase)} as usual; what lags is this page, because the archive is written by a pipeline that is not currently running. Subscribing gets you the issues on time. This notice is generated from the issues themselves and disappears when the archive catches up.
   </div>`
     : `<div class="callout" style="max-width:var(--prose);margin:0 0 30px">
     <b>The brief is not currently publishing to schedule</b>
-    ${what} The cadence advertised on this site is every weekday at 7am GST, and it is not being met at the moment. This notice is generated from the issues themselves, so it disappears when publication resumes.
+    ${what} The cadence advertised on this site is ${esc(cadence(briefs, undefined, site.brief).phrase)}, and it is not being met at the moment. This notice is generated from the issues themselves, so it disappears when publication resumes.
   </div>`;
 }
 
 export function home({ site, market, brief, briefs = [], playbooks, calculators, wireHtml = "", pathsHtml = "" }) {
   const cad = cadence(briefs, undefined, site.brief);
-  const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
+  const nextLine = cad.next;
   const cards = playbooks.slice(0, 9);
   const briefBlock = brief
     ? `<div class="brief-head">
@@ -127,7 +127,7 @@ export function home({ site, market, brief, briefs = [], playbooks, calculators,
     : `<h2 class="brief-title">The first issue has not been published yet</h2>
        <p class="brief-sub">${
          cad.live
-           ? "Subscribe and the first issue lands at 7am GST."
+           ? `Subscribe and ${cad.next.charAt(0).toLowerCase() + cad.next.slice(1)}`
            : "Subscribe and you will get the first issue when publication starts."
        }</p>
        <div class="gate__box" style="max-width:520px;margin-top:24px"><h2>Get the brief</h2><p>${esc(cad.phrase[0].toUpperCase() + cad.phrase.slice(1))}.</p>${briefForm(site, "gate-form", nextLine, "", "home-no-issue")}</div>`;
@@ -321,7 +321,7 @@ ${authorBand(site)}`;
 
 export function briefIndex({ site, briefs }) {
   const cad = cadence(briefs, undefined, site.brief);
-  const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
+  const nextLine = cad.next;
   let lastMonth = "";
   const rows = briefs
     .map((b) => {
@@ -338,7 +338,7 @@ export function briefIndex({ site, briefs }) {
 
   const body = `<section class="band"><div class="wrap">
   <div class="section-head">
-    <p class="eyebrow">${esc(cad.live ? "Published every weekday, 7am GST" : "Weekday mornings, 7am GST. Paused at the moment")}</p>
+    <p class="eyebrow">${esc(cad.live ? `Published ${cad.phrase}` : "Weekday mornings. Paused at the moment")}</p>
     <h1>The Brief</h1>
     <p>Three items. Global markets, property, and one number worth knowing. Written from the figures on the market data page, every one of which carries its own source.</p>
     <p style="font-size:14px"><a href="/record/">Every call this brief makes is scored on The Record</a>, including the ones that went wrong, along with every correction issued.</p>
@@ -353,7 +353,7 @@ export function briefIndex({ site, briefs }) {
 
 export function briefPage({ site, brief, prev, next, briefs = [], playbooks = [] }) {
   const cad = cadence(briefs, undefined, site.brief);
-  const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
+  const nextLine = cad.next;
   const numbers = (brief.numbers || []).length
     ? `<div class="table-scroll" style="margin:34px 0 10px;max-width:var(--prose)"><table class="tbl"><caption>The numbers</caption>
     <thead><tr><th>Measure</th><th class="n">Level</th><th>Context</th></tr></thead>
@@ -456,7 +456,7 @@ ${captureBlock(site, { source: "playbooks-index", heading: "Take the whole libra
 
 export function playbookPage({ site, pb, calcName, related = [], briefs = [], liveBand = "" }) {
   const cad = cadence(briefs, undefined, site.brief);
-  const nextLine = cad.live ? "The next brief lands at 7am GST." : "You will get the next issue when publication resumes.";
+  const nextLine = cad.next;
   const jump = [
     ["the-rule", "The rule"],
     pb.formula ? ["the-arithmetic", "The arithmetic"] : null,

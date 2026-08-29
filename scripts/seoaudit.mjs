@@ -443,6 +443,32 @@ for (const p of indexable) if (!inMap.has(p.url)) note("error", "missing from si
   console.log(`\nTables: ${tables}, all inside a scrolling wrapper.`);
 }
 
+/* ---------- the cadence the site claims ---------- */
+// "every weekday at 7am GST" went out on 140 pages because a boolean was set
+// on a verbal report. The campaign record for that week showed three issues,
+// at 06:48, 17:58 and 12:03. A promise about when something arrives is one a
+// reader can check, and this one was checkable and wrong.
+//
+// So the phrase is configuration, and no page may state a precision the
+// configuration does not. If site.json does not name a time, no built page
+// names one either.
+{
+  const phrase = String((site.brief && site.brief.phrase) || "");
+  const configNamesATime = /\d{1,2}(:\d{2})?\s*(am|pm)/i.test(phrase);
+  if (!configNamesATime) {
+    const offenders = [];
+    for (const p of pages.values()) {
+      const main = (fs.readFileSync(p.file, "utf8").match(/<main\b[^>]*>([\s\S]*?)<\/main>/i) || ["", ""])[1];
+      if (/\b\d{1,2}(:\d{2})?\s*(am|pm)\s*(GST|Gulf)/i.test(main)) offenders.push(p.url);
+    }
+    if (offenders.length) {
+      note("error", "cadence overclaimed",
+        `${offenders.length} page(s) name a delivery time while site.json says only "${phrase}": ${offenders.slice(0, 3).join(", ")}`);
+    }
+  }
+  console.log(`\nCadence: the site says the brief goes out ${phrase || "(unset)"}.`);
+}
+
 /* ---------- third parties the privacy page names ---------- */
 // The privacy page said "Fonts are served by Google Fonts, which will see
 // your IP address" for a week after the fonts were self-hosted and Google
