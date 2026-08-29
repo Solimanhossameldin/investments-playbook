@@ -239,5 +239,66 @@ check(
   "measured: it overflows up to 374px, so a lower cap leaves 360 and 365 broken"
 );
 
+/* ---------- the channel that brought them ----------
+   Asserting the source contains the right characters proves nothing about
+   what it does. The block is lifted out of app.js and executed against stub
+   globals, so these are the shipped lines running rather than a copy that can
+   drift away from them. */
+const appSrc = fs.readFileSync(path.join(root, "src/app/app.js"), "utf8");
+const chanBlock = appSrc.match(/\/\* -+ the channel that brought them[\s\S]*?\n  \}\)\(\);/);
+check("the channel block is still in app.js under its own heading", !!chanBlock, null);
+
+function storedChannel(search, already) {
+  const store = already === undefined ? {} : { ip_channel: already };
+  const localStorage = {
+    getItem: (k) => (k in store ? store[k] : null),
+    setItem: (k, v) => { store[k] = String(v); },
+  };
+  new Function("location", "localStorage", "URLSearchParams", chanBlock[0])(
+    { search }, localStorage, URLSearchParams
+  );
+  return store.ip_channel;
+}
+
+check("no campaign tag stores nothing at all",
+  storedChannel("") === undefined && storedChannel("?page=2") === undefined,
+  JSON.stringify([storedChannel(""), storedChannel("?page=2")]));
+
+check("utm_source is captured",
+  storedChannel("?utm_source=linkedin") === "linkedin", storedChannel("?utm_source=linkedin"));
+
+check("ref wins over utm_source, because a referral is the more specific claim",
+  storedChannel("?utm_source=linkedin&ref=soliman") === "soliman",
+  storedChannel("?utm_source=linkedin&ref=soliman"));
+
+check("medium and campaign are kept alongside the source",
+  storedChannel("?utm_source=linkedin&utm_medium=post&utm_campaign=launch") === "linkedin / post / launch",
+  storedChannel("?utm_source=linkedin&utm_medium=post&utm_campaign=launch"));
+
+// First touch is the whole point. Without it the channel is whatever the
+// reader happened to have in the address bar on the day they subscribed,
+// which for anyone who read more than one page is nothing.
+check("first touch wins, a later visit does not overwrite it",
+  storedChannel("?utm_source=twitter", "linkedin") === "linkedin",
+  storedChannel("?utm_source=twitter", "linkedin"));
+
+// A crafted link must not be able to write arbitrary text into a lead record.
+check("a hostile value is reduced to a safe one",
+  storedChannel('?utm_source=' + encodeURIComponent('<script>alert(1)</script>')) === "script-alert-1-script",
+  storedChannel('?utm_source=' + encodeURIComponent('<script>alert(1)</script>')));
+
+check("an overlong value is cut to forty characters",
+  storedChannel("?utm_source=" + "a".repeat(200)) === "a".repeat(40),
+  String(storedChannel("?utm_source=" + "a".repeat(200)) || "").length);
+
+check("a value that cleans away to nothing stores nothing",
+  storedChannel("?utm_source=" + encodeURIComponent("!!!")) === undefined,
+  storedChannel("?utm_source=" + encodeURIComponent("!!!")));
+
+// The capture is worthless if the forms do not read it back.
+check("both forms send the stored channel with the lead source",
+  (appSrc.match(/channel\(\) \? " \/ " \+ channel\(\) : ""/g) || []).length === 2,
+  (appSrc.match(/channel\(\) \? " \/ " \+ channel\(\) : ""/g) || []).length);
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 process.exit(fails ? 1 : 0);

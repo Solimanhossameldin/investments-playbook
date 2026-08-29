@@ -174,6 +174,49 @@
     }
   } catch (e) {}
 
+  /* ---------------- the channel that brought them ----------------
+     `lead_source` names the page that earned a signup. It does not name the
+     channel that produced the visit, and only the six field lead form ever
+     looked, reading utm_source at the moment of submit. So a reader who
+     arrives on a framework from LinkedIn, reads three more and subscribes on
+     the fourth had no query string left by then, and the channel was lost on
+     exactly the signups worth tracing.
+
+     First touch is captured on arrival and kept. Somebody who came from a
+     forwarded link and returns a week later by typing the address is still a
+     reader that link produced, and the page that earned the signup is a
+     different question the source string already answers.
+
+     Anything arriving in a URL is untrusted. The value is lower cased,
+     reduced to a conservative character set and cut to forty characters
+     before it is stored, so a crafted link cannot write arbitrary text into
+     a lead record. */
+  (function () {
+    var clean = function (v) {
+      return String(v || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 40);
+    };
+    var params = new URLSearchParams(location.search);
+    var parts = [
+      clean(params.get("ref") || params.get("utm_source")),
+      clean(params.get("utm_medium")),
+      clean(params.get("utm_campaign")),
+    ].filter(Boolean);
+    if (!parts.length) return;
+    try {
+      if (!localStorage.getItem("ip_channel")) {
+        localStorage.setItem("ip_channel", parts.join(" / "));
+      }
+    } catch (e) {}
+  })();
+
+  function channel() {
+    try { return localStorage.getItem("ip_channel") || ""; } catch (e) { return ""; }
+  }
+
   /* ---------------- MailerLite ---------------- */
   function mlPost(formId, fields) {
     var fd = new FormData();
@@ -205,7 +248,8 @@
       var intent = form.getAttribute("data-intent");
       mlPost(ML.brief, {
         email: email,
-        lead_source: "investmentsplaybook.com" + (src ? " / " + src : " / brief"),
+        lead_source: "investmentsplaybook.com" + (src ? " / " + src : " / brief")
+          + (channel() ? " / " + channel() : ""),
         investor_intent: intent || ""
       }).then(function () {
         try { localStorage.setItem("ip_subscribed", "1"); } catch (e) {}
@@ -253,7 +297,6 @@
       ev.preventDefault();
       var g = function (n) { var el = form.querySelector('[name=' + n + ']'); return el ? el.value.trim() : ""; };
       busy(form, true, "Sending the Playbook");
-      var params = new URLSearchParams(location.search);
       mlPost(ML.lead, {
         name: g("name"),
         email: g("email"),
@@ -262,7 +305,7 @@
         investor_intent: g("intent"),
         lead_source: "investmentsplaybook.com"
           + (form.getAttribute("data-source") ? " / " + form.getAttribute("data-source") : "")
-          + (params.get("utm_source") ? " / " + params.get("utm_source") : ""),
+          + (channel() ? " / " + channel() : ""),
         lead_status: "New",
       }).then(function () {
         var wrap = form.parentNode;

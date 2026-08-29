@@ -33,11 +33,11 @@ Every other figure is fetched by the build server, not by you.
 
 ## Local storage
 
-If you subscribe from the homepage, the site sets a single flag in your browser's local storage so that the rest of the brief stays visible on your next visit. It contains no personal data and never leaves your browser. Clearing your browser data removes it.
+The site stores two small values in your browser's local storage and nothing else. One is a flag set when you subscribe, so that the rest of the brief stays visible on your next visit. The other records how you first arrived, if you followed a link carrying a campaign or referral tag, so that a signup can be traced to the link that produced it rather than to nothing at all. That value is taken from the address you arrived on, is reduced to letters, digits and dashes, and is capped at forty characters. Neither contains personal data, neither is readable by any other site, and clearing your browser data removes both.
 
 ## Analytics and tracking
 
-This site does not run third party advertising trackers. Any analytics in use are configured for aggregate traffic measurement only.
+This site runs no analytics at all. No Google Analytics, no third party advertising trackers, no pixels, and no script that reports your visit anywhere. If that ever changes, this page will say what was added and what it collects before it is switched on.
 
 ## Your rights
 
@@ -45,7 +45,7 @@ You can unsubscribe from any email with one click, using the link at the bottom 
 
 ## Cookies
 
-The site sets no advertising or tracking cookies of its own. Fonts are served by Google Fonts, which will see your IP address as part of delivering them.
+The site sets no advertising or tracking cookies of its own, and no cookies at all. Fonts are served from this domain rather than from a font network, so loading a page on this site tells no third party that you did.
 
 ## Changes
 

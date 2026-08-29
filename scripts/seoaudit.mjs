@@ -412,6 +412,56 @@ for (const p of indexable) if (!inMap.has(p.url)) note("error", "missing from si
   console.log(`\nFrameworks: ${cited.size}, all cited by at least one other framework's prose.`);
 }
 
+/* ---------- third parties the privacy page names ---------- */
+// The privacy page said "Fonts are served by Google Fonts, which will see
+// your IP address" for a week after the fonts were self-hosted and Google
+// stopped seeing anything. A privacy page is the one page on a site where a
+// stale sentence is not a typo, and nothing was checking it.
+//
+// So each provider the page names is paired with the host a browser would
+// have to contact for that claim to be true, and the built pages are searched
+// for it. Naming a provider the site no longer talks to is an error; talking
+// to one the page does not name is the more serious error and is checked in
+// the same pass.
+{
+  const PROVIDERS = [
+    ["Google Fonts", "fonts.googleapis.com"],
+    ["gold-api.com", "api.gold-api.com"],
+    ["Kraken", "api.kraken.com"],
+    ["MailerLite", "assets.mailerlite.com"],
+    ["ExchangeRate-API", "open.er-api.com"],
+  ];
+  const privacy = pages.get("/privacy/");
+  if (!privacy) note("error", "privacy missing", "/privacy/ was not built");
+  else {
+    // Only the page's own prose counts. The footer carries a site-wide data
+    // attribution block naming every provider the build ever touches, which
+    // would make this check pass on every page and mean nothing, the same
+    // trap the inbound-link graph fell into.
+    const text = (fs.readFileSync(privacy.file, "utf8")
+      .match(/<main\b[^>]*>([\s\S]*?)<\/main>/i) || ["", ""])[1];
+    // What a browser actually reaches out to, taken from the built output
+    // rather than from anyone's memory of it.
+    let contacted = "";
+    for (const p of pages.values()) contacted += fs.readFileSync(p.file, "utf8");
+    for (const asset of ["app.js", "app.min.js"]) {
+      const f = path.join(dist, asset);
+      if (fs.existsSync(f)) contacted += fs.readFileSync(f, "utf8");
+    }
+    for (const f of fs.readdirSync(dist)) {
+      if (/^app\.[a-f0-9]+\.js$/.test(f)) contacted += fs.readFileSync(path.join(dist, f), "utf8");
+    }
+    for (const [name, host] of PROVIDERS) {
+      const named = text.includes(name);
+      const reached = contacted.includes(host);
+      if (named && !reached)
+        note("error", "stale privacy claim", `/privacy/ names ${name} but nothing in the build contacts ${host}`);
+      if (!named && reached)
+        note("error", "undisclosed third party", `the build contacts ${host} and /privacy/ does not name ${name}`);
+    }
+  }
+}
+
 /* ---------- counts stated in prose ---------- */
 // The about page said "Six tools" for as long as there were eight, because a
 // number typed into prose has nothing holding it to the thing it counts. The
