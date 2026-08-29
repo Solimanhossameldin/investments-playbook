@@ -259,7 +259,7 @@ main:focus { outline: none; }
 .cx-live .tbl tbody th { font-weight: 400; color: #ffffff; }
 .cx-live .cx-note { color: var(--muted-dark); font-size: 12.5px; padding-left: 14px; }
 .cx-live .cx-cap { color: var(--muted-dark); font-size: 12px; line-height: 1.6; margin: 16px 0 0; }
-.cx-live .cx-cap a { color: var(--gold); }
+.cx-live .cx-cap a { color: var(--gold-on-dark); }
 .cx-live--stale { opacity: 0.82; }
 @media (max-width: 560px) {
   .cx-live { padding: 24px 20px; }
@@ -811,6 +811,24 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.018em; line-height: 1.1; }
 .band--ink .eyebrow, .band--ink-deep .eyebrow { color: #ff4d4d; }
 .band--ink .eyebrow::before, .band--ink-deep .eyebrow::before { background: #ff4d4d; }
 .beat__l { color: var(--gold); letter-spacing: 0.16em; }
+
+/* ---------- colours that only work on the surface they were chosen for ----------
+   Measured on the rendered pages. The paper reds and the paper muted grey are
+   correct on paper and fail on the ink bands: the split line came to 2.43, the
+   form disclaimer to 3.36 and the large stat figures to 3.45. Scoped rather
+   than replaced, because the same tokens pass on light and `.res--hero .res__v`
+   uses the brand red on a light band where it is fine.
+
+   The market data table had the reverse problem. Its up, down and flat colours
+   were chosen for the dark ticker, where they clear 4.5 comfortably, and the
+   table reuses the same classes on white where they come to 2.74, 3.87 and
+   3.36. On a page whose entire job is conveying numbers. */
+.band--ink .q__split { color: var(--gold-on-dark); }
+.band--ink .form-note { color: var(--muted-dark); }
+.band--ink .stat__v, .band--ink .lead__stat b { color: var(--gold-on-dark); }
+.tbl .up { color: var(--pos); }
+.tbl .dn { color: var(--neg); }
+.tbl .flat { color: var(--muted); }
 
 /* ---------- buttons, square and decided ---------- */
 /* Written as `a.btn--solid` rather than `.btn--solid` deliberately. `.article a`

@@ -365,6 +365,30 @@ check("both emitters make the scrolling block focusable and labelled",
     /\.btn--solid,\s*a\.btn--solid[^{]*\{[^}]*color:\s*#ffffff/.test(css),
     (css.match(/[^\n]*a\.btn--solid[^\n]*/) || [])[0]);
 
+  // Everything else that sits on an ink band. Each of these was measured
+  // failing on a rendered page: 2.43, 3.36, 3.45 and 4.04 respectively.
+  check("text on the ink bands uses colours chosen for a dark surface",
+    /\.band--ink \.q__split \{ color: var\(--gold-on-dark\)/.test(css) &&
+    /\.band--ink \.form-note \{ color: var\(--muted-dark\)/.test(css) &&
+    /\.band--ink \.stat__v, \.band--ink \.lead__stat b \{ color: var\(--gold-on-dark\)/.test(css) &&
+    /\.cx-live \.cx-cap a \{ color: var\(--gold-on-dark\)/.test(css),
+    null);
+
+  // The market data table reuses the ticker's classes on a white background,
+  // where the ticker's colours come to 2.74, 3.87 and 3.36.
+  check("the data table's up, down and flat are the versions that work on white",
+    /\.tbl \.up \{ color: var\(--pos\)/.test(css) &&
+    /\.tbl \.dn \{ color: var\(--neg\)/.test(css) &&
+    /\.tbl \.flat \{ color: var\(--muted\)/.test(css),
+    null);
+  check("and those three are readable on white",
+    ratio(token("pos"), "#ffffff") >= 4.5 && ratio(token("neg"), "#ffffff") >= 4.5 &&
+    ratio(token("muted"), "#ffffff") >= 4.5,
+    [ratio(token("pos"), "#ffffff").toFixed(2), ratio(token("neg"), "#ffffff").toFixed(2), ratio(token("muted"), "#ffffff").toFixed(2)]);
+  check("muted text on ink uses the lighter grey",
+    ratio(token("muted-dark"), token("ink")) >= 4.5,
+    ratio(token("muted-dark"), token("ink")).toFixed(2));
+
   // The ticker and footer links must not fall back to the paper reds.
   check("links on dark ground use the dark-surface red",
     /\.ticker__meta a \{ color: var\(--gold-on-dark\)/.test(css) &&
