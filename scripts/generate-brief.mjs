@@ -115,6 +115,11 @@ Also produce:
 title: two to four words, a hook, no colon, no full stop.
 emoji: one, relevant, never a rocket and never a money bag.
 subtitle: one sentence under twenty words.
+subject: the email subject line, under seventy characters. State the most
+surprising number or the sharpest tension in the issue. No colons, no
+"Daily Brief", no date, no emoji. Two short sentences is allowed and often
+better than one long one. Examples of the register: "Prices rose 4%. Per
+square foot, they fell." and "Rents fell for the first time in five years."
 numbers_block: four to six entries drawn ONLY from the DATA block. label, value as a display string, and a note of under twelve words giving context.
 calendar: two to four entries for the week ahead. Only events on a known recurring schedule, for example a scheduled central bank meeting or a monthly data release. If unsure, return an empty array.`;
 
@@ -122,6 +127,10 @@ const SCHEMA_PROPS = {
   title: { type: "string" },
   emoji: { type: "string" },
   subtitle: { type: "string" },
+  // The email subject line. The title is written for a page, where it sits
+  // under a masthead that supplies the context. A subject line has none of
+  // that and competes in an inbox, so it is asked for separately.
+  subject: { type: "string" },
   items: {
     type: "array",
     items: {
@@ -256,6 +265,7 @@ const record = {
   title,
   emoji: (brief.emoji || "📈").slice(0, 4),
   subtitle: clean(brief.subtitle),
+  subject: clean(brief.subject),
   readMinutes: Math.max(2, Math.round(words / 240)),
   author: "Soliman Hossam Eldin",
   items: brief.items,

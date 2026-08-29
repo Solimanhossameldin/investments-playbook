@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "Only 0 of 19 market figures are fresh. Not mailing a numbers block that is mostly stale.",
+   "ranAt": "2026-08-29T18:39:50.515Z"
+  },
+  {
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "19 figures refreshed",
    "ranAt": "2026-08-26T16:46:39.316Z"
-  },
-  {
-   "job": "fetch-wire",
-   "result": "failed",
-   "detail": "0 items from 0 of 14 feeds. Down: fed-monetary (fetch failed); fed-all (fetch failed); fed-speeches (fetch failed); bls (fetch failed); bea (fetch failed); treasury (fetch failed); sec (fetch failed); ecb (fetch failed); boe (fetch failed); bis (fetch failed); imf (fetch failed); uae-cb (fetch failed); dubai-media (fetch failed); wam (fetch failed)",
-   "at": "2026-08-26T16:21:39.645Z"
   }
  ]
 }

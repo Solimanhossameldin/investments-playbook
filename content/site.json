@@ -1,72 +1,82 @@
 {
-  "name": "Investments Playbook",
-  "domain": "investmentsplaybook.com",
-  "origin": "https://investmentsplaybook.com",
-  "tagline": "The arithmetic behind every investment decision.",
-  "description": "A daily brief on global markets and property, a library of the frameworks that actually work, and the calculators that turn them into your number.",
-  "author": {
-    "name": "Soliman Hossam Eldin",
-    "role": "Head of Sales and Marketing, OneLink Properties, Dubai",
-    "years": "13+ years in UAE real estate",
-    "initials": "SH",
-    "linkedin": "https://www.linkedin.com/in/solimanhossameldin",
-    "site": "https://solimanhossameldin.com",
-    "bio": "Soliman has spent thirteen years inside the UAE property market, on the side of the table that sees the numbers before the brochure does. Investments Playbook is where the arithmetic gets published rather than pitched."
-  },
-  "mailerlite": {
-    "account": "2532906",
-    "briefFormId": "196852881104570257",
-    "leadFormId": "196852884221986141"
-  },
-  "disclaimer": "Investments Playbook publishes educational research and general information. Nothing on this site is personal investment advice, a solicitation, or a recommendation to buy or sell any asset. Property and securities can fall in value. Past performance does not predict future returns. Figures shown are indicative and may be delayed. Always take regulated professional advice before acting.",
-  "attribution": "Market figures on this site come from FRED at the Federal Reserve Bank of St. Louis, carrying series published by the U.S. Treasury, the Federal Reserve Board, the Bureau of Labor Statistics, the Energy Information Administration and Freddie Mac, plus ExchangeRate-API, gold-api.com and Kraken. Every figure carries its own source and timestamp.",
-  "nav": [
-    {
-      "href": "/brief/",
-      "label": "The Brief"
-    },
-    {
-      "href": "/wire/",
-      "label": "The Wire"
-    },
-    {
-      "href": "/communities/",
-      "label": "Communities"
-    },
-    {
-      "href": "/playbooks/",
-      "label": "Playbooks"
-    },
-    {
-      "href": "/calculators/",
-      "label": "Calculators"
-    },
-    {
-      "href": "/glossary/",
-      "label": "Glossary"
-    },
-    {
-      "href": "/chartbook/",
-      "label": "Chartbook"
-    },
-    {
-      "href": "/data/",
-      "label": "Market Data"
-    },
-    {
-      "href": "/about/",
-      "label": "About"
-    }
+ "name": "Investments Playbook",
+ "domain": "investmentsplaybook.com",
+ "origin": "https://investmentsplaybook.com",
+ "tagline": "The arithmetic behind every investment decision.",
+ "description": "A daily brief on global markets and property, a library of the frameworks that actually work, and the calculators that turn them into your number.",
+ "author": {
+  "name": "Soliman Hossam Eldin",
+  "role": "Head of Sales and Marketing, OneLink Properties, Dubai",
+  "years": "13+ years in UAE real estate",
+  "initials": "SH",
+  "linkedin": "https://www.linkedin.com/in/solimanhossameldin",
+  "site": "https://solimanhossameldin.com",
+  "bio": "Soliman has spent thirteen years inside the UAE property market, on the side of the table that sees the numbers before the brochure does. Investments Playbook is where the arithmetic gets published rather than pitched."
+ },
+ "mailerlite": {
+  "account": "2532906",
+  "briefFormId": "196852881104570257",
+  "leadFormId": "196852884221986141",
+  "from": "soliman.hossameldin.aly@gmail.com",
+  "fromName": "The Dubai Signal",
+  "briefGroups": [
+   "194150618195035167",
+   "196852856803821437"
   ],
-  "heroGlobe": false,
-  "contact": {
-    "email": "hello@investmentsplaybook.com",
-    "whatsapp": "",
-    "booking": "",
-    "responseHours": 48
+  "briefGroupNames": [
+   "Newsletter – Market Insights",
+   "IP: Daily Brief"
+  ]
+ },
+ "disclaimer": "Investments Playbook publishes educational research and general information. Nothing on this site is personal investment advice, a solicitation, or a recommendation to buy or sell any asset. Property and securities can fall in value. Past performance does not predict future returns. Figures shown are indicative and may be delayed. Always take regulated professional advice before acting.",
+ "attribution": "Market figures on this site come from FRED at the Federal Reserve Bank of St. Louis, carrying series published by the U.S. Treasury, the Federal Reserve Board, the Bureau of Labor Statistics, the Energy Information Administration and Freddie Mac, plus ExchangeRate-API, gold-api.com and Kraken. Every figure carries its own source and timestamp.",
+ "nav": [
+  {
+   "href": "/brief/",
+   "label": "The Brief"
   },
-  "brief": {
-    "byEmail": true,
-    "note": "The brief is published every weekday by email. Set byEmail to false if that ever stops. The web archive lags whenever the drafting pipeline is not running, and the site says so separately."
+  {
+   "href": "/wire/",
+   "label": "The Wire"
+  },
+  {
+   "href": "/communities/",
+   "label": "Communities"
+  },
+  {
+   "href": "/playbooks/",
+   "label": "Playbooks"
+  },
+  {
+   "href": "/calculators/",
+   "label": "Calculators"
+  },
+  {
+   "href": "/glossary/",
+   "label": "Glossary"
+  },
+  {
+   "href": "/chartbook/",
+   "label": "Chartbook"
+  },
+  {
+   "href": "/data/",
+   "label": "Market Data"
+  },
+  {
+   "href": "/about/",
+   "label": "About"
   }
+ ],
+ "heroGlobe": false,
+ "contact": {
+  "email": "hello@investmentsplaybook.com",
+  "whatsapp": "",
+  "booking": "",
+  "responseHours": 48
+ },
+ "brief": {
+  "byEmail": true,
+  "note": "The brief is published every weekday by email. Set byEmail to false if that ever stops. The web archive lags whenever the drafting pipeline is not running, and the site says so separately."
+ }
 }

@@ -13,3 +13,4 @@ go-live.command
 node_modules/
 preview.command
 push.command
+mail-preview.html

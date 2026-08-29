@@ -50,6 +50,20 @@ jobs:
         run: node scripts/generate-brief.mjs
         continue-on-error: true
 
+      # Carries the brief that was just written to the list. Ships in draft:
+      # MAIL_MODE is a repository variable rather than a secret, so switching
+      # it to schedule or send is a change in the GitHub settings and needs no
+      # commit. It refuses to send when there is no brief for today, when one
+      # has already gone out, when the issue is short, or when the market
+      # figures are stale.
+      - name: Mail today's brief
+        env:
+          MAILERLITE_API_KEY: ${{ secrets.MAILERLITE_API_KEY }}
+          MAIL_MODE: ${{ vars.MAIL_MODE }}
+          MAIL_AT: ${{ vars.MAIL_AT }}
+        run: node scripts/mail-brief.mjs
+        continue-on-error: true
+
       - name: Commit the day's content
         run: |
           git config user.name "Investments Playbook bot"

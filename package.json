@@ -11,7 +11,7 @@
     "data": "node scripts/fetch-market-data.mjs",
     "brief": "node scripts/generate-brief.mjs",
     "build": "node scripts/build.mjs",
-    "test": "node scripts/contenttest.mjs && node scripts/selftest.mjs && node scripts/calctest.mjs && node scripts/wiretest.mjs && node scripts/glossarytest.mjs && node scripts/playbooktest.mjs && node scripts/dldtest.mjs && npm run chartbooktest && npm run recordtest && npm run pathstest && npm run contacttest && npm run brieftest && npm run cryptotest && npm run feedtest && npm run pdftest && npm run buildadmin && npm run admintest && npm run audit",
+    "test": "node scripts/contenttest.mjs && node scripts/selftest.mjs && node scripts/calctest.mjs && node scripts/wiretest.mjs && node scripts/glossarytest.mjs && node scripts/playbooktest.mjs && node scripts/dldtest.mjs && npm run chartbooktest && npm run recordtest && npm run pathstest && npm run contacttest && npm run brieftest && npm run cryptotest && npm run mailtest && npm run feedtest && npm run pdftest && npm run buildadmin && npm run admintest && npm run audit",
     "daily": "npm run data && npm run brief && npm run build",
     "serve": "node scripts/build.mjs && npx --yes serve dist -l 4173",
     "communities": "node scripts/fetch-dld.mjs",
@@ -29,6 +29,9 @@
     "contacttest": "node scripts/contacttest.mjs",
     "feedtest": "node scripts/feedtest.mjs",
     "cryptotest": "node scripts/cryptotest.mjs",
-    "brieftest": "node scripts/brieftest.mjs"
+    "brieftest": "node scripts/brieftest.mjs",
+    "mail": "node scripts/mail-brief.mjs",
+    "mailpreview": "node scripts/mail-preview.mjs",
+    "mailtest": "node scripts/mailtest.mjs"
   }
 }
