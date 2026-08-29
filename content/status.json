@@ -3,6 +3,12 @@
   {
    "job": "fetch-wire",
    "result": "partial",
+   "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
+   "at": "2026-08-29T15:04:56.631Z"
+  },
+  {
+   "job": "fetch-wire",
+   "result": "partial",
    "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); bis (HTTP 404); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
    "at": "2026-08-29T10:05:53.366Z"
   },
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "19 figures refreshed",
    "ranAt": "2026-08-27T00:45:40.902Z"
-  },
-  {
-   "job": "fetch-wire",
-   "result": "partial",
-   "detail": "22 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); bis (HTTP 404); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
-   "at": "2026-08-26T22:08:01.776Z"
   }
  ]
 }
