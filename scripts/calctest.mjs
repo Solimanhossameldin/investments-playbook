@@ -85,6 +85,49 @@ console.log("\nThe flagship worked example against the calculator");
     Math.abs(opexSaid - fourItems) < 200, [opexSaid, Math.round(fourItems)]);
 }
 
+/* ---------- the off-plan worked example, same treatment ----------
+   Found the same way and it was the same shape of defect: Plan A agreed with
+   the calculator to within two hundred dirhams and Plan B was out by twenty
+   thousand, claiming a 15.5 percent discount where the engine returns 14.1 on
+   the plans the page itself describes. No plausible reading of the schedule
+   produced the published figure, and Plan A matching so exactly is what ruled
+   out the model being wrong rather than the page.
+
+   The page now states the instalment timing, because a worked example nobody
+   can reproduce is an assertion. */
+console.log("\nThe off-plan worked example against the calculator");
+{
+  const page = fs.readFileSync(path.join(root, "content/playbooks/off-plan-irr.md"), "utf8");
+  // Split the row on pipes rather than building a regex around a label that
+  // contains an apostrophe. Simpler, and it cannot silently fail to match.
+  const row = (label) => {
+    const line = page.split("\n").find((l) => l.startsWith("| " + label + " |"));
+    if (!line) return [NaN, NaN];
+    const cells = line.split("|").map((c) => c.trim()).filter(Boolean);
+    return cells.slice(1, 3).map((x) => parseFloat(x.replace(/[,%]/g, "")));
+  };
+  const r = CALC["off-plan-irr"]({
+    price: 1500000, disc: 6, months: 30,
+    aDown: 20, aBuild: 60, aHand: 20, aPost: 0, aPostMonths: 0,
+    bDown: 10, bBuild: 30, bHand: 20, bPost: 40, bPostMonths: 48,
+  });
+  const [aPV, bPV] = row("Cost in today's money");
+  const [aEff, bEff] = row("Effective discount to headline");
+
+  check("plan A present value matches the calculator", Math.abs(aPV - numOf(r.aPV)) < 500, [aPV, r.aPV]);
+  check("plan B present value matches the calculator", Math.abs(bPV - numOf(r.bPV)) < 500, [bPV, r.bPV]);
+  check("plan A effective discount matches", Math.abs(aEff - numOf(r.aEff)) < 0.06, [aEff, r.aEff]);
+  check("plan B effective discount matches", Math.abs(bEff - numOf(r.bEff)) < 0.06, [bEff, r.bEff]);
+  check("the gap the prose claims matches the two figures above",
+    /roughly one hundred and six thousand/.test(page) && Math.abs(numOf(r.gap) - 106000) < 1000,
+    [r.gap]);
+  // The instalment timing has to stay stated, or the numbers stop being
+  // reproducible and the check above is testing a coincidence.
+  check("the page still states the instalment timing",
+    /construction instalments as monthly across the thirty months/.test(page) &&
+    /forty percent as monthly across the forty eight/.test(page), null);
+}
+
 console.log("\nDubai rent increase, Decree 43 of 2013");
 {
   const run = (current, index, notice = 90) => CALC["dubai-rent-increase"]({ current, index, notice });

@@ -30,7 +30,7 @@
 }
 ---
 
-A developer offers you a unit at one and a half million dirhams. Plan A is twenty percent down, sixty percent during construction, twenty percent at handover in thirty months. Plan B is ten percent down, thirty percent during construction, twenty percent at handover, and forty percent spread over four years after you get the keys.
+A developer offers you a unit at one and a half million dirhams. Plan A is twenty percent down, sixty percent during construction, twenty percent at handover in thirty months. Plan B is ten percent down, thirty percent during construction, twenty percent at handover, and forty percent spread over four years after you get the keys. Take the construction instalments as monthly across the thirty months in both plans, and the post handover forty percent as monthly across the forty eight that follow, so that the figures below can be reproduced rather than taken on trust.
 
 Both say one and a half million. Neither costs one and a half million, and they do not cost the same.
 
@@ -43,10 +43,10 @@ On the two plans above, at a six percent discount rate:
 | | Plan A | Plan B |
 |---|---|---|
 | Headline price | 1,500,000 | 1,500,000 |
-| Cost in today's money | 1,395,000 | 1,268,000 |
-| Effective discount to headline | 7.0% | 15.5% |
+| Cost in today's money | 1,395,000 | 1,289,000 |
+| Effective discount to headline | 7.0% | 14.1% |
 
-Plan B is roughly one hundred and twenty seven thousand dirhams cheaper, on the same unit, at the same advertised price. That is eight and a half percent of the purchase, which is more than most people negotiate off a price and considerably more than the agency commission they argue about.
+Plan B is roughly one hundred and six thousand dirhams cheaper, on the same unit, at the same advertised price. That is seven percent of the purchase, which is more than most people negotiate off a price and considerably more than the agency commission they argue about.
 
 ## The catch, and it is a real one
 
