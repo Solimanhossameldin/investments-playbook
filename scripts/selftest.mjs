@@ -300,5 +300,28 @@ check("both forms send the stored channel with the lead source",
   (appSrc.match(/channel\(\) \? " \/ " \+ channel\(\) : ""/g) || []).length === 2,
   (appSrc.match(/channel\(\) \? " \/ " \+ channel\(\) : ""/g) || []).length);
 
+/* ---------- the arithmetic block keeps its alignment ----------
+   `overflow-x: auto` sat on .formula for months and could never fire, because
+   the same rule set `white-space: pre-wrap` and wrapped content never exceeds
+   its box. Every aligned column, rule line and indent in 67 frameworks was
+   being rewrapped at 320px into something that no longer lined up. Measured
+   at 320px before the fix: scrollWidth equalled clientWidth on every page,
+   and the block was nearly twice as tall as it needed to be. */
+check("the arithmetic block does not wrap, so its alignment survives",
+  /\.formula \{[^}]*white-space: pre;/.test(css),
+  (css.match(/\.formula \{[^}]*white-space: [a-z-]+/) || [])[0]);
+
+check("and it scrolls instead, which is what makes not wrapping safe",
+  /\.formula \{[^}]*overflow-x: auto/.test(css), null);
+
+// A region that scrolls sideways is unreachable by keyboard unless it can be
+// focused, which would make the arithmetic readable only with a pointer.
+const pagesSrc = fs.readFileSync(path.join(root, "src/templates/pages.mjs"), "utf8");
+const docSrc = fs.readFileSync(path.join(root, "src/templates/document.mjs"), "utf8");
+check("both emitters make the scrolling block focusable and labelled",
+  /class="formula" tabindex="0" role="region" aria-label=/.test(pagesSrc) &&
+  /class="formula" tabindex="0" role="region" aria-label=/.test(docSrc),
+  null);
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 process.exit(fails ? 1 : 0);

@@ -380,7 +380,15 @@ input[type="range"] { width: 100%; accent-color: var(--gold); padding: 0; border
 .article code { font-family: var(--mono); font-size: 0.9em; background: rgba(23,23,23,0.06); padding: 2px 5px; border-radius: 2px; }
 .article a { color: var(--gold-muted); }
 .definition { border-left: 3px solid var(--gold); background: var(--paper); padding: 20px 24px; font-family: var(--serif); font-size: 1.4rem; line-height: 1.35; margin: 28px 0 36px; }
-.formula { font-family: var(--mono); font-size: 13.5px; line-height: 1.9; background: var(--ink); color: #e5e5e5; padding: 22px 24px; border-radius: var(--r); overflow-x: auto; white-space: pre-wrap; }
+/* The arithmetic block is aligned columns, rule lines and indentation that
+   carries meaning, so `pre-wrap` did not soften it, it destroyed it: at 320px
+   a figure wrapped onto its own line at column zero and a rule line broke in
+   half. `overflow-x: auto` was already here and could never fire, because
+   wrapped content by definition never exceeds its box. `pre` lets it. */
+.formula { font-family: var(--mono); font-size: 13.5px; line-height: 1.9; background: var(--ink); color: #e5e5e5; padding: 22px 24px; border-radius: var(--r); overflow-x: auto; white-space: pre; }
+/* A region that scrolls must be reachable by keyboard, or it is readable
+   only by people who can use a pointer. */
+.formula:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 .breaks { list-style: none; padding: 0; margin: 0; }
 .breaks li { border-top: 1px solid var(--hair-light); padding: 14px 0 14px 30px; position: relative; margin: 0; }
 .breaks li::before { content: "!"; position: absolute; left: 0; top: 14px; font-family: var(--mono); color: var(--neg); font-size: 13px; }

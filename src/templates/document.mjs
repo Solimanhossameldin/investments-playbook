@@ -50,7 +50,7 @@ export function playbookDoc({ site, playbooks, calculators, briefs = [] }) {
     <h3>${esc(copy(p.title))}</h3>
     <div class="definition">${esc(copy(p.summary))}</div>
     <div class="article">${demote(md(p.body))}</div>
-    ${p.formula ? `<h4>The arithmetic</h4><div class="formula">${esc(copy(p.formula))}</div>` : ""}
+    ${p.formula ? `<h4>The arithmetic</h4><div class="formula" tabindex="0" role="region" aria-label="The arithmetic, scrolls sideways">${esc(copy(p.formula))}</div>` : ""}
     ${
       (p.failureModes || []).length
         ? `<h4>Where it breaks</h4><ul class="breaks">${p.failureModes.map((f) => `<li>${esc(copy(f))}</li>`).join("")}</ul>`
