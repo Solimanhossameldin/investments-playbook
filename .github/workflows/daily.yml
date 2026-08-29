@@ -122,3 +122,23 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Google does not accept submissions and there is no way to make it crawl
+  # faster than it wants to. Bing, Yandex, Naver and Seznam share one endpoint
+  # that does, and Bing is what DuckDuckGo and several answer engines read.
+  #
+  # After the deploy, never before. The script verifies the key file is served
+  # and spot-checks that the live site returns pages the sitemap promises, so
+  # it cannot submit a sitemap describing a build that is not deployed. It
+  # waits out Pages propagation and refuses rather than guesses.
+  submit:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node scripts/build.mjs
+      - run: node scripts/indexnow.mjs --wait=120
+        continue-on-error: true

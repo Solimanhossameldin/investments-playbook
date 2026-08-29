@@ -1,6 +1,18 @@
 {
  "runs": [
   {
+   "job": "indexnow",
+   "status": "skipped",
+   "detail": "could not reach https://investmentsplaybook.com/31796d29a0fb45bf910e908521071620.txt from here (fetch failed), so nothing is known about what is deployed",
+   "ranAt": "2026-08-29T19:36:36.667Z"
+  },
+  {
+   "job": "indexnow",
+   "status": "skipped",
+   "detail": "https://investmentsplaybook.com/31796d29a0fb45bf910e908521071620.txt does not serve the key, so the deploy carrying it is not live yet",
+   "ranAt": "2026-08-29T19:36:09.931Z"
+  },
+  {
    "job": "mail-daily-brief",
    "status": "skipped",
    "detail": "Only 0 of 19 market figures are fresh. Not mailing a numbers block that is mostly stale.",
@@ -227,18 +239,6 @@
    "status": "partial",
    "detail": "17 figures refreshed. Notes: metals fetch failed",
    "ranAt": "2026-08-26T17:01:28.039Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "A brief for 2026-08-26 already exists.",
-   "ranAt": "2026-08-26T16:46:39.367Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-26T16:46:39.316Z"
   }
  ]
 }

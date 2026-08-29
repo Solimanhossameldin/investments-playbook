@@ -203,6 +203,11 @@ fs.writeFileSync(
   `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`
 );
 
+// IndexNow's proof of control: a file at the root whose contents are the key.
+// Nothing can be submitted until this is deployed, which is the point - it
+// means a submission cannot run ahead of the pages it is submitting.
+if (site.indexnow) fs.writeFileSync(path.join(dist, `${site.indexnow}.txt`), site.indexnow);
+
 fs.writeFileSync(
   path.join(dist, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${written
