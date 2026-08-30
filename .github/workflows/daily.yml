@@ -142,3 +142,22 @@ jobs:
       - run: node scripts/build.mjs
       - run: node scripts/indexnow.mjs --wait=120
         continue-on-error: true
+
+      # The first real run showed the flaw in the step above: it writes its
+      # outcome into status.json, which the data page publishes, and then this
+      # job ends without committing anything, so the record is thrown away. A
+      # job that reports into a file nobody keeps has not reported. [skip ci]
+      # because this commit is bookkeeping and must not start the cycle again.
+      - name: Record what the submission did
+        if: always()
+        run: |
+          git config user.name "Investments Playbook bot"
+          git config user.email "bot@investmentsplaybook.com"
+          git add content/status.json
+          if git diff --staged --quiet; then
+            echo "Nothing to record."
+          else
+            git commit -m "IndexNow $(date -u +%H:%M) [skip ci]"
+            git pull --rebase --autostash origin main
+            git push
+          fi
