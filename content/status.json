@@ -1,6 +1,30 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-08-30T11:10:07.700Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-08-30, so there is nothing to send.",
+   "ranAt": "2026-08-30T11:10:07.654Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-08-30T11:10:07.612Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-08-30T11:10:07.500Z"
+  },
+  {
    "job": "generate-daily-brief",
    "status": "skipped",
    "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
@@ -215,30 +239,6 @@
    "status": "ok",
    "detail": "19 figures refreshed",
    "ranAt": "2026-08-27T07:17:09.628Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-27T06:38:56.012Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "partial",
-   "detail": "18 figures refreshed. Notes: fred-DGS2 T10YIE HTTP 404",
-   "ranAt": "2026-08-27T06:38:55.876Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-27T06:18:36.517Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-27T06:18:36.369Z"
   }
  ]
 }
