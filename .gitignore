@@ -10,7 +10,7 @@ admin/.dev.vars
 content/dld/*.csv
 dist/
 go-live.command
+mail-preview.html
 node_modules/
 preview.command
 push.command
-mail-preview.html
