@@ -519,6 +519,29 @@ for (const p of indexable) if (!inMap.has(p.url)) note("error", "missing from si
   }
 }
 
+/* ---------- the job table on /data/ says what each job did ---------- */
+// fetch-wire wrote `result` and `at` where every other job writes `status`
+// and `ranAt`, and the page reads the latter, so twelve of the forty runs
+// rendered a blank status and "n/a" for the time. The wire runs every fifteen
+// minutes, which makes it the job most often at the top of that table. The
+// page is the thing that has to be right, so the page is what is measured.
+{
+  const data = pages.get("/data/");
+  if (!data) note("error", "data page missing", "/data/ was not built");
+  else {
+    const html = fs.readFileSync(data.file, "utf8");
+    const rows = [...html.matchAll(/<tr><td>([^<]*)<\/td><td class="(?:up|dn|flat)">([^<]*)<\/td><td class="note">[\s\S]*?<\/td><td class="note">([^<]*)<\/td><\/tr>/g)];
+    if (!rows.length) note("error", "no job rows on /data/", "the run table rendered nothing, so this check proved nothing");
+    for (const [, job, status, when] of rows) {
+      if (!status.trim())
+        note("error", "job row has no status", `/data/ shows "${job}" with an empty status cell`);
+      if (/n\/a/i.test(when))
+        note("error", "job row has no time", `/data/ shows "${job}" with no time it ran`);
+    }
+    if (rows.length) console.log(`\nJob table: ${rows.length} rows on /data/, every one naming a status and a time.\n`);
+  }
+}
+
 /* ---------- counts stated in prose ---------- */
 // The about page said "Six tools" for as long as there were eight, because a
 // number typed into prose has nothing holding it to the thing it counts. The

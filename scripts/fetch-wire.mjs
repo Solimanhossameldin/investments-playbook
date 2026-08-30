@@ -177,11 +177,16 @@ const notes = Object.entries(errors);
 status.runs = [
   {
     job: "fetch-wire",
-    result: ok === 0 ? "failed" : notes.length ? "partial" : "ok",
+    /* `status` and `ranAt`, not `result` and `at`. This job wrote its own
+       shape for as long as it has existed, and the data page reads the shape
+       every other job uses, so twelve of the forty runs on a public page
+       rendered a blank status and "n/a" for the time. The wire runs every
+       fifteen minutes, so it is the job most often at the top of that table. */
+    status: ok === 0 ? "failed" : notes.length ? "partial" : "ok",
     detail:
       `${merged.length} items from ${ok} of ${SOURCES.length} feeds` +
       (notes.length ? `. Down: ${notes.map(([k, v]) => `${k} (${v})`).join("; ")}` : ""),
-    at: new Date(now).toISOString(),
+    ranAt: new Date(now).toISOString(),
   },
   ...(status.runs || []),
 ].slice(0, 40);

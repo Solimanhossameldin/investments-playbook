@@ -609,7 +609,14 @@ export function dataPage({ site, market, status }) {
       runs.length
         ? runs
             .map(
-              (r) => `<tr><td>${esc(r.job)}</td><td class="${r.status === "ok" ? "up" : r.status === "failed" ? "dn" : "flat"}">${esc(r.status)}</td><td class="note">${esc(r.detail || "")}</td><td class="note">${esc(gst(r.ranAt))} GST</td></tr>`
+              (r) => {
+                // fetch-wire wrote `result`/`at` where everything else writes
+                // `status`/`ranAt`. Fixed at the source, but entries already
+                // in the file outlive the fix, so both are read here.
+                const status = r.status ?? r.result ?? "";
+                const ranAt = r.ranAt ?? r.at;
+                return `<tr><td>${esc(r.job)}</td><td class="${status === "ok" ? "up" : status === "failed" ? "dn" : "flat"}">${esc(status)}</td><td class="note">${esc(r.detail || "")}</td><td class="note">${esc(gst(ranAt))} GST</td></tr>`;
+              }
             )
             .join("")
         : '<tr><td colspan="4" class="note">No runs recorded yet.</td></tr>'
