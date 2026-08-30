@@ -13,7 +13,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ENDPOINT, submission, urlsFromSitemap, keyFileUrl, probeTargets } from "../src/indexnow.mjs";
+import { submission, submit, urlsFromSitemap, keyFileUrl, probeTargets } from "../src/indexnow.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const site = JSON.parse(fs.readFileSync(path.join(root, "content/site.json"), "utf8"));
@@ -71,15 +71,5 @@ if (!s.ok) stop("skipped", s.reason);
 console.log(`indexnow: ${s.payload.urlList.length} urls, key file served, ${probes.length} spot checks all 200`);
 if (dry) stop("ok", `dry run, nothing submitted (${s.payload.urlList.length} urls ready)`);
 
-const r = await fetch(ENDPOINT, {
-  method: "POST",
-  headers: { "Content-Type": "application/json; charset=utf-8" },
-  body: JSON.stringify(s.payload),
-  signal: AbortSignal.timeout(30000),
-});
-
-/* 200 accepted, 202 accepted but key still being validated. Anything else is
-   a refusal worth reading rather than retrying. */
-if (r.status === 200 || r.status === 202)
-  stop("ok", `submitted ${s.payload.urlList.length} urls, HTTP ${r.status}`);
-stop("failed", `IndexNow returned ${r.status}: ${(await r.text()).slice(0, 200)}`, 1);
+const verdict = await submit(s.payload);
+stop(verdict.ok ? "ok" : "failed", verdict.reason, verdict.ok ? 0 : 1);

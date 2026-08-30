@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "indexnow",
+   "status": "skipped",
+   "detail": "could not reach https://investmentsplaybook.com/31796d29a0fb45bf910e908521071620.txt from here (fetch failed), so nothing is known about what is deployed",
+   "ranAt": "2026-08-30T11:32:22.959Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
    "ranAt": "2026-08-27T07:17:09.767Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-27T07:17:09.628Z"
   }
  ]
 }

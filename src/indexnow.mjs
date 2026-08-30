@@ -89,3 +89,33 @@ export function probeTargets(urls, origin) {
   const pick = [deep.find((u) => /\/start\//.test(u)), deep.find((u) => /\/playbooks\//.test(u))];
   return [home, ...pick.filter(Boolean)].slice(0, 3);
 }
+
+/* The submission itself, injectable so it can be tested without a network.
+
+   The first real run exited 1 and left no record at all: this call was the one
+   unguarded await in the whole script, so a throw - DNS, TLS, a timeout, a
+   refused connection - killed the process before anything could be written,
+   and the job that exists to report what happened reported nothing. Every
+   refusal above it was carefully logged; the one that actually fired was not.
+
+   Returns a verdict rather than throwing, so the caller always has something
+   to write down. */
+export async function submit(payload, fetchImpl = fetch) {
+  let r;
+  try {
+    r = await fetchImpl(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(30000),
+    });
+  } catch (e) {
+    return { ok: false, status: 0, reason: `could not reach ${ENDPOINT}: ${String((e && e.message) || e)}` };
+  }
+  /* 200 accepted, 202 accepted but the key is still being validated. */
+  if (r.status === 200 || r.status === 202)
+    return { ok: true, status: r.status, reason: `submitted ${payload.urlList.length} urls, HTTP ${r.status}` };
+  let body = "";
+  try { body = (await r.text()).slice(0, 200); } catch {}
+  return { ok: false, status: r.status, reason: `IndexNow returned ${r.status}: ${body}` };
+}

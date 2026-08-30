@@ -12,7 +12,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { submission, urlsFromSitemap, keyFileUrl, probeTargets, MAX_URLS } from "../src/indexnow.mjs";
+import { submission, submit, urlsFromSitemap, keyFileUrl, probeTargets, MAX_URLS } from "../src/indexnow.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const site = JSON.parse(fs.readFileSync(path.join(root, "content/site.json"), "utf8"));
@@ -25,9 +25,18 @@ if (!fs.existsSync(path.join(root, "dist/sitemap.xml")))
 
 let n = 0;
 const fails = [];
+const pending = [];
 const t = (name, fn) => {
-  try { fn(); n++; console.log(`  pass  ${name}`); }
-  catch (e) { fails.push(`${name}: ${e.message}`); console.log(`  FAIL  ${name}: ${e.message}`); }
+  try {
+    const r = fn();
+    if (r && typeof r.then === "function") {
+      pending.push(r.then(
+        () => { n++; console.log(`  pass  ${name}`); },
+        (e) => { fails.push(`${name}: ${e.message}`); console.log(`  FAIL  ${name}: ${e.message}`); }));
+      return;
+    }
+    n++; console.log(`  pass  ${name}`);
+  } catch (e) { fails.push(`${name}: ${e.message}`); console.log(`  FAIL  ${name}: ${e.message}`); }
 };
 
 const KEY = "31796d29a0fb45bf910e908521071620";
@@ -175,5 +184,53 @@ t("the shipped script refuses from a machine that cannot reach the site", () => 
   fs.writeFileSync(path.join(root, "content/status.json"), before);
 });
 
+
+/* ---------------- the submission, which is where it actually broke ----------------
+
+   The first real run in production exited 1 and wrote nothing. The POST was
+   the single unguarded await in the script: a throw killed the process before
+   the status file could be written, so the job whose whole purpose is to say
+   what happened said nothing, and the failure was invisible until someone read
+   the Actions annotations by hand. Every refusal above it was logged. The one
+   that fired was not. */
+
+const PAYLOAD = { host: "investmentsplaybook.com", key: KEY, keyLocation: `${ORIGIN}/${KEY}.txt`, urlList: URLS };
+const settle = (p) => p;
+
+t("a 200 is success and says how many went", async () => {
+  const v = await submit(PAYLOAD, async () => ({ status: 200, text: async () => "" }));
+  assert.equal(v.ok, true);
+  assert.match(v.reason, /submitted 3 urls, HTTP 200/);
+});
+
+t("a 202 is success too, because the key is still being validated", async () => {
+  const v = await submit(PAYLOAD, async () => ({ status: 202, text: async () => "" }));
+  assert.equal(v.ok, true);
+  assert.match(v.reason, /HTTP 202/);
+});
+
+t("a refusal carries the status and what the endpoint said", async () => {
+  const v = await submit(PAYLOAD, async () => ({ status: 422, text: async () => "Unprocessable: key not valid for host" }));
+  assert.equal(v.ok, false);
+  assert.equal(v.status, 422);
+  assert.match(v.reason, /422/);
+  assert.match(v.reason, /key not valid for host/);
+});
+
+t("a throw is a verdict, not an exit", async () => {
+  const v = await submit(PAYLOAD, async () => { throw new Error("fetch failed"); });
+  assert.equal(v.ok, false);
+  assert.equal(v.status, 0);
+  assert.match(v.reason, /could not reach/);
+  assert.match(v.reason, /fetch failed/);
+});
+
+t("a body that cannot be read still yields a usable verdict", async () => {
+  const v = await submit(PAYLOAD, async () => ({ status: 500, text: async () => { throw new Error("stream closed"); } }));
+  assert.equal(v.ok, false);
+  assert.match(v.reason, /500/);
+});
+
+await Promise.all(pending);
 console.log(`\nindexnow: ${n} checks passed${fails.length ? `, ${fails.length} FAILED` : ""}.`);
 process.exit(fails.length ? 1 : 0);
