@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-08-30T20:00:01.740Z",
+ "fetchedAt": "2026-08-30T22:39:45.977Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -111,9 +111,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260825a.htm",
    "published": "2026-08-25T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Piero Cipollone: Interview with ilsussidiario.net",
@@ -165,9 +165,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260819a.htm",
    "published": "2026-08-19T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Christine Lagarde: Panel remarks about the European economy during a discussion on the global economic outlook at the World Economic Forum",
