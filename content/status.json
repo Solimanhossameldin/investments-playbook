@@ -4,6 +4,30 @@
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
+   "ranAt": "2026-08-30T11:26:18.552Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-08-30, so there is nothing to send.",
+   "ranAt": "2026-08-30T11:26:18.424Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-08-30T11:26:18.289Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-08-30T11:26:18.086Z"
+  },
+  {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
    "ranAt": "2026-08-30T11:10:07.700Z"
   },
   {
@@ -215,30 +239,6 @@
    "status": "partial",
    "detail": "17 figures refreshed. Notes: metals fetch failed",
    "ranAt": "2026-08-27T08:09:41.131Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-27T07:31:38.267Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-27T07:31:38.153Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-27T07:17:09.767Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-27T07:17:09.628Z"
   }
  ]
 }
