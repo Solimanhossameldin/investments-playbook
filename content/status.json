@@ -4,6 +4,12 @@
    "job": "fetch-wire",
    "status": "partial",
    "detail": "27 items from 7 of 12 feeds. Down: imf (HTTP 403); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
+   "ranAt": "2026-08-30T17:29:47.376Z"
+  },
+  {
+   "job": "fetch-wire",
+   "status": "partial",
+   "detail": "27 items from 7 of 12 feeds. Down: imf (HTTP 403); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
    "ranAt": "2026-08-30T13:08:43.592Z"
   },
   {
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "19 figures refreshed",
    "ranAt": "2026-08-27T08:31:14.812Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-27T08:09:41.275Z"
   }
  ]
 }
