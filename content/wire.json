@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-08-31T14:28:19.517Z",
+ "fetchedAt": "2026-08-31T20:19:10.535Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "SEC and FDA Announce MOU to Bolster Cooperation and Ensure Market Integrity",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-80-sec-fda-announce-mou-bolster-cooperation-ensure-market-integrity",
+   "published": "2026-08-31T18:24:32.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
   {
    "title": "SEC Proposes Amendments to Exchange Act Rule 3a12-8 to Add European Union Debt Obligations",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-79-sec-proposes-amendments-exchange-act-rule-3a12-8-add-european-union-debt-obligations",
@@ -258,15 +267,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "SEC Charges Private Fund Adviser Adit Ventures Management, Its CEO and Affiliated General Partners in Alleged Fraud",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-73-sec-charges-private-fund-adviser-adit-ventures-management-its-ceo-affiliated-general-partners",
-   "published": "2026-08-10T18:00:00.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
   }
  ]
 }
