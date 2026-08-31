@@ -1,7 +1,29 @@
 {
- "fetchedAt": "2026-08-30T07:17:28.297Z",
- "sourcesTotal": 14,
+ "fetchedAt": "2026-08-31T00:51:16.275Z",
+ "sourcesTotal": 7,
  "sourcesOk": 7,
+ "retired": [
+  {
+   "name": "U.S. Treasury",
+   "note": "27 August 2026: /news/press-releases/feed, /rss and /rss/press.xml all return 404."
+  },
+  {
+   "name": "International Monetary Fund",
+   "note": "27 August 2026: the RSS route serves HTML, not a feed."
+  },
+  {
+   "name": "Central Bank of the UAE",
+   "note": "27 August 2026: /en/rss/news returns 404."
+  },
+  {
+   "name": "Dubai Media Office",
+   "note": "27 August 2026: /en/rss returns a 404 page."
+  },
+  {
+   "name": "Emirates News Agency",
+   "note": "27 August 2026: /en/rss returns 200 and renders the homepage, a soft 404. Their RSS index no longer lists any feed."
+  }
+ ],
  "items": [
   {
    "title": "SEC Proposes Amendments to Exchange Act Rule 3a12-8 to Add European Union Debt Obligations",
