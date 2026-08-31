@@ -43,6 +43,20 @@ jobs:
         run: node scripts/fetch-chartbook.mjs
         continue-on-error: true
 
+      # Twice a key was set and the next run still reported it missing, with no
+      # way from outside the repository to tell whether it had not been made,
+      # had been made in the wrong place, or was simply not picked up yet. The
+      # runner knows which names arrived. It says so here, and never says what
+      # they contain.
+      - name: What reached this run
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MAILERLITE_API_KEY: ${{ secrets.MAILERLITE_API_KEY }}
+          MAIL_MODE: ${{ vars.MAIL_MODE }}
+        run: node scripts/configcheck.mjs
+        continue-on-error: true
+
       - name: Write today's brief
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

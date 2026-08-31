@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "configuration",
+   "status": "ok",
+   "detail": "nothing configured. Missing: ",
+   "ranAt": "2026-08-31T09:11:50.900Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "result": "partial",
    "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
    "at": "2026-08-29T18:30:38.935Z"
-  },
-  {
-   "job": "fetch-wire",
-   "result": "partial",
-   "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
-   "at": "2026-08-29T15:04:56.631Z"
   }
  ]
 }
