@@ -205,4 +205,39 @@ t("the month spelling is right at both ends of the year", () => {
   assert.deepEqual(dateForms("2026-12-31"), ["2026-12-31", "31 Dec 2026"]);
 });
 
+
+/* ---------------- the route that actually gets answered ----------------
+
+   The brief that has been going out to this list carries exactly one link and
+   it is a WhatsApp number. That was the half that earned; the framework links
+   were the half that was missing. An issue now carries both. */
+
+t("the issue offers the number, taken from configuration and not typed", () => {
+  const html = renderBriefEmail({ brief, site, slugs });
+  const digits = String(site.contact.whatsapp).replace(/[^0-9]/g, "");
+  assert.ok(html.includes(`https://wa.me/${digits}`), "no whatsapp route in the issue");
+  assert.equal((html.match(/wa\.me\//g) || []).length, 1, "the number appears more than once");
+});
+
+t("the message is prefilled with the issue date, which is the only attribution this channel has", () => {
+  const html = renderBriefEmail({ brief, site, slugs });
+  const m = html.match(/wa\.me\/\d+\?text=([^"']+)/);
+  assert.ok(m, "no prefilled text");
+  const text = decodeURIComponent(m[1]);
+  assert.match(text, /Reading the brief of/);
+  assert.ok(text.includes(brief.date), `the prefill does not name the issue: ${text}`);
+});
+
+t("with no number configured the block is absent, not empty furniture", () => {
+  const bare = { ...site, contact: { ...site.contact, whatsapp: "" } };
+  const html = renderBriefEmail({ brief, site: bare, slugs });
+  assert.ok(!/wa\.me/.test(html), "rendered a whatsapp link with nothing configured");
+  assert.ok(!/Ask me on WhatsApp/.test(html), "left the label behind with no link under it");
+});
+
+t("the number is never hard-coded into the renderer", () => {
+  const src = fs.readFileSync(path.join(root, "src/mail/brief-email.mjs"), "utf8");
+  assert.ok(!/\d{9,}/.test(src.replace(/#[0-9a-f]{3,8}/gi, "")), "a long number literal is sitting in the renderer");
+});
+
 console.log(`\nmail: ${n} checks passed. Email renders ${brief.items.length} items, all linked to a framework.`);

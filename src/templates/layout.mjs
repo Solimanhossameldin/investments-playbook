@@ -1,5 +1,5 @@
 import { esc, copy, fmt, pct, dir, glyph, gst, clampDescription, COUNTRIES, DIAL, INTENTS } from "../lib.mjs";
-import { primaryCta } from "./contact.mjs";
+import { primaryCta, whatsappUrl } from "./contact.mjs";
 
 // Breadcrumbs are derived from the URL rather than declared per page, because
 // the URL is the hierarchy: /playbooks/price-to-rent/ has exactly one parent
@@ -243,6 +243,7 @@ export function footer(site) {
     <div><h2>Company</h2><ul>
       <li><a href="/about/">About</a></li>
       <li><a href="/contact/">Contact</a></li>
+      ${whatsappUrl(site) ? `<li><a href="${esc(whatsappUrl(site))}" rel="noopener">WhatsApp</a></li>` : ""}
       <li><a href="/record/">The Record</a></li>
       <li><a href="/data/">Market data</a></li>
       <li><a href="/disclosure/">Disclosure standards</a></li>

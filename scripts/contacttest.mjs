@@ -48,7 +48,10 @@ t("with a booking url configured, the offer appears and points at it", () => {
 });
 
 t("the fallback label is one the site can honour", () => {
-  const cta = primaryCta(withContact({ booking: "" }));
+  // Both routes empty, not just the diary. This assertion used to pass with
+  // only `booking: ""` because there was no number configured; the moment one
+  // was, it was asserting the fallback while looking at the WhatsApp route.
+  const cta = primaryCta(withContact({ booking: "", whatsapp: "" }));
   assert.equal(cta.href, "/contact/");
   assert.ok(!/call/i.test(cta.label), `the fallback still mentions a call: ${cta.label}`);
 });
@@ -56,7 +59,7 @@ t("the fallback label is one the site can honour", () => {
 t("a half written booking url is treated as absent, not as a link", () => {
   for (const bad of ["cal.example.com/x", "http://cal.example.com/x", "TODO", " ", "https://"]) {
     assert.equal(bookingUrl(withContact({ booking: bad })), "", `accepted a bad booking value: ${bad}`);
-    assert.equal(primaryCta(withContact({ booking: bad })).label, "Get in touch");
+    assert.equal(primaryCta(withContact({ booking: bad, whatsapp: "" })).label, "Get in touch");
   }
 });
 
@@ -150,6 +153,35 @@ t("the whole page renders through the layout without throwing", () => {
   const html = page({ site: real, market: { asOf: null, quotes: [] }, assets: {}, ...contactPage({ site: real }) });
   assert.ok(html.startsWith("<!doctype html>"));
   assert.ok(html.includes("Reaching the desk"));
+});
+
+
+/* The button says what happens when it is pressed. With a diary it books a
+   call; with only a number it opens a chat and says so; with neither it goes
+   to the page that explains how to get in touch. Three states, and the label
+   is wrong in a different way if any two are confused. */
+t("with no diary but a number, the call to action is WhatsApp and says so", () => {
+  const cta = primaryCta(withContact({ booking: "", whatsapp: "+971507795060" }));
+  assert.equal(cta.label, "Ask on WhatsApp");
+  assert.equal(cta.href, "https://wa.me/971507795060");
+  assert.equal(cta.external, true);
+});
+
+t("a diary still wins over a number", () => {
+  const cta = primaryCta(withContact({ booking: "https://cal.example.com/s", whatsapp: "+971507795060" }));
+  assert.equal(cta.label, "Book a call");
+  assert.match(cta.href, /cal\.example\.com/);
+});
+
+t("a number too short to dial does not become the call to action", () => {
+  assert.equal(primaryCta(withContact({ booking: "", whatsapp: "1234" })).label, "Get in touch");
+});
+
+t("the number this site publishes lives in exactly one file", () => {
+  const site = JSON.parse(fs.readFileSync(path.join(root, "content/site.json"), "utf8"));
+  const digits = String(site.contact.whatsapp).replace(/[^0-9]/g, "");
+  assert.ok(digits.length >= 8, "no whatsapp number configured");
+  assert.equal(whatsappUrl(site), `https://wa.me/${digits}`);
 });
 
 console.log(`contact: ${n} checks passed, ${routes(real).length} route(s) live in the current configuration.`);

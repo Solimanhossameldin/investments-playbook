@@ -42,9 +42,14 @@ export function whatsappUrl(site) {
 // is true: the booking label only where there is something to book.
 export function primaryCta(site) {
   const b = bookingUrl(site);
-  return b
-    ? { label: "Book a call", href: b, external: true }
-    : { label: "Get in touch", href: "/contact/", external: false };
+  if (b) return { label: "Book a call", href: b, external: true };
+  // With no diary to book, WhatsApp is the shortest route to a conversation
+  // and the one that actually gets answered. Labelled for what it is: the
+  // rule here has always been that the button says what happens when it is
+  // pressed, which is why it does not say "Book a call" over a chat thread.
+  const w = whatsappUrl(site);
+  if (w) return { label: "Ask on WhatsApp", href: w, external: true };
+  return { label: "Get in touch", href: "/contact/", external: false };
 }
 
 export function routes(site) {

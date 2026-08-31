@@ -13,12 +13,14 @@
    has been opened by roughly thirty percent of the list and clicked by one or
    two people an issue, because until now it had nowhere to send them. */
 
+import { whatsappUrl } from "../templates/contact.mjs";
 import BRIEF_FRAMEWORKS from "../../content/brief-frameworks.mjs";
 
 const RED = "#DC0000";
 const INK = "#171717";
 const MUTED = "#6b6b6b";
 const HAIR = "#e3e3e1";
+const PAPER = "#ECE5C0";
 
 export function esc(s) {
   return String(s == null ? "" : s)
@@ -99,6 +101,27 @@ function calendarBlock(calendar = []) {
   </table>`;
 }
 
+/* The brief that has actually been going out carries one link and it is this
+   number, and it is the half that earns. The site links were the half that
+   was missing. An issue now carries both: a framework behind every figure,
+   and the one route that gets a reply.
+
+   The message is prefilled with the issue date because WhatsApp carries no
+   referrer and no query string of its own, so without it there is no way to
+   know which morning produced the conversation. It is the only attribution
+   this channel can have. */
+function whatsappBlock(site, brief) {
+  const url = whatsappUrl(site);
+  if (!url) return "";
+  const text = encodeURIComponent(`Reading the brief of ${brief.date || "today"}. A question about `);
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 26px">
+      <tr><td style="padding:18px 20px;background:${PAPER};border-left:3px solid ${RED}">
+        <p style="margin:0 0 10px;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.5;color:${INK}">Holding something specific and wondering what these numbers mean for it?</p>
+        <a href="${url}?text=${text}" style="font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;color:${RED};text-decoration:none">Ask me on WhatsApp &rarr;</a>
+      </td></tr>
+     </table>`;
+}
+
 export function renderBriefEmail({ brief, site, slugs }) {
   const origin = String(site.origin || "").replace(/\/$/, "");
   const items = (brief.items || []).map((it, i) => itemBlock(it, i + 1, origin, slugs)).join("");
@@ -130,6 +153,8 @@ export function renderBriefEmail({ brief, site, slugs }) {
         <a href="${origin}/start/?utm_source=brief&amp;utm_medium=email&amp;utm_campaign=daily" style="display:inline-block;background:${RED};color:#ffffff;text-decoration:none;padding:12px 22px;font-family:Helvetica,Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:0.1em;text-transform:uppercase">Find your starting point</a>
       </td></tr>
      </table>
+
+     ${whatsappBlock(site, brief)}
 
      <p style="margin:0 0 24px;font-family:Georgia,'Times New Roman',serif;font-size:15px;color:${INK}">${esc(brief.author || site.author?.name || "")}</p>
    </td></tr>
