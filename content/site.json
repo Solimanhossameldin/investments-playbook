@@ -79,8 +79,8 @@
   "responseHours": 48
  },
  "brief": {
-  "byEmail": true,
-  "phrase": "most weekday mornings",
+  "byEmail": false,
+  "phrase": "weekday mornings",
   "note": "The sentence the site prints about how often the brief goes out. It must describe what is actually happening, not what is intended. Today the issue is built by hand, so the honest phrase is 'most weekday mornings'. When scripts/mail-brief.mjs is switched from draft to schedule with MAIL_AT=07:00, change this to 'every weekday at 7am GST' and it becomes true. The web archive lags whenever the drafting pipeline is not running, which the site says separately."
  }
 }

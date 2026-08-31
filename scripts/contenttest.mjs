@@ -7,6 +7,7 @@
    These checks name the file. */
 
 import assert from "node:assert/strict";
+import { cadence } from "../src/lib.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -134,6 +135,30 @@ t("every framework a glossary term names exists", async () => {
   for (const term of terms.default) {
     if (term.playbook) assert.ok(slugs.has(term.playbook), `${term.slug} points at framework ${term.playbook}, which does not exist`);
   }
+});
+
+
+/* The claim that went onto 140 pages, and the boolean that could bring it
+   back. Both branches of cadence() hard coded "every weekday at 7am GST"
+   once; removing it from the branch in use left it sitting in the other one,
+   where flipping brief.byEmail would have republished it. */
+t("no cadence branch invents a clock time the configuration does not name", () => {
+  for (const byEmail of [true, false]) {
+    for (const phrase of ["weekday mornings", "most weekday mornings", undefined]) {
+      for (const briefs of [[], [{ date: "2026-08-26" }]]) {
+        const c = cadence(briefs, "2026-08-31T09:00:00Z", { byEmail, phrase });
+        const all = `${c.phrase} ${c.short} ${c.next}`;
+        assert.ok(!/\d{1,2}(:\d{2})?\s*(am|pm)/i.test(all),
+          `a clock time appeared with byEmail=${byEmail}, phrase=${JSON.stringify(phrase)}: ${all}`);
+      }
+    }
+  }
+});
+
+t("and the paused sentence still names the cadence it is failing to keep", () => {
+  const c = cadence([], "2026-08-31T09:00:00Z", { byEmail: false, phrase: "weekday mornings" });
+  assert.match(c.phrase, /weekday mornings/);
+  assert.match(c.phrase, /paused/);
 });
 
 console.log(`content: ${n} checks passed across ${fs.readdirSync(path.join(root, "content/playbooks")).length} frameworks and ${fs.readdirSync(path.join(root, "content/glossary")).length} glossary terms.`);

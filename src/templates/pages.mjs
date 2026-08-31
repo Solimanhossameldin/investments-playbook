@@ -86,7 +86,7 @@ function briefLate(briefs, site) {
   </div>`
     : `<div class="callout" style="max-width:var(--prose);margin:0 0 30px">
     <b>The brief is not currently publishing to schedule</b>
-    ${what} The cadence advertised on this site is ${esc(cadence(briefs, undefined, site.brief).phrase)}, and it is not being met at the moment. This notice is generated from the issues themselves, so it disappears when publication resumes.
+    ${what} The cadence advertised on this site is ${esc(cadence(briefs, undefined, site.brief).intended)}, and it is not being met. This notice is generated from the issues themselves, so it disappears when publication resumes.
   </div>`;
 }
 

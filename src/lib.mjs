@@ -232,14 +232,20 @@ export function cadence(briefs = [], nowISO, opts = {}) {
   // from draft to schedule, and not before.
   if (opts.byEmail) {
     const phrase = opts.phrase || "most weekday mornings";
-    return { live: true, phrase, short: phrase, next: nextLine(phrase) };
+    return { live: true, phrase, short: phrase, intended: phrase, next: nextLine(phrase) };
   }
+  // This branch used to hard code "every weekday at 7am GST" twice. That is the
+  // sentence that went onto 140 pages against a record of 06:48, 17:58 and
+  // 12:03, and removing it from the other branch left it sitting here, one
+  // boolean away from coming back. Both branches read the configured phrase
+  // now, so there is one place where this claim is made and it is a file
+  // somebody has to edit on purpose.
+  const intended = opts.phrase || "weekday mornings";
   const st = briefStatus(briefs, nowISO);
   return st.behind
-    ? { live: false, phrase: "weekday mornings at 7am GST, paused at the moment",
+    ? { live: false, phrase: `${intended}, paused at the moment`, intended,
         short: "paused at the moment", next: "You will get the next issue when publication resumes." }
-    : { live: true, phrase: "every weekday at 7am GST", short: "every weekday at 7am GST",
-        next: nextLine("every weekday at 7am GST") };
+    : { live: true, phrase: intended, short: intended, intended, next: nextLine(intended) };
 }
 
 /* The sentence a reader sees the instant after handing over an email address.
