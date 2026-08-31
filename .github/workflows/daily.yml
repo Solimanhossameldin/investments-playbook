@@ -131,8 +131,31 @@ jobs:
   # and spot-checks that the live site returns pages the sitemap promises, so
   # it cannot submit a sitemap describing a build that is not deployed. It
   # waits out Pages propagation and refuses rather than guesses.
+  # Off by default, and deliberately.
+  #
+  # This job submits the sitemap to the engines that accept submissions, and it
+  # has never once worked. It exits 1 on every run and writes no record, the
+  # fallback that was supposed to write a record when the script did not also
+  # exits 1, and the only thing that would say why is an Actions log that needs
+  # an account to read. Four attempts from outside the repository have not
+  # found it.
+  #
+  # Leaving it on made the build red on every push. A build that is always red
+  # is worse than a feature that is missing: it teaches everyone to ignore the
+  # one signal that is supposed to mean something, and this repository has
+  # spent a lot of effort on checks that are worth reading.
+  #
+  # The code and its seventeen tests are untouched and correct as far as they
+  # can be tested offline. To finish it: set the repository variable INDEXNOW
+  # to `on`, push, then open the failing `submit` job while signed in to
+  # GitHub. The first line of the traceback is the whole answer.
+  #
+  # What is lost while it is off: Bing, Yandex, Naver and Seznam are not told
+  # about new pages and will find them on their own schedule. Google never
+  # accepted submissions anyway, so nothing about Google changes.
   submit:
     needs: deploy
+    if: vars.INDEXNOW == 'on'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
