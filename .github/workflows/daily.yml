@@ -140,7 +140,8 @@ jobs:
         with:
           node-version: "20"
       - run: node scripts/build.mjs
-      - run: node scripts/indexnow.mjs --wait=120
+      - id: idx
+        run: node scripts/indexnow.mjs --wait=120
         continue-on-error: true
 
       # The first real run showed the flaw in the step above: it writes its
@@ -153,6 +154,22 @@ jobs:
         run: |
           git config user.name "Investments Playbook bot"
           git config user.email "bot@investmentsplaybook.com"
+          # Three runs in a row exited 1 and left status.json untouched, so the
+          # script is dying somewhere before it can write its own outcome and
+          # the only trace is an Actions log that needs an account to read.
+          # Trusting the reporter to report is the mistake. The job knows
+          # whether the step succeeded either way, so it writes that down when
+          # the script did not.
+          node -e "
+            const fs = require('fs'), p = 'content/status.json';
+            const s = JSON.parse(fs.readFileSync(p, 'utf8'));
+            if (s.runs[0] && s.runs[0].job === 'indexnow') { console.log('the script recorded its own outcome'); process.exit(0); }
+            s.runs.unshift({ job: 'indexnow', status: '${{ steps.idx.outcome }}' === 'success' ? 'ok' : 'failed',
+              detail: 'the script exited without writing a record; the step outcome was ${{ steps.idx.outcome }}',
+              ranAt: new Date().toISOString() });
+            s.runs = s.runs.slice(0, 40);
+            fs.writeFileSync(p, JSON.stringify(s, null, 1));
+            console.log('wrote a fallback record');"
           git add content/status.json
           if git diff --staged --quiet; then
             echo "Nothing to record."
