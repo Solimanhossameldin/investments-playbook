@@ -75,7 +75,8 @@ for (const c of campaignList) {
 }
 const automations = await everyAutomation();
 
-const { findings, examined } = auditAccount({ site, counts, campaigns, automations });
+const today = new Date().toISOString().slice(0, 10);
+const { findings, examined } = auditAccount({ site, counts, campaigns, automations, today });
 
 console.log(`mailaudit: ${examined} emails across ${campaigns.length} campaigns and ${automations.length} automations`);
 

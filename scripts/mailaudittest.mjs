@@ -9,10 +9,11 @@
    than an invention. */
 
 import { execFileSync } from "node:child_process";
+import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { auditAccount, everyEmail, readNumber, spell } from "../src/mail/audit.mjs";
+import { auditAccount, everyEmail, readNumber, spell, cadenceHolds, sentIssueDates, completedWeekdays } from "../src/mail/audit.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -338,6 +339,81 @@ const RENAMING = {
   ok("and the name the mailer uses is one of them", names.includes(real.mailerlite.fromName),
     `${real.mailerlite.fromName} not in ${JSON.stringify(names)}`);
 }
+
+
+/* This file counts with ok(cond); the cases below read better as assertions,
+   so they borrow the same counter through a thin wrapper. */
+const t = (name, fn) => { try { fn(); ok(name, true); } catch (e) { ok(name, false, e.message); } };
+
+/* ---------------- the cadence the site advertises, against the record ----------------
+
+   Nothing had ever asked. The site prints brief.phrase as fact and the only
+   thing behind that string is that a human typed it, which is how "every
+   weekday at 7am GST" reached 140 pages against a record of three sends. The
+   account knows the answer: every issue that went out is a sent campaign with
+   a date on it. Checked here against the real record of 24, 25 and 28 August. */
+
+const SENT = ["2026-08-24", "2026-08-25", "2026-08-28"];
+const sentCampaign = (name, finished) => ({ id: String(Math.random()).slice(2), name, status: "sent", finished_at: finished });
+
+t("weekends are not missed issues", () => {
+  // 29 and 30 August 2026 are a Saturday and a Sunday.
+  const days = completedWeekdays("2026-08-31", 6);
+  assert.ok(!days.includes("2026-08-29") && !days.includes("2026-08-30"), days.join(" "));
+  assert.equal(days[0], "2026-08-28");
+});
+
+t("today is never counted as missed, because it may still go out", () => {
+  assert.ok(!completedWeekdays("2026-08-31", 6).includes("2026-08-31"));
+});
+
+t("\"most weekday mornings\" fails on the record as it actually stands", () => {
+  const v = cadenceHolds({ phrase: "most weekday mornings", sentDates: SENT, today: "2026-08-31", window: 6 });
+  assert.equal(v.ok, false);
+  assert.equal(v.kept, 3);
+  assert.match(v.reason, /only 3 of the last 6/);
+});
+
+t("and holds once most of them are kept", () => {
+  const v = cadenceHolds({ phrase: "most weekday mornings", sentDates: [...SENT, "2026-08-26", "2026-08-27"], today: "2026-08-31", window: 6 });
+  assert.equal(v.ok, true);
+  assert.equal(v.kept, 5);
+});
+
+t("\"every weekday\" is a stricter claim and fails on one miss", () => {
+  const all = completedWeekdays("2026-08-31", 6);
+  assert.equal(cadenceHolds({ phrase: "every weekday at 7am GST", sentDates: all, today: "2026-08-31", window: 6 }).ok, true);
+  assert.equal(cadenceHolds({ phrase: "every weekday at 7am GST", sentDates: all.slice(1), today: "2026-08-31", window: 6 }).ok, false);
+});
+
+t("a phrase that claims nothing measurable is not judged", () => {
+  assert.equal(cadenceHolds({ phrase: "when there is something worth saying", sentDates: [], today: "2026-08-31" }).checked, 0);
+  assert.equal(cadenceHolds({ phrase: "", sentDates: [], today: "2026-08-31" }).checked, 0);
+});
+
+t("only sent briefs count, not drafts and not other campaigns", () => {
+  const cs = [
+    sentCampaign("The Dubai Signal – Daily Brief · 28 Aug 2026", "2026-08-28 06:49:48"),
+    { id: "1", name: "The Dubai Signal – Daily Brief · 29 Aug 2026", status: "draft", created_at: "2026-08-29 04:48:58" },
+    sentCampaign("Rename and site announcement", "2026-08-27 10:00:00"),
+  ];
+  assert.deepEqual(sentIssueDates(cs), ["2026-08-28"]);
+});
+
+t("the audit reports it, and names the claim it is judging", () => {
+  const a = clean();
+  a.today = "2026-08-31";
+  a.campaigns = SENT.map((d) => sentCampaign(`The Dubai Signal – Daily Brief · ${d}`, `${d} 06:49:00`));
+  const f = auditAccount(a).findings.find((x) => x.kind === "cadence not kept");
+  assert.ok(f, "the audit did not report a cadence the account is not keeping");
+  assert.match(f.detail, /most weekday mornings/);
+});
+
+t("with no date supplied the check does not run at all", () => {
+  const a = clean();
+  a.campaigns = SENT.map((d) => sentCampaign(`Daily Brief · ${d}`, `${d} 06:49:00`));
+  assert.ok(!kinds(a).includes("cadence not kept"));
+});
 
 console.log(`mailaudittest: ${pass} passed, ${fails.length} failed`);
 for (const f of fails) console.log(`  FAIL ${f}`);

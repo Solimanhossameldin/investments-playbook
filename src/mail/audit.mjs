@@ -99,7 +99,7 @@ export function everyEmail({ campaigns = [], automations = [] } = {}) {
    Returns { findings, examined }. `examined` exists so a run that found nothing
    can be told apart from a run that looked at nothing, which is the way these
    checks fail in practice. */
-export function auditAccount({ site, counts, campaigns = [], automations = [] }) {
+export function auditAccount({ site, counts, campaigns = [], automations = [], today }) {
   const findings = [];
   const note = (level, kind, where, detail) => findings.push({ level, kind, where, detail });
 
@@ -174,6 +174,13 @@ export function auditAccount({ site, counts, campaigns = [], automations = [] })
         `the body links nowhere on ${domain} (${live})`);
   }
 
+  /* The cadence the site advertises, against the cadence the account kept. */
+  if (today) {
+    const v = cadenceHolds({ phrase, sentDates: sentIssueDates(campaigns), today });
+    if (v.checked && !v.ok)
+      note("error", "cadence not kept", "the site's own claim", v.reason);
+  }
+
   for (const a of automations) {
     if (!a.enabled) continue;
     if (a.broken)
@@ -186,4 +193,70 @@ export function auditAccount({ site, counts, campaigns = [], automations = [] })
   }
 
   return { findings, examined: emails.length };
+}
+
+/* Does the cadence the site advertises match the cadence it is keeping?
+
+   Nothing has ever asked. The site prints `brief.phrase` from site.json as
+   fact, and the only thing standing behind that string is that a human typed
+   it. That is exactly how "every weekday at 7am GST" ended up on 140 pages
+   against a record of three sends at 06:48, 17:58 and 12:03; the fix at the
+   time was to stop inferring the phrase and start configuring it, which made
+   it stable but no more true.
+
+   The account knows the answer. Every issue that went out is a sent campaign
+   with a date on it, so the claim can be checked against the record rather
+   than trusted.
+
+   Weekdays are Monday to Friday. The current day is excluded: an issue that
+   has not gone out yet at ten in the morning is not a missed issue. */
+const WEEK = 7;
+
+export function completedWeekdays(today, count) {
+  const out = [];
+  const d = new Date(`${today}T00:00:00Z`);
+  while (out.length < count) {
+    d.setUTCDate(d.getUTCDate() - 1);
+    const day = d.getUTCDay();
+    if (day !== 0 && day !== 6) out.push(d.toISOString().slice(0, 10));
+  }
+  return out;
+}
+
+/* Returns { checked, kept, missed, ok, reason } - or { checked: 0 } when the
+   phrase makes no claim this can test. */
+export function cadenceHolds({ phrase, sentDates, today, window: w = 10 }) {
+  const p = String(phrase || "").toLowerCase();
+  const everyDay = /\bevery\s+weekday\b/.test(p);
+  const most = /\bmost\b/.test(p);
+  if (!everyDay && !most) return { checked: 0 };
+
+  const days = completedWeekdays(today, w);
+  const sent = new Set(sentDates || []);
+  const kept = days.filter((d) => sent.has(d));
+  const missed = days.filter((d) => !sent.has(d));
+
+  if (everyDay && missed.length)
+    return { checked: days.length, kept: kept.length, missed, ok: false,
+      reason: `the site says "${phrase}" and ${missed.length} of the last ${days.length} weekdays had no issue (${missed.slice(0, 5).join(", ")})` };
+
+  if (most && kept.length * 2 <= days.length)
+    return { checked: days.length, kept: kept.length, missed, ok: false,
+      reason: `the site says "${phrase}" and only ${kept.length} of the last ${days.length} weekdays had an issue` };
+
+  return { checked: days.length, kept: kept.length, missed, ok: true };
+}
+
+/* The dates of every issue actually sent, read off the campaign names and
+   send times rather than assumed. */
+export function sentIssueDates(campaigns = []) {
+  const out = [];
+  for (const c of campaigns) {
+    if (c.status !== "sent") continue;
+    if (!/daily brief/i.test(String(c.name || ""))) continue;
+    const when = c.finished_at || c.started_at || c.scheduled_for || c.created_at || "";
+    const d = String(when).slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) out.push(d);
+  }
+  return [...new Set(out)];
 }
