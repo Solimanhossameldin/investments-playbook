@@ -4,6 +4,30 @@
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
+   "ranAt": "2026-08-31T09:08:21.266Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-08-31, so there is nothing to send.",
+   "ranAt": "2026-08-31T09:08:21.203Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-08-31T09:08:21.147Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-08-31T09:08:21.001Z"
+  },
+  {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
    "ranAt": "2026-08-31T09:00:57.105Z"
   },
   {
@@ -215,30 +239,6 @@
    "status": "skipped",
    "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
    "ranAt": "2026-08-29T23:15:28.663Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-29T23:15:28.523Z"
-  },
-  {
-   "job": "fetch-wire",
-   "result": "partial",
-   "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
-   "at": "2026-08-29T21:15:18.629Z"
-  },
-  {
-   "job": "fetch-wire",
-   "result": "partial",
-   "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
-   "at": "2026-08-29T18:30:38.935Z"
-  },
-  {
-   "job": "fetch-wire",
-   "result": "partial",
-   "detail": "27 items from 7 of 14 feeds. Down: bea (HTTP 404); imf (HTTP 403); uae-cb (HTTP 403); bis (HTTP 404); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
-   "at": "2026-08-29T15:04:56.631Z"
   }
  ]
 }
