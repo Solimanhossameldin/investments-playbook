@@ -1,5 +1,5 @@
 {
- "asOf": "2026-09-01T09:31:10.609Z",
+ "asOf": "2026-09-01T09:35:49.219Z",
  "quotes": [
   {
    "symbol": "us-2y",
@@ -14,7 +14,7 @@
    "asOf": "2026-08-28T00:00:00.000Z",
    "order": 1,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "us-10y",
@@ -29,7 +29,7 @@
    "asOf": "2026-08-28T00:00:00.000Z",
    "order": 2,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "us-30y",
@@ -44,7 +44,7 @@
    "asOf": "2026-08-28T00:00:00.000Z",
    "order": 3,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "us-10y-real",
@@ -59,7 +59,7 @@
    "asOf": "2026-08-28T00:00:00.000Z",
    "order": 4,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "breakeven-10y",
@@ -74,7 +74,7 @@
    "asOf": "2026-08-31T00:00:00.000Z",
    "order": 5,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "us-30y-mortgage",
@@ -89,7 +89,7 @@
    "asOf": "2026-08-27T00:00:00.000Z",
    "order": 6,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "us-cpi",
@@ -104,37 +104,37 @@
    "asOf": "2026-07-01T00:00:00.000Z",
    "order": 7,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "xau",
    "label": "Gold",
    "category": "commodity",
-   "value": 4374.2,
+   "value": 4371.9,
    "changePct": null,
    "changeAbs": null,
    "unit": "USD/oz",
    "source": "gold-api.com",
    "sourceUrl": "https://api.gold-api.com",
-   "asOf": "2026-09-01T09:30:49Z",
+   "asOf": "2026-09-01T09:35:19Z",
    "order": 30,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "xag",
    "label": "Silver",
    "category": "commodity",
-   "value": 64.84,
+   "value": 64.86,
    "changePct": null,
    "changeAbs": null,
    "unit": "USD/oz",
    "source": "gold-api.com",
    "sourceUrl": "https://api.gold-api.com",
-   "asOf": "2026-09-01T09:30:48Z",
+   "asOf": "2026-09-01T09:35:48Z",
    "order": 31,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "wti",
@@ -149,7 +149,7 @@
    "asOf": "2026-08-25T00:00:00.000Z",
    "order": 32,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "usd-eur",
@@ -164,7 +164,7 @@
    "asOf": "2026-09-01T00:02:31.000Z",
    "order": 40,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "usd-gbp",
@@ -179,7 +179,7 @@
    "asOf": "2026-09-01T00:02:31.000Z",
    "order": 41,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "usd-jpy",
@@ -194,7 +194,7 @@
    "asOf": "2026-09-01T00:02:31.000Z",
    "order": 42,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "usd-aed",
@@ -209,7 +209,7 @@
    "asOf": "2026-09-01T00:02:31.000Z",
    "order": 43,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "usd-chf",
@@ -224,7 +224,7 @@
    "asOf": "2026-09-01T00:02:31.000Z",
    "order": 44,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "usd-inr",
@@ -239,7 +239,7 @@
    "asOf": "2026-09-01T00:02:31.000Z",
    "order": 45,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "dxy-broad",
@@ -254,37 +254,37 @@
    "asOf": "2026-08-28T00:00:00.000Z",
    "order": 46,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "btc-usd",
    "label": "Bitcoin",
    "category": "crypto",
-   "value": 77905.7,
-   "changeAbs": -657.3,
-   "changePct": -0.84,
+   "value": 77920,
+   "changeAbs": -643,
+   "changePct": -0.82,
    "unit": "USD",
    "source": "Kraken",
    "sourceUrl": "https://www.kraken.com",
-   "asOf": "2026-09-01T09:31:10.385Z",
+   "asOf": "2026-09-01T09:35:48.937Z",
    "order": 50,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   },
   {
    "symbol": "eth-usd",
    "label": "Ethereum",
    "category": "crypto",
-   "value": 2449.87,
-   "changeAbs": -17.25,
-   "changePct": -0.7,
+   "value": 2450.13,
+   "changeAbs": -16.99,
+   "changePct": -0.69,
    "unit": "USD",
    "source": "Kraken",
    "sourceUrl": "https://www.kraken.com",
-   "asOf": "2026-09-01T09:31:10.385Z",
+   "asOf": "2026-09-01T09:35:48.937Z",
    "order": 51,
    "stale": false,
-   "fetched_at": "2026-09-01T09:31:10.609Z"
+   "fetched_at": "2026-09-01T09:35:49.218Z"
   }
  ]
 }

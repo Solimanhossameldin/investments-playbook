@@ -1,6 +1,36 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-09-01T09:35:49.501Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-09-01, so there is nothing to send.",
+   "ranAt": "2026-09-01T09:35:49.459Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-09-01T09:35:49.341Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-09-01T09:35:49.312Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-09-01T09:35:49.219Z"
+  },
+  {
    "job": "pipeline",
    "status": "failed",
    "detail": "update=success, deploy=success, submit=failure. The failing job is submit; its log says why.",
@@ -209,36 +239,6 @@
    "status": "partial",
    "detail": "27 items from 7 of 12 feeds. Down: imf (HTTP 403); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
    "ranAt": "2026-08-31T14:28:19.517Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-08-31T11:59:52.756Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-08-31, so there is nothing to send.",
-   "ranAt": "2026-08-31T11:59:52.694Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-31T11:59:52.631Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-08-31T11:59:52.578Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-31T11:59:52.429Z"
   }
  ]
 }
