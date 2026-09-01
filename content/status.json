@@ -4,6 +4,36 @@
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
+   "ranAt": "2026-09-01T09:31:10.889Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-09-01, so there is nothing to send.",
+   "ranAt": "2026-09-01T09:31:10.840Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-09-01T09:31:10.775Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-09-01T09:31:10.737Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-09-01T09:31:10.610Z"
+  },
+  {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
    "ranAt": "2026-09-01T09:15:21.587Z"
   },
   {
@@ -209,36 +239,6 @@
    "status": "skipped",
    "detail": "no api key",
    "ranAt": "2026-08-31T09:37:26.468Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-08-31, so there is nothing to send.",
-   "ranAt": "2026-08-31T09:37:26.412Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-31T09:37:26.357Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-08-31T09:37:26.312Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-31T09:37:26.174Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-08-31T09:14:45.353Z"
   }
  ]
 }
