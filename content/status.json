@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "pipeline",
+   "status": "ok",
+   "detail": "update=success, deploy=success, submit=success",
+   "ranAt": "2026-09-01T09:36:48.704Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "status": "partial",
    "detail": "27 items from 7 of 12 feeds. Down: imf (HTTP 403); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
    "ranAt": "2026-08-31T20:19:10.535Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "partial",
-   "detail": "27 items from 7 of 12 feeds. Down: imf (HTTP 403); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
-   "ranAt": "2026-08-31T14:28:19.517Z"
   }
  ]
 }
