@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "pipeline",
+   "status": "ok",
+   "detail": "update=success, deploy=success, submit=success",
+   "ranAt": "2026-09-01T09:40:45.143Z"
+  },
+  {
    "job": "indexnow",
    "status": "ok",
    "detail": "submitted 145 urls, HTTP 200",
@@ -233,12 +239,6 @@
    "status": "partial",
    "detail": "27 items from 7 of 12 feeds. Down: uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); imf (HTTP 403); treasury (This operation was aborted)",
    "ranAt": "2026-09-01T05:08:45.340Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-09-01T00:35:12.173Z"
   }
  ]
 }
