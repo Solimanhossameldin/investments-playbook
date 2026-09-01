@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-01T14:53:57.826Z",
+ "fetchedAt": "2026-09-01T18:11:36.401Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Boris Vujčić: Listening to households: expectations, behaviour and monetary policy",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260901~bb28f33f54.en.html",
+   "published": "2026-09-01T16:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "SEC Proposes to Modernize Rules for Registered Transfer Agents",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-81-sec-proposes-modernize-rules-registered-transfer-agents",
+   "published": "2026-09-01T14:57:00.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
   {
    "title": "Major Economic Indicators Latest Numbers",
    "url": "https://www.bls.gov/bls/",
