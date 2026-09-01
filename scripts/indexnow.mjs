@@ -56,10 +56,15 @@ async function status(url) {
 const waitFor = Number((process.argv.find((a) => a.startsWith("--wait=")) || "").split("=")[1] || 0);
 const every = 15;
 
-let s;
+/* Both of these are read after the loop, so both have to outlive it. `s` was
+   hoisted and `probes` was not, which threw ReferenceError on the line below
+   and took the process down with an exit code and no record -- and only ever
+   on the happy path, because any refusal calls stop() first. That is why it
+   looked like a mystery: it failed exactly when everything else worked. */
+let s, probes;
 for (let elapsed = 0; ; elapsed += every) {
   const keyFile = key ? await status(keyFileUrl(origin, key)) : { status: 0 };
-  const probes = await Promise.all(probeTargets(urls, origin).map(status));
+  probes = await Promise.all(probeTargets(urls, origin).map(status));
   s = submission({ origin, key, urls, keyFile, probes });
   if (s.ok || s.unreachable || !/not live yet|does not serve/.test(s.reason)) break;
   if (elapsed >= waitFor) break;

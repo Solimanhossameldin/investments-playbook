@@ -231,6 +231,74 @@ t("a body that cannot be read still yields a usable verdict", async () => {
   assert.match(v.reason, /500/);
 });
 
+/* ---- the runner itself, not just the module it imports ----
+   Everything above tests src/indexnow.mjs, which is pure and was always
+   correct. The bug that stopped this job working for a week lived in
+   scripts/indexnow.mjs, in the twelve lines of glue that nothing executed: a
+   `probes` declared inside the retry loop and read after it, which threw
+   ReferenceError, exited 1 and wrote no record -- and only on the happy path,
+   since any refusal calls stop() first. Four attempts to diagnose it failed
+   because the only environments available could not reach the live site, so a
+   guard always refused before the broken line was reached.
+
+   This runs the real script against a stub on localhost, in a throwaway root,
+   with every guard satisfied, which is the exact state the bug needed. */
+t("the runner survives the path where every guard passes", async () => {
+  const os = await import("node:os");
+  const http = await import("node:http");
+  const { spawn } = await import("node:child_process");
+  /* spawn, not spawnSync: the stub server lives in this process, and a
+     synchronous spawn blocks the event loop so it could never answer the
+     child. The first version of this test deadlocked on exactly that. */
+  const run = (file, args) => new Promise((resolve) => {
+    const c = spawn(process.execPath, [file, ...args], { encoding: "utf8" });
+    let out = "";
+    c.stdout.on("data", (d) => { out += d; });
+    c.stderr.on("data", (d) => { out += d; });
+    const kill = setTimeout(() => c.kill("SIGKILL"), 30000);
+    c.on("close", (status) => { clearTimeout(kill); resolve({ status, out }); });
+  });
+
+  const KEY = "a".repeat(32);
+  const server = http.createServer((req, res) => {
+    if (req.url === `/${KEY}.txt`) { res.writeHead(200, { "content-type": "text/plain" }); return res.end(KEY); }
+    res.writeHead(200, { "content-type": "text/html" }); res.end("<html>ok</html>");
+  });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+
+  try {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "idxnow-"));
+    fs.mkdirSync(path.join(tmp, "scripts"));
+    fs.mkdirSync(path.join(tmp, "src"));
+    fs.mkdirSync(path.join(tmp, "content"));
+    fs.mkdirSync(path.join(tmp, "dist"));
+    fs.copyFileSync(path.join(root, "scripts/indexnow.mjs"), path.join(tmp, "scripts/indexnow.mjs"));
+    fs.copyFileSync(path.join(root, "src/indexnow.mjs"), path.join(tmp, "src/indexnow.mjs"));
+    fs.writeFileSync(path.join(tmp, "content/site.json"), JSON.stringify({ origin, indexnow: KEY }));
+    /* probeTargets wants the home page plus a /start/ and a /playbooks/ URL. */
+    fs.writeFileSync(path.join(tmp, "dist/sitemap.xml"),
+      `<?xml version="1.0"?><urlset>` +
+      [`${origin}/`, `${origin}/start/buying/`, `${origin}/playbooks/net-rental-yield/`]
+        .map((u) => `<url><loc>${u}</loc></url>`).join("") + `</urlset>`);
+
+    const r = await run(path.join(tmp, "scripts/indexnow.mjs"), ["--dry-run"]);
+    const out = r.out;
+
+    assert.doesNotMatch(out, /ReferenceError|is not defined/, `the runner threw: ${out.slice(0, 300)}`);
+    assert.equal(r.status, 0, `expected exit 0, got ${r.status}: ${out.slice(0, 300)}`);
+    /* Exiting quietly is not success either: the run has to leave a record. */
+    const rec = JSON.parse(fs.readFileSync(path.join(tmp, "content/status.json"), "utf8"));
+    const entry = (rec.runs || []).find((x) => x.job === "indexnow");
+    assert.ok(entry, "the run wrote no record to status.json");
+    assert.equal(entry.status, "ok");
+    assert.match(entry.detail, /dry run/);
+    fs.rmSync(tmp, { recursive: true, force: true });
+  } finally {
+    server.close();
+  }
+});
+
 await Promise.all(pending);
 console.log(`\nindexnow: ${n} checks passed${fails.length ? `, ${fails.length} FAILED` : ""}.`);
 process.exit(fails.length ? 1 : 0);

@@ -169,7 +169,13 @@ jobs:
   # accepted submissions anyway, so nothing about Google changes.
   submit:
     needs: deploy
-    if: vars.INDEXNOW == 'on'
+    # Was opt-in because this job exited 1 on every run and a permanently red
+    # build is worse than a missing feature. The cause is now found and fixed
+    # (a ReferenceError in the runner, see scripts/indexnow.mjs) and covered by
+    # a test that executes the runner, so the default flips: it runs unless
+    # explicitly switched off. The step keeps continue-on-error, so a bad day
+    # at an engine still cannot fail a deploy.
+    if: vars.INDEXNOW != 'off'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
