@@ -247,3 +247,59 @@ jobs:
             git pull --rebase --autostash origin main
             git push
           fi
+
+  # Three separate bugs stopped the submission from ever running, and each one
+  # cost hours because the only thing that could say what failed was an Actions
+  # log that needs an account to read. The site publishes a status panel; the
+  # pipeline should report into it like every other job does.
+  #
+  # This runs whatever happened above -- if: always(), and it needs all three,
+  # so it is the last thing in the run -- and writes down how each job ended.
+  # A red deploy or a red submit now shows up on /data/ by name, minutes later,
+  # instead of being invisible from outside the repository.
+  report:
+    needs: [update, deploy, submit]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record how the run itself went
+        run: |
+          git config user.name "Investments Playbook bot"
+          git config user.email "bot@investmentsplaybook.com"
+          git pull --rebase --autostash origin main || true
+          node -e "
+            const fs = require('fs'), p = 'content/status.json';
+            let s = { runs: [] };
+            try { s = JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) {}
+            const r = {
+              update: '${{ needs.update.result }}',
+              deploy: '${{ needs.deploy.result }}',
+              submit: '${{ needs.submit.result }}',
+            };
+            // 'skipped' is a decision, not a fault: submit is skipped when
+            // INDEXNOW is off. Only a real non-success is worth alarming on.
+            const bad = Object.keys(r).filter((k) => r[k] !== 'success' && r[k] !== 'skipped');
+            s.runs.unshift({
+              job: 'pipeline',
+              status: bad.length ? 'failed' : 'ok',
+              detail: Object.keys(r).map((k) => k + '=' + r[k]).join(', ') +
+                (bad.length ? '. The failing job is ' + bad[0] + '; its log says why.' : ''),
+              ranAt: new Date().toISOString(),
+            });
+            s.runs = s.runs.slice(0, 40);
+            fs.writeFileSync(p, JSON.stringify(s, null, 1));
+            console.log(JSON.stringify(r));
+          "
+          git add content/status.json
+          if git diff --staged --quiet; then
+            echo "Nothing to record."
+          else
+            git commit -m "Pipeline $(date -u +%H:%M) [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase --autostash origin main && git push && break
+              echo "push attempt $attempt failed, retrying"
+              sleep 5
+            done
+          fi
+
