@@ -89,7 +89,17 @@ jobs:
         run: node scripts/mailaudit.mjs
         continue-on-error: true
 
+      # Bookkeeping must never be able to stop publishing. This step pushes,
+      # and a push races: the bot commits every fifteen minutes and a person
+      # can push at any moment, so between this job's checkout and its push
+      # origin may have moved and the push is rejected. Without
+      # continue-on-error that rejection fails the job, and because deploy
+      # needs update and submit needs deploy, a lost race silently cancels the
+      # deployment and the search-engine submission. Saving today's content is
+      # worth a retry; it is not worth the site not updating. The rebase below
+      # makes the race rare, this makes losing it harmless.
       - name: Commit the day's content
+        continue-on-error: true
         run: |
           git config user.name "Investments Playbook bot"
           git config user.email "bot@investmentsplaybook.com"
@@ -107,7 +117,14 @@ jobs:
             # never to run at all. The deploy still needs to happen, and it
             # does: it is the next job in this same run, which now survives.
             git commit -m "Daily update $(date -u +%Y-%m-%d) [skip ci]"
-            git push
+            # Rebase before pushing, the way the submission job already does.
+            # content/status.json is the file both sides write, so a plain
+            # push loses this race regularly.
+            for attempt in 1 2 3; do
+              git pull --rebase --autostash origin main && git push && break
+              echo "push attempt $attempt failed, retrying"
+              sleep 5
+            done
           fi
 
       - name: Build the site
