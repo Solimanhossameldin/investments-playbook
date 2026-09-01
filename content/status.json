@@ -1,6 +1,36 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-09-01T00:35:12.173Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-09-01, so there is nothing to send.",
+   "ranAt": "2026-09-01T00:35:12.112Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-09-01T00:35:12.049Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-09-01T00:35:12.001Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-09-01T00:35:11.857Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "partial",
    "detail": "27 items from 7 of 12 feeds. Down: imf (HTTP 403); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
@@ -209,36 +239,6 @@
    "status": "ok",
    "detail": "19 figures refreshed",
    "ranAt": "2026-08-31T06:41:51.612Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "partial",
-   "detail": "27 items from 7 of 12 feeds. Down: imf (HTTP 403); uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); treasury (This operation was aborted)",
-   "ranAt": "2026-08-31T00:51:16.275Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-08-30T23:26:50.238Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-08-30, so there is nothing to send.",
-   "ranAt": "2026-08-30T23:26:50.179Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-08-30T23:26:50.127Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-30T23:26:49.984Z"
   }
  ]
 }
