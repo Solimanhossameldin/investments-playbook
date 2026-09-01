@@ -118,29 +118,48 @@ export function briefForm(site, id = "brief-form", next = "", unlock = "", sourc
 }
 
 export function leadForm(site) {
+  /* Two rendering bugs and a conversion problem, all visible in one screenshot.
+
+     `.check` is display:flex, so every child of the label became a flex item:
+     the two anchors and each bare text node between them laid out side by side
+     as columns, with the full stop stranded on its own. Wrapping the text in a
+     single span gives the flex container two children -- the box and the text
+     -- which is what it was always meant to have.
+
+     The country input carried no `type`, and the stylesheet targets
+     input[type="text"], which does not match an element with no type
+     attribute. It fell out of the design system entirely and rendered as a
+     small native box. Every input here now states its type, and selftest
+     checks that each type the form uses is one the stylesheet actually styles.
+
+     And it asked for eight required things before handing over a free PDF:
+     six fields and two tick boxes. Name, email and phone are the record; the
+     rest now help rather than block. The privacy and disclosure links move
+     under the button as a sentence, which is where a statement of terms
+     belongs -- the consent that legally matters is the email opt-in, and that
+     is still an explicit, unticked box. */
   return `<form class="lead-form" data-ml="lead" id="lead-form">
   <div class="field"><label for="lf-name">Full name</label><input id="lf-name" name="name" type="text" required autocomplete="name"></div>
-  <div class="field"><label for="lf-email">Email</label><input id="lf-email" name="email" type="email" required autocomplete="email"></div>
+  <div class="field"><label for="lf-email">Email</label><input id="lf-email" name="email" type="email" required autocomplete="email" inputmode="email"></div>
   <div class="field field--row">
     <div><label for="lf-dial">Dial code</label><select id="lf-dial" name="dial">${DIAL.map(
       ([d, c], i) => `<option value="${d}"${i === 0 ? " selected" : ""}>${d} ${c}</option>`
     ).join("")}</select></div>
-    <div><label for="lf-phone">Phone</label><input id="lf-phone" name="phone" type="tel" required autocomplete="tel"></div>
+    <div><label for="lf-phone">Phone</label><input id="lf-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel"></div>
   </div>
-  <div class="field"><label for="lf-country">Country</label>
-    <input id="lf-country" name="country" list="country-list" required autocomplete="country-name" placeholder="Start typing">
+  <div class="field"><label for="lf-country">Country <span class="opt">optional</span></label>
+    <input id="lf-country" name="country" type="text" list="country-list" autocomplete="country-name" placeholder="Start typing">
     <datalist id="country-list">${COUNTRIES.map((c) => `<option value="${esc(c)}">`).join("")}</datalist>
   </div>
-  <div class="field"><label for="lf-intent">What are you trying to do?</label>
-    <select id="lf-intent" name="intent" required>
-      <option value="" selected disabled>Choose one</option>
+  <div class="field"><label for="lf-intent">What are you trying to do? <span class="opt">optional</span></label>
+    <select id="lf-intent" name="intent">
+      <option value="" selected>Choose one, or skip it</option>
       ${INTENTS.map((i) => `<option value="${esc(i)}">${esc(i)}</option>`).join("")}
     </select>
   </div>
-  <label class="check"><input type="checkbox" required> I agree to receive the Playbook and the daily brief by email. I can unsubscribe in one click.</label>
-  <label class="check"><input type="checkbox" required> I have read the <a href="/privacy/">privacy policy</a> and the <a href="/disclosure/">disclosure standards</a>.</label>
+  <label class="check"><input type="checkbox" required> <span>I agree to receive the Playbook and the daily brief by email. I can unsubscribe in one click.</span></label>
   <button class="btn btn--solid" type="submit" style="width:100%;margin-top:8px">Send me the Playbook</button>
-  <p class="form-note">Nothing here is personal advice. The Playbook is educational research.</p>
+  <p class="form-note">By continuing you accept the <a href="/privacy/">privacy policy</a> and the <a href="/disclosure/">disclosure standards</a>. Nothing here is personal advice. The Playbook is educational research.</p>
 </form>`;
 }
 

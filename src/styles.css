@@ -344,7 +344,10 @@ a.card:hover { background: #f5f5f3; }
 /* ---------- forms ---------- */
 label { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 7px; color: var(--muted); }
 .band--ink label { color: #a8a8a8; }
-input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, textarea {
+/* input:not([type]) because an input with no type attribute behaves as text
+   and is styled by none of the selectors below. The country field had no
+   type and rendered as a small native box in the middle of the form. */
+input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input:not([type]), select, textarea {
   width: 100%; font-family: var(--sans); font-size: 15px; padding: 12px 13px;
   border: 1px solid var(--hair-light); border-radius: var(--r); background: var(--paper);
   color: var(--slate); appearance: none;
@@ -355,6 +358,8 @@ input[type="range"] { width: 100%; accent-color: var(--gold); padding: 0; border
 .field--row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .check { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; font-size: 12.5px; color: var(--muted); }
 .band--ink .check { color: #a8a8a8; }
+.check > span { flex: 1 1 auto; }
+.field .opt { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); font-size: 11px; }
 .check input { width: 16px; height: 16px; margin-top: 3px; accent-color: var(--gold); flex: 0 0 auto; }
 .form-note { font-size: 12px; color: var(--muted); margin-top: 14px; }
 .ok { border: 1px solid var(--gold); padding: 22px; border-radius: var(--r); background: var(--gold-wash); }

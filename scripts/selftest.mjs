@@ -459,5 +459,55 @@ check("both emitters make the scrolling block focusable and labelled",
     !/971507795060/.test(appSrc) && /__ML_WHATSAPP__/.test(appSrc), null);
 }
 
+/* ---------- the form people actually have to fill in ----------
+   Two bugs shipped here at once and both were only visible in a screenshot:
+   an input with no type attribute, which no selector in the stylesheet
+   matches, and a flex label whose links each became their own column. Neither
+   is a thing anyone would think to assert, which is exactly why they lasted. */
+{
+  const { leadForm } = await import(`${new URL("../src/templates/layout.mjs", import.meta.url).href}`);
+  const form = leadForm({ name: "T", origin: "https://e.com" });
+
+  /* Every input states a type, and every type it states is one the stylesheet
+     actually styles. This is the check the country field would have failed. */
+  const inputs = form.match(/<input\b[^>]*>/g) || [];
+  check("the form has inputs to check at all", inputs.length >= 4, inputs.length);
+  const untyped = inputs.filter((i) => !/\stype=/.test(i));
+  check("every input in the lead form states its type",
+    untyped.length === 0, untyped.join(" | "));
+
+  const styled = new Set(
+    (css.match(/input\[type="([a-z]+)"\]/g) || []).map((m) => m.match(/"([a-z]+)"/)[1])
+  );
+  const unstyled = [...new Set(inputs.map((i) => (i.match(/type="([a-z]+)"/) || [])[1]))]
+    .filter((t) => t && t !== "checkbox" && !styled.has(t));
+  check("every input type the form uses is one the stylesheet styles",
+    unstyled.length === 0, unstyled.join(", "));
+
+  /* A flex row with loose text and links in it lays the links out as columns.
+     The text has to be one element, so the box and the text are the only two
+     children the flex container ever sees. */
+  const checks = form.match(/<label class="check">[\s\S]*?<\/label>/g) || [];
+  check("there is at least one consent box", checks.length >= 1, checks.length);
+  check("no link sits loose inside a flex label, where it becomes its own column",
+    checks.every((c) => !/<a\b/.test(c) || /<span>[\s\S]*<a\b/.test(c)),
+    checks.find((c) => /<a\b/.test(c) && !/<span>[\s\S]*<a\b/.test(c)));
+  check("every consent box wraps its text in a single span",
+    checks.every((c) => (c.match(/<span>/g) || []).length === 1), null);
+
+  /* Friction is a number, so it gets a number. Eight required interactions
+     stood between a reader and a free PDF; this fails if that creeps back. */
+  const required = (form.match(/\brequired\b/g) || []).length;
+  check("the form asks for at most four required things",
+    required <= 4, `${required} required`);
+  check("the email opt-in is still an explicit, unticked box",
+    /<input type="checkbox" required>/.test(form) && !/checked/.test(form), null);
+
+  /* The optional fields must still be sent, or making them optional would
+     quietly drop data the CRM depends on. */
+  for (const n of ["name", "email", "dial", "phone", "country", "intent"])
+    check(`the form still carries a ${n} field`, form.includes(`name="${n}"`), null);
+}
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 process.exit(fails ? 1 : 0);
