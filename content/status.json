@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "fetch-wire",
+   "status": "partial",
+   "detail": "27 items from 7 of 12 feeds. Down: uae-cb (HTTP 403); dubai-media (no items parsed); wam (no items parsed); imf (HTTP 403); treasury (This operation was aborted)",
+   "ranAt": "2026-09-01T05:08:45.340Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
    "ranAt": "2026-08-31T06:41:51.760Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-08-31T06:41:51.612Z"
   }
  ]
 }
