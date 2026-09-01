@@ -97,7 +97,16 @@ jobs:
           if git diff --staged --quiet; then
             echo "Nothing changed today."
           else
-            git commit -m "Daily update $(date -u +%Y-%m-%d)"
+            # [skip ci], for the same reason the wire commits carry it, and it
+            # matters more here. This workflow triggers on pushes to main and
+            # runs under `concurrency: pages` with cancel-in-progress, so a
+            # commit made here starts a new run that CANCELS THIS ONE -- before
+            # deploy (needs: update) and submit (needs: deploy) can finish.
+            # Four "Daily update" commits landed on 1 September, each killing
+            # the run that made it, which is why the submission job appeared
+            # never to run at all. The deploy still needs to happen, and it
+            # does: it is the next job in this same run, which now survives.
+            git commit -m "Daily update $(date -u +%Y-%m-%d) [skip ci]"
             git push
           fi
 
