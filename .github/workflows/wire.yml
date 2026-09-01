@@ -7,11 +7,15 @@ on:
     - cron: "*/15 * * * *"
   workflow_dispatch:
 
-# The daily job deploys Pages too. Let whichever is running finish rather than
-# having two deployments race.
+# The daily job deploys Pages too, and shares this group. cancel-in-progress
+# was true, which does not mean "let whichever is running finish" -- it means
+# the opposite: a wire refresh starting KILLS a daily run already in flight.
+# The wire fires every fifteen minutes and the daily run writes the brief,
+# mails it and submits the sitemap, so this could cancel all three at random.
+# Queue instead of killing, which is also what GitHub recommends for Pages.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -46,6 +50,15 @@ jobs:
 
       - name: Commit
         if: steps.diff.outputs.changed == 'true'
+        # Same rule as the daily job: publishing must never be downstream of
+        # bookkeeping succeeding. This stages content/status.json, which the
+        # daily job also writes, so the push below races. Without this a lost
+        # race failed the step, failed this job, and skipped the deploy that
+        # needs it -- so a wire refresh that had already fetched new items
+        # never reached the site, on a page that advertises fifteen minutes.
+        # The build and deploy steps below still run on the fetched file, so
+        # the site updates even when the commit is lost; the next run recommits.
+        continue-on-error: true
         run: |
           git config user.name "Investments Playbook bot"
           git config user.email "bot@investmentsplaybook.com"
@@ -53,8 +66,11 @@ jobs:
           # skip ci, because this workflow does its own build and deploy and the
           # daily job must not re-run its market pull ninety six times a day.
           git commit -m "Wire refresh $(date -u +%H:%M) [skip ci]"
-          git pull --rebase origin main
-          git push origin main
+          for attempt in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin main && break
+            echo "push attempt $attempt lost the race, retrying"
+            sleep 5
+          done
 
       - name: Build the site
         if: steps.diff.outputs.changed == 'true'

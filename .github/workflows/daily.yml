@@ -17,9 +17,12 @@ permissions:
   pages: write
   id-token: write
 
+# Shared with the wire workflow. cancel-in-progress killed whichever run was
+# already going, which is how a wire refresh could destroy a daily run's brief,
+# mail and submission halfway through. Deployments should queue, not race.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   update:
