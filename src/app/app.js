@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  var ML = { account: "__ML_ACCOUNT__", brief: "__ML_BRIEF__", lead: "__ML_LEAD__" };
+  var ML = { account: "__ML_ACCOUNT__", brief: "__ML_BRIEF__", lead: "__ML_LEAD__", whatsapp: "__ML_WHATSAPP__" };
 
   /* ---------------- nav ---------------- */
   var burger = document.getElementById("burger");
@@ -218,15 +218,52 @@
   }
 
   /* ---------------- MailerLite ---------------- */
+  /* ---------------- the submit, and what it may honestly claim ----------------
+     A reader is told "you are on the list" in the second after handing over an
+     address, so that sentence has to be true. It was not. Two ways it lied:
+
+       - no status was ever checked, so a 400 or a 500 from MailerLite resolved
+         and was reported to the reader as a successful signup;
+       - the fallback sends with mode:"no-cors", whose response is opaque by
+         specification: it always resolves and its status cannot be read.
+         Returning that promise made the failure branch unreachable, so the
+         page could never say a signup had failed, however badly it had.
+
+     An opaque response is not evidence of anything, so it is not called a
+     success. It resolves { verified: false } and the page says something
+     weaker and true, with a way to reach a human. Only a 2xx this origin was
+     allowed to read returns { verified: true }. A status we could read and
+     that was bad rejects, because that is the one case genuinely known to
+     have gone wrong. */
   function mlPost(formId, fields) {
     var fd = new FormData();
     Object.keys(fields).forEach(function (k) { if (fields[k]) fd.append("fields[" + k + "]", fields[k]); });
     fd.append("ml-submit", "1");
     fd.append("anticsrf", "true");
     var url = "https://assets.mailerlite.com/jsonp/" + ML.account + "/forms/" + formId + "/subscribe";
-    return fetch(url, { method: "POST", body: fd }).catch(function () {
-      return fetch(url, { method: "POST", body: fd, mode: "no-cors" });
-    });
+    return fetch(url, { method: "POST", body: fd }).then(
+      function (r) {
+        if (!r || !r.ok) throw new Error("HTTP " + ((r && r.status) || "unknown"));
+        return { verified: true };
+      },
+      function () {
+        /* Blocked before any status existed. Retry opaquely so the data still
+           arrives, and record that nothing about it can be confirmed. */
+        return fetch(url, { method: "POST", body: fd, mode: "no-cors" }).then(function () {
+          return { verified: false };
+        });
+      }
+    );
+  }
+
+  /* What the reader is shown, given what is actually known. Kept next to the
+     post rather than at each call site so the two cannot drift apart. */
+  function confirmLine(res) {
+    if (res && res.verified) return "You are on the list. Check your inbox to confirm.";
+    var wa = ML.whatsapp && ML.whatsapp.indexOf("http") === 0
+      ? ' or <a href="' + ML.whatsapp + '">message us on WhatsApp</a>'
+      : "";
+    return "Sent. Check your inbox to confirm \u2014 if nothing arrives in a few minutes, try again" + wa + ".";
   }
 
   function busy(form, on, label) {
@@ -251,7 +288,7 @@
         lead_source: "investmentsplaybook.com" + (src ? " / " + src : " / brief")
           + (channel() ? " / " + channel() : ""),
         investor_intent: intent || ""
-      }).then(function () {
+      }).then(function (res) {
         try { localStorage.setItem("ip_subscribed", "1"); } catch (e) {}
         // Where a form promised a document, the page hands it over itself.
         // Waiting on an email would make the promise depend on a mail
@@ -260,10 +297,10 @@
         if (unlock) {
           try { localStorage.setItem("ip_unlocked", "1"); } catch (e) {}
           form.innerHTML =
-            '<p style="margin:0 0 12px;font-size:14px">You are on the list. Check your inbox to confirm.</p>' +
+            '<p style="margin:0 0 12px;font-size:14px">' + confirmLine(res) + '</p>' +
             '<a class="btn btn--solid" href="' + unlock + '" download>Download the checklist</a>';
         } else {
-          form.innerHTML = '<p style="margin:0;font-size:14px">You are on the list. Check your inbox to confirm.</p>';
+          form.innerHTML = '<p style="margin:0;font-size:14px">' + confirmLine(res) + '</p>';
         }
         openGate();
       }).catch(function () {

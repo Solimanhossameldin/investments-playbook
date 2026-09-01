@@ -15,7 +15,7 @@ import { communityIndex, communityPage } from "../src/templates/communities.mjs"
 import { chartbookPage } from "../src/templates/chartbook.mjs";
 import { recordPage } from "../src/templates/record.mjs";
 import { pathIndex, pathPage, pathBand } from "../src/templates/paths.mjs";
-import { contactPage } from "../src/templates/contact.mjs";
+import { contactPage, whatsappUrl } from "../src/templates/contact.mjs";
 import { feed } from "../src/templates/feed.mjs";
 import { buildChartbookPdf, pdfPageCount } from "./make-chartbook-pdf.mjs";
 import { buildCryptoChecklistPdf, checklistPageCount, checklistQuestionCount } from "./make-crypto-checklist-pdf.mjs";
@@ -81,7 +81,10 @@ const appText = [
   .join("\n")
   .replace("__ML_ACCOUNT__", site.mailerlite.account)
   .replace("__ML_BRIEF__", site.mailerlite.briefFormId)
-  .replace("__ML_LEAD__", site.mailerlite.leadFormId);
+  .replace("__ML_LEAD__", site.mailerlite.leadFormId)
+  /* The number lives in configuration and is rendered by code, here as
+     everywhere else. A test fails if it is ever typed into a template. */
+  .replace("__ML_WHATSAPP__", whatsappUrl(site) || "");
 
 const hash = (t) => crypto.createHash("sha1").update(t).digest("hex").slice(0, 8);
 const assets = { css: hash(cssText), js: hash(appText) };

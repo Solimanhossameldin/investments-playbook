@@ -397,5 +397,67 @@ check("both emitters make the scrolling block focusable and labelled",
     null);
 }
 
+/* ---------- what the signup form may claim ----------
+   The reader is told they are on the list one second after handing over an
+   address. That sentence used to be unfalsifiable: nothing checked the status,
+   and the no-cors fallback resolves opaquely by specification, so the failure
+   branch could not be reached however badly the post had failed. These lift
+   the shipped lines and run them against stub responses, so they test the code
+   that ships rather than a copy of it that can drift. */
+{
+  const block = appSrc.match(
+    /\/\* -+ the submit, and what it may honestly claim[\s\S]*?\n  function confirmLine\(res\) \{[\s\S]*?\n  \}/
+  );
+  check("the submit block is still in app.js under its own heading", !!block, null);
+
+  const load = (fetchImpl) =>
+    new Function(
+      "fetch", "FormData", "ML",
+      block[0] + "\nreturn { mlPost: mlPost, confirmLine: confirmLine };"
+    )(fetchImpl, FormData, { account: "1", whatsapp: "https://wa.me/971507795060" });
+
+  const settle = async (fetchImpl) => {
+    try { return { ok: true, value: await load(fetchImpl).mlPost("f", { email: "a@b.c" }) }; }
+    catch (e) { return { ok: false, error: String(e.message || e) }; }
+  };
+
+  const readable = (status) => async () => ({ ok: status >= 200 && status < 300, status });
+  const blocked = () => { throw new TypeError("Failed to fetch"); };
+
+  const good = await settle(readable(200));
+  check("a status we were allowed to read, and that was fine, is a verified signup",
+    good.ok && good.value.verified === true, JSON.stringify(good));
+
+  const bad = await settle(readable(500));
+  check("a status we could read and that was bad rejects, so the failure branch is reachable",
+    bad.ok === false && /500/.test(bad.error), JSON.stringify(bad));
+
+  let calls = 0;
+  const opaque = await settle((url, opts) => {
+    calls++;
+    if (!opts || opts.mode !== "no-cors") return Promise.reject(new TypeError("CORS"));
+    return Promise.resolve({ type: "opaque", ok: false, status: 0 });
+  });
+  check("a blocked post still retries opaquely, so the data arrives",
+    calls === 2, `fetch called ${calls} time(s)`);
+  check("an opaque response is never reported as a verified signup",
+    opaque.ok && opaque.value.verified === false, JSON.stringify(opaque));
+
+  const dead = await settle(() => Promise.reject(new TypeError("offline")));
+  check("both attempts failing rejects rather than claiming success",
+    dead.ok === false, JSON.stringify(dead));
+
+  const { confirmLine } = load(readable(200));
+  check("only a verified signup is told they are on the list",
+    confirmLine({ verified: true }).includes("You are on the list") &&
+    !confirmLine({ verified: false }).includes("on the list"),
+    confirmLine({ verified: false }));
+  check("an unconfirmable signup is given a human to reach",
+    /wa\.me\/971507795060/.test(confirmLine({ verified: false })),
+    confirmLine({ verified: false }));
+  check("the number is read from configuration, never typed into the runtime",
+    !/971507795060/.test(appSrc) && /__ML_WHATSAPP__/.test(appSrc), null);
+}
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 process.exit(fails ? 1 : 0);
