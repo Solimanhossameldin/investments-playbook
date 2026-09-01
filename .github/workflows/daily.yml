@@ -232,38 +232,51 @@ jobs:
         run: |
           git config user.name "Investments Playbook bot"
           git config user.email "bot@investmentsplaybook.com"
-          # Three runs in a row exited 1 and left status.json untouched, so the
-          # script is dying somewhere before it can write its own outcome and
-          # the only trace is an Actions log that needs an account to read.
-          # Trusting the reporter to report is the mistake. The job knows
-          # whether the step succeeded either way, so it writes that down when
-          # the script did not.
-          node -e "
-            const fs = require('fs'), p = 'content/status.json';
-            const s = JSON.parse(fs.readFileSync(p, 'utf8'));
-            if (s.runs[0] && s.runs[0].job === 'indexnow') { console.log('the script recorded its own outcome'); process.exit(0); }
-            s.runs.unshift({ job: 'indexnow', status: '${{ steps.idx.outcome }}' === 'success' ? 'ok' : 'failed',
+
+          # Take the record this run produced -- the script's own, or a
+          # fallback built from the step outcome when the script died before
+          # it could write one -- and hold it as a single JSON value.
+          RECORD=$(node -e "
+            const fs = require('fs');
+            let mine = null;
+            try {
+              const s = JSON.parse(fs.readFileSync('content/status.json', 'utf8'));
+              if (s.runs && s.runs[0] && s.runs[0].job === 'indexnow') mine = s.runs[0];
+            } catch (e) {}
+            if (!mine) mine = {
+              job: 'indexnow',
+              status: '${{ steps.idx.outcome }}' === 'success' ? 'ok' : 'failed',
               detail: 'the script exited without writing a record; the step outcome was ${{ steps.idx.outcome }}',
-              ranAt: new Date().toISOString() });
-            s.runs = s.runs.slice(0, 40);
-            fs.writeFileSync(p, JSON.stringify(s, null, 1));
-            console.log('wrote a fallback record');"
-          git add content/status.json
-          if git diff --staged --quiet; then
-            echo "Nothing to record."
-          else
+              ranAt: new Date().toISOString(),
+            };
+            console.log(JSON.stringify(mine));
+          ")
+          echo "record: $RECORD"
+
+          # Never diverge, so there is nothing to conflict. Each attempt starts
+          # from whatever origin holds right now and puts this one record on
+          # top. status.json is only ever prepended to by either side, so
+          # rebuilding from origin is the correct resolution, not a compromise.
+          # The previous version committed first and then rebased, which meant
+          # a wire commit landing mid-run produced a conflict, and the step
+          # that exists to report a failure became one.
+          for attempt in 1 2 3; do
+            git fetch origin main && git reset --hard origin/main
+            node -e "
+              const fs = require('fs'), p = 'content/status.json';
+              let s = { runs: [] };
+              try { s = JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) {}
+              s.runs.unshift(JSON.parse(process.argv[1]));
+              s.runs = s.runs.slice(0, 40);
+              fs.writeFileSync(p, JSON.stringify(s, null, 1));
+            " "$RECORD"
+            git add content/status.json
+            if git diff --staged --quiet; then echo "Nothing to record."; break; fi
             git commit -m "IndexNow $(date -u +%H:%M) [skip ci]"
-            for attempt in 1 2 3; do
-              git pull --rebase --autostash origin main && git push && break
-              # A conflict on status.json is structural, not a merge to solve:
-              # both sides only ever prepend a run. Take the remote file, put
-              # this run's record back on top, and try again.
-              git rebase --abort 2>/dev/null || true
-              git fetch origin main && git checkout --theirs content/status.json 2>/dev/null || true
-              echo "push attempt $attempt failed, retrying"
-              sleep 5
-            done
-          fi
+            git push && break
+            echo "push attempt $attempt lost the race, rebuilding on origin"
+            sleep 5
+          done
 
   # Three separate bugs stopped the submission from ever running, and each one
   # cost hours because the only thing that could say what failed was an Actions
