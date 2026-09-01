@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-01T05:08:45.340Z",
+ "fetchedAt": "2026-09-01T10:06:53.079Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -13,11 +13,11 @@
   },
   {
    "name": "Central Bank of the UAE",
-   "note": "27 August 2026: /en/rss/news returns 404."
+   "note": "27 August 2026: /en/rss/news returns 404. Re-checked 31 August 2026 and the picture is worse than a 404. The bank does still publish RSS, at /en/rss-feed/news-and-insights/ (also /publications-rss-feed/ and /events-rss-feed/), and those URLs return valid RSS 2.0 with 299 items and a lastBuildDate of 30 August 2026, so the CMS regenerates them nightly and they look alive from outside. They are not. Every pubDate is a placeholder with no real day or month -- '1 January 2000', '1 January 2007', '1 January 2011' -- the items run oldest-first, and the newest is from 2011. Fifteen years stale and undatable. Deliberately NOT moved into the url field above: retired sources are still fetched, so pointing this entry at a feed that answers would inject 299 items dated 2000-2011 into the wire. The dead 404 is the safer URL to keep here."
   },
   {
    "name": "Dubai Media Office",
-   "note": "27 August 2026: /en/rss returns a 404 page."
+   "note": "27 August 2026: /en/rss returns a 404 page. Re-checked 31 August 2026 by reading the homepage HTML: no link rel=alternate, no href containing rss, feed or .xml, and no subscribe link anywhere. The site publishes no feed at all, so there is no moved URL to find. This one is not coming back without a redesign."
   },
   {
    "name": "Emirates News Agency",
@@ -258,15 +258,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "ECB and Frankfurt Radio Symphony invite the public to Europa Open Air concert on 20 August 2026",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260811~47cd3ee040.en.html",
-   "published": "2026-08-11T08:30:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
