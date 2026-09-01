@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-01T10:06:53.079Z",
+ "fetchedAt": "2026-09-01T14:53:57.826Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -26,6 +26,24 @@
  ],
  "items": [
   {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-09-01T14:00:23.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
+  {
+   "title": "Barr, Unlocking Opportunities for Workers and Entrepreneurs with a Criminal Record",
+   "url": "https://www.federalreserve.gov/newsevents/speech/barr20260901a.htm",
+   "published": "2026-09-01T13:05:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
+  },
+  {
    "title": "SEC and FDA Announce MOU to Bolster Cooperation and Ensure Market Integrity",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-80-sec-fda-announce-mou-bolster-cooperation-ensure-market-integrity",
    "published": "2026-08-31T18:24:32.000Z",
@@ -51,15 +69,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-08-28T14:00:33.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "Warsh, In Our Time",
@@ -120,9 +129,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260825a.htm",
    "published": "2026-08-25T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Piero Cipollone: Interview with ilsussidiario.net",
@@ -174,9 +183,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260819a.htm",
    "published": "2026-08-19T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Christine Lagarde: Panel remarks about the European economy during a discussion on the global economic outlook at the World Economic Forum",
@@ -249,15 +258,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Results of the Semi-Annual FX Turnover Surveys in April 2026",
-   "url": "https://www.bankofengland.co.uk/markets/london-foreign-exchange-joint-standing-committee/results-of-the-semi-annual-fx-turnover-survey-april-2026",
-   "published": "2026-08-11T13:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
