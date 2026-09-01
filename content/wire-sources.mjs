@@ -60,12 +60,41 @@ export default [
     retired: "27 August 2026: the RSS route serves HTML, not a feed." },
 
   // ---- the Gulf, which is the half nobody else aggregates ----
+  // 31 August 2026. Searched for replacements for the three dead Gulf sources and found
+  // none, which is a finding rather than a gap in the search. Checked and rejected:
+  //   Central Bank of the UAE  - publishes RSS; abandoned since 2011 (see the note below).
+  //   Dubai Media Office       - publishes no feed of any kind (see the note below).
+  //   Abu Dhabi Securities Exchange - adx.ae/about-adx/media/press-releases has no feed, and
+  //     the releases themselves render client-side ("Loading component..." in the served
+  //     HTML), so even scraping would need a headless browser rather than a fetch.
+  //   Abu Dhabi Media Office   - mediaoffice.abudhabi has no feed.
+  // The pattern is consistent: UAE institutions have moved to X, Telegram and client-rendered
+  // newsrooms, and have abandoned RSS. This wire is deliberately built on primary-source
+  // feeds, so that architecture cannot carry Gulf coverage no matter which institution is
+  // tried next. Getting the Gulf in requires changing the mechanism, not the source list --
+  // and the better answer is probably not a newsroom feed at all but Dubai Pulse
+  // (api.dubaipulse.gov.ae), the Dubai government open-data platform, which publishes DLD
+  // property transactions daily. That needs a registered API key and issues no licence
+  // statement, so it is a decision, not a drop-in. Do not spend another evening looking for
+  // a Gulf RSS feed; there isn't one.
   { id: "uae-cb", name: "Central Bank of the UAE", label: "News", category: "gulf",
     url: "https://www.centralbank.ae/en/rss/news",
-    retired: "27 August 2026: /en/rss/news returns 404." },
+    retired: "27 August 2026: /en/rss/news returns 404. Re-checked 31 August 2026 and the \
+picture is worse than a 404. The bank does still publish RSS, at \
+/en/rss-feed/news-and-insights/ (also /publications-rss-feed/ and /events-rss-feed/), and \
+those URLs return valid RSS 2.0 with 299 items and a lastBuildDate of 30 August 2026, so the \
+CMS regenerates them nightly and they look alive from outside. They are not. Every pubDate is \
+a placeholder with no real day or month -- '1 January 2000', '1 January 2007', '1 January \
+2011' -- the items run oldest-first, and the newest is from 2011. Fifteen years stale and \
+undatable. Deliberately NOT moved into the url field above: retired sources are still fetched, \
+so pointing this entry at a feed that answers would inject 299 items dated 2000-2011 into the \
+wire. The dead 404 is the safer URL to keep here." },
   { id: "dubai-media", name: "Dubai Media Office", label: "News", category: "gulf",
     url: "https://mediaoffice.ae/en/rss",
-    retired: "27 August 2026: /en/rss returns a 404 page." },
+    retired: "27 August 2026: /en/rss returns a 404 page. Re-checked 31 August 2026 by \
+reading the homepage HTML: no link rel=alternate, no href containing rss, feed or .xml, and \
+no subscribe link anywhere. The site publishes no feed at all, so there is no moved URL to \
+find. This one is not coming back without a redesign." },
   { id: "wam", name: "Emirates News Agency", label: "Business", category: "gulf",
     url: "https://www.wam.ae/en/rss/business",
     retired: "27 August 2026: /en/rss returns 200 and renders the homepage, a soft 404. Their RSS index no longer lists any feed." },

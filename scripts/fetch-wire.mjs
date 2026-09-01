@@ -84,6 +84,35 @@ export function parse(xml) {
     .filter((x) => x.title && x.url);
 }
 
+/* ---------- what the run reports ----------
+   Pure, and exported, because the bug this replaced lived here and nothing
+   could reach it: the parsers were testable and the reporting was not, so a
+   status line that could never say "ok" went unnoticed for as long as the job
+   has existed. `perSource` is one entry per configured source, in any order. */
+export function wireReport({ itemCount, perSource, errors = {} }) {
+  const live = perSource.filter((r) => !r.src.retired);
+  const retired = perSource.filter((r) => r.src.retired);
+  const liveOk = live.filter((r) => r.answered).length;
+  const liveDown = live.filter((r) => !r.answered).map((r) => [r.src.id, errors[r.src.id]]);
+  const restored = retired.filter((r) => r.answered).map((r) => r.src.id);
+  return {
+    liveOk,
+    liveTotal: live.length,
+    liveDown,
+    restored,
+    status: liveOk === 0 ? "failed" : liveDown.length ? "partial" : "ok",
+    detail:
+      `${itemCount} items from ${liveOk} of ${live.length} feeds` +
+      (liveDown.length ? `. Down: ${liveDown.map(([k, v]) => `${k} (${v})`).join("; ")}` : "") +
+      (retired.length
+        ? `. Withdrawn, still asked: ${retired.map((r) => r.src.id).join(", ")}`
+        : "") +
+      (restored.length
+        ? `. RESTORED: ${restored.join(", ")} answered again -- clear the retired field`
+        : ""),
+  };
+}
+
 /* ---------- run ----------
    Guarded so the parsers above can be imported and tested without a network,
    which matters here because a parser is the part that breaks silently. */
@@ -158,10 +187,22 @@ const merged = [...byUrl.values()]
 const retired = SOURCES.filter((s) => s.retired);
 const live = SOURCES.filter((s) => !s.retired);
 
+/* The split above existed but nothing below it used it. `sourcesTotal` counted
+   live sources while `sourcesOk` counted successes across all twelve, which is
+   only the same number while every live feed answers -- the exact moment the
+   figure stops mattering. And because a retired source always throws, the
+   `notes.length` test below could never be zero, so this job reported "partial"
+   on every run it has ever made. A status that cannot go green cannot go red
+   either: four dead institutions were hiding whatever the live feeds did. */
+const perSource = SOURCES.map((src, i) => ({ src, answered: results[i] }));
+
+const report = wireReport({ itemCount: merged.length, perSource, errors });
+const { liveOk, liveDown, restored } = report;
+
 const out = {
   fetchedAt: new Date(now).toISOString(),
   sourcesTotal: live.length,
-  sourcesOk: ok,
+  sourcesOk: liveOk,
   retired: retired.map((s) => ({ name: s.name, note: s.retired })),
   items: merged,
 };
@@ -173,7 +214,6 @@ let status = { runs: [] };
 try {
   status = JSON.parse(fs.readFileSync(statusPath, "utf8"));
 } catch {}
-const notes = Object.entries(errors);
 status.runs = [
   {
     job: "fetch-wire",
@@ -182,16 +222,15 @@ status.runs = [
        every other job uses, so twelve of the forty runs on a public page
        rendered a blank status and "n/a" for the time. The wire runs every
        fifteen minutes, so it is the job most often at the top of that table. */
-    status: ok === 0 ? "failed" : notes.length ? "partial" : "ok",
-    detail:
-      `${merged.length} items from ${ok} of ${SOURCES.length} feeds` +
-      (notes.length ? `. Down: ${notes.map(([k, v]) => `${k} (${v})`).join("; ")}` : ""),
+    status: report.status,
+    detail: report.detail,
     ranAt: new Date(now).toISOString(),
   },
   ...(status.runs || []),
 ].slice(0, 40);
 fs.writeFileSync(statusPath, JSON.stringify(status, null, 1) + "\n");
 
-console.log(`Wire: ${merged.length} items, ${ok}/${SOURCES.length} feeds ok.`);
-if (notes.length) console.log("  down:", notes.map(([k, v]) => `${k}=${v}`).join(", "));
+console.log(`Wire: ${merged.length} items, ${liveOk}/${live.length} live feeds ok.`);
+if (liveDown.length) console.log("  down:", liveDown.map(([k, v]) => `${k}=${v}`).join(", "));
+if (restored.length) console.log("  RESTORED:", restored.join(", "));
 }
