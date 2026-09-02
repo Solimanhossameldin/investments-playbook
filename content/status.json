@@ -4,6 +4,12 @@
    "job": "fetch-wire",
    "status": "ok",
    "detail": "30 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-09-02T01:13:57.687Z"
+  },
+  {
+   "job": "fetch-wire",
+   "status": "ok",
+   "detail": "30 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-01T23:18:39.661Z"
   },
   {
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "no api key",
    "ranAt": "2026-09-01T09:15:21.587Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-09-01, so there is nothing to send.",
-   "ranAt": "2026-09-01T09:15:21.529Z"
   }
  ]
 }
