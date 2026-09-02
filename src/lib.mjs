@@ -140,6 +140,65 @@ export function md(src = "") {
 
 export const COUNTRIES = ["United Arab Emirates","Saudi Arabia","Qatar","Kuwait","Bahrain","Oman","United Kingdom","United States","India","Pakistan","Egypt","Jordan","Lebanon","Canada","Australia","Singapore","Hong Kong","China","Germany","France","Italy","Spain","Netherlands","Switzerland","Sweden","Norway","Denmark","Ireland","Portugal","Greece","Turkey","Russia","Ukraine","Kazakhstan","Azerbaijan","Nigeria","Kenya","South Africa","Ghana","Morocco","Tunisia","Algeria","Iraq","Syria","Yemen","Sudan","Libya","Bangladesh","Sri Lanka","Nepal","Philippines","Indonesia","Malaysia","Thailand","Vietnam","Japan","South Korea","New Zealand","Brazil","Argentina","Mexico","Chile","Colombia","Poland","Czechia","Romania","Hungary","Austria","Belgium","Finland","Israel","Cyprus","Malta","Other"];
 
+/* How many digits a national number has, per dial code, so a mistyped one is
+   caught at the form rather than discovered when somebody tries to ring it.
+
+   These are national significant numbers -- what is left after the country
+   code and after the trunk prefix (the leading 0 people type out of habit:
+   050 in the UAE, 07 in the UK). A range where a country genuinely has one,
+   a single number where it does not. Where a country's plan is wide or
+   irregular, the range is deliberately generous: refusing a real customer's
+   number is a far worse failure than accepting an odd one.
+
+   Not a substitute for a proper libphonenumber, and not pretending to be.
+   It catches the mistakes people actually make -- too few digits, too many,
+   the country code typed twice -- without a dependency or a network call. */
+export const PHONE_DIGITS = {
+  "+971": [9, 9], "+966": [9, 9], "+974": [8, 8], "+965": [8, 8],
+  "+973": [8, 8], "+968": [8, 8], "+44": [9, 10], "+1": [10, 10],
+  "+91": [10, 10], "+92": [10, 10], "+20": [9, 10], "+962": [8, 9],
+  "+961": [7, 8], "+61": [9, 9], "+65": [8, 8], "+852": [8, 8],
+  "+86": [11, 11], "+49": [9, 11], "+33": [9, 9], "+39": [9, 11],
+  "+34": [9, 9], "+31": [9, 9], "+41": [9, 9], "+353": [7, 9],
+  "+90": [10, 10], "+7": [10, 10], "+234": [10, 10], "+254": [9, 9],
+  "+27": [9, 9], "+212": [9, 9], "+880": [10, 10], "+94": [9, 9],
+  "+63": [10, 10], "+62": [9, 12], "+60": [9, 10], "+66": [9, 9],
+  "+81": [10, 10], "+82": [9, 10], "+55": [10, 11], "+52": [10, 10],
+  "+48": [9, 9], "+972": [9, 9],
+};
+
+/* Returns { ok, national, pretty, reason }. Pure, so it can be tested without
+   a browser, and shared by both forms so they cannot disagree about what a
+   valid number is. */
+export function normalisePhone(dial, raw) {
+  const code = String(dial || "").trim();
+  let d = String(raw || "").replace(/\D+/g, "");
+  if (!d) return { ok: false, reason: "Enter your phone number." };
+
+  /* People paste the country code into the number box as often as not, having
+     already chosen it from the list beside it. Both spellings, with and
+     without the leading zeros of an international prefix. */
+  const bare = code.replace("+", "");
+  if (d.startsWith("00" + bare)) d = d.slice(2 + bare.length);
+  else if (d.startsWith(bare) && d.length > (PHONE_DIGITS[code] || [7])[0]) d = d.slice(bare.length);
+
+  /* The trunk prefix. A UAE mobile is 050 1234567 spoken and 50 1234567
+     dialled from abroad; the 0 is not part of the number. */
+  d = d.replace(/^0+/, "");
+  if (!d) return { ok: false, reason: "That is not a phone number." };
+
+  const rule = PHONE_DIGITS[code];
+  if (!rule) return { ok: true, national: d, pretty: `${code} ${d}` };
+
+  const [min, max] = rule;
+  if (d.length < min)
+    return { ok: false, reason: `That looks short for ${code}. Expected ${min === max ? min : `${min} to ${max}`} digits after the code, got ${d.length}.` };
+  if (d.length > max)
+    return { ok: false, reason: `That looks long for ${code}. Expected ${min === max ? min : `${min} to ${max}`} digits after the code, got ${d.length}.` };
+
+  return { ok: true, national: d, pretty: `${code} ${d}` };
+}
+
 export const DIAL = [["+971","AE"],["+966","SA"],["+974","QA"],["+965","KW"],["+973","BH"],["+968","OM"],["+44","UK"],["+1","US"],["+91","IN"],["+92","PK"],["+20","EG"],["+962","JO"],["+961","LB"],["+61","AU"],["+65","SG"],["+852","HK"],["+86","CN"],["+49","DE"],["+33","FR"],["+39","IT"],["+34","ES"],["+31","NL"],["+41","CH"],["+353","IE"],["+90","TR"],["+7","RU"],["+234","NG"],["+254","KE"],["+27","ZA"],["+212","MA"],["+880","BD"],["+94","LK"],["+63","PH"],["+62","ID"],["+60","MY"],["+66","TH"],["+81","JP"],["+82","KR"],["+55","BR"],["+52","MX"],["+48","PL"],["+972","IL"]];
 
 export const INTENTS = [

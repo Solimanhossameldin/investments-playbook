@@ -551,5 +551,78 @@ check("both emitters make the scrolling block focusable and labelled",
   }
 }
 
+/* ---- a number you can actually ring ----
+   Every door asks for a phone now, so every door has to check it is one. The
+   cases below are the mistakes people really make, not invented ones: the
+   trunk zero they say out loud, the country code typed again beside the menu
+   that already asks for it, and the slip of a digit.
+
+   The browser has its own copy of this function -- app.js cannot import an
+   ES module -- so the last check runs both over the same table. A validator
+   that disagrees with itself is worse than none, because the form and the
+   tests would each be certain and one of them wrong. */
+{
+  const { normalisePhone, PHONE_DIGITS, DIAL } = await import(`${new URL("../src/lib.mjs", import.meta.url).href}`);
+
+  const good = [
+    ["+971", "0501234567", "+971 501234567", "UAE mobile with the trunk zero"],
+    ["+971", "501234567", "+971 501234567", "UAE mobile as dialled"],
+    ["+971", "971501234567", "+971 501234567", "country code typed into the box as well"],
+    ["+971", "00971501234567", "+971 501234567", "international prefix and all"],
+    ["+971", "050 123 4567", "+971 501234567", "spaces"],
+    ["+44", "07871093242", "+44 7871093242", "UK mobile with the trunk zero"],
+    ["+966", "0505929637", "+966 505929637", "Saudi mobile, the shape a real lead arrived in"],
+  ];
+  for (const [dial, raw, want, why] of good) {
+    const r = normalisePhone(dial, raw);
+    check(`accepts ${why}`, r.ok && r.pretty === want, JSON.stringify(r));
+  }
+
+  const bad = [
+    ["+971", "12345", "too short"],
+    ["+971", "5012345678901", "too long"],
+    ["+971", "", "empty"],
+    ["+971", "abcdef", "letters"],
+    ["+971", "0", "a lone zero"],
+    ["+44", "1234", "too short for the UK"],
+  ];
+  for (const [dial, raw, why] of bad) {
+    const r = normalisePhone(dial, raw);
+    check(`rejects ${why}`, r.ok === false && !!r.reason, JSON.stringify(r));
+  }
+
+  check("the refusal says what was expected and what arrived",
+    /Expected 9 digits after the code, got 5/.test(normalisePhone("+971", "12345").reason || ""),
+    normalisePhone("+971", "12345").reason);
+
+  /* A rule for every code the menu offers, or a country silently skips
+     validation and the whole exercise has a hole in it. */
+  const missing = DIAL.map(([d]) => d).filter((d) => !PHONE_DIGITS[d]);
+  check("every dial code the form offers has a digit rule",
+    missing.length === 0, missing.join(", "));
+
+  /* The two implementations must agree, always. */
+  const browser = appSrc.match(/function normalisePhone\(dial, raw\) \{[\s\S]*?\n  \}/);
+  check("the browser carries its own copy of the validator", !!browser, null);
+  if (browser) {
+    const digits = JSON.parse(JSON.stringify(PHONE_DIGITS));
+    const fn = new Function("PHONE_DIGITS", `${browser[0]}\nreturn normalisePhone;`)(digits);
+    const table = [...good.map(([d, r]) => [d, r]), ...bad.map(([d, r]) => [d, r]),
+      ["+1", "5551234567"], ["+91", "9876543210"], ["+7", "9012345678"], ["+999", "12345678"]];
+    const differs = table.filter(([d, r]) => {
+      const a = normalisePhone(d, r), b = fn(d, r);
+      return a.ok !== b.ok || a.pretty !== b.pretty || a.reason !== b.reason;
+    });
+    check("the browser's validator agrees with the module's on every case",
+      differs.length === 0, JSON.stringify(differs.slice(0, 3)));
+  }
+
+  check("the build injects the digit rules rather than the placeholder",
+    /__PHONE_DIGITS__/.test(appSrc) &&
+    !fs.existsSync(path.join(root, "dist/app.js")) === false &&
+    !/__PHONE_DIGITS__/.test(fs.readFileSync(path.join(root, "dist/app.js"), "utf8")),
+    null);
+}
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 process.exit(fails ? 1 : 0);

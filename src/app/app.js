@@ -4,6 +4,45 @@
 
   var ML = { account: "__ML_ACCOUNT__", brief: "__ML_BRIEF__", lead: "__ML_LEAD__", whatsapp: "__ML_WHATSAPP__" };
 
+  /* ---------------- a number you can actually ring ----------------
+     Both forms demand a phone now, so both have to check it is one. The
+     digit counts come from src/lib.mjs at build time rather than being typed
+     again here, and selftest runs this function and that one over the same
+     table and fails if they ever disagree.
+
+     It normalises before it judges, because the commonest "wrong" number is
+     a right one written the way people say it out loud: 050 in the UAE, 07
+     in the UK, or the country code typed again in the box beside the menu
+     that already asks for it. Rejecting those would be the form's mistake,
+     not the reader's. */
+  var PHONE_DIGITS = __PHONE_DIGITS__;
+
+  function normalisePhone(dial, raw) {
+    var code = String(dial || "").trim();
+    var d = String(raw || "").replace(/\D+/g, "");
+    if (!d) return { ok: false, reason: "Enter your phone number." };
+    var bare = code.replace("+", "");
+    var rule = PHONE_DIGITS[code];
+    if (d.indexOf("00" + bare) === 0) d = d.slice(2 + bare.length);
+    else if (d.indexOf(bare) === 0 && d.length > (rule ? rule[0] : 7)) d = d.slice(bare.length);
+    d = d.replace(/^0+/, "");
+    if (!d) return { ok: false, reason: "That is not a phone number." };
+    if (!rule) return { ok: true, national: d, pretty: code + " " + d };
+    var min = rule[0], max = rule[1], want = min === max ? String(min) : min + " to " + max;
+    if (d.length < min) return { ok: false, reason: "That looks short for " + code + ". Expected " + want + " digits after the code, got " + d.length + "." };
+    if (d.length > max) return { ok: false, reason: "That looks long for " + code + ". Expected " + want + " digits after the code, got " + d.length + "." };
+    return { ok: true, national: d, pretty: code + " " + d };
+  }
+
+  /* Say it where the reader is looking, and let the browser say it too, so
+     the message survives being missed on screen. */
+  function tellPhone(form, message) {
+    var el = form.querySelector("[name=phone]");
+    if (!el) return;
+    el.setCustomValidity(message || "");
+    if (message) { el.reportValidity(); el.focus(); }
+  }
+
   /* ---------------- nav ---------------- */
   var burger = document.getElementById("burger");
   var nav = document.getElementById("nav");
@@ -281,7 +320,13 @@
       /* The short form asks for a number now. Read it the same way the lead
          form does, so a signup from any door on the site arrives dialable. */
       var f = function (n) { var el = form.querySelector('[name=' + n + ']'); return el ? el.value.trim() : ""; };
-      var tel = f("phone") ? (f("dial") + " " + f("phone")).trim() : "";
+      var tel = "";
+      if (f("phone")) {
+        var ph = normalisePhone(f("dial"), f("phone"));
+        if (!ph.ok) { tellPhone(form, ph.reason); return; }
+        tellPhone(form, "");
+        tel = ph.pretty;
+      }
       busy(form, true);
       // A constant lead_source made every signup look identical, so nothing
       // could be traced to the page that earned it. The page now says.
@@ -338,11 +383,14 @@
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
       var g = function (n) { var el = form.querySelector('[name=' + n + ']'); return el ? el.value.trim() : ""; };
+      var lp = normalisePhone(g("dial"), g("phone"));
+      if (!lp.ok) { tellPhone(form, lp.reason); return; }
+      tellPhone(form, "");
       busy(form, true, "Sending the Playbook");
       mlPost(ML.lead, {
         name: g("name"),
         email: g("email"),
-        phone: g("dial") + " " + g("phone"),
+        phone: lp.pretty,
         country: g("country"),
         investor_intent: g("intent"),
         lead_source: "investmentsplaybook.com"
