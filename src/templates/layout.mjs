@@ -110,9 +110,24 @@ ${sorted
 // knows which framework it is, and a path page knows which of the seven
 // intents its reader just told us about by being there.
 export function briefForm(site, id = "brief-form", next = "", unlock = "", source = "", intent = "") {
-  return `<form class="inline-form" data-ml="brief" id="${id}"${next ? ` data-next="${esc(next)}"` : ""}${unlock ? ` data-unlock="${esc(unlock)}"` : ""}${source ? ` data-source="${esc(source)}"` : ""}${intent ? ` data-intent="${esc(intent)}"` : ""}>
+  /* This used to take an email and nothing else, on six pages. That is how the
+     31 August signup arrived with no way to ring the person back: an address,
+     an unconfirmed opt-in, and nothing else to work with. This is a lead
+     business before it is a newsletter, so every door now asks for a number.
+
+     It costs subscribers, and that was a decision taken with the cost known.
+     Three fields is still light -- the full lead form asks for six. The dial
+     code is a select rather than free text so the number arrives dialable,
+     and it defaults to the country the site is written for. */
+  return `<form class="inline-form inline-form--tel" data-ml="brief" id="${id}"${next ? ` data-next="${esc(next)}"` : ""}${unlock ? ` data-unlock="${esc(unlock)}"` : ""}${source ? ` data-source="${esc(source)}"` : ""}${intent ? ` data-intent="${esc(intent)}"` : ""}>
   <label class="sr-only" for="${id}-email" style="position:absolute;left:-9999px">Email address</label>
   <input id="${id}-email" name="email" type="email" required placeholder="your@email.com" autocomplete="email">
+  <label class="sr-only" for="${id}-dial" style="position:absolute;left:-9999px">Dial code</label>
+  <select id="${id}-dial" name="dial" aria-label="Dial code">${DIAL.map(
+    ([d, c], i) => `<option value="${d}"${i === 0 ? " selected" : ""}>${d} ${c}</option>`
+  ).join("")}</select>
+  <label class="sr-only" for="${id}-phone" style="position:absolute;left:-9999px">Phone number</label>
+  <input id="${id}-phone" name="phone" type="tel" required placeholder="Phone" autocomplete="tel" inputmode="tel">
   <button class="btn btn--solid" type="submit">Continue</button>
 </form>`;
 }

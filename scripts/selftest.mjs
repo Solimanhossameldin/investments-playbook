@@ -509,5 +509,47 @@ check("both emitters make the scrolling block focusable and labelled",
     check(`the form still carries a ${n} field`, form.includes(`name="${n}"`), null);
 }
 
+/* ---- every door asks for a number ----
+   A signup arrived on 31 August through the short form with an email and
+   nothing else, and there was no way to ring the person back. This is a lead
+   business before it is a newsletter. The rule is now enforced rather than
+   remembered: every capture form on the site takes a phone, and the built
+   pages are checked as well as the template, because a form is only as good
+   as the page it actually renders on. */
+{
+  const L = await import(`${new URL("../src/templates/layout.mjs", import.meta.url).href}`);
+  const brief = L.briefForm({ name: "T", origin: "https://e.com" }, "t-form");
+
+  check("the short form asks for a phone number",
+    /name="phone"[^>]*required/.test(brief) || /required[^>]*name="phone"/.test(brief), brief.slice(0, 200));
+  check("the short form carries a dial code so the number is dialable",
+    /name="dial"/.test(brief), null);
+  check("the short form still asks for an email",
+    /name="email"[^>]*required/.test(brief), null);
+
+  /* The runtime has to send what the markup collects, or the field is
+     decoration. This is the half that would fail silently. */
+  check("the runtime sends the phone on the short form's path",
+    /mlPost\(ML\.brief,\s*\{[\s\S]{0,120}phone:/.test(appSrc), null);
+
+  /* And the built site, not just the template: every form that posts to
+     MailerLite must collect a number, whichever page it sits on. */
+  const dist = path.join(root, "dist");
+  if (fs.existsSync(dist)) {
+    const pages = fs.readdirSync(dist, { recursive: true })
+      .filter((f) => String(f).endsWith(".html")).map((f) => path.join(dist, String(f)));
+    let forms = 0; const bad = [];
+    for (const f of pages) {
+      const html = fs.readFileSync(f, "utf8");
+      for (const m of html.match(/<form[^>]*data-ml="[^"]*"[\s\S]*?<\/form>/g) || []) {
+        forms++;
+        if (!/name="phone"/.test(m)) bad.push(path.relative(dist, f));
+      }
+    }
+    check("every capture form on the built site collects a phone number",
+      forms > 0 && bad.length === 0, `${forms} forms, ${bad.length} without a phone: ${[...new Set(bad)].slice(0, 4).join(", ")}`);
+  }
+}
+
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 process.exit(fails ? 1 : 0);

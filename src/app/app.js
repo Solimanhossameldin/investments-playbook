@@ -278,6 +278,10 @@
       ev.preventDefault();
       var email = form.querySelector('input[name=email]').value.trim();
       if (!email) return;
+      /* The short form asks for a number now. Read it the same way the lead
+         form does, so a signup from any door on the site arrives dialable. */
+      var f = function (n) { var el = form.querySelector('[name=' + n + ']'); return el ? el.value.trim() : ""; };
+      var tel = f("phone") ? (f("dial") + " " + f("phone")).trim() : "";
       busy(form, true);
       // A constant lead_source made every signup look identical, so nothing
       // could be traced to the page that earned it. The page now says.
@@ -285,6 +289,7 @@
       var intent = form.getAttribute("data-intent");
       mlPost(ML.brief, {
         email: email,
+        phone: tel,
         lead_source: "investmentsplaybook.com" + (src ? " / " + src : " / brief")
           + (channel() ? " / " + channel() : ""),
         investor_intent: intent || ""
