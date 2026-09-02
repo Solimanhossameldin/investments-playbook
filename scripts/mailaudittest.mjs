@@ -106,13 +106,13 @@ const kinds = (a) => auditAccount(a).findings.map((f) => f.kind);
   for (const auto of a.automations)
     for (const s of auto.steps) {
       if (s.type !== "email") continue;
-      s.from_name = "TOP MASTERS REAL ESTATE L. L. C";
-      s.email.from_name = "TOP MASTERS REAL ESTATE L. L. C";
+      s.from_name = "Unrelated Holdings L. L. C";
+      s.email.from_name = "Unrelated Holdings L. L. C";
     }
   const found = auditAccount(a).findings.filter((f) => f.kind === "wrong sender name");
   ok("every automation email sending as another company is caught", found.length === 4, `${found.length} of 4`);
   ok("and the campaign, which was correct, is not", !found.some((f) => f.where.startsWith("campaign")));
-  ok("and the finding names the wrong sender", found[0] && found[0].detail.includes("TOP MASTERS"));
+  ok("and the finding names the wrong sender", found[0] && found[0].detail.includes("Unrelated Holdings"));
   ok("and says whether it is switched on", found[0] && found[0].detail.includes("not live"));
 }
 
@@ -306,8 +306,8 @@ const RENAMING = {
 {
   const a = clean();
   a.site = RENAMING;
-  a.automations[0].steps[1].from_name = "TOP MASTERS REAL ESTATE L. L. C";
-  a.automations[0].steps[1].email.from_name = "TOP MASTERS REAL ESTATE L. L. C";
+  a.automations[0].steps[1].from_name = "Unrelated Holdings L. L. C";
+  a.automations[0].steps[1].email.from_name = "Unrelated Holdings L. L. C";
   const f = auditAccount(a).findings.find((x) => x.kind === "wrong sender name");
   ok("a third name is still caught while renaming", !!f);
   ok("and the finding lists both permitted names",

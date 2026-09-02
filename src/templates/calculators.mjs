@@ -1,4 +1,4 @@
-import { esc, copy, pageTitle } from "../lib.mjs";
+import { esc, copy, pageTitle, clampDescription } from "../lib.mjs";
 import { leadBand, captureBlock } from "./layout.mjs";
 
 const n = (id, label, def, opts = {}) => ({ kind: "num", id, label, def, ...opts });
@@ -314,6 +314,22 @@ const FAQ = {
 };
 for (const c of CALCULATORS) c.faq = FAQ[c.slug];
 
+/* The count in the index description used to be typed by hand. It said six
+   while eight were shipping, and because the sentence also ran past DESC_MAX
+   the clamp published it ending on the word "and". Derive it instead: the
+   list below is the only place a calculator is declared, so the sentence
+   cannot disagree with the site. selftest.mjs fails the build if it does. */
+const NUM_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+export const inWords = (n) => NUM_WORDS[n] || String(n);
+
+export function calcIndexDescription(list = CALCULATORS) {
+  const named = 4;
+  return clampDescription(
+    `${inWords(list.length)[0].toUpperCase()}${inWords(list.length).slice(1)} free calculators for property and portfolio decisions. ` +
+      `Net rental yield, Dubai rent increase, off-plan IRR, rent versus buy and ${inWords(Math.max(list.length - named, 0))} more.`
+  );
+}
+
 function field(f) {
   if (f.kind === "head") return `<h2 style="font-family:var(--serif);font-size:1.3rem;margin:30px 0 14px;padding-top:18px;border-top:1px solid var(--hair-light)">${esc(f.label)}</h2>`;
   if (f.kind === "range")
@@ -348,7 +364,7 @@ export function calcIndex({ site }) {
 
 ${captureBlock(site, { source: "calculators-index", heading: "The frameworks behind the calculators", blurb: "Every calculator here comes from a framework that shows the arithmetic and where it breaks. Get all of them as one document." })}
 </div></section>`;
-  return { title: pageTitle("Calculators. Property and portfolio arithmetic", site.name), description: "Six free calculators for property and portfolio decisions. Net rental yield, rent versus buy, off-plan IRR, withdrawal rate, US estate tax exposure and lump sum versus cost averaging.", path: "/calculators/", body };
+  return { title: pageTitle("Calculators. Property and portfolio arithmetic", site.name), description: calcIndexDescription(), path: "/calculators/", body };
 }
 
 export function calcPage({ site, calc, counts }) {

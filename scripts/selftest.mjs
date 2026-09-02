@@ -625,4 +625,42 @@ check("both emitters make the scrolling block focusable and labelled",
 }
 
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
+
+/* ---- counts and clamps in metadata ----
+   The calculators index description was typed by hand. It said six while eight
+   were shipping, and it ran past DESC_MAX, so the clamp published it ending on
+   the word "and". Both faults were invisible: nothing rendered wrong, the page
+   just told Google something untrue in a sentence that stopped mid-thought.
+   The count is derived now, and these two checks are what keep it honest. */
+{
+  const { CALCULATORS, calcIndexDescription, inWords } =
+    await import(new URL("../src/templates/calculators.mjs", import.meta.url));
+  const desc = calcIndexDescription();
+
+  check("the calculators description names the real number of calculators",
+    desc.toLowerCase().startsWith(inWords(CALCULATORS.length).toLowerCase()),
+    `${desc.slice(0, 40)}... vs ${CALCULATORS.length}`);
+
+  check("and a calculator added later still agrees with it",
+    calcIndexDescription([...CALCULATORS, { slug: "x" }]).toLowerCase()
+      .startsWith(inWords(CALCULATORS.length + 1).toLowerCase()), null);
+
+  /* No description anywhere may end on a dangling conjunction: that is the
+     signature of a sentence the clamp cut in half. */
+  const distDir = path.join(root, "dist");
+  if (fs.existsSync(distDir)) {
+    const dangling = [];
+    for (const f of fs.readdirSync(distDir, { recursive: true })
+      .filter((x) => String(x).endsWith(".html"))) {
+      const html = fs.readFileSync(path.join(distDir, String(f)), "utf8");
+      const m = html.match(/<meta name="description" content="([^"]*)"/);
+      if (m && /\b(and|or|with|for|the|a|to|of|in)$/i.test(m[1].trim()))
+        dangling.push(String(f));
+    }
+    check("no built page publishes a description cut off mid-sentence",
+      dangling.length === 0, `${dangling.length}: ${dangling.slice(0, 4).join(", ")}`);
+  }
+}
+
+
 process.exit(fails ? 1 : 0);

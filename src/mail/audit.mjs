@@ -2,8 +2,8 @@
 
    The site has checks that will not let it publish a stale count or a cadence
    it is not keeping. The mailing list had none, and it showed: on 29 August
-   every one of the sixteen automation emails was set to send from "TOP MASTERS
-   REAL ESTATE L. L. C", a different business, while the sent campaigns were
+   every one of the sixteen automation emails was set to send under an
+   unrelated company's name, while the sent campaigns were
    correctly from "The Dubai Signal". Nothing in the account can notice that,
    because MailerLite has no opinion about which company the account belongs to.
 

@@ -246,7 +246,19 @@ export function clampDescription(text, max = DESC_MAX) {
 
   const cut = t.slice(0, max);
   const at = cut.lastIndexOf(" ");
-  return (at > 40 ? cut.slice(0, at) : cut).replace(/[,;:\-\s]+$/, "");
+  let tail = (at > 40 ? cut.slice(0, at) : cut).replace(/[,;:\-\s]+$/, "");
+
+  /* Cutting on a word boundary is not enough. A sentence that ends "...each
+     linking to" or "...the tax treatment and" is grammatical nowhere, and it
+     is what search results were showing on 30 pages. Walk back off any word
+     that cannot end a sentence, then off the punctuation that word left. */
+  const DANGLING = /(^|\s)(and|or|but|with|without|for|from|to|of|in|on|at|by|as|the|a|an|its|their|his|her|which|that|than|while|when|each|every|both|into|onto|over|under|per|via)$/i;
+  while (DANGLING.test(tail)) {
+    const back = tail.lastIndexOf(" ");
+    if (back <= 40) break;
+    tail = tail.slice(0, back).replace(/[,;:\-\s]+$/, "");
+  }
+  return tail;
 }
 
 /* ---------- is the brief actually keeping its promise? ----------
