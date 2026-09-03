@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-03T11:20:20.036Z",
+ "fetchedAt": "2026-09-03T15:06:50.747Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -28,11 +28,20 @@
   {
    "title": "Major Economic Indicators Latest Numbers",
    "url": "https://www.bls.gov/bls/",
-   "published": "2026-09-02T14:03:08.000Z",
+   "published": "2026-09-03T12:31:10.000Z",
    "source": "Bureau of Labor Statistics",
    "sourceLabel": "Economic indicators",
    "category": "macro",
    "feed": "bls"
+  },
+  {
+   "title": "Waller, The Economic Outlook and Some Comments on My Policy Communication",
+   "url": "https://www.federalreserve.gov/newsevents/speech/waller20260903a.htm",
+   "published": "2026-09-03T12:30:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
   },
   {
    "title": "SEC Announces Agenda and Panelists for Roundtable on Preparations for 24-Hour Trading",
@@ -276,15 +285,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Federal Reserve Board issues enforcement action with former employee of Regions Bank",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260813a.htm",
-   "published": "2026-08-13T15:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
   }
  ]
 }
