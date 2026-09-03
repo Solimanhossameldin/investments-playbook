@@ -115,11 +115,17 @@ export function briefForm(site, id = "brief-form", next = "", unlock = "", sourc
      an unconfirmed opt-in, and nothing else to work with. This is a lead
      business before it is a newsletter, so every door now asks for a number.
 
+     A number alone was still not enough. On 2 September a signup arrived
+     through this door with a working Saudi mobile and no name -- someone to
+     ring with nothing to call them. So this asks for a name too, and every
+     field here is required: a partial record is not a lead.
+
      It costs subscribers, and that was a decision taken with the cost known.
-     Three fields is still light -- the full lead form asks for six. The dial
-     code is a select rather than free text so the number arrives dialable,
-     and it defaults to the country the site is written for. */
+     The dial code is a select rather than free text so the number arrives
+     dialable, and it defaults to the country the site is written for. */
   return `<form class="inline-form inline-form--tel" data-ml="brief" id="${id}"${next ? ` data-next="${esc(next)}"` : ""}${unlock ? ` data-unlock="${esc(unlock)}"` : ""}${source ? ` data-source="${esc(source)}"` : ""}${intent ? ` data-intent="${esc(intent)}"` : ""}>
+  <label class="sr-only" for="${id}-name" style="position:absolute;left:-9999px">Full name</label>
+  <input id="${id}-name" name="name" type="text" required placeholder="Your name" autocomplete="name">
   <label class="sr-only" for="${id}-email" style="position:absolute;left:-9999px">Email address</label>
   <input id="${id}-email" name="email" type="email" required placeholder="your@email.com" autocomplete="email">
   <label class="sr-only" for="${id}-dial" style="position:absolute;left:-9999px">Dial code</label>
@@ -162,13 +168,13 @@ export function leadForm(site) {
     ).join("")}</select></div>
     <div><label for="lf-phone">Phone</label><input id="lf-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel"></div>
   </div>
-  <div class="field"><label for="lf-country">Country <span class="opt">optional</span></label>
-    <input id="lf-country" name="country" type="text" list="country-list" autocomplete="country-name" placeholder="Start typing">
+  <div class="field"><label for="lf-country">Country</label>
+    <input id="lf-country" name="country" type="text" required list="country-list" autocomplete="country-name" placeholder="Start typing">
     <datalist id="country-list">${COUNTRIES.map((c) => `<option value="${esc(c)}">`).join("")}</datalist>
   </div>
-  <div class="field"><label for="lf-intent">What are you trying to do? <span class="opt">optional</span></label>
-    <select id="lf-intent" name="intent">
-      <option value="" selected>Choose one, or skip it</option>
+  <div class="field"><label for="lf-intent">What are you trying to do?</label>
+    <select id="lf-intent" name="intent" required>
+      <option value="" selected disabled>Choose one</option>
       ${INTENTS.map((i) => `<option value="${esc(i)}">${esc(i)}</option>`).join("")}
     </select>
   </div>

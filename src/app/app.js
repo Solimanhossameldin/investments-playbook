@@ -36,7 +36,21 @@
 
   /* Say it where the reader is looking, and let the browser say it too, so
      the message survives being missed on screen. */
-  function tellPhone(form, message) {
+  /* Every field the markup marks required must actually arrive. Returns false
+   and focuses the first empty one, so the person is told which, rather than
+   the form failing silently or -- worse -- posting an unusable record. */
+function missingOk(form) {
+  var req = form.querySelectorAll("[required]");
+  for (var i = 0; i < req.length; i++) {
+    if (String(req[i].value || "").trim()) continue;
+    try { req[i].focus(); } catch (e) {}
+    if (typeof req[i].reportValidity === "function") req[i].reportValidity();
+    return false;
+  }
+  return true;
+}
+
+function tellPhone(form, message) {
     var el = form.querySelector("[name=phone]");
     if (!el) return;
     el.setCustomValidity(message || "");
@@ -315,24 +329,29 @@
   document.querySelectorAll('form[data-ml="brief"]').forEach(function (form) {
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
-      var email = form.querySelector('input[name=email]').value.trim();
-      if (!email) return;
+      var f = function (n) { var el = form.querySelector('[name=' + n + ']'); return el ? el.value.trim() : ""; };
+      /* The markup marks these required, but `required` is a browser courtesy,
+         not a guarantee: it is skipped on a programmatic submit and gone the
+         moment anything sets novalidate. The runtime is the only place the
+         rule can actually hold, so it holds here. A partial record is not a
+         lead -- it is someone we cannot ring back. */
+      if (!missingOk(form)) return;
+      var email = f("email");
       /* The short form asks for a number now. Read it the same way the lead
          form does, so a signup from any door on the site arrives dialable. */
-      var f = function (n) { var el = form.querySelector('[name=' + n + ']'); return el ? el.value.trim() : ""; };
-      var tel = "";
-      if (f("phone")) {
-        var ph = normalisePhone(f("dial"), f("phone"));
-        if (!ph.ok) { tellPhone(form, ph.reason); return; }
-        tellPhone(form, "");
-        tel = ph.pretty;
-      }
+      var ph = normalisePhone(f("dial"), f("phone"));
+      if (!ph.ok) { tellPhone(form, ph.reason); return; }
+      tellPhone(form, "");
+      var tel = ph.pretty;
       busy(form, true);
       // A constant lead_source made every signup look identical, so nothing
       // could be traced to the page that earned it. The page now says.
       var src = form.getAttribute("data-source");
       var intent = form.getAttribute("data-intent");
+      /* The name field is decoration unless the runtime sends it. That is
+         exactly how the phone field failed the first time. */
       mlPost(ML.brief, {
+        name: f("name"),
         email: email,
         phone: tel,
         lead_source: "investmentsplaybook.com" + (src ? " / " + src : " / brief")
@@ -383,6 +402,7 @@
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
       var g = function (n) { var el = form.querySelector('[name=' + n + ']'); return el ? el.value.trim() : ""; };
+      if (!missingOk(form)) return;
       var lp = normalisePhone(g("dial"), g("phone"));
       if (!lp.ok) { tellPhone(form, lp.reason); return; }
       tellPhone(form, "");

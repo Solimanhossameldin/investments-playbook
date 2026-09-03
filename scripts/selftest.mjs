@@ -495,11 +495,23 @@ check("both emitters make the scrolling block focusable and labelled",
   check("every consent box wraps its text in a single span",
     checks.every((c) => (c.match(/<span>/g) || []).length === 1), null);
 
-  /* Friction is a number, so it gets a number. Eight required interactions
-     stood between a reader and a free PDF; this fails if that creeps back. */
+  /* Friction is a number, so it gets a number -- but which way the number
+     should go was a business decision, and it has been made twice.
+
+     First cut: eight required interactions stood between a reader and a free
+     PDF, so country and intent became optional and this asserted "at most
+     four". Then the leads arrived. One came through with a working mobile and
+     no name, and a lead you cannot address is not cheaper than no lead, it is
+     worth less. The owner's call on 3 September: every field, every door.
+
+     So the bound is now a floor, not a ceiling: name, email, phone, country,
+     intent and the opt-in. The dial code is not counted -- it is a select that
+     always holds a value, so `required` on it would assert nothing. Lowering
+     the floor again is a decision someone should have to make on purpose,
+     which is what a failing test forces. */
   const required = (form.match(/\brequired\b/g) || []).length;
-  check("the form asks for at most four required things",
-    required <= 4, `${required} required`);
+  check("every field on the lead form is required, opt-in included",
+    required >= 6, `${required} required, expected at least 6`);
   check("the email opt-in is still an explicit, unticked box",
     /<input type="checkbox" required>/.test(form) && !/checked/.test(form), null);
 
@@ -548,6 +560,43 @@ check("both emitters make the scrolling block focusable and labelled",
     }
     check("every capture form on the built site collects a phone number",
       forms > 0 && bad.length === 0, `${forms} forms, ${bad.length} without a phone: ${[...new Set(bad)].slice(0, 4).join(", ")}`);
+  }
+
+  /* ---- a partial record is not a lead ----
+     A number was not enough either. On 2 September a signup came through the
+     short form with a working Saudi mobile and no name: someone to ring, with
+     nothing to call them. Every door now asks for a name, every field on every
+     capture form is required, and the runtime enforces it rather than trusting
+     the `required` attribute, which a programmatic submit skips. */
+  {
+    const distDir = path.join(root, "dist");
+    if (fs.existsSync(distDir)) {
+      const noName = [], optional = [];
+      let seen = 0;
+      for (const rel of fs.readdirSync(distDir, { recursive: true })
+        .filter((x) => String(x).endsWith(".html"))) {
+        const html = fs.readFileSync(path.join(distDir, String(rel)), "utf8");
+        for (const m of html.match(/<form[^>]*data-ml="[^"]*"[\s\S]*?<\/form>/g) || []) {
+          seen++;
+          if (!/name="name"/.test(m)) noName.push(String(rel));
+          for (const fld of m.match(/<(input|select)\b[^>]*name="(name|email|dial|phone|country|intent)"[^>]*>/g) || [])
+            if (!/\brequired\b/.test(fld) && !/name="dial"/.test(fld)) optional.push(String(rel));
+        }
+      }
+      check("every capture form asks for a name", seen > 0 && noName.length === 0,
+        `${seen} forms, ${noName.length} without: ${[...new Set(noName)].slice(0, 3).join(", ")}`);
+      check("and no field on any capture form is optional", optional.length === 0,
+        `${optional.length} optional fields on ${[...new Set(optional)].slice(0, 3).join(", ")}`);
+    }
+
+    /* Markup alone is a courtesy. The runtime has to refuse too, and it has to
+       send what it collected -- the phone field shipped once as decoration
+       because the runtime never posted it. */
+    check("the runtime refuses a form with an empty required field",
+      /function missingOk\(form\)/.test(appSrc) && (appSrc.match(/if \(!missingOk\(form\)\) return;/g) || []).length === 2,
+      (appSrc.match(/if \(!missingOk\(form\)\) return;/g) || []).length + " of 2 handlers guarded");
+    check("and the short form actually sends the name it collects",
+      /mlPost\(ML\.brief,\s*\{[\s\S]{0,200}name:/.test(appSrc), null);
   }
 }
 
