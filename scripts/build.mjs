@@ -176,7 +176,7 @@ emit(P.staticPage({ site, title: `Editorial and disclosure standards. ${site.nam
    counting and the disclosure in the same commit, and clearing it removes
    both. The earlier version of this page claimed Google Fonts for a week
    after the fonts were self-hosted, which is the failure this prevents. */
-const ANALYTICS_PRIVACY = false
+const ANALYTICS_PRIVACY = site.analytics?.cloudflareToken
   ? "Visits are counted using Cloudflare Web Analytics, which records the page, the referring site, the country and the type of device, and nothing else. It sets no cookie, stores no identifier, and cannot follow you to another site or recognise you when you come back. There is no profile of you here to build, which is why this page carries no consent banner: there is nothing to consent to.\n\nIf that ever changes, and this site starts using anything that can recognise a returning visitor, it will be said here first."
   : "";
 
