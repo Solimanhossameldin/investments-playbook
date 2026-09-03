@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-03T06:13:04.727Z",
+ "fetchedAt": "2026-09-03T11:20:20.036Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -285,15 +285,6 @@
    "sourceLabel": "Press releases",
    "category": "rates",
    "feed": "fed-all"
-  },
-  {
-   "title": "Cash remains most widely accepted payment method in euro area",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260813~389729d6a9.en.html",
-   "published": "2026-08-13T09:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
