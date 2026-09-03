@@ -487,6 +487,7 @@ for (const p of indexable) if (!inMap.has(p.url)) note("error", "missing from si
     ["Kraken", "api.kraken.com"],
     ["MailerLite", "assets.mailerlite.com"],
     ["ExchangeRate-API", "open.er-api.com"],
+    ["Cloudflare", "static.cloudflareinsights.com"],
   ];
   const privacy = pages.get("/privacy/");
   if (!privacy) note("error", "privacy missing", "/privacy/ was not built");

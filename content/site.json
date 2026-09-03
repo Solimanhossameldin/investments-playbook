@@ -1,86 +1,92 @@
 {
- "name": "Investments Playbook",
- "domain": "investmentsplaybook.com",
- "origin": "https://investmentsplaybook.com",
- "tagline": "The arithmetic behind every investment decision.",
- "description": "A daily brief on global markets and property, a library of the frameworks that actually work, and the calculators that turn them into your number.",
- "author": {
-  "name": "Soliman Hossam Eldin",
-  "role": "Head of Sales and Marketing, OneLink Properties, Dubai",
-  "years": "13+ years in UAE real estate",
-  "initials": "SH",
-  "linkedin": "https://www.linkedin.com/in/solimanhossameldin",
-  "site": "https://solimanhossameldin.com",
-  "bio": "Soliman has spent thirteen years inside the UAE property market, on the side of the table that sees the numbers before the brochure does. Investments Playbook is where the arithmetic gets published rather than pitched."
- },
- "indexnow": "31796d29a0fb45bf910e908521071620",
- "mailerlite": {
-  "account": "2532906",
-  "briefFormId": "196852881104570257",
-  "leadFormId": "196852884221986141",
-  "from": "soliman.hossameldin.aly@gmail.com",
-  "fromName": "The Dubai Signal",
-  "fromNameNote": "The name the daily brief sends as today. The account is mid-rename: the announcement campaign and all sixteen automation emails already say Investments Playbook, because none of them can reach anyone before the announcement goes out. On the day it is sent, change fromName to Investments Playbook and drop The Dubai Signal from senderNames, and the audit tightens by itself.",
-  "senderNames": ["The Dubai Signal", "Investments Playbook"],
-  "briefGroups": [
-   "194150618195035167",
-   "196852856803821437"
+  "name": "Investments Playbook",
+  "domain": "investmentsplaybook.com",
+  "origin": "https://investmentsplaybook.com",
+  "tagline": "The arithmetic behind every investment decision.",
+  "description": "A daily brief on global markets and property, a library of the frameworks that actually work, and the calculators that turn them into your number.",
+  "author": {
+    "name": "Soliman Hossam Eldin",
+    "role": "Head of Sales and Marketing, OneLink Properties, Dubai",
+    "years": "13+ years in UAE real estate",
+    "initials": "SH",
+    "linkedin": "https://www.linkedin.com/in/solimanhossameldin",
+    "site": "https://solimanhossameldin.com",
+    "bio": "Soliman has spent thirteen years inside the UAE property market, on the side of the table that sees the numbers before the brochure does. Investments Playbook is where the arithmetic gets published rather than pitched."
+  },
+  "indexnow": "31796d29a0fb45bf910e908521071620",
+  "mailerlite": {
+    "account": "2532906",
+    "briefFormId": "196852881104570257",
+    "leadFormId": "196852884221986141",
+    "from": "soliman.hossameldin.aly@gmail.com",
+    "fromName": "The Dubai Signal",
+    "fromNameNote": "The name the daily brief sends as today. The account is mid-rename: the announcement campaign and all sixteen automation emails already say Investments Playbook, because none of them can reach anyone before the announcement goes out. On the day it is sent, change fromName to Investments Playbook and drop The Dubai Signal from senderNames, and the audit tightens by itself.",
+    "senderNames": [
+      "The Dubai Signal",
+      "Investments Playbook"
+    ],
+    "briefGroups": [
+      "194150618195035167",
+      "196852856803821437"
+    ],
+    "briefGroupNames": [
+      "Newsletter – Market Insights",
+      "IP: Daily Brief"
+    ]
+  },
+  "disclaimer": "Investments Playbook publishes educational research and general information. Nothing on this site is personal investment advice, a solicitation, or a recommendation to buy or sell any asset. Property and securities can fall in value. Past performance does not predict future returns. Figures shown are indicative and may be delayed. Always take regulated professional advice before acting.",
+  "attribution": "Market figures on this site come from FRED at the Federal Reserve Bank of St. Louis, carrying series published by the U.S. Treasury, the Federal Reserve Board, the Bureau of Labor Statistics, the Energy Information Administration and Freddie Mac, plus ExchangeRate-API, gold-api.com and Kraken. Every figure carries its own source and timestamp.",
+  "nav": [
+    {
+      "href": "/brief/",
+      "label": "The Brief"
+    },
+    {
+      "href": "/wire/",
+      "label": "The Wire"
+    },
+    {
+      "href": "/communities/",
+      "label": "Communities"
+    },
+    {
+      "href": "/playbooks/",
+      "label": "Playbooks"
+    },
+    {
+      "href": "/calculators/",
+      "label": "Calculators"
+    },
+    {
+      "href": "/glossary/",
+      "label": "Glossary"
+    },
+    {
+      "href": "/chartbook/",
+      "label": "Chartbook"
+    },
+    {
+      "href": "/data/",
+      "label": "Market Data"
+    },
+    {
+      "href": "/about/",
+      "label": "About"
+    }
   ],
-  "briefGroupNames": [
-   "Newsletter – Market Insights",
-   "IP: Daily Brief"
-  ]
- },
- "disclaimer": "Investments Playbook publishes educational research and general information. Nothing on this site is personal investment advice, a solicitation, or a recommendation to buy or sell any asset. Property and securities can fall in value. Past performance does not predict future returns. Figures shown are indicative and may be delayed. Always take regulated professional advice before acting.",
- "attribution": "Market figures on this site come from FRED at the Federal Reserve Bank of St. Louis, carrying series published by the U.S. Treasury, the Federal Reserve Board, the Bureau of Labor Statistics, the Energy Information Administration and Freddie Mac, plus ExchangeRate-API, gold-api.com and Kraken. Every figure carries its own source and timestamp.",
- "nav": [
-  {
-   "href": "/brief/",
-   "label": "The Brief"
+  "heroGlobe": false,
+  "contact": {
+    "email": "hello@investmentsplaybook.com",
+    "whatsapp": "+971507795060",
+    "booking": "",
+    "responseHours": 48
   },
-  {
-   "href": "/wire/",
-   "label": "The Wire"
+  "brief": {
+    "byEmail": false,
+    "phrase": "weekday mornings",
+    "note": "The sentence the site prints about how often the brief goes out. It must describe what is actually happening, not what is intended. Today the issue is built by hand, so the honest phrase is 'most weekday mornings'. When scripts/mail-brief.mjs is switched from draft to schedule with MAIL_AT=07:00, change this to 'every weekday at 7am GST' and it becomes true. The web archive lags whenever the drafting pipeline is not running, which the site says separately."
   },
-  {
-   "href": "/communities/",
-   "label": "Communities"
-  },
-  {
-   "href": "/playbooks/",
-   "label": "Playbooks"
-  },
-  {
-   "href": "/calculators/",
-   "label": "Calculators"
-  },
-  {
-   "href": "/glossary/",
-   "label": "Glossary"
-  },
-  {
-   "href": "/chartbook/",
-   "label": "Chartbook"
-  },
-  {
-   "href": "/data/",
-   "label": "Market Data"
-  },
-  {
-   "href": "/about/",
-   "label": "About"
+  "analytics": {
+    "cloudflareToken": ""
   }
- ],
- "heroGlobe": false,
- "contact": {
-  "email": "hello@investmentsplaybook.com",
-  "whatsapp": "+971507795060",
-  "booking": "",
-  "responseHours": 48
- },
- "brief": {
-  "byEmail": false,
-  "phrase": "weekday mornings",
-  "note": "The sentence the site prints about how often the brief goes out. It must describe what is actually happening, not what is intended. Today the issue is built by hand, so the honest phrase is 'most weekday mornings'. When scripts/mail-brief.mjs is switched from draft to schedule with MAIL_AT=07:00, change this to 'every weekday at 7am GST' and it becomes true. The web archive lags whenever the drafting pipeline is not running, which the site says separately."
- }
 }

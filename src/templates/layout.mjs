@@ -138,6 +138,21 @@ export function briefForm(site, id = "brief-form", next = "", unlock = "", sourc
 </form>`;
 }
 
+/* Cloudflare Web Analytics: page counts, referrers and paths, with no cookie
+   and no identifier, so there is nothing to ask consent for and no banner.
+   The privacy page's "no cookies at all" stays true with this on.
+
+   It is off until a token exists. An empty token emits nothing at all, which
+   is what keeps the privacy page honest: seoaudit pairs every provider the
+   page names with the host a browser must contact, and errors both ways --
+   naming one that is not reached, and reaching one that is not named. So the
+   page's sentence about this provider and this tag have to arrive together. */
+export function analyticsTag(site) {
+  const token = ((site && site.analytics) || {}).cloudflareToken || "";
+  if (!token) return "";
+  return `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"${esc(token)}"}'></script>`;
+}
+
 export function leadForm(site) {
   /* Two rendering bugs and a conversion problem, all visible in one screenshot.
 
@@ -313,6 +328,7 @@ ${body}
 </main>
 ${footer(site)}
 <script src="/app.js${assets.js ? `?v=${assets.js}` : ""}" defer></script>
+${analyticsTag(site)}
 </body>
 </html>`;
 }

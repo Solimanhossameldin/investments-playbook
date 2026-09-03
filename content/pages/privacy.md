@@ -47,6 +47,8 @@ You can unsubscribe from any email with one click, using the link at the bottom 
 
 The site sets no advertising or tracking cookies of its own, and no cookies at all. Fonts are served from this domain rather than from a font network, so loading a page on this site tells no third party that you did.
 
+__ANALYTICS_PRIVACY__
+
 ## Changes
 
 If this policy changes materially, the change will be noted on this page with a date, and subscribers will be told in the brief.

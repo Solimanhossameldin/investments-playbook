@@ -168,7 +168,19 @@ emit(recordPage({ site, calls, results: callResults.results || {}, briefs }));
 emit(P.dataPage({ site, market, status }), DAILY);
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));
 emit(P.staticPage({ site, title: `Editorial and disclosure standards. ${site.name}`, description: "How figures are sourced, how the daily brief is produced, how corrections are handled, and every commercial relationship declared.", path: "/disclosure/", eyebrow: "Editorial standards", heading: "How this is produced, and every conflict declared.", bodyMd: STATIC.disclosure }));
-emit(P.staticPage({ site, title: `Privacy. ${site.name}`, description: "What this site collects, where it goes, and what the calculators never send anywhere.", path: "/privacy/", eyebrow: "Privacy", heading: "What is collected, and what never leaves your browser.", bodyMd: STATIC.privacy }));
+/* The privacy page and the analytics tag are switched by one value. seoaudit
+   errors both ways -- naming a provider nothing contacts, and contacting one
+   the page does not name -- so the sentence and the script must arrive
+   together or not at all. Deriving both from site.analytics.cloudflareToken
+   makes that structural rather than remembered: pasting a token turns on the
+   counting and the disclosure in the same commit, and clearing it removes
+   both. The earlier version of this page claimed Google Fonts for a week
+   after the fonts were self-hosted, which is the failure this prevents. */
+const ANALYTICS_PRIVACY = false
+  ? "Visits are counted using Cloudflare Web Analytics, which records the page, the referring site, the country and the type of device, and nothing else. It sets no cookie, stores no identifier, and cannot follow you to another site or recognise you when you come back. There is no profile of you here to build, which is why this page carries no consent banner: there is nothing to consent to.\n\nIf that ever changes, and this site starts using anything that can recognise a returning visitor, it will be said here first."
+  : "";
+
+emit(P.staticPage({ site, title: `Privacy. ${site.name}`, description: "What this site collects, where it goes, and what the calculators never send anywhere.", path: "/privacy/", eyebrow: "Privacy", heading: "What is collected, and what never leaves your browser.", bodyMd: STATIC.privacy.replace("__ANALYTICS_PRIVACY__", ANALYTICS_PRIVACY) }));
 emit(contactPage({ site }));
 emit(P.notFound({ site }));
 
