@@ -170,6 +170,43 @@ export const PHONE_DIGITS = {
 /* Returns { ok, national, pretty, reason }. Pure, so it can be tested without
    a browser, and shared by both forms so they cannot disagree about what a
    valid number is. */
+/* A number of the right length is not the same as a number. "111111111" and
+   "123456789" both passed, and both are someone getting past a form rather
+   than giving you a way to reach them.
+
+   The leading digit is where a country's numbering plan actually lives, but
+   this only tightens where the rule is certain: the set below lists every
+   digit a valid national number of that length can start with, so a real
+   number cannot be turned away. In the Gulf a landline is shorter than a
+   mobile, so the length check has already excluded it and the mobile prefix
+   is the whole story. Everywhere else the rule is length plus junk only --
+   rejecting a real customer costs far more than accepting a fake number,
+   which costs one wasted row. */
+export const PHONE_STARTS = {
+  "+971": "5",        // UAE mobile; the 8-digit landline is already excluded
+  "+966": "5",        // Saudi mobile; landline is 8 digits
+  "+974": "34567",    // Qatar: every valid number starts here
+  "+965": "12569",    // Kuwait
+  "+973": "1367",     // Bahrain
+  "+968": "279",      // Oman
+  "+44": "1235789",   // UK national significant numbers
+  "+234": "789",      // Nigeria, 10-digit NSN
+};
+
+/* Same digit throughout, or a straight run up or down. Both are what someone
+   types to get past a form, and neither is issued by anyone. */
+export function looksTyped(d) {
+  if (/^(\d)\1+$/.test(d)) return true;
+  /* Counted modulo ten, so "1234567890" is caught: the 9 to 0 step is a wrap,
+     not a break, and that string is the keyboard row rather than a number. */
+  let up = true, down = true;
+  for (let i = 1; i < d.length; i++) {
+    if (+d[i] !== (+d[i - 1] + 1) % 10) up = false;
+    if (+d[i] !== (+d[i - 1] + 9) % 10) down = false;
+  }
+  return up || down;
+}
+
 export function normalisePhone(dial, raw) {
   const code = String(dial || "").trim();
   let d = String(raw || "").replace(/\D+/g, "");
@@ -195,6 +232,12 @@ export function normalisePhone(dial, raw) {
     return { ok: false, reason: `That looks short for ${code}. Expected ${min === max ? min : `${min} to ${max}`} digits after the code, got ${d.length}.` };
   if (d.length > max)
     return { ok: false, reason: `That looks long for ${code}. Expected ${min === max ? min : `${min} to ${max}`} digits after the code, got ${d.length}.` };
+
+  if (looksTyped(d)) return { ok: false, reason: "That is not a phone number." };
+
+  const starts = PHONE_STARTS[code];
+  if (starts && !starts.includes(d[0]))
+    return { ok: false, reason: `A ${code} number does not start with ${d[0]}. Check the number.` };
 
   return { ok: true, national: d, pretty: `${code} ${d}` };
 }

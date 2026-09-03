@@ -16,6 +16,23 @@
      that already asks for it. Rejecting those would be the form's mistake,
      not the reader's. */
   var PHONE_DIGITS = __PHONE_DIGITS__;
+  var PHONE_STARTS = __PHONE_STARTS__;
+
+  /* Same digit throughout, or a straight run up or down. Neither is issued by
+     anyone; both are what someone types to get past a form. Kept identical to
+     looksTyped() in lib.mjs -- selftest runs both over one table and fails if
+     they ever disagree. */
+  function looksTyped(d) {
+    if (/^(\d)\1+$/.test(d)) return true;
+    /* Modulo ten, so "1234567890" counts as a run: the 9 to 0 step is a wrap.
+       Must stay identical to looksTyped() in lib.mjs. */
+    var up = true, down = true;
+    for (var i = 1; i < d.length; i++) {
+      if (+d[i] !== (+d[i - 1] + 1) % 10) up = false;
+      if (+d[i] !== (+d[i - 1] + 9) % 10) down = false;
+    }
+    return up || down;
+  }
 
   function normalisePhone(dial, raw) {
     var code = String(dial || "").trim();
@@ -31,6 +48,10 @@
     var min = rule[0], max = rule[1], want = min === max ? String(min) : min + " to " + max;
     if (d.length < min) return { ok: false, reason: "That looks short for " + code + ". Expected " + want + " digits after the code, got " + d.length + "." };
     if (d.length > max) return { ok: false, reason: "That looks long for " + code + ". Expected " + want + " digits after the code, got " + d.length + "." };
+    if (looksTyped(d)) return { ok: false, reason: "That is not a phone number." };
+    var starts = PHONE_STARTS[code];
+    if (starts && starts.indexOf(d.charAt(0)) === -1)
+      return { ok: false, reason: "A " + code + " number does not start with " + d.charAt(0) + ". Check the number." };
     return { ok: true, national: d, pretty: code + " " + d };
   }
 

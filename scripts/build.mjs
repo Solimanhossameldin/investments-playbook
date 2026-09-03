@@ -27,7 +27,7 @@ import playbooks from "../content/playbooks.mjs";
 import paths from "../content/paths.mjs";
 import * as STATIC from "../content/static.mjs";
 import { pickRelated } from "../src/related.mjs";
-import { isoDate, PHONE_DIGITS } from "../src/lib.mjs";
+import { isoDate, PHONE_DIGITS, PHONE_STARTS } from "../src/lib.mjs";
 import { cryptoBand } from "../src/templates/crypto.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -87,7 +87,8 @@ const appText = [
   .replace("__ML_WHATSAPP__", whatsappUrl(site) || "")
   /* The digit rules live in src/lib.mjs and are injected, not retyped, so the
      browser and the tests cannot drift apart on what a valid number is. */
-  .replace("__PHONE_DIGITS__", JSON.stringify(PHONE_DIGITS));
+  .replace("__PHONE_DIGITS__", JSON.stringify(PHONE_DIGITS))
+  .replace("__PHONE_STARTS__", JSON.stringify(PHONE_STARTS));
 
 const hash = (t) => crypto.createHash("sha1").update(t).digest("hex").slice(0, 8);
 const assets = { css: hash(cssText), js: hash(appText) };

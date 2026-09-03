@@ -611,7 +611,7 @@ check("both emitters make the scrolling block focusable and labelled",
    that disagrees with itself is worse than none, because the form and the
    tests would each be certain and one of them wrong. */
 {
-  const { normalisePhone, PHONE_DIGITS, DIAL } = await import(`${new URL("../src/lib.mjs", import.meta.url).href}`);
+  const { normalisePhone, PHONE_DIGITS, PHONE_STARTS, DIAL } = await import(`${new URL("../src/lib.mjs", import.meta.url).href}`);
 
   const good = [
     ["+971", "0501234567", "+971 501234567", "UAE mobile with the trunk zero"],
@@ -650,14 +650,26 @@ check("both emitters make the scrolling block focusable and labelled",
   check("every dial code the form offers has a digit rule",
     missing.length === 0, missing.join(", "));
 
-  /* The two implementations must agree, always. */
+  /* The two implementations must agree, always. The browser copy is lifted out
+     of app.js and run here, so it needs everything it leans on: the two lookup
+     tables the build injects, and its own looksTyped. Pulling looksTyped out of
+     app.js rather than passing the module's keeps this a comparison of two
+     independent implementations, which is the only version worth running. */
   const browser = appSrc.match(/function normalisePhone\(dial, raw\) \{[\s\S]*?\n  \}/);
+  const browserTyped = appSrc.match(/function looksTyped\(d\) \{[\s\S]*?\n  \}/);
   check("the browser carries its own copy of the validator", !!browser, null);
-  if (browser) {
+  check("and its own copy of the junk-number rule", !!browserTyped, null);
+  if (browser && browserTyped) {
     const digits = JSON.parse(JSON.stringify(PHONE_DIGITS));
-    const fn = new Function("PHONE_DIGITS", `${browser[0]}\nreturn normalisePhone;`)(digits);
+    const starts = JSON.parse(JSON.stringify(PHONE_STARTS));
+    const fn = new Function("PHONE_DIGITS", "PHONE_STARTS",
+      `${browserTyped[0]}\n${browser[0]}\nreturn normalisePhone;`)(digits, starts);
     const table = [...good.map(([d, r]) => [d, r]), ...bad.map(([d, r]) => [d, r]),
-      ["+1", "5551234567"], ["+91", "9876543210"], ["+7", "9012345678"], ["+999", "12345678"]];
+      ["+1", "5551234567"], ["+91", "9876543210"], ["+7", "9012345678"], ["+999", "12345678"],
+      /* the right length and not a number: both implementations must agree */
+      ["+971", "111111111"], ["+971", "123456789"], ["+971", "987654321"],
+      ["+971", "401234567"], ["+966", "105929637"], ["+44", "1111111111"],
+      ["+33", "123456789"], ["+33", "612345678"], ["+234", "9035557895"]];
     const differs = table.filter(([d, r]) => {
       const a = normalisePhone(d, r), b = fn(d, r);
       return a.ok !== b.ok || a.pretty !== b.pretty || a.reason !== b.reason;
@@ -709,6 +721,67 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
     check("no built page publishes a description cut off mid-sentence",
       dangling.length === 0, `${dangling.length}: ${dangling.slice(0, 4).join(", ")}`);
   }
+}
+
+
+
+/* ---- a number of the right length is not a number ----
+   "111111111" and "123456789" are nine digits, which is what a UAE mobile has,
+   and both got through. Someone typing those is getting past a form, not
+   giving you a way to reach them.
+
+   The prefix rule only tightens where the numbering plan is certain, and the
+   asymmetry is the reason: accepting a fake number wastes one row, turning
+   away a real customer loses them for good. So PHONE_STARTS lists every digit
+   a valid national number of that length can begin with, and countries not in
+   it keep length-plus-junk. The Gulf entries are safe because a landline there
+   is shorter than a mobile and the length check has already excluded it. */
+{
+  const { normalisePhone, looksTyped, PHONE_STARTS, PHONE_DIGITS } =
+    await import(new URL("../src/lib.mjs", import.meta.url));
+
+  const junk = [["+971", "111111111"], ["+971", "123456789"], ["+971", "987654321"],
+    ["+44", "1111111111"], ["+33", "123456789"], ["+1", "1234567890"]];
+  check("a straight run or a repeated digit is refused, whatever the country",
+    junk.every(([d, r]) => !normalisePhone(d, r).ok),
+    junk.find(([d, r]) => normalisePhone(d, r).ok));
+
+  check("and the refusal does not blame the length, which was right",
+    junk.every(([d, r]) => !/short|long/.test(normalisePhone(d, r).reason)), null);
+
+  const wrongStart = [["+971", "401234567"], ["+966", "105929637"], ["+974", "84567890"]];
+  check("a leading digit no number in that country uses is refused",
+    wrongStart.every(([d, r]) => !normalisePhone(d, r).ok), null);
+  check("and the refusal names the digit, so it can be corrected",
+    wrongStart.every(([d, r]) => /does not start with/.test(normalisePhone(d, r).reason)), null);
+
+  /* The real numbers of five actual leads. This is the check that matters:
+     a validator that refuses these is worse than no validator at all. */
+  const real = [["+971", "501234567"], ["+966", "505929637"], ["+44", "7871093242"],
+    ["+234", "9035557895"], ["+966", "509541628"], ["+33", "612345678"], ["+1", "5551234567"]];
+  check("every real number we hold still passes",
+    real.every(([d, r]) => normalisePhone(d, r).ok),
+    real.find(([d, r]) => !normalisePhone(d, r).ok));
+
+  /* A start rule for a country whose length band admits landlines too would
+     turn real people away. Every entry must be a country the digit count has
+     already narrowed to one kind of number. */
+  check("every country with a start rule has a fixed number length",
+    Object.keys(PHONE_STARTS).every((c) => {
+      const r = PHONE_DIGITS[c];
+      return r && (c === "+44" ? true : r[0] === r[1]);
+    }), Object.keys(PHONE_STARTS).find((c) => {
+      const r = PHONE_DIGITS[c];
+      return !r || (c !== "+44" && r[0] !== r[1]);
+    }));
+
+  check("looksTyped is exported so the browser copy can be held to it",
+    typeof looksTyped === "function" && looksTyped("111") && !looksTyped("501234567"), null);
+
+  check("the build injects the start rules rather than the placeholder",
+    fs.existsSync(path.join(root, "dist/app.js")) &&
+    !/__PHONE_STARTS__/.test(fs.readFileSync(path.join(root, "dist/app.js"), "utf8")) &&
+    /PHONE_STARTS/.test(fs.readFileSync(path.join(root, "dist/app.js"), "utf8")), null);
 }
 
 
