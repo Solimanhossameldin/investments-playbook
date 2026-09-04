@@ -234,7 +234,7 @@ function tellPhone(form, message) {
     var next = (form && form.getAttribute("data-next")) || "You will get the next issue when it publishes.";
     var route = otherRoute();
     if (box) box.innerHTML = '<h2>You are on the list</h2><p>' + next +
-      ' Check your inbox for a confirmation email.</p>' +
+      '</p>' +
       (route ? '<p style="margin:10px 0 0;font-size:14px">Would rather not wait? ' + route + '</p>' : "");
   }
   try { if (localStorage.getItem("ip_subscribed") === "1") openGate(); } catch (e) {}
@@ -351,10 +351,15 @@ function tellPhone(form, message) {
     return (prefix || "") + '<a href="' + ML.whatsapp + '">message me on WhatsApp</a> and skip the inbox entirely.';
   }
 
+  /* The reader is not sent to their inbox to finish the job. Half of the first
+     eight never came back from that trip, and the details that matter -- the
+     name and the working number -- are already captured by the time this line
+     renders. A confirmation mail may still arrive; it is simply no longer the
+     step the page demands before it will call this done. */
   function confirmLine(res) {
     if (res && res.verified)
-      return "You are on the list. Check your inbox to confirm \u2014 or " + (otherRoute() || "reply to the email when it arrives.");
-    return "Sent. Check your inbox to confirm \u2014 if nothing arrives in a few minutes, try again, or "
+      return "You are on the list, and I have your number. Nothing else to do \u2014 or " + (otherRoute() || "reply to the email when it arrives.");
+    return "Sent. If you do not hear from me in a day or so, try again, or "
       + (otherRoute() || "email us directly.");
   }
 
@@ -460,7 +465,7 @@ function tellPhone(form, message) {
         var wrap = form.parentNode;
         var route = otherRoute();
         wrap.innerHTML = '<div class="ok"><h4>Here it is</h4>' +
-          '<p style="margin:0 0 14px;font-size:14px">Open it now, and confirm the email we just sent so the daily brief reaches you.</p>' +
+          '<p style="margin:0 0 14px;font-size:14px">Open it now. I have your details and will come back to you on the building.</p>' +
           '<a class="btn btn--solid" href="/playbook/">Read the Playbook</a>' +
           (route ? '<p style="margin:14px 0 0;font-size:14px">Got a building in mind already? ' + route + '</p>' : "") +
           '</div>';
