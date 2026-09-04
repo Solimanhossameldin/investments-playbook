@@ -389,6 +389,15 @@ check("both emitters make the scrolling block focusable and labelled",
     ratio(token("muted-dark"), token("ink")) >= 4.5,
     ratio(token("muted-dark"), token("ink")).toFixed(2));
 
+  /* The wordmark. It sits on rgba(0,0,0,.95) and was the last colour on the
+     site still failing: brand red on black at 4.04. It is also the first
+     thing anyone sees, which is a poor place to keep the one exception. */
+  check("the wordmark's accent uses the dark-surface red, not the paper one",
+    /\.mark b \{ color: var\(--gold-on-dark\)/.test(css),
+    (css.match(/[^\n]*\.mark b \{[^\n]*/g) || []).join(" | "));
+  check("and that red clears the bar on the masthead's near-black ground",
+    ratio(ONDARK, "#000000") >= 4.5, ratio(ONDARK, "#000000").toFixed(2));
+
   // The ticker and footer links must not fall back to the paper reds.
   check("links on dark ground use the dark-surface red",
     /\.ticker__meta a \{ color: var\(--gold-on-dark\)/.test(css) &&

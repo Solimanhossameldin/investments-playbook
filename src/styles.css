@@ -798,7 +798,12 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.018em; line-height: 1.1; }
 .hdr { border-bottom: none; box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.12); }
 .hdr--on { box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.12), 0 10px 26px -22px rgba(0, 0, 0, 0.8); }
 .mark { color: #ffffff; }
-.mark b { color: var(--gold); font-weight: 600; }
+/* The masthead sits on rgba(0,0,0,.95), so the accent word in the wordmark
+   was brand red on black at 4.04 against a bar of 4.5 -- the last colour on
+   the site still failing, and the one every visitor sees first. --gold-on-dark
+   is the token that already exists for exactly this ground, and every other
+   element on a dark surface uses it. It measures 6.42 here. */
+.mark b { color: var(--gold-on-dark); font-weight: 600; }
 .nav a { color: #d4d4d4; font-size: 11.5px; letter-spacing: 0.1em; }
 .nav a:hover, .nav a[aria-current="page"] { color: #ffffff; border-color: transparent; }
 .nav a::after { background: var(--gold); height: 2px; bottom: -2px; }
