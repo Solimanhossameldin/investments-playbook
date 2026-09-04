@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "pipeline",
+   "status": "ok",
+   "detail": "update=success, deploy=success, submit=success",
+   "ranAt": "2026-09-04T23:02:05.633Z"
+  },
+  {
    "job": "indexnow",
    "status": "ok",
    "detail": "submitted 145 urls, HTTP 200",
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "19 figures refreshed",
    "ranAt": "2026-09-04T07:56:15.454Z"
-  },
-  {
-   "job": "pipeline",
-   "status": "ok",
-   "detail": "update=success, deploy=success, submit=success",
-   "ranAt": "2026-09-04T07:54:57.223Z"
   }
  ]
 }
