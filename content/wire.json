@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-04T18:09:36.863Z",
+ "fetchedAt": "2026-09-04T20:46:04.526Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -303,15 +303,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "SEC Charges Boiler Room Operator and Three Entities with Defrauding Retail Investors in $74 Million Pre-IPO Investment Scam",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-75-sec-charges-boiler-room-operator-three-entities-defrauding-retail-investors-74-million-pre-ipo",
-   "published": "2026-08-14T20:16:34.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
   }
  ]
 }
