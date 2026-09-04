@@ -834,4 +834,24 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 }
 
 
+
+/* ---- images an email points at ----
+   A broken image in a newsletter cannot be fixed after the send. These are
+   hosted on this origin rather than a third party for the same reason the
+   fonts are: an image loaded from someone else's server tells them who opened
+   the email and when. The build throws if a source file is missing; this
+   checks the other half, that the built site actually serves it. */
+{
+  const distDir = path.join(root, "dist");
+  if (fs.existsSync(distDir)) {
+    const img = path.join(distDir, "email", "net-yield.png");
+    check("the email image is served from this origin", fs.existsSync(img), img);
+    check("and it is a real PNG, not a zero-byte placeholder",
+      fs.existsSync(img) && fs.statSync(img).size > 1000 &&
+      fs.readFileSync(img).subarray(0, 4).toString("hex") === "89504e47",
+      fs.existsSync(img) ? fs.statSync(img).size + " bytes" : "absent");
+  }
+}
+
+
 process.exit(fails ? 1 : 0);

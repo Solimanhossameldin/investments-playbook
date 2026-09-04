@@ -199,6 +199,20 @@ fs.writeFileSync(
 fs.copyFileSync(path.join(root, "content", "og.png"), path.join(dist, "og.png"));
 fs.copyFileSync(path.join(root, "content", "icon-512.png"), path.join(dist, "icon-512.png"));
 
+/* Images for the mailing list are served from this origin, like the fonts and
+   for the same reason: an email that loads a picture from a third party tells
+   that third party who opened it and when. Hosting them here means the only
+   party who learns anything is the one who sent the email. They are copied,
+   not generated, and selftest fails if a file named here is missing -- a
+   broken image in an email cannot be fixed after it is sent. */
+const EMAIL_IMAGES = ["email-net-yield.png"];
+fs.mkdirSync(path.join(dist, "email"), { recursive: true });
+for (const f of EMAIL_IMAGES) {
+  const src = path.join(root, "content", f);
+  if (!fs.existsSync(src)) throw new Error(`email image missing: content/${f}`);
+  fs.copyFileSync(src, path.join(dist, "email", f.replace(/^email-/, "")));
+}
+
 // The typefaces, served from this origin. Copied rather than listed one by
 // one so adding a weight is a matter of dropping the file in and adding the
 // @font-face rule, with nothing to forget here.
