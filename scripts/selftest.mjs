@@ -785,4 +785,44 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 }
 
 
+
+/* ---- no success path may end at an unconfirmed inbox ----
+   The first eight website signups split four confirmed and four not, while
+   seven of the eight left a working phone number. The site was telling every
+   successful signup to "check your inbox to confirm", and offering WhatsApp
+   only when the post could not be verified -- so the half most likely to go
+   quiet were handed nothing but the channel they were about to ignore.
+
+   Three places end a signup: confirmLine, the gate box, and the lead form's
+   replacement block. Each must offer a route that does not depend on an email
+   being opened. This checks the source rather than a rendered page because
+   two of the three only exist after a network call the test cannot make. */
+{
+  const routes = (appSrc.match(/otherRoute\(/g) || []).length;
+  check("there is one helper for the non-email route, not three copies",
+    /function otherRoute\(/.test(appSrc), null);
+
+  /* Definition plus three call sites. Fewer means a path lost its route. */
+  check("all three success paths offer it", routes >= 4, `${routes} occurrences, expected at least 4`);
+
+  /* This assertion was written loose the first time and passed with the fix
+     reverted, because 200 characters was far enough to reach the otherRoute
+     call in the fallback branch below it. It has to bind to the verified
+     branch's own return statement and nothing else. */
+  const verifiedReturn = (appSrc.match(/res\.verified\)\s*\n\s*return ([^;]*);/) || [])[1] || "";
+  check("the verified branch offers it too, not just the fallback",
+    /otherRoute\(/.test(verifiedReturn), verifiedReturn.slice(0, 70));
+
+  check("the gate box offers it", /You are on the list<\/h2>[\s\S]{0,300}route/.test(appSrc), null);
+
+  check("the lead form's success block offers it",
+    /Read the Playbook<\/a>'[\s\S]{0,120}route/.test(appSrc), null);
+
+  /* And it degrades to something true rather than a dangling sentence when no
+     number is configured. */
+  check("with no WhatsApp number configured it still reads as a sentence",
+    /otherRoute\(\) \|\| "/.test(appSrc), null);
+}
+
+
 process.exit(fails ? 1 : 0);

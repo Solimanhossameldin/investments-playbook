@@ -232,7 +232,10 @@ function tellPhone(form, message) {
     // sentence that promises nothing is the safe direction to be wrong in.
     var form = document.querySelector("form[data-ml='brief'][data-next]");
     var next = (form && form.getAttribute("data-next")) || "You will get the next issue when it publishes.";
-    if (box) box.innerHTML = '<h2>You are on the list</h2><p>' + next + ' Check your inbox for a confirmation email.</p>';
+    var route = otherRoute();
+    if (box) box.innerHTML = '<h2>You are on the list</h2><p>' + next +
+      ' Check your inbox for a confirmation email.</p>' +
+      (route ? '<p style="margin:10px 0 0;font-size:14px">Would rather not wait? ' + route + '</p>' : "");
   }
   try { if (localStorage.getItem("ip_subscribed") === "1") openGate(); } catch (e) {}
 
@@ -332,12 +335,27 @@ function tellPhone(form, message) {
 
   /* What the reader is shown, given what is actually known. Kept next to the
      post rather than at each call site so the two cannot drift apart. */
+  /* Half of them never click the confirmation link.
+
+     Eight signups in the first five days: four confirmed their address and
+     four did not, and seven of the eight left a working phone number. Until
+     now the site's last word to a successful signup was "check your inbox to
+     confirm", and WhatsApp appeared only when the post could not be verified
+     -- so the people most likely to go quiet were the ones offered nothing
+     but the channel they were about to ignore.
+
+     Every success path now offers a second route that does not depend on an
+     email being opened. selftest fails if one of them stops. */
+  function otherRoute(prefix) {
+    if (!ML.whatsapp || ML.whatsapp.indexOf("http") !== 0) return "";
+    return (prefix || "") + '<a href="' + ML.whatsapp + '">message me on WhatsApp</a> and skip the inbox entirely.';
+  }
+
   function confirmLine(res) {
-    if (res && res.verified) return "You are on the list. Check your inbox to confirm.";
-    var wa = ML.whatsapp && ML.whatsapp.indexOf("http") === 0
-      ? ' or <a href="' + ML.whatsapp + '">message us on WhatsApp</a>'
-      : "";
-    return "Sent. Check your inbox to confirm \u2014 if nothing arrives in a few minutes, try again" + wa + ".";
+    if (res && res.verified)
+      return "You are on the list. Check your inbox to confirm \u2014 or " + (otherRoute() || "reply to the email when it arrives.");
+    return "Sent. Check your inbox to confirm \u2014 if nothing arrives in a few minutes, try again, or "
+      + (otherRoute() || "email us directly.");
   }
 
   function busy(form, on, label) {
@@ -440,7 +458,12 @@ function tellPhone(form, message) {
         lead_status: "New",
       }).then(function () {
         var wrap = form.parentNode;
-        wrap.innerHTML = '<div class="ok"><h4>Here it is</h4><p style="margin:0 0 14px;font-size:14px">Open it now, and confirm the email we just sent so the daily brief reaches you.</p><a class="btn btn--solid" href="/playbook/">Read the Playbook</a></div>';
+        var route = otherRoute();
+        wrap.innerHTML = '<div class="ok"><h4>Here it is</h4>' +
+          '<p style="margin:0 0 14px;font-size:14px">Open it now, and confirm the email we just sent so the daily brief reaches you.</p>' +
+          '<a class="btn btn--solid" href="/playbook/">Read the Playbook</a>' +
+          (route ? '<p style="margin:14px 0 0;font-size:14px">Got a building in mind already? ' + route + '</p>' : "") +
+          '</div>';
       }).catch(function () {
         busy(form, false);
         var e = document.createElement("p");
