@@ -835,6 +835,43 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 
 
 
+/* ---- the fragment that carries every call to action ----
+   "Get the Playbook" in the header is /#playbook, and every link in the
+   newsletter ends the same way, so this fragment is the site's whole
+   conversion path. On 6 September the live site answered that URL at scroll
+   position zero: ten and a half screens above the form on the home page,
+   four and a third on a calculator page. Nine conversions in eleven days had
+   an obvious contributing cause and nobody had measured it.
+
+   These checks cover the three parts of the repair, because a silent
+   regression here costs leads without anything looking broken. */
+{
+  const appSrcNow = fs.readFileSync(path.join(root, "src", "app", "app.js"), "utf8");
+  const cssNow = fs.readFileSync(path.join(root, "src", "styles.css"), "utf8");
+
+  check("the runtime scrolls to the element the URL names",
+    /location\.hash[\s\S]{0,900}scrollIntoView/.test(appSrcNow), null);
+
+  check("it scrolls instantly, not through ten screens of animation",
+    /scrollIntoView\(\{[^}]*behavior:\s*"instant"/.test(appSrcNow), null);
+
+  /* A script that keeps dragging the reader back where it wants them is
+     worse than one that never scrolled. */
+  check("it gives up as soon as the reader scrolls for themselves",
+    /wheel[\s\S]{0,220}theirs = true/.test(appSrcNow) &&
+    /function go\(\)\s*\{\s*if \(theirs\) return;/.test(appSrcNow), null);
+
+  check("a section reached by its id clears the sticky header",
+    /section\[id\][^{]*\{[^}]*scroll-margin-top/.test(cssNow), null);
+
+  /* If the header ever stops pointing at the form, the checks above are
+     guarding a path nobody walks. */
+  const layoutSrc = fs.readFileSync(path.join(root, "src", "templates", "layout.mjs"), "utf8");
+  check("the header's own call to action still points at the form",
+    /#playbook/.test(layoutSrc), null);
+}
+
+
 /* ---- images an email points at ----
    A broken image in a newsletter cannot be fixed after the send. These are
    hosted on this origin rather than a third party for the same reason the

@@ -4,6 +4,50 @@
 
   var ML = { account: "__ML_ACCOUNT__", brief: "__ML_BRIEF__", lead: "__ML_LEAD__", whatsapp: "__ML_WHATSAPP__" };
 
+  /* ---------------- landing on the form, not above it ----------------
+     "Get the Playbook" in the header is /#playbook on every page, and every
+     link in the newsletter ends the same way. Measured against the live site
+     on 6 September: arriving on that URL left the reader at scroll position
+     zero -- ten and a half screens above the form on the home page, four and
+     a third on a calculator page. The browser's own fragment scroll did not
+     survive this page, and the reveal animation and the late-arriving market
+     figures both move layout after parse, so the single path that turns a
+     reader into a lead was asking them to go looking for it.
+
+     Rather than work out which of those defeats the browser, this stops
+     leaving the money path to the browser at all: if the URL names an
+     element, scroll to it once layout has settled and again after the ticker
+     has had its chance. "instant" rather than the sheet's smooth, because
+     animating ten screens on arrival is slower than the reader's patience.
+
+     It gives up the moment the reader touches the page. A script that keeps
+     yanking someone back to where it thinks they should be is worse than one
+     that never scrolled at all. */
+  (function () {
+    var id = (location.hash || "").slice(1);
+    if (!id || !/^[A-Za-z][\w-]*$/.test(id)) return;
+
+    var theirs = false;
+    ["wheel", "touchstart", "keydown"].forEach(function (t) {
+      window.addEventListener(t, function () { theirs = true; }, { passive: true, once: true });
+    });
+
+    function go() {
+      if (theirs) return;
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ block: "start", behavior: "instant" });
+    }
+
+    if (document.readyState === "loading")
+      document.addEventListener("DOMContentLoaded", function () { requestAnimationFrame(go); });
+    else requestAnimationFrame(go);
+
+    window.addEventListener("load", function () {
+      setTimeout(go, 60);
+      setTimeout(go, 500);
+    });
+  })();
+
   /* ---------------- a number you can actually ring ----------------
      Both forms demand a phone now, so both have to check it is one. The
      digit counts come from src/lib.mjs at build time rather than being typed

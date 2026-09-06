@@ -63,6 +63,11 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+/* The header is sticky at 68px, so an element scrolled to by its id lands
+   underneath it -- including the lead form's section, which is where every
+   "Get the Playbook" link and every link in the newsletter points. */
+section[id], [id].band { scroll-margin-top: 84px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
