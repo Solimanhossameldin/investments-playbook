@@ -205,7 +205,7 @@ fs.copyFileSync(path.join(root, "content", "icon-512.png"), path.join(dist, "ico
    party who learns anything is the one who sent the email. They are copied,
    not generated, and selftest fails if a file named here is missing -- a
    broken image in an email cannot be fixed after it is sent. */
-const EMAIL_IMAGES = ["email-net-yield.png"];
+const EMAIL_IMAGES = ["email-net-yield.png", "email-off-plan-plans.png"];
 fs.mkdirSync(path.join(dist, "email"), { recursive: true });
 for (const f of EMAIL_IMAGES) {
   const src = path.join(root, "content", f);

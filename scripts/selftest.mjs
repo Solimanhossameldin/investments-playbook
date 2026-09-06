@@ -841,15 +841,29 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
    fonts are: an image loaded from someone else's server tells them who opened
    the email and when. The build throws if a source file is missing; this
    checks the other half, that the built site actually serves it. */
+/* This named one image, so the day a second was added the check still passed
+   while the new one could have been absent, empty or not a PNG at all. It now
+   reads the build's own manifest, so every image an email points at is covered
+   the moment it is listed, and a third needs no edit here. */
 {
   const distDir = path.join(root, "dist");
   if (fs.existsSync(distDir)) {
-    const img = path.join(distDir, "email", "net-yield.png");
-    check("the email image is served from this origin", fs.existsSync(img), img);
-    check("and it is a real PNG, not a zero-byte placeholder",
-      fs.existsSync(img) && fs.statSync(img).size > 1000 &&
-      fs.readFileSync(img).subarray(0, 4).toString("hex") === "89504e47",
-      fs.existsSync(img) ? fs.statSync(img).size + " bytes" : "absent");
+    const buildSrc = fs.readFileSync(path.join(root, "scripts", "build.mjs"), "utf8");
+    const listed = (buildSrc.match(/const EMAIL_IMAGES = \[([^\]]*)\]/) || [])[1] || "";
+    const names = listed.match(/"([^"]+)"/g)?.map((q) => q.slice(1, -1)) || [];
+
+    check("the email image manifest is readable, so this check covers something",
+      names.length > 0, listed.slice(0, 80));
+
+    for (const name of names) {
+      const served = name.replace(/^email-/, "");
+      const img = path.join(distDir, "email", served);
+      check(`${served} is served from this origin`, fs.existsSync(img), img);
+      check(`${served} is a real PNG, not a zero-byte placeholder`,
+        fs.existsSync(img) && fs.statSync(img).size > 1000 &&
+        fs.readFileSync(img).subarray(0, 4).toString("hex") === "89504e47",
+        fs.existsSync(img) ? fs.statSync(img).size + " bytes" : "absent");
+    }
   }
 }
 
