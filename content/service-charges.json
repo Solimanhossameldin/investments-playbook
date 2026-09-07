@@ -1,0 +1,4 @@
+{
+  "_comment": "Dubai service charge index. Every record needs project, area, psf (a number), period, source, sourceUrl and retrievedAt (YYYY-MM-DD). src/servicecharges.mjs refuses anything else and the build fails rather than publishing a figure nobody can check. While records is empty the page is not built at all. Official source: the DLD open dataset dld_oa_service_charges-open on Dubai Pulse.",
+  "records": []
+}

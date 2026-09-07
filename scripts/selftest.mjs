@@ -835,6 +835,58 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 
 
 
+/* ---- the service charge index cannot publish an unsourced figure ----
+   Every page competing on this query in September 2026 published either area
+   bands naming no building, or a few towers credited to "Mollak data" with no
+   retrieval date and no sample size. The only reason for this table to exist
+   is that it shows its working, which makes an unsourced row not a gap but a
+   defect -- and one that would look exactly like a real row on the page.
+
+   So it is enforced in the build rather than in review. These checks run the
+   validator over records that must be refused. */
+{
+  const sc = await import("../src/servicecharges.mjs");
+  const good = {
+    project: "Some Tower", area: "Dubai Marina", psf: 17.5, period: "2026",
+    source: "DLD Mollak", sourceUrl: "https://www.dubaipulse.gov.ae/x", retrievedAt: "2026-09-07",
+  };
+
+  check("a fully sourced record is accepted", sc.recordProblems(good).length === 0,
+    JSON.stringify(sc.recordProblems(good)));
+
+  for (const k of ["source", "sourceUrl", "retrievedAt", "psf", "project", "area", "period"]) {
+    const bad = { ...good }; delete bad[k];
+    check(`a record with no ${k} is refused`, sc.recordProblems(bad).length > 0, null);
+  }
+
+  /* A range or an approximation is not a figure anyone can check, and both
+     coerce to something if you let them. */
+  check("a psf written as a range is refused",
+    sc.recordProblems({ ...good, psf: "17-20" }).length > 0, null);
+  check("scaffolding left in a field is refused",
+    sc.recordProblems({ ...good, project: "TBD" }).length > 0, null);
+  check("a source that is not a URL is refused",
+    sc.recordProblems({ ...good, sourceUrl: "Mollak" }).length > 0, null);
+  check("an undated retrieval is refused",
+    sc.recordProblems({ ...good, retrievedAt: "September 2026" }).length > 0, null);
+
+  /* validate() is what the build calls, so it has to throw, not just report. */
+  let threw = false;
+  try { sc.validate([{ ...good, source: "" }]); } catch (e) { threw = /refused/.test(e.message); }
+  check("validate throws, so a bad record fails the build", threw, null);
+
+  /* And an empty dataset is a state of the world, not an error: the page is
+     simply not built, so there is no stub for a crawler to judge. */
+  check("an empty dataset validates rather than throwing",
+    sc.validate([]).count === 0, null);
+
+  const buildSrc = fs.readFileSync(path.join(root, "scripts", "build.mjs"), "utf8");
+  check("the build only emits the page when there are records",
+    /serviceCharges\.records \|\| \[\]\)\.length/.test(buildSrc) &&
+    /validateServiceCharges\(serviceCharges\.records\)/.test(buildSrc), null);
+}
+
+
 /* ---- the live price refresh must not race first paint ----
    Four figures refresh in the browser: gold, silver, Bitcoin, Ethereum. That
    costs three third party requests, and measured against the live site on

@@ -13,6 +13,8 @@ import { wirePage, wireStrip } from "../src/templates/wire.mjs";
 import { glossaryIndex, glossaryTerm } from "../src/templates/glossary.mjs";
 import { communityIndex, communityPage } from "../src/templates/communities.mjs";
 import { chartbookPage } from "../src/templates/chartbook.mjs";
+import { serviceChargePage } from "../src/templates/service-charges.mjs";
+import { validate as validateServiceCharges } from "../src/servicecharges.mjs";
 import { recordPage } from "../src/templates/record.mjs";
 import { pathIndex, pathPage, pathBand } from "../src/templates/paths.mjs";
 import { contactPage, whatsappUrl } from "../src/templates/contact.mjs";
@@ -42,6 +44,7 @@ const status = read("content/status.json", { runs: [] });
 const wire = read("content/wire.json", { fetchedAt: null, items: [], sourcesOk: 0, sourcesTotal: 0 });
 const callResults = read("content/call-results.json", { resolvedAt: null, results: {}, errors: {} });
 const chartbook = read("content/chartbook.json", { asOf: null, windowYears: 12, series: {}, errors: {} });
+const serviceCharges = read("content/service-charges.json", { records: [] });
 const communities = read("content/communities.json", { source: "none", communities: [], skipped: [], totalSales: 0, minSales: 30, windowDays: 365 });
 
 const briefs = fs.existsSync(path.join(root, "content/briefs"))
@@ -164,6 +167,17 @@ const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length }
 CALCULATORS.forEach((calc) => emit(calcPage({ site, calc, counts })));
 emit(playbookDoc({ site, playbooks, calculators: calcMeta, briefs }), libraryReviewed);
 emit(chartbookPage({ site, data: chartbook, pdf: pdfMeta }), (chartbook.asOf || "").slice(0, 10));
+
+/* The service charge index publishes only when there is something to publish.
+   An empty file means the page does not exist -- no stub, no "coming soon",
+   nothing for a crawler to find and judge. A file with records in it is
+   validated instead, and a bad record fails the build rather than shipping a
+   number nobody can check. Those are deliberately different outcomes: an
+   absent dataset is a state of the world, a wrong one is a defect. */
+if ((serviceCharges.records || []).length) {
+  const scIndex = validateServiceCharges(serviceCharges.records);
+  emit(serviceChargePage({ site, index: scIndex }), scIndex.retrievedTo);
+}
 emit(recordPage({ site, calls, results: callResults.results || {}, briefs }));
 emit(P.dataPage({ site, market, status }), DAILY);
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));
