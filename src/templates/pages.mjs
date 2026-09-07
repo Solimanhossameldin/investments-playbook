@@ -266,7 +266,7 @@ ${
     <p class="eyebrow">The library</p>
     <h2>Frameworks, not opinions</h2>
     <p>Each page gives you the rule, the arithmetic, and the honest list of where it breaks. If a framework has a known failure mode, it is on the page.</p>
-    <p style="font-size:14px">For the conditions the frameworks are being applied in, <a href="/chartbook/">the Chartbook</a> carries twelve years of the cost of money, ungated. For what property actually changed hands for, <a href="/communities/">Dubai by community</a>.</p>
+    <p style="font-size:14px">For the conditions the frameworks are being applied in, <a href="/chartbook/">the Chartbook</a> carries twelve years of the cost of money, ungated. For what property actually changed hands for, <a href="/communities/">Dubai by community</a>, and for the shape of the last full Dubai cycle, <a href="/dubai-price-index/">the DLD price index</a>.</p>
   </div>
   <div class="chips rise" id="pb-chips">
     <button class="chip" aria-pressed="true" data-cat="all">All</button>
@@ -596,7 +596,7 @@ export function dataPage({ site, market, status }) {
     <h1>Market data</h1>
     <p>These figures are indicative and may be delayed. Each row names its own source and its own timestamp, because a number without a provenance is not a number, it is a claim.</p>
     <p style="font-size:13.5px">Gold, silver, Bitcoin and Ethereum carry a <span class="livedot" style="position:relative;top:-1px"></span> and refresh in your browser about once a minute, straight from the provider named in the row. Everything else is rebuilt twice a day, because at source it changes daily, weekly or monthly and a faster clock on this page would not make it any newer.</p>
-    <p style="font-size:13.5px">These are today's levels. Twelve years of most of them, and what each one does to the price of a property, is in <a href="/chartbook/">the Chartbook</a>. What the institutions behind them actually published, unrewritten, is on <a href="/wire/">the Wire</a>, and what any of it meant on the day is in <a href="/brief/">the Brief</a>.</p>
+    <p style="font-size:13.5px">These are today's levels. Twelve years of most of them, and what each one does to the price of a property, is in <a href="/chartbook/">the Chartbook</a>. What the institutions behind them actually published, unrewritten, is on <a href="/wire/">the Wire</a>, and what any of it meant on the day is in <a href="/brief/">the Brief</a>. For Dubai residential prices across the last full cycle, the official DLD series is on <a href="/dubai-price-index/">the price index</a>.</p>
   </div>
 
   ${tables || '<p style="color:var(--muted)">The first data pull runs tonight.</p>'}

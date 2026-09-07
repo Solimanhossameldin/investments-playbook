@@ -49,6 +49,11 @@ function yearTicks(fromIso, toIso) {
    fallback for anything that cannot render SVG. It states only what the data
    says: where it is now, where it was, and the range it moved through. */
 export function chartSentence(s) {
+  /* A series may carry its own sentence where the default framing would be
+     false. The default says "Now X on <date>", which is right for a series
+     that refreshes daily and wrong for a closed historical one: the DLD
+     price index stops in May 2024, and "now" is not what that reading is. */
+  if (s.sentence) return s.sentence;
   const u = s.unit === "USD" ? "" : s.unit === "index" ? "" : s.unit;
   const n = (v) => `${s.unit === "USD" ? "$" : ""}${Number(v).toFixed(s.dp)}${u}`;
   const parts = [

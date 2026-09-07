@@ -15,6 +15,8 @@ import { communityIndex, communityPage } from "../src/templates/communities.mjs"
 import { chartbookPage } from "../src/templates/chartbook.mjs";
 import { serviceChargePage } from "../src/templates/service-charges.mjs";
 import { validate as validateServiceCharges } from "../src/servicecharges.mjs";
+import { priceIndexPage } from "../src/templates/price-index.mjs";
+import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { recordPage } from "../src/templates/record.mjs";
 import { pathIndex, pathPage, pathBand } from "../src/templates/paths.mjs";
 import { contactPage, whatsappUrl } from "../src/templates/contact.mjs";
@@ -45,6 +47,7 @@ const wire = read("content/wire.json", { fetchedAt: null, items: [], sourcesOk: 
 const callResults = read("content/call-results.json", { resolvedAt: null, results: {}, errors: {} });
 const chartbook = read("content/chartbook.json", { asOf: null, windowYears: 12, series: {}, errors: {} });
 const serviceCharges = read("content/service-charges.json", { records: [] });
+const priceIndex = read("content/dld-price-index.json", null);
 const communities = read("content/communities.json", { source: "none", communities: [], skipped: [], totalSales: 0, minSales: 30, windowDays: 365 });
 
 const briefs = fs.existsSync(path.join(root, "content/briefs"))
@@ -177,6 +180,16 @@ emit(chartbookPage({ site, data: chartbook, pdf: pdfMeta }), (chartbook.asOf || 
 if ((serviceCharges.records || []).length) {
   const scIndex = validateServiceCharges(serviceCharges.records);
   emit(serviceChargePage({ site, index: scIndex }), scIndex.retrievedTo);
+}
+
+/* The DLD price index, on the same terms as the service charges above: the
+   page exists only if the data does, and analyse() throws rather than let a
+   missing series become a quiet gap in the prose. The sitemap date is the
+   day the data was retrieved, not where the series stops -- the page changed
+   when I pulled it, and claiming a 2024 lastmod would be a lie about the
+   page rather than about the market. */
+if (priceIndex) {
+  emit(priceIndexPage({ site, data: priceIndex, a: analysePriceIndex(priceIndex) }), priceIndex.retrievedAt);
 }
 emit(recordPage({ site, calls, results: callResults.results || {}, briefs }));
 emit(P.dataPage({ site, market, status }), DAILY);

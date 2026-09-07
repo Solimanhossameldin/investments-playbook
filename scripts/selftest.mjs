@@ -990,4 +990,109 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 }
 
 
+/* ---- the DLD price index page cannot go stale quietly ----
+   This page publishes a price history under Soliman's name, and the two ways
+   it could mislead are not typos. The first is time: the official open series
+   ends in May 2024 and today is September 2026, so a page that reads as a
+   market reading is worse than no page at all. The second is arithmetic: the
+   recovery, the cycle legs, the turning points are the whole argument, and a
+   figure typed into the prose would drift from the data the day either moved.
+
+   Both are structural, so both are tested here rather than proof-read. */
+{
+  const pi = await import("../src/priceindex.mjs");
+  const data = JSON.parse(fs.readFileSync(path.join(root, "content", "dld-price-index.json"), "utf8"));
+  const a = pi.analyse(data);
+
+  /* --- the turning points come out of the data --- */
+
+  check("the peak is the highest reading in its window",
+    a.byKey.all.points.filter((p) => p[0] <= "2016-12-01").every((p) => p[1] <= a.peak.value), a.peak.value);
+
+  /* This is the check that would have caught the trough being the 2012 low:
+     a fall that ends before the peak it fell from is not a fall. */
+  check("the trough is after the peak, not the whole-series low",
+    a.trough.date > a.peak.date, `${a.peak.date} -> ${a.trough.date}`);
+
+  check("the recovery is the first month back above the peak, and nothing earlier qualifies",
+    a.recovered.value >= a.peak.value &&
+    a.byKey.all.points.filter((p) => p[0] > a.peak.date && p[0] < a.recovered.date).every((p) => p[1] < a.peak.value),
+    a.recovered.date);
+
+  /* --- the headline figure is derived, so moving the data moves it --- */
+
+  const shift = (months) => {
+    const bump = (pts) => pts.map(([d, v]) =>
+      [d, d > "2015-05-01" && d < "2022-06-01" && d >= `2021-${String(6 + months).padStart(2, "0")}-01` ? 1.4 : v]);
+    return {
+      ...data,
+      series: data.series.map((s) => ({ ...s, points: bump(s.points), prices: s.prices })),
+    };
+  };
+  const earlier = pi.analyse(shift(0));
+  check("an earlier recovery in the data produces a smaller recovery figure",
+    earlier.recovered.months < a.recovered.months,
+    `${earlier.recovered.months} vs ${a.recovered.months}`);
+
+  /* A series that never gets back above its peak has no story this page can
+     tell, so it must fail loudly rather than print a blank where the number
+     was, or crash in the template with an error that names nothing. */
+  const flat = {
+    ...data,
+    series: data.series.map((s) => ({ ...s, points: s.points.filter((p) => p[0] <= "2019-01-01") })),
+  };
+  let threw = "";
+  try { pi.analyse(flat); } catch (e) { threw = e.message; }
+  check("a series that never regains its peak fails the build with a legible message",
+    /premise has changed/.test(threw), threw.slice(0, 70) || "did not throw");
+
+  let missing = "";
+  try { pi.analyse({ ...data, series: data.series.filter((s) => s.key !== "villa") }); } catch (e) { missing = e.message; }
+  check("a missing series fails the build rather than emitting a gap",
+    /missing series villa/.test(missing), missing.slice(0, 70) || "did not throw");
+
+  /* --- and the built page says where the series stops --- */
+
+  const built = path.join(root, "dist", "dubai-price-index", "index.html");
+  if (fs.existsSync(built)) {
+    const html = fs.readFileSync(built, "utf8");
+    const stops = new Date(`${data.coverageTo.slice(0, 7)}-01T00:00:00Z`)
+      .toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
+
+    check("the page names the month the series stops, above the fold",
+      html.indexOf(stops) > -1 && html.indexOf("Where this series stops") > -1 &&
+      html.indexOf("Where this series stops") < html.indexOf("The cycle, in four legs"),
+      stops);
+
+    check("the page says in words that nothing is extended past that point",
+      /nothing here is extended, smoothed or forecast/.test(html), null);
+
+    /* Monthly readings printed as "1 May 2024" claim a precision the DLD
+       never published. The retrieval date is a real day and is exempt. */
+    const dayPrecision = html.match(/\b\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) (201\d|202\d)\b/g) || [];
+    check("no index date is printed with a fabricated day",
+      dayPrecision.every((d) => d.endsWith("2026")), dayPrecision.join(", "));
+
+    /* Nothing on the page may be dated after the series ends. */
+    const years = [...html.matchAll(/\b(20[0-4]\d)-\d{2}\b/g)].map((m) => +m[1]);
+    check("no reading on the page is dated after the series ends",
+      years.every((y) => y <= +data.coverageTo.slice(0, 4)), Math.max(0, ...years));
+
+    /* Not "the figure appears somewhere" -- the page says it twice, so a
+       wrong one could sit beside a right one and the page would still pass.
+       Every month-count printed has to be one the data actually produces. */
+    const legit = new Set([a.recovered.months, a.months]);
+    const counts = [...html.matchAll(/\b(\d+) months\b/g)].map((m) => +m[1]);
+    check("every month-count on the page is one the data produces",
+      counts.length >= 2 && counts.every((n) => legit.has(n)),
+      `${counts.join(", ")} against ${[...legit].join(", ")}`);
+
+    /* The compilation is free to reuse; the DLD's data is not mine to
+       license. A CC-BY on the Dataset would assert one I cannot grant. */
+    check("the Dataset markup claims no licence over someone else's data",
+      !/"license"/.test(html) && /"isBasedOn"/.test(html), null);
+  }
+}
+
+
 process.exit(fails ? 1 : 0);

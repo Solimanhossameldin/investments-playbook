@@ -301,6 +301,7 @@ export function footer(site) {
       ${whatsappUrl(site) ? `<li><a href="${esc(whatsappUrl(site))}" rel="noopener">WhatsApp</a></li>` : ""}
       <li><a href="/record/">The Record</a></li>
       <li><a href="/data/">Market data</a></li>
+      <li><a href="/dubai-price-index/">Dubai price index</a></li>
       <li><a href="/disclosure/">Disclosure standards</a></li>
       <li><a href="/privacy/">Privacy</a></li>
     </ul></div>
