@@ -1,6 +1,36 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-09-07T07:59:02.166Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-09-07, so there is nothing to send.",
+   "ranAt": "2026-09-07T07:59:02.105Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-09-07T07:59:02.041Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-09-07T07:59:01.989Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "partial",
+   "detail": "17 figures refreshed. Notes: metals fetch failed",
+   "ranAt": "2026-09-07T07:59:01.840Z"
+  },
+  {
    "job": "pipeline",
    "status": "ok",
    "detail": "update=success, deploy=success, submit=success",
@@ -209,36 +239,6 @@
    "status": "skipped",
    "detail": "No brief written for 2026-09-06, so there is nothing to send.",
    "ranAt": "2026-09-06T22:52:13.770Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-09-06T22:52:13.704Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-09-06T22:52:13.653Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-09-06T22:52:13.496Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "31 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-06T21:21:59.156Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "31 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-06T19:11:01.019Z"
   }
  ]
 }
