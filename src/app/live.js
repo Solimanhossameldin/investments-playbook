@@ -130,8 +130,28 @@
     });
   }
 
-  tick();
-  var timer = setInterval(tick, EVERY);
+  /* The first refresh used to fire the moment this script ran, which put three
+     third party requests -- Kraken and two gold-api calls -- into the same
+     window as the stylesheet and the two preloaded fonts. Measured on the live
+     site, those calls took between 200ms and 1.8s and were competing with the
+     things a reader is actually waiting to see.
+
+     They buy nothing by being early. Every figure on the page was already
+     written at build time and is correct to within a day; the live refresh
+     only sharpens four of them. So it waits until the page has finished
+     loading, and then until the browser is idle if it will tell us. A reader
+     on a slow connection gets their page first and their gold price a second
+     later, which is the right way round. */
+  var timer;
+  function start() {
+    var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 200); };
+    idle(function () {
+      tick();
+      timer = setInterval(tick, EVERY);
+    });
+  }
+  if (document.readyState === "complete") start();
+  else window.addEventListener("load", start, { once: true });
 
   // A backgrounded tab does not need fresh prices. Catch up on return.
   document.addEventListener("visibilitychange", function () {

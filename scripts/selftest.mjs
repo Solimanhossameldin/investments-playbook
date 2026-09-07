@@ -835,6 +835,39 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 
 
 
+/* ---- the live price refresh must not race first paint ----
+   Four figures refresh in the browser: gold, silver, Bitcoin, Ethereum. That
+   costs three third party requests, and measured against the live site on
+   7 September they took between 200ms and 1.8 seconds. Fired at script time
+   they compete with the stylesheet and the two preloaded fonts for a reader
+   who is still looking at nothing.
+
+   Nothing is lost by waiting. Every figure is written at build time and is
+   already correct to within a day. So the first tick waits for load, and the
+   page a reader is waiting for wins the race. */
+{
+  const liveSrc = fs.readFileSync(path.join(root, "src", "app", "live.js"), "utf8");
+
+  check("the first live refresh waits for the page to load",
+    /window\.addEventListener\("load", start/.test(liveSrc) &&
+    /document\.readyState === "complete"/.test(liveSrc), null);
+
+  /* A bare tick() at the top level is the thing this replaced, and it would
+     reintroduce the race silently. It must not come back. */
+  const topLevelTick = /\n  tick\(\);/.test(liveSrc);
+  check("no refresh is fired at script time any more", !topLevelTick,
+    topLevelTick ? "found a top-level tick() call" : null);
+
+  check("the interval still starts, so prices do keep refreshing",
+    /setInterval\(tick, EVERY\)/.test(liveSrc), null);
+
+  /* Backgrounded tabs stop polling; that behaviour predates this change and
+     must survive it. */
+  check("a backgrounded tab still stops polling",
+    /visibilitychange[\s\S]{0,160}clearInterval\(timer\)/.test(liveSrc), null);
+}
+
+
 /* ---- the fragment that carries every call to action ----
    "Get the Playbook" in the header is /#playbook, and every link in the
    newsletter ends the same way, so this fragment is the site's whole
