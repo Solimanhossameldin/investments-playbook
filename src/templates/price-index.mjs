@@ -1,4 +1,5 @@
 import { esc, longDate, pageTitle } from "../lib.mjs";
+import { captureBlock } from "./layout.mjs";
 import { lineChart } from "../charts.mjs";
 
 /* Monthly data gets a monthly label. longDate would render 2015-05-01 as
@@ -66,7 +67,7 @@ export function priceIndexPage({ site, data, a }) {
     <p>Index change between the turning points the data itself picks out.</p>
   </div>
 
-  <div style="overflow-x:auto">
+  <div class="table-scroll">
   <table class="tbl">
     <thead><tr>
       <th scope="col">Leg</th><th scope="col">Period</th>
@@ -111,7 +112,13 @@ export function priceIndexPage({ site, data, a }) {
     Free to quote, screenshot and republish with attribution to ${esc(site.name)}. No permission needed. The underlying data is the DLD's and is open.
   </div>
 
-  <p style="margin-top:28px"><a class="btn btn--ghost btn--sm" href="/playbooks/net-rental-yield/">What a building actually nets you</a> <a class="btn btn--ghost btn--sm" href="/playbooks/off-plan-vs-ready/">Off-plan against ready</a></p>
+  <p style="margin-top:28px"><a class="btn btn--ghost btn--sm" href="/playbooks/net-rental-yield/">What a building actually nets you</a> <a class="btn btn--ghost btn--sm" href="/playbooks/off-plan-vs-ready/">Off-plan against ready</a> <a class="btn btn--ghost btn--sm" href="/playbooks/short-let-vs-long-let/">Short let against long let</a></p>
+
+  ${captureBlock(site, {
+    source: "dubai-price-index",
+    heading: "The rest of the arithmetic",
+    blurb: "This page is the history. The library is what it costs to own one of these, line by line: service charges, the transfer fee, the agency fee, what a short let nets after the permit and the cleaning. One email address, no card, unsubscribe in one click.",
+  })}
 </div></section>`;
 
   return {
