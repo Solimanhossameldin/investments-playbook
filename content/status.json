@@ -1,10 +1,46 @@
 {
  "runs": [
   {
+   "job": "pipeline",
+   "status": "ok",
+   "detail": "update=success, deploy=success, submit=success",
+   "ranAt": "2026-09-07T06:14:04.024Z"
+  },
+  {
    "job": "indexnow",
+   "status": "ok",
+   "detail": "submitted 146 urls, HTTP 200",
+   "ranAt": "2026-09-07T06:13:53.922Z"
+  },
+  {
+   "job": "mail-audit",
    "status": "skipped",
-   "detail": "could not reach https://investmentsplaybook.com/31796d29a0fb45bf910e908521071620.txt from here (fetch failed), so nothing is known about what is deployed",
-   "ranAt": "2026-09-07T06:16:29.418Z"
+   "detail": "no api key",
+   "ranAt": "2026-09-07T06:13:30.345Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-09-07, so there is nothing to send.",
+   "ranAt": "2026-09-07T06:13:30.277Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-09-07T06:13:30.219Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-09-07T06:13:30.167Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-09-07T06:13:30.013Z"
   },
   {
    "job": "fetch-wire",
@@ -203,42 +239,6 @@
    "status": "ok",
    "detail": "31 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-06T19:11:01.019Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "31 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-06T17:02:58.142Z"
-  },
-  {
-   "job": "pipeline",
-   "status": "ok",
-   "detail": "update=success, deploy=success, submit=success",
-   "ranAt": "2026-09-06T16:56:09.017Z"
-  },
-  {
-   "job": "indexnow",
-   "status": "ok",
-   "detail": "submitted 145 urls, HTTP 200",
-   "ranAt": "2026-09-06T16:55:56.276Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-09-06T16:55:29.703Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-09-06, so there is nothing to send.",
-   "ranAt": "2026-09-06T16:55:29.647Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-09-06T16:55:29.591Z"
   }
  ]
 }
