@@ -11,6 +11,7 @@ import { isoDate, longDate } from "../src/lib.mjs";
 import * as hh from "../src/holidayhome.mjs";
 import * as rc from "../src/rentcap.mjs";
 import * as aq from "../src/acquisition.mjs";
+import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
 const ok = (name, cond, got) => {
@@ -430,6 +431,52 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     ok("net yield: the trustee fee steps at the threshold in the schedule",
       aq.trusteeFee(aq.FEES.trusteeThreshold) === Math.round(aq.FEES.trusteeHigh * 1.05) &&
       aq.trusteeFee(aq.FEES.trusteeThreshold - 1) === Math.round(aq.FEES.trusteeLow * 1.05));
+  }
+}
+
+/* ---- the law register and the pages it indexes ----
+
+   The register is generated from the statutory modules, so the thing that
+   can go wrong is coverage rather than content: a module gains an instrument
+   and the register does not list it, or lists it under a page that does not
+   cite it, or a page that cites the law stops linking back. Each of those
+   is a reader landing on the decree and not finding the arithmetic, or the
+   reverse, and none of them breaks the build on its own. */
+{
+  const reg = register();
+  const listed = new Map(reg.map((e) => [e.url, e]));
+
+  for (const [slug, mod] of STATUTORY_PAGES) {
+    ok(`law register: ${slug} is in the applied list`, APPLIED.includes(slug));
+    for (const [key, inst] of Object.entries(mod.INSTRUMENTS)) {
+      const e = listed.get(inst.url);
+      ok(`law register: lists ${slug}'s instrument "${key}"`, !!e, inst.url);
+      if (e) {
+        ok(`law register: "${key}" is filed under a page that cites it`, e.applied === slug, `${e.applied} vs ${slug}`);
+        ok(`law register: "${key}" carries the module's name for it`, e.name === inst.name);
+        const claims = mod.STATUTORY.filter((x) => x.instrument === key).map((x) => x.claim);
+        ok(`law register: "${key}" lists every claim its module requires, and nothing else`,
+          same(e.sets, claims), JSON.stringify(e.sets));
+      }
+    }
+  }
+  ok("law register: every applied slug is a statutory page",
+    APPLIED.every((slug) => STATUTORY_PAGES.some(([s]) => s === slug)), APPLIED.join(", "));
+
+  for (const e of reg) {
+    const p = playbooks.find((x) => x.slug === e.applied);
+    ok(`law register: "${e.key}" is applied by a page that exists`, !!p, e.applied);
+    if (p) {
+      ok(`law register: ${e.applied} cites "${e.key}" in its own sources`,
+        (p.sources || []).some((x) => x.url === e.url), e.url);
+    }
+    ok(`law register: "${e.key}" says what the instrument does`, (e.what || "").length >= 60);
+    ok(`law register: "${e.key}" has an https url`, /^https:\/\//.test(e.url));
+  }
+
+  for (const slug of APPLIED) {
+    const p = playbooks.find((x) => x.slug === slug);
+    ok(`law register: ${slug} links back to the register`, !!p && p.body.includes("](/dubai-property-law/)"));
   }
 }
 

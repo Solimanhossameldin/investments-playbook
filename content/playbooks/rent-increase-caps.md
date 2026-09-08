@@ -126,3 +126,5 @@ This is the honest version of a sentence you will hear from an agent: that a bel
 The rule is symmetrical in usefulness. A tenant facing an increase can run the Land Department's own calculator, and anything above the permitted figure can be declined without argument, because the figure is not a negotiating position. The Rental Dispute Centre exists for the disagreement that follows.
 
 Run your own numbers on the [Dubai rent increase calculator](/calculators/dubai-rent-increase/), and if you are weighing a tenanted purchase, read [due diligence before an offer](/playbooks/due-diligence-before-an-offer/) next, because the tenancy contract and its Ejari registration are documents to read before the price is agreed rather than after.
+
+Every instrument cited on this page, with what it sets in its own words, is on the [Dubai property law register](/dubai-property-law/).

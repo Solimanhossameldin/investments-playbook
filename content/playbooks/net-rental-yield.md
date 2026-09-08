@@ -33,7 +33,7 @@
     },
     {
       "name": "Federal Decree-Law No. (8) of 2017 on Value Added Tax, Article 3",
-      "url": "https://tax.gov.ae/DataFolder/Files/Pdf/VAT-Decree-Law-No-8-of-2017.pdf"
+      "url": "https://uaelegislation.gov.ae/en/legislations/1227"
     },
     {
       "name": "RERA rental index and rent increase tiers",
@@ -51,7 +51,7 @@ Every competing page on this query fixes the second assumption and waves at the 
 
 The fees are not a market convention. They are a schedule, approved by [Executive Council Resolution No. (30) of 2013](https://dlp.dubai.gov.ae/Legislation%20Reference/2013/ECR%2030%20of%202013.html), and the Schedule's own words for registering a sale are **4% of the value of the sale contract**. Registering a mortgage is **0.25% of the mortgage (debt) value**. The flat fees are published on the Land Department's own service pages, which is the only place several of them appear at all: **AED 250 Title Deed Certificate Issuance Fee**, AED 250 for the map on villas and apartments, AED 10 knowledge fee and AED 10 innovation fee.
 
-The trustee office is a service partner rather than the Land Department, so its fee carries VAT where the registration fee does not. The threshold, in the Land Department's own words, is **AED 4,000 + VAT If the sale value is AED 500,000 or more** and **AED 2,000 + VAT If the sale value is less than AED 500,000**. VAT is 5%, under Article 3 of Federal Decree-Law No. (8) of 2017.
+The trustee office is a service partner rather than the Land Department, so its fee carries VAT where the registration fee does not. The threshold, in the Land Department's own words, is **AED 4,000 + VAT If the sale value is AED 500,000 or more** and **AED 2,000 + VAT If the sale value is less than AED 500,000**. Article 3 of Federal Decree-Law No. (8) of 2017 says the **standard rate of the tax to be levied on any supply or importation shall be (5%)**.
 
 Take an illustrative one bedroom at AED 1,500,000, 900 square feet, let at AED 105,000 a year. Buying it cash:
 
@@ -149,3 +149,5 @@ Small against the 4%, and beside the point. What debt changes is not the acquisi
 It cannot tell you the achieved rent, only the asking rent you were shown. It cannot tell you next year's service charge, because the owners association sets it. It cannot tell you what the property will be worth, and a net yield says nothing at all about that. And if the property comes with a tenant already in it, the rent you inherit may be capped for years by [the rent increase ladder](/playbooks/rent-increase-caps/), which is a materially different asset from the same unit bought vacant.
 
 What it does tell you is the denominator, with the instrument behind every line of it. [Run your own figures](/calculators/net-rental-yield/), then read [what it costs to get back out](/playbooks/selling-well/) before you decide the yield is enough.
+
+The resolution and the Land Department pages behind every line of the fee stack are listed, with what each sets in its own words, on the [Dubai property law register](/dubai-property-law/).

@@ -16,6 +16,8 @@ import { chartbookPage } from "../src/templates/chartbook.mjs";
 import { serviceChargePage } from "../src/templates/service-charges.mjs";
 import { validate as validateServiceCharges } from "../src/servicecharges.mjs";
 import { priceIndexPage } from "../src/templates/price-index.mjs";
+import { propertyLawPage } from "../src/templates/property-law.mjs";
+import { APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { recordPage } from "../src/templates/record.mjs";
 import { pathIndex, pathPage, pathBand } from "../src/templates/paths.mjs";
@@ -191,6 +193,9 @@ if ((serviceCharges.records || []).length) {
 if (priceIndex) {
   emit(priceIndexPage({ site, data: priceIndex, a: analysePriceIndex(priceIndex) }), priceIndex.retrievedAt);
 }
+/* The law register is generated from the statutory modules, so its
+   lastmod is the latest review date among the pages that cite them. */
+emit(propertyLawPage({ site, playbooks }), latest(APPLIED.map((slug) => isoDate(playbooks.find((p) => p.slug === slug).reviewed))));
 emit(recordPage({ site, calls, results: callResults.results || {}, briefs }));
 emit(P.dataPage({ site, market, status }), DAILY);
 emit(P.staticPage({ site, title: `About. ${site.name}`, description: "Who writes Investments Playbook, what is on it, and what it deliberately is not.", path: "/about/", eyebrow: "About", heading: "The number in the advertisement, and the number that reaches your account.", bodyMd: STATIC.about }));

@@ -35,7 +35,7 @@ export const INSTRUMENTS = {
   },
   vat: {
     name: "Federal Decree-Law No. (8) of 2017 on Value Added Tax, Article 3",
-    url: "https://tax.gov.ae/DataFolder/Files/Pdf/VAT-Decree-Law-No-8-of-2017.pdf",
+    url: "https://uaelegislation.gov.ae/en/legislations/1227",
   },
 };
 
@@ -50,6 +50,7 @@ export const STATUTORY = [
   { key: "trusteeLow", claim: "AED 2,000 + VAT If the sale value is less than AED 500,000", instrument: "dldSale" },
   { key: "titleDeed", claim: "AED 250 Title Deed Certificate Issuance Fee", instrument: "dldSale" },
   { key: "mortgageTrustee", claim: "AED 4,000 service fee", instrument: "dldMortgage" },
+  { key: "vatRate", claim: "standard rate of the tax to be levied on any supply or importation shall be (5%)", instrument: "vat" },
 ];
 
 /* The fee schedule, as amounts rather than as prose. Percentages are of the

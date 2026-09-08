@@ -302,6 +302,7 @@ export function footer(site) {
       <li><a href="/record/">The Record</a></li>
       <li><a href="/data/">Market data</a></li>
       <li><a href="/dubai-price-index/">Dubai price index</a></li>
+      <li><a href="/dubai-property-law/">Dubai property law</a></li>
       <li><a href="/disclosure/">Disclosure standards</a></li>
       <li><a href="/privacy/">Privacy</a></li>
     </ul></div>

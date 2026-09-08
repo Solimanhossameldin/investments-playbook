@@ -148,3 +148,5 @@ The annual tenancy nets 78,550 and does it without an occupancy assumption at al
 An annual tenancy is one signature and four cheques. A short let is a business: pricing, calendar, reviews, guest messages at midnight, a cleaner who did not show up, a permit to renew and a return to file every month. Paying an operator to absorb that is exactly what the twenty percent buys, which is why the comparison after paying an operator is the honest one for most owners.
 
 Run it on your own numbers with the [net rental yield calculator](/calculators/net-rental-yield/), which takes the long let side and gives you the figure the short let has to beat.
+
+The resolutions behind the permit, the tourism dirham and the fines are listed, with what each sets in its own words, on the [Dubai property law register](/dubai-property-law/).

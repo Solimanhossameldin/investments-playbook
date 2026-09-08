@@ -1095,4 +1095,34 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 }
 
 
+/* ---- the law register page carries every instrument, verbatim ----
+   The register module is checked against the statutory modules elsewhere.
+   This is the other half: the page a reader gets has to carry each
+   instrument's link and every figure line in the instrument's own words,
+   and has to link to the page that applies it. A template that dropped a
+   list, or escaped a URL wrongly, would pass every module check. */
+{
+  const { register } = await import("../src/lawregister.mjs");
+  const built = path.join(root, "dist", "dubai-property-law", "index.html");
+  check("the law register page is built", fs.existsSync(built), built);
+  if (fs.existsSync(built)) {
+    const html = fs.readFileSync(built, "utf8");
+    const unescape = (t) => t.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+    const text = unescape(html);
+    const reg = register();
+    for (const e of reg) {
+      check(`law register page links to "${e.key}"`, html.includes(`href="${e.url.replace(/&/g, "&amp;")}"`), e.url);
+      for (const c of e.sets) {
+        check(`law register page carries "${c.slice(0, 48)}" verbatim`, text.includes(c), c);
+      }
+      check(`law register page links "${e.key}" to the page that applies it`,
+        html.includes(`href="/playbooks/${e.applied}/"`), e.applied);
+    }
+    check("the law register page says it is not legal advice", /not legal advice/.test(html), null);
+    check("the law register page is in the sitemap",
+      fs.readFileSync(path.join(root, "dist", "sitemap.xml"), "utf8").includes("/dubai-property-law/"), null);
+  }
+}
+
+
 process.exit(fails ? 1 : 0);
