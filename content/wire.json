@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-08T10:06:32.844Z",
+ "fetchedAt": "2026-09-08T18:06:01.655Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Frank Elderson: Fireside chat",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260908~3652aa828f.en.html",
+   "published": "2026-09-08T15:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Federal Reserve Board announces termination of enforcement actions with United Texas Bank, Quontic Bank Acquisition Corp., and Quontic Bank Holdings Corp.",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260904a.htm",
@@ -281,15 +290,6 @@
    "title": "SEC Charges Former Executives With Fraud in Connection With $1.9 Billion Collapse of Subprime Auto Lender Tricolor",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-77-sec-charges-former-executives-fraud-connection-19-billion-collapse-subprime-auto-lender-tricolor",
    "published": "2026-08-18T19:55:10.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "SEC Proposes New Regulation Crypto Assets",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-76-sec-proposes-new-regulation-crypto-assets",
-   "published": "2026-08-18T17:15:48.000Z",
    "source": "Securities and Exchange Commission",
    "sourceLabel": "Press releases",
    "category": "markets",
