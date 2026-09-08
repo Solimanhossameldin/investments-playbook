@@ -10,6 +10,7 @@ import { CALCULATORS } from "../src/templates/calculators.mjs";
 import { isoDate, longDate } from "../src/lib.mjs";
 import * as hh from "../src/holidayhome.mjs";
 import * as rc from "../src/rentcap.mjs";
+import * as aq from "../src/acquisition.mjs";
 
 let pass = 0, fail = 0;
 const ok = (name, cond, got) => {
@@ -95,6 +96,7 @@ for (const p of playbooks) {
 const STATUTORY_PAGES = [
   ["short-let-vs-long-let", hh],
   ["rent-increase-caps", rc],
+  ["net-rental-yield", aq],
 ];
 
 for (const [slug, mod] of STATUTORY_PAGES) {
@@ -298,6 +300,136 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       ok(`rent cap: a tenancy ${start}% below the index stops climbing`, !!s, start);
       ok(`rent cap: a tenancy ${start}% below the index never reaches the index`, !!s && s.gap > 0, s && s.gap);
     }
+  }
+}
+
+/* ---- the net yield page and the fee schedule under it ----
+
+   This page's denominator is a statutory schedule and its argument is a
+   ratio between two blocks of cost. Both can rot silently: a fee can be
+   edited in the prose so it no longer matches the resolution, and a line in
+   a table can be edited so a total no longer adds up while still looking
+   like arithmetic. So the schedule lives in src/acquisition.mjs with the
+   instrument behind each figure, every table on the page is compared to it
+   cell by cell, and the sentences that carry a computed number are matched
+   as whole phrases, because presence somewhere on the page is not a claim. */
+{
+  const p = playbooks.find((x) => x.slug === "net-rental-yield");
+  if (p) {
+    const A = aq.acquisition();
+    const O = aq.operating();
+    const Y = aq.yields();
+    const D = aq.drag();
+    const P = aq.payback();
+    const M = aq.mortgageCosts();
+    const tables = tablesIn(p.body);
+
+    const acqTable = tables.find((t) => t.rows.length && /Land Department registration fee/.test(t.rows[0][0]));
+    ok("net yield: the acquisition table is present", !!acqTable);
+    if (acqTable) {
+      ok("net yield: the acquisition table matches the computed fee schedule",
+        same(col(acqTable, 1), [...A.lines.map(([, v]) => v), A.total]),
+        JSON.stringify(col(acqTable, 1)));
+      ok("net yield: the acquisition table is labelled with the lines it computed",
+        same(acqTable.rows.slice(0, A.lines.length).map((r) => r[0]), A.lines.map(([k]) => k)));
+      ok("net yield: every acquisition line names what sets it",
+        acqTable.rows.slice(0, A.lines.length).every((r) => (r[2] || "").length > 8),
+        JSON.stringify(acqTable.rows.map((r) => r[2])));
+    }
+
+    const opTable = tables.find((t) => t.rows.length && /^Annual rent$/.test(t.rows[0][0]));
+    ok("net yield: the operating table is present", !!opTable);
+    if (opTable) {
+      ok("net yield: the operating table matches the computed lines",
+        same(col(opTable, 1), [aq.EXAMPLE.rent, ...O.lines.map(([, v]) => v), O.net]),
+        JSON.stringify(col(opTable, 1)));
+    }
+
+    const yTable = tables.find((t) => /^Yield$/.test(t.head[0] || ""));
+    ok("net yield: the three-yield table is present", !!yTable);
+    if (yTable) {
+      ok("net yield: the three-yield table matches the computed yields",
+        same(col(yTable, 1), [Y.gross, Y.onPrice, Y.net]), JSON.stringify(col(yTable, 1)));
+    }
+
+    const scTable = tables.find((t) => /Service charge/i.test(t.head[0] || ""));
+    ok("net yield: the service charge table is present", !!scTable);
+    if (scTable) {
+      ok("net yield: the service charge table is labelled with the rates it computed",
+        same(col(scTable, 0), aq.SC_RATES), JSON.stringify(col(scTable, 0)));
+      ok("net yield: the service charge table matches the computed yields",
+        same(col(scTable, 1), aq.SC_RATES.map((r) => aq.atServiceCharge(r).net)),
+        JSON.stringify(col(scTable, 1)));
+    }
+
+    const mTable = tables.find((t) => t.rows.length && /Mortgage registration fee/.test(t.rows[0][0]));
+    ok("net yield: the mortgage table is present", !!mTable);
+    if (mTable) {
+      ok("net yield: the mortgage table matches the computed lines",
+        same(col(mTable, 1), [...M.lines.map(([, v]) => v), M.total]),
+        JSON.stringify(col(mTable, 1)));
+    }
+
+    const claims = [
+      ["the acquisition total", `**${aq.money(A.total)}**`],
+      ["the acquisition total as a share of price", `**${aq.pctText(Y.costRate)} of the price**`],
+      ["the seller's statutory half", `**AED ${aq.money(A.sellerShare)}**`],
+      ["the yield if the fee were split", `nets **${aq.pctText(Y.netIfSplit)}** rather than **${aq.pctText(Y.net)}**`],
+      ["the running cost drag", `**${D.running} percentage points** of yield`],
+      ["the transaction cost drag", `takes **${D.transaction} percentage points**`],
+      ["the ratio between them", `**Running costs are ${D.ratio} times more destructive**`],
+      ["the entry payback", `**${P.entry} years** of net rent`],
+      ["the round trip payback", `round trip is **${P.roundTrip} years** of net rent`],
+      ["the exit commission", `AED ${aq.money(P.exit)} at the same price`],
+      ["the service charge step", `is ${(aq.atServiceCharge(15).net - aq.atServiceCharge(18).net).toFixed(2)} percentage points`],
+      ["the rate at which it falls below four per cent",
+        `**At AED ${aq.serviceChargeAt(4)} a foot this one bedroom drops below 4.00% net**`],
+      ["the loan the mortgage table is built on", `a loan of AED ${aq.money(M.loan)}`],
+    ];
+    for (const [label, phrase] of claims) {
+      ok(`net yield: prose carries ${label}`, p.body.includes(phrase), phrase);
+    }
+
+    ok("net yield: the summary carries the net and gross figures",
+      p.summary.includes(`${aq.pctText(Y.net)}, not ${aq.pctText(Y.gross)}`), p.summary);
+
+    /* Internal consistency of the arithmetic itself, so a table that agrees
+       with a broken module still fails. */
+    ok("net yield: acquisition total equals the sum of its lines",
+      A.total === A.lines.reduce((a, [, v]) => a + v, 0));
+    ok("net yield: net operating income equals rent less its deductions",
+      O.net === aq.EXAMPLE.rent - O.deductions);
+    ok("net yield: management is charged on rent collected, not rent asked",
+      O.lines.find(([k]) => /Management/.test(k))[1] ===
+        Math.round((aq.EXAMPLE.rent - O.lines[0][1]) * aq.EXAMPLE.managementRate));
+    ok("net yield: the net yield divides by price plus the acquisition stack",
+      Y.outlay === aq.EXAMPLE.price + A.total);
+
+    /* The page's central claim, checked as behaviour rather than as prose:
+       the running costs have to outweigh the transaction stack, and they
+       have to do it across the whole plausible range of service charges. If
+       a future fee amendment reversed that, this page's argument would be
+       wrong and this is what would say so. */
+    ok("net yield: running costs outweigh the transaction stack", D.ratio > 1, D.ratio);
+    for (const r of aq.SC_RATES) {
+      const y = aq.atServiceCharge(r);
+      ok(`net yield: at AED ${r} a foot the running costs still outweigh the stack`,
+        (y.gross - y.onPrice) > (y.onPrice - y.net),
+        `${(y.gross - y.onPrice).toFixed(2)} vs ${(y.onPrice - y.net).toFixed(2)}`);
+      ok(`net yield: at AED ${r} a foot the net yield is below the gross`, y.net < y.gross);
+    }
+
+    /* A payback of zero years, or one that ignores the exit, is not a
+       payback. The round trip has to cost strictly more than the entry. */
+    ok("net yield: the round trip costs more than the entry", P.roundTrip > P.entry, `${P.roundTrip} vs ${P.entry}`);
+    ok("net yield: the payback is acquisition costs over net operating income",
+      Math.abs(P.entry - A.total / O.net) < 0.005, P.entry);
+
+    /* The trustee fee is a threshold, so both sides of it are worth a check;
+       an off-by-one here would misprice every purchase near AED 500,000. */
+    ok("net yield: the trustee fee steps at the threshold in the schedule",
+      aq.trusteeFee(aq.FEES.trusteeThreshold) === Math.round(aq.FEES.trusteeHigh * 1.05) &&
+      aq.trusteeFee(aq.FEES.trusteeThreshold - 1) === Math.round(aq.FEES.trusteeLow * 1.05));
   }
 }
 

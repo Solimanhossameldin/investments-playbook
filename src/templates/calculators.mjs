@@ -27,7 +27,7 @@ export const CALCULATORS = [
       rng("dld", "Transfer fee", 4, 0, 12, 0.1),
       rng("agency", "Agency commission", 2, 0, 6, 0.25),
       rng("vat", "VAT on the commission", 5, 0, 25, 1),
-      n("closing", "Other closing costs, trustee and admin", 4600, { prefix: "AED" }),
+      n("closing", "Trustee, title deed, map and admin fees", 4720, { prefix: "AED" }),
       rng("ltv", "Mortgage, share of price", 0, 0, 80, 5),
       rng("rate", "Mortgage rate", 4.5, 0, 12, 0.1),
       n("term", "Mortgage term, years", 25),
