@@ -14,7 +14,7 @@ export function propertyLawPage({ site, playbooks }) {
   const reviewedOf = new Map(playbooks.map((p) => [p.slug, p.reviewed]));
 
   const entry = (e) => `<article class="law" id="${esc(e.key)}" style="max-width:var(--prose);padding:22px 0;border-top:1px solid var(--line)">
-    <p class="eyebrow" style="margin:0 0 4px">${esc(e.area)}${e.year ? ` &middot; ${e.year}` : ""}</p>
+    <p class="eyebrow" style="margin:0 0 4px">${e.year ? esc(String(e.year)) : "Land Department service page"}</p>
     <h3 style="margin:0 0 8px"><a href="${esc(e.url)}" rel="noopener" target="_blank">${esc(e.name)}</a></h3>
     <p style="margin:0 0 10px">${esc(e.what)}</p>
     ${e.sets.length ? `<p style="margin:0 0 6px;font-size:13.5px;color:var(--muted)">In the instrument's own words, it sets:</p>
@@ -34,11 +34,6 @@ export function propertyLawPage({ site, playbooks }) {
     <p>Every fee, cap and notice period this site quotes is set by a resolution, a decree or a law, and each one is public, free and better written than the brokerage page that paraphrases it. This is the register of those instruments: what each one sets, in its own words, and the page on this site that does the arithmetic with it.</p>
   </div>
 
-  <div class="callout" style="max-width:var(--prose)">
-    <b>How this page is built</b>
-    Nothing on it is typed by hand. The instrument names, the links and every figure line are read from the same code that computes the worked examples on the pages it links to, and the build fails if a page and its instrument disagree. Amend a fee in one place and this register and the page that applies it change together. It lists ${entries.length} instruments across ${AREAS.length} areas, and it will grow only as pages that cite the law are added.
-  </div>
-
   ${AREAS.map(section).join("\n")}
 
   <div class="section-head" style="margin-top:44px;margin-bottom:8px">
@@ -48,6 +43,7 @@ export function propertyLawPage({ site, playbooks }) {
     <ul>
       <li><b>Where they live.</b> Dubai's legislation is published on the <a href="https://dlp.dubai.gov.ae/" rel="noopener" target="_blank">Dubai Legislation portal</a>, in English and Arabic, with the schedules that set the figures. Federal law is on the <a href="https://uaelegislation.gov.ae/" rel="noopener" target="_blank">UAE Legislation portal</a>. The Land Department publishes several fees only on its own service pages, which are cited above where that is the case.</li>
       <li><b>The schedule is the part that matters.</b> The articles say who pays and when; the schedule at the end says how much. Several instruments have been paraphrased for years from the articles alone, which is how a per-bedroom permit fee became a per-unit one in most of what is written about holiday homes.</li>
+      <li><b>Quoted, not paraphrased.</b> Every figure line above is the instrument's own wording, and this page is regenerated from the same source the worked examples use, so when a page on this site changes its figures, this one changes with it.</li>
       <li><b>Amendment.</b> A fee set by resolution can be changed by resolution. Each page above carries the date it was last reviewed against the instrument, and a figure is only as good as that date.</li>
       <li><b>What this is not.</b> A register of the instruments a set of arithmetic depends on, not legal advice, and not a complete statement of Dubai property law. If you are relying on one of these for a transaction, read the instrument and take advice.</li>
       <li><b>Corrections.</b> If an instrument has been amended and a page here has not caught up, <a href="/contact/">say so</a>. It will be fixed rather than defended.</li>
