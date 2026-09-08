@@ -36,19 +36,7 @@ export function propertyLawPage({ site, playbooks }) {
 
   ${AREAS.map(section).join("\n")}
 
-  <div class="section-head" style="margin-top:44px;margin-bottom:8px">
-    <h2>Reading the instrument</h2>
-  </div>
-  <div style="max-width:var(--prose)">
-    <ul>
-      <li><b>Where they live.</b> Dubai's legislation is published on the <a href="https://dlp.dubai.gov.ae/" rel="noopener" target="_blank">Dubai Legislation portal</a>, in English and Arabic, with the schedules that set the figures. Federal law is on the <a href="https://uaelegislation.gov.ae/" rel="noopener" target="_blank">UAE Legislation portal</a>. The Land Department publishes several fees only on its own service pages, which are cited above where that is the case.</li>
-      <li><b>The schedule is the part that matters.</b> The articles say who pays and when; the schedule at the end says how much. Several instruments have been paraphrased for years from the articles alone, which is how a per-bedroom permit fee became a per-unit one in most of what is written about holiday homes.</li>
-      <li><b>Quoted, not paraphrased.</b> Every figure line above is the instrument's own wording, and this page is regenerated from the same source the worked examples use, so when a page on this site changes its figures, this one changes with it.</li>
-      <li><b>Amendment.</b> A fee set by resolution can be changed by resolution. Each page above carries the date it was last reviewed against the instrument, and a figure is only as good as that date.</li>
-      <li><b>What this is not.</b> A register of the instruments a set of arithmetic depends on, not legal advice, and not a complete statement of Dubai property law. If you are relying on one of these for a transaction, read the instrument and take advice.</li>
-      <li><b>Corrections.</b> If an instrument has been amended and a page here has not caught up, <a href="/contact/">say so</a>. It will be fixed rather than defended.</li>
-    </ul>
-  </div>
+  <p style="max-width:var(--prose);margin-top:36px;font-size:14px;color:var(--muted)">A register of the instruments this site's arithmetic depends on, not legal advice. Every line above is the instrument's own wording. If one has been amended and a page here has not caught up, <a href="/contact/">say so</a> and it will be fixed.</p>
 
   ${captureBlock(site, {
     source: "dubai-property-law",
