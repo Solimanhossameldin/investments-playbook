@@ -4,6 +4,12 @@
    "job": "fetch-wire",
    "status": "ok",
    "detail": "28 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-09-09T18:47:30.619Z"
+  },
+  {
+   "job": "fetch-wire",
+   "status": "ok",
+   "detail": "28 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-09T15:20:02.849Z"
   },
   {
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "No brief written for 2026-09-08, so there is nothing to send.",
    "ranAt": "2026-09-08T14:14:32.664Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-09-08T14:14:32.610Z"
   }
  ]
 }

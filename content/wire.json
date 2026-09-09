@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-09T15:20:02.849Z",
+ "fetchedAt": "2026-09-09T18:47:30.619Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Christine Lagarde: The choice facing Europeans",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260909~59a07e6f05.en.html",
+   "published": "2026-09-09T17:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Major Economic Indicators Latest Numbers",
    "url": "https://www.bls.gov/bls/",
@@ -263,15 +272,6 @@
    "title": "Federal Reserve Board issues enforcement actions with former employee of Regions Bank and former employee of United Community Bank",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260820a.htm",
    "published": "2026-08-20T15:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
-  },
-  {
-   "title": "Minutes of the Federal Open Market Committee, July 28–29, 2026",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260819a.htm",
-   "published": "2026-08-19T18:00:00.000Z",
    "source": "Federal Reserve",
    "sourceLabel": "Press releases",
    "category": "rates",
