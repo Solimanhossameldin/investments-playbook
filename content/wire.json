@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-09T06:25:38.791Z",
+ "fetchedAt": "2026-09-09T11:43:57.510Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -276,15 +276,6 @@
    "sourceLabel": "Monetary policy",
    "category": "rates",
    "feed": "fed-monetary"
-  },
-  {
-   "title": "Christine Lagarde: Panel remarks about the European economy during a discussion on the global economic outlook at the World Economic Forum",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260819~98ddf24b7b.en.html",
-   "published": "2026-08-19T07:10:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
