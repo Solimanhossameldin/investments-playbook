@@ -15,6 +15,7 @@
 import * as aq from "./acquisition.mjs";
 import * as rc from "./rentcap.mjs";
 import * as hh from "./holidayhome.mjs";
+import * as dp from "./disposal.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -40,6 +41,21 @@ const ENTRIES = [
     mod: aq, key: "vat", year: 2017, area: "Buying and selling",
     what: "Federal law setting the standard rate of value added tax, which applies to agency commission and to the trustee's fee but not to the Land Department's own registration fee.",
     applied: "net-rental-yield",
+  },
+  {
+    mod: dp, key: "cbuaeCaps", year: 2019, area: "Buying and selling",
+    what: "Caps, to the dirham, what a bank may charge a home loan customer for settling early, for a liability or clearance letter and for its own no objection certificate.",
+    applied: "selling-well",
+  },
+  {
+    mod: dp, key: "dldMortgagedSale", year: null, area: "Buying and selling",
+    what: "The service page for selling a property that still carries a mortgage, with the release procedure fee, the registrar fee and the case in which the registrar fee is waived.",
+    applied: "selling-well",
+  },
+  {
+    mod: dp, key: "dldRelease", year: null, area: "Buying and selling",
+    what: "The service page for discharging a mortgage on its own, rather than as part of a sale.",
+    applied: "selling-well",
   },
   {
     mod: rc, key: "decree43", year: 2013, area: "Renting",
@@ -84,6 +100,6 @@ export function register() {
 
 /* The three playbooks that cite instruments. Kept here so the page and the
    suite agree on what "every instrument the site cites" means. */
-export const APPLIED = ["net-rental-yield", "rent-increase-caps", "short-let-vs-long-let"];
+export const APPLIED = ["net-rental-yield", "selling-well", "rent-increase-caps", "short-let-vs-long-let"];
 
 export const AREAS = ["Buying and selling", "Renting", "Holiday homes"];

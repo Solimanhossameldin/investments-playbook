@@ -11,6 +11,7 @@ import { isoDate, longDate } from "../src/lib.mjs";
 import * as hh from "../src/holidayhome.mjs";
 import * as rc from "../src/rentcap.mjs";
 import * as aq from "../src/acquisition.mjs";
+import * as dp from "../src/disposal.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -98,6 +99,7 @@ const STATUTORY_PAGES = [
   ["short-let-vs-long-let", hh],
   ["rent-increase-caps", rc],
   ["net-rental-yield", aq],
+  ["selling-well", dp],
 ];
 
 for (const [slug, mod] of STATUTORY_PAGES) {
@@ -431,6 +433,143 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     ok("net yield: the trustee fee steps at the threshold in the schedule",
       aq.trusteeFee(aq.FEES.trusteeThreshold) === Math.round(aq.FEES.trusteeHigh * 1.05) &&
       aq.trusteeFee(aq.FEES.trusteeThreshold - 1) === Math.round(aq.FEES.trusteeLow * 1.05));
+  }
+}
+
+/* ---- the selling page and the three tiers of cost under it ----
+
+   The seller's stack is the first thing on this site assembled from two
+   regulators at once: the Central Bank caps what a bank may charge, the
+   Land Department publishes what it charges, and the developer's NOC fee
+   is set by neither. Three things can rot silently here. A cap can be
+   edited so the page quotes a ceiling the instrument does not set. A table
+   row can be edited so a total stops adding up. And, worst of the three,
+   somebody can helpfully supply a figure for the developer's NOC, which
+   has no source, in a table that looks exactly like the sourced ones. The
+   checks below cover all three, and the last of them is the reason this
+   block exists at all. */
+{
+  const p = playbooks.find((x) => x.slug === "selling-well");
+  if (p) {
+    const S = dp.sellerStack();
+    const C = dp.contingent();
+    const R = dp.roundTrip();
+    const tables = tablesIn(p.body);
+
+    const stack = tables.find((t) => t.rows.length && /Agency commission/.test(t.rows[0][0]));
+    ok("selling: the seller stack table is present", !!stack);
+    if (stack) {
+      ok("selling: the stack table matches the computed lines",
+        same(col(stack, 1), [...S.lines.map(([, v]) => v), S.total]), JSON.stringify(col(stack, 1)));
+      ok("selling: the stack table is labelled with the lines it computed",
+        same(stack.rows.slice(0, S.lines.length).map((r) => r[0]), S.lines.map(([k]) => k)));
+      ok("selling: every stack line names what sets it",
+        stack.rows.slice(0, S.lines.length).every((r) => (r[2] || "").length > 8),
+        JSON.stringify(stack.rows.map((r) => r[2])));
+    }
+
+    const bal = tables.find((t) => /Outstanding balance/i.test(t.head[0] || ""));
+    ok("selling: the outstanding balance table is present", !!bal);
+    if (bal) {
+      ok("selling: the balance table is labelled with the balances it computed",
+        same(col(bal, 0), dp.BALANCES), JSON.stringify(col(bal, 0)));
+      ok("selling: the balance table matches the computed settlement fees",
+        same(col(bal, 1), dp.BALANCES.map((b) => dp.earlySettlement(b))), JSON.stringify(col(bal, 1)));
+      ok("selling: the balance table matches the computed totals",
+        same(col(bal, 2), dp.BALANCES.map((b) => dp.atBalance(b).total)), JSON.stringify(col(bal, 2)));
+    }
+
+    const pr = tables.find((t) => /Sale price/i.test(t.head[0] || ""));
+    ok("selling: the sale price table is present", !!pr);
+    if (pr) {
+      ok("selling: the price table is labelled with the prices it computed",
+        same(col(pr, 0), dp.PRICES), JSON.stringify(col(pr, 0)));
+      ok("selling: the price table matches the computed commissions",
+        same(col(pr, 1), dp.PRICES.map((x) => dp.atPrice(x).agency)), JSON.stringify(col(pr, 1)));
+      ok("selling: the price table matches the computed totals",
+        same(col(pr, 2), dp.PRICES.map((x) => dp.atPrice(x).total)), JSON.stringify(col(pr, 2)));
+      ok("selling: the price table matches the computed share of price",
+        same(col(pr, 3), dp.PRICES.map((x) => dp.atPrice(x).rate)), JSON.stringify(col(pr, 3)));
+      ok("selling: the price table matches the computed commission share",
+        same(col(pr, 4), dp.PRICES.map((x) => dp.atPrice(x).commissionShare)), JSON.stringify(col(pr, 4)));
+    }
+
+    const claims = [
+      ["the seller stack total", `**AED ${dp.money(S.total)}**`],
+      ["the stack as a share of price", `which is **${S.rate.toFixed(2)}% of the price**`],
+      ["the official block", `added together, is **AED ${dp.money(S.total - S.agency)}**`],
+      ["the balance at which the cap binds", `stops growing at an outstanding balance of **AED ${dp.money(dp.capBindsAt())}**`],
+      ["the contingent statutory half", `The statutory half on this sale is **AED ${dp.money(C.share)}**`],
+      ["the contingent half against the commission", `**${(C.ofAgency * 100).toFixed(1)}% of the agency commission**`],
+      ["the contingent half against the stack", `**${(C.ofStack * 100).toFixed(1)}% of the whole stack**`],
+      ["the commission share at the bottom of the range",
+        `the commission is **${dp.atPrice(dp.PRICES[0]).commissionShare.toFixed(1)}% of what the seller pays**`],
+      ["the commission share at the top of the range",
+        `it is **${dp.atPrice(dp.PRICES[dp.PRICES.length - 1]).commissionShare.toFixed(1)}%**`],
+      ["the round trip in dirhams", `is **AED ${dp.money(R.total)}**`],
+      ["the round trip as a share of price", `or **${R.rate.toFixed(2)}% of the price**`],
+      ["the round trip in years of net rent", `which is **${R.years.toFixed(2)} years** of net rent`],
+      ["the acquisition side of the round trip", `costs AED ${dp.money(R.buy)} in acquisition fees`],
+      ["the mortgage registration side", `a further AED ${dp.money(R.debt)} to register the mortgage`],
+    ];
+    for (const [label, phrase] of claims) {
+      ok(`selling: prose carries ${label}`, p.body.includes(phrase), phrase);
+    }
+
+    /* Internal consistency of the arithmetic. */
+    ok("selling: the stack total equals the sum of its lines",
+      S.total === S.lines.reduce((a, [, v]) => a + v, 0));
+    ok("selling: the round trip is entry plus debt registration plus exit",
+      R.total === R.buy + R.debt + R.sell);
+    ok("selling: the round trip exit is the seller stack", R.sell === S.total);
+    /* Asked at prices other than the example's, because at the example's own
+       price a retyped literal and a live derivation are the same number, and
+       a check that cannot tell them apart is guarding nothing. An earlier
+       version of this compared only the default and passed happily when the
+       share was replaced by the constant 30000. */
+    ok("selling: the contingent half is the acquisition module's seller share",
+      [900000, 1500000, 2400000, 7000000].every(
+        (x) => dp.contingent({ ...dp.SELLER, price: x }).share === aq.acquisition({ ...aq.EXAMPLE, price: x }).sellerShare),
+      JSON.stringify([900000, 2400000].map((x) => dp.contingent({ ...dp.SELLER, price: x }).share)));
+    ok("selling: the mortgaged round trip costs more than the cash one",
+      R.total > aq.payback().exitTotal, `${R.total} vs ${aq.payback().exitTotal}`);
+
+    /* The cap, as behaviour rather than as a printed number. The ceiling has
+       to bind at the balance the page names and not one dirham earlier, the
+       rate has to be what sets the fee below it, and the fee has to be flat
+       above it. An amendment to either the rate or the ceiling changes where
+       this lands, and this is what would say so. */
+    const bind = dp.capBindsAt();
+    ok("selling: the cap binds at the balance the page names", dp.capped(bind), bind);
+    ok("selling: the cap does not bind one dirham below it", !dp.capped(bind - 1), bind - 1);
+    ok("selling: below the binding balance the rate is what sets the fee",
+      dp.earlySettlement(bind - 100000) === Math.round((bind - 100000) * dp.CAPS.earlySettlementRate));
+    ok("selling: above the binding balance the fee does not move",
+      dp.earlySettlement(bind) === dp.CAPS.earlySettlementCap &&
+      dp.earlySettlement(bind * 4) === dp.CAPS.earlySettlementCap);
+
+    /* The page's claim about the gradient, checked across the whole range
+       rather than at its ends: the seller's share of the price has to fall
+       as the price rises, because the capped block stops growing. */
+    const rates = dp.PRICES.map((x) => dp.atPrice(x).rate);
+    ok("selling: the seller's share of price falls as the price rises",
+      rates.every((r, i) => i === 0 || r < rates[i - 1]), JSON.stringify(rates));
+    const shares = dp.PRICES.map((x) => dp.atPrice(x).commissionShare);
+    ok("selling: the commission's share of the stack rises as the price rises",
+      shares.every((r, i) => i === 0 || r > shares[i - 1]), JSON.stringify(shares));
+
+    /* The one that matters most. The developer's NOC fee has no instrument
+       behind it, so it must not acquire a number by appearing in a table
+       beside figures that do. A row for it anywhere on this page is a
+       sourced-looking figure that is not sourced, which is the single
+       failure this whole site is positioned against. */
+    ok("selling: no table on the page carries a line for the developer's NOC",
+      !tables.some((t) => t.rows.some((r) => /\bNOC\b|no objection/i.test(r[0] || ""))),
+      JSON.stringify(tables.flatMap((t) => t.rows.map((r) => r[0])).filter((x) => /NOC|no objection/i.test(x))));
+    ok("selling: the module holds no figure for the developer's NOC",
+      !Object.keys(dp.DLD_EXIT).concat(Object.keys(dp.CAPS)).some((k) => /^noc$|developerNoc/i.test(k)));
+    ok("selling: the page says in terms that nothing sets the developer's NOC",
+      p.body.includes("No instrument sets it. No cap constrains it. No register publishes it."));
   }
 }
 
