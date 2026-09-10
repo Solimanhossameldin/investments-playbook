@@ -1,4 +1,4 @@
-import { esc, copy, md, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus, isoDate, cadence } from "../lib.mjs";
+import { esc, copy, md, inlineLinks, plainLinks, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus, isoDate, cadence } from "../lib.mjs";
 import { leadBand, authorBand, briefForm, captureBlock } from "./layout.mjs";
 import BRIEF_FRAMEWORKS from "../../content/brief-frameworks.mjs";
 
@@ -492,7 +492,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
     ${pb.formula ? `<h2 id="the-arithmetic">The arithmetic</h2><div class="formula" tabindex="0" role="region" aria-label="The arithmetic, scrolls sideways">${esc(copy(pb.formula))}</div>` : ""}
     ${
       (pb.failureModes || []).length
-        ? `<h2 id="where-it-breaks">Where it breaks</h2><ul class="breaks">${pb.failureModes.map((f) => `<li>${esc(copy(f))}</li>`).join("")}</ul>`
+        ? `<h2 id="where-it-breaks">Where it breaks</h2><ul class="breaks">${pb.failureModes.map((f) => `<li>${inlineLinks(copy(f))}</li>`).join("")}</ul>`
         : ""
     }
     ${pb.whenToUse ? `<h2 id="when-to-use-it">When to use it</h2><p>${esc(copy(pb.whenToUse))}</p>` : ""}
@@ -527,7 +527,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
   const faqs = (pb.failureModes || []).slice(0, 3).map((f, i) => ({
     "@type": "Question",
     name: `${copy(pb.title)}: known limitation ${i + 1}`,
-    acceptedAnswer: { "@type": "Answer", text: copy(f) },
+    acceptedAnswer: { "@type": "Answer", text: plainLinks(copy(f)) },
   }));
 
   return {

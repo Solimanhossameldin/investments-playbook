@@ -7,6 +7,20 @@ export const esc = (s = "") =>
 export const copy = (s = "") =>
   String(s).replace(/—/g, ",").replace(/\s·\s/g, ", ").replace(/–/g, " to ");
 
+// A failure mode is a sentence, not a document, but it is allowed to point at
+// the playbook or calculator that carries the thing it warns about. Only
+// site-relative paths resolve: an external or javascript: target is left as
+// the literal text it was written as rather than becoming a link. Escaping
+// happens first, so nothing inside the label can close the anchor.
+const INLINE_LINK = /\[([^\]]+)\]\((\/[A-Za-z0-9\-._~/]*)\)/g;
+
+export const inlineLinks = (s = "") =>
+  esc(s).replace(INLINE_LINK, (_, label, href) => `<a href="${href}">${label}</a>`);
+
+// The same sentence with its links flattened to their labels, for the places
+// that take text rather than markup: FAQ schema, meta descriptions, email.
+export const plainLinks = (s = "") => String(s).replace(INLINE_LINK, "$1");
+
 export const fmt = (v, d = 2) =>
   v === null || v === undefined || Number.isNaN(v)
     ? "n/a"

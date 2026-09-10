@@ -1,4 +1,4 @@
-import { esc, copy, md, cadence } from "../lib.mjs";
+import { esc, copy, md, plainLinks, cadence } from "../lib.mjs";
 
 // In the compendium every framework sits under an <h3> title inside an <h2>
 // part, and its own section labels below are <h4>. The body is the same
@@ -53,7 +53,7 @@ export function playbookDoc({ site, playbooks, calculators, briefs = [] }) {
     ${p.formula ? `<h4>The arithmetic</h4><div class="formula" tabindex="0" role="region" aria-label="The arithmetic, scrolls sideways">${esc(copy(p.formula))}</div>` : ""}
     ${
       (p.failureModes || []).length
-        ? `<h4>Where it breaks</h4><ul class="breaks">${p.failureModes.map((f) => `<li>${esc(copy(f))}</li>`).join("")}</ul>`
+        ? `<h4>Where it breaks</h4><ul class="breaks">${p.failureModes.map((f) => `<li>${esc(plainLinks(copy(f)))}</li>`).join("")}</ul>`
         : ""
     }
     ${p.whenToUse ? `<h4>When to use it</h4><p>${esc(copy(p.whenToUse))}</p>` : ""}

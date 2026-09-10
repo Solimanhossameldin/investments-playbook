@@ -121,6 +121,12 @@ for (const file of walk(dist)) {
     proseLinks: [...new Set(links(prose))],
     allLinks: [...new Set(links(html))],
     words: body.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length,
+    // Markdown that reached the reader. A field rendered with esc() rather
+    // than through the inline-link helper prints "[net rental yield](/pl...)"
+    // on the page: the link is dead, the sentence is broken, and nothing else
+    // in this audit notices, because a broken link that was never an <a> is
+    // not in the link graph at all. Found on a live page, so it is checked.
+    rawMarkdown: [...prose.matchAll(/\[[^\]\n]{1,80}\]\(\/[^)\s]*\)/g)].map((m) => m[0]),
   });
 }
 
@@ -159,6 +165,7 @@ for (const p of indexable) {
   if (p.h1s.length > 1) note("warn", "multiple h1", `${p.h1s.length} on ${p.url}`);
   if (p.jsonld.includes("INVALID")) note("error", "broken json-ld", p.url);
   if (p.words < 120) note("warn", "thin page", `${p.words} words: ${p.url}`);
+  for (const m of p.rawMarkdown) note("error", "unrendered markdown", `${p.url} prints ${m} as text`);
 }
 
 // A screen reader announces the outline, not the type size. A heading that
