@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-10T19:00:04.949Z",
+ "fetchedAt": "2026-09-10T21:34:16.856Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -26,7 +26,25 @@
  ],
  "items": [
   {
-   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement",
+   "title": "Agencies reduce regulatory burden for community banks, increase eligibility for 18-month exam cycle",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260910a.htm",
+   "published": "2026-09-10T20:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
+  {
+   "title": "SEC Charges Founder and His Two New Jersey-Based Companies in Alleged $16 Million Ponzi Scheme",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-86-sec-charges-founder-his-two-new-jersey-based-companies-alleged-16-million-ponzi-scheme",
+   "published": "2026-09-10T17:45:22.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
+  {
+   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
    "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is260910~6a45359cfc.en.html",
    "published": "2026-09-10T13:00:00.000Z",
    "source": "European Central Bank",
@@ -276,15 +294,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Federal Reserve Board announces approval of application by National Westminster Bank Plc",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20260820a.htm",
-   "published": "2026-08-20T20:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
   }
  ]
 }
