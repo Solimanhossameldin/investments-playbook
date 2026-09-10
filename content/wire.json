@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-10T11:51:01.485Z",
+ "fetchedAt": "2026-09-10T15:55:55.498Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -26,6 +26,33 @@
  ],
  "items": [
   {
+   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement",
+   "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is260910~6a45359cfc.en.html",
+   "published": "2026-09-10T13:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-09-10T12:32:53.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
+  {
+   "title": "Monetary policy decisions",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp260910~314e508016.en.html",
+   "published": "2026-09-10T12:15:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
    "title": "Announcement of the publication of the Governor's interview transcript",
    "url": "https://www.bankofengland.co.uk/news/2026/september/statement-announcing-governors-interview",
    "published": "2026-09-10T09:00:00.000Z",
@@ -42,15 +69,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-09-09T14:00:17.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "Frank Elderson: Fireside chat",
@@ -237,9 +255,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260825a.htm",
    "published": "2026-08-25T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Piero Cipollone: Interview with ilsussidiario.net",
@@ -263,24 +281,6 @@
    "title": "Federal Reserve Board announces approval of application by National Westminster Bank Plc",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20260820a.htm",
    "published": "2026-08-20T20:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
-  },
-  {
-   "title": "Federal Reserve Board issues enforcement action with SouthPoint Bancshares, Inc. and announces termination of enforcement action with Deutsche Bank AG, DB USA Corporation, and Deutsche Bank AG New York Branch",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260820b.htm",
-   "published": "2026-08-20T15:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
-  },
-  {
-   "title": "Federal Reserve Board issues enforcement actions with former employee of Regions Bank and former employee of United Community Bank",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260820a.htm",
-   "published": "2026-08-20T15:00:00.000Z",
    "source": "Federal Reserve",
    "sourceLabel": "Press releases",
    "category": "rates",
