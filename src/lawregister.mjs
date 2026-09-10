@@ -1,6 +1,6 @@
 /* The Dubai property instruments this site relies on, in one place.
 
-   Three pages cite the law that sets their figures rather than a blog about
+   Five pages cite the law that sets their figures rather than a blog about
    it. This register lists every instrument those pages cite, what it sets,
    and which page applies it, so a reader who searches for the decree rather
    than the arithmetic lands somewhere that links to both.
@@ -16,6 +16,7 @@ import * as aq from "./acquisition.mjs";
 import * as rc from "./rentcap.mjs";
 import * as hh from "./holidayhome.mjs";
 import * as dp from "./disposal.mjs";
+import * as jp from "./jointproperty.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -58,6 +59,21 @@ const ENTRIES = [
     applied: "selling-well",
   },
   {
+    mod: jp, key: "law6", year: 2019, area: "Owning in a building",
+    what: "The jointly owned property law. Sets the area a service charge is levied on, the RERA approval and audit without which nothing may be collected, the bank account the money sits in, the closed list of what it may be spent on, the separate account holding the reserve, the levy when that reserve falls short, and the lien that stops a sale while charges are unpaid.",
+    applied: "service-charge-and-reserves",
+  },
+  {
+    mod: jp, key: "scIndex", year: null, area: "Owning in a building",
+    what: "The Land Department e-service that lets anyone look up the service charge RERA approved for a named project, use and year, which is the figure Article 27 makes the only collectable one.",
+    applied: "service-charge-and-reserves",
+  },
+  {
+    mod: jp, key: "mollak", year: null, area: "Owning in a building",
+    what: "The system through which service charges are invoiced, collected and monitored, and which publishes the registers of approved management companies and approved auditors a buyer can check a building against.",
+    applied: "service-charge-and-reserves",
+  },
+  {
     mod: rc, key: "decree43", year: 2013, area: "Renting",
     what: "Sets the maximum rent increase a landlord may impose on renewal, in bands measured against the official rent index.",
     applied: "rent-increase-caps",
@@ -98,8 +114,8 @@ export function register() {
   });
 }
 
-/* The three playbooks that cite instruments. Kept here so the page and the
-   suite agree on what "every instrument the site cites" means. */
-export const APPLIED = ["net-rental-yield", "selling-well", "rent-increase-caps", "short-let-vs-long-let"];
+/* The playbooks that cite instruments. Kept here so the page and the suite
+   agree on what "every instrument the site cites" means. */
+export const APPLIED = ["net-rental-yield", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let"];
 
-export const AREAS = ["Buying and selling", "Renting", "Holiday homes"];
+export const AREAS = ["Buying and selling", "Owning in a building", "Renting", "Holiday homes"];

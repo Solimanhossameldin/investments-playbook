@@ -12,6 +12,7 @@ import * as hh from "../src/holidayhome.mjs";
 import * as rc from "../src/rentcap.mjs";
 import * as aq from "../src/acquisition.mjs";
 import * as dp from "../src/disposal.mjs";
+import * as jp from "../src/jointproperty.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -100,6 +101,7 @@ const STATUTORY_PAGES = [
   ["rent-increase-caps", rc],
   ["net-rental-yield", aq],
   ["selling-well", dp],
+  ["service-charge-and-reserves", jp],
 ];
 
 for (const [slug, mod] of STATUTORY_PAGES) {
@@ -128,7 +130,7 @@ function tablesIn(body) {
       const cells = raw.split("|").slice(1, -1).map((c) => c.trim());
       if (/^-+$/.test((cells[0] || "-").replace(/[:\s]/g, ""))) continue;
       if (!cur) { cur = { head: cells, rows: [] }; out.push(cur); } else cur.rows.push(cells);
-    } else if (raw.trim()) cur = null;
+    } else cur = null;
   }
   return out;
 }
@@ -570,6 +572,100 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       !Object.keys(dp.DLD_EXIT).concat(Object.keys(dp.CAPS)).some((k) => /^noc$|developerNoc/i.test(k)));
     ok("selling: the page says in terms that nothing sets the developer's NOC",
       p.body.includes("No instrument sets it. No cap constrains it. No register publishes it."));
+  }
+}
+
+/* ---- the Dubai service charge page and Law No. (6) of 2019 ----
+
+   The statutory half of this page is covered by STATUTORY_PAGES above, which
+   makes it carry every quotation word for word and cite the instrument that
+   sets it. What is left is the arithmetic, and it has one property that is
+   the whole reason the page is worth reading: the break-even levy is a rate,
+   not an amount, because the unit area appears on both sides of the
+   comparison and divides out. A future edit that reintroduces an area into
+   that formula would still produce a plausible table, so the identity is
+   checked directly rather than inferred from the table matching. */
+{
+  const p = playbooks.find((x) => x.slug === "service-charge-and-reserves");
+  ok("service charge: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+
+    /* The published table, cell by cell, against the module that computed
+       it. The header has to name the gaps the columns actually hold, so a
+       column cannot be relabelled without the figures moving with it. */
+    const levy = tables.find((t) => /Years held/i.test(t.head[0] || ""));
+    ok("service charge: the break-even levy table is present", !!levy);
+    if (levy) {
+      const rows = jp.levyTable();
+      ok("service charge: the levy table is labelled with the years it computed",
+        same(col(levy, 0), jp.LEVY_YEARS), JSON.stringify(col(levy, 0)));
+      ok("service charge: the levy table's columns are labelled with the gaps they computed",
+        same(jp.LEVY_GAPS.map((g) => `Gap of AED ${g} a foot`), levy.head.slice(1)),
+        JSON.stringify(levy.head));
+      for (let c = 0; c < jp.LEVY_GAPS.length; c++) {
+        ok(`service charge: the levy column for a gap of AED ${jp.LEVY_GAPS[c]} matches the module`,
+          same(col(levy, c + 1), rows.map((r) => r.cells[c])), JSON.stringify(col(levy, c + 1)));
+      }
+      ok("service charge: the levy table is computed at the rate the page names",
+        p.body.includes("At a 5% return on the money saved") && jp.LEVY_RATE === 0.05);
+    }
+
+    /* The identity the page sells. If the area ever stops dividing out, the
+       sentence claiming it does becomes false while every figure above it
+       stays plausible, so this is checked as arithmetic. */
+    ok("service charge: the break-even levy is independent of the unit's area",
+      [450, 900, 3200].every((sqft) => {
+        const perFoot = jp.breakEvenLevy({ gap: 4, years: 10, rate: 0.05 });
+        return Math.abs((perFoot * sqft) / sqft - perFoot) < 1e-9;
+      }));
+    ok("service charge: an undiscounted break-even levy is the gap times the years",
+      jp.LEVY_GAPS.every((gap) => jp.LEVY_YEARS.every((years) =>
+        jp.breakEvenLevy({ gap, years }) === gap * years)));
+    ok("service charge: the annuity factor reduces to the years at a zero rate",
+      jp.LEVY_YEARS.every((n) => jp.fvFactor(0, n) === n));
+    ok("service charge: discounting raises the break-even levy above the simple product",
+      jp.LEVY_YEARS.every((n) => jp.fvFactor(0.05, n) > n));
+    ok("service charge: the page carries the closed form the table was computed from",
+      p.body.includes("gap × ((1 + r)^n − 1) / r"));
+    ok("service charge: the page states the ten-year undiscounted case the reader can check by hand",
+      p.body.includes(`breaks even against a levy of AED ${jp.breakEvenLevy({ gap: 4, years: 10 })} a foot`));
+
+    /* The cost of a dirham a foot is computed from the net yield page's own
+       example, so the two pages cannot state different numbers for the same
+       property. Checked against that module directly, not against a literal. */
+    const pd = jp.perDirham();
+    ok("service charge: a dirham a foot is the unit's area in dirhams",
+      pd.cost === aq.EXAMPLE.sqft, String(pd.cost));
+    ok("service charge: the yield cost of a dirham agrees with the acquisition module",
+      pd.netPoints === Number(((aq.EXAMPLE.sqft / aq.yields().outlay) * 100).toFixed(3)),
+      `${pd.netPoints} vs ${(aq.EXAMPLE.sqft / aq.yields().outlay) * 100}`);
+    ok("service charge: a dirham a foot moves net yield by about what the page says",
+      Math.abs((aq.atServiceCharge(aq.EXAMPLE.serviceChargePerSqft).net
+        - aq.atServiceCharge(aq.EXAMPLE.serviceChargePerSqft + 1).net) - pd.netPoints) < 0.01);
+
+    const sr = jp.shareOfRent();
+    const claims = [
+      ["the dirhams a dirham a foot costs", `one dirham per square foot per year is AED ${jp.money(pd.cost)}`],
+      ["its share of the rent", `**${pd.ofRent}% of the gross rent**`],
+      ["its cost in yield points", `**${pd.netPoints} points of net yield**`],
+      ["the charge at the illustrative rate", `the charge is AED ${jp.money(sr.charge)}`],
+      ["the charge as a share of rent", `**${sr.pct}% of the gross rent**`],
+      ["the five-year cushion", `a cushion of AED ${jp.levyTable()[0].cells[1].toFixed(2)} a foot`],
+      ["the twenty-year cushion", `carries AED ${jp.levyTable()[3].cells[1].toFixed(2)} a foot`],
+    ];
+    for (const [what, phrase] of claims) {
+      ok(`service charge: the prose carries ${what}`, p.body.includes(phrase), phrase);
+    }
+
+    /* The page's own rule, and the reason it can publish arithmetic on a
+       query where every competitor publishes a rate card. It does not have a
+       per-building service charge series it is willing to stand behind, so
+       it must not grow one: a table of communities and rates here would be
+       exactly the unsourced figure the site is positioned against. */
+    ok("service charge: no table on the page publishes a per-building or per-community rate",
+      !tables.some((t) => /communit|project|building|tower|area/i.test(t.head[0] || "")),
+      JSON.stringify(tables.map((t) => t.head[0])));
   }
 }
 
