@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-10T06:35:55.542Z",
+ "fetchedAt": "2026-09-10T11:51:01.485Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Announcement of the publication of the Governor's interview transcript",
+   "url": "https://www.bankofengland.co.uk/news/2026/september/statement-announcing-governors-interview",
+   "published": "2026-09-10T09:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
   {
    "title": "Christine Lagarde: The choice facing Europeans",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260909~59a07e6f05.en.html",
