@@ -2,6 +2,12 @@
  "runs": [
   {
    "job": "fetch-wire",
+   "status": "partial",
+   "detail": "32 items from 6 of 7 feeds. Down: fed-all (HTTP 404). Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-09-11T18:38:31.492Z"
+  },
+  {
+   "job": "fetch-wire",
    "status": "ok",
    "detail": "31 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-11T15:14:35.201Z"
@@ -233,12 +239,6 @@
    "status": "incomplete",
    "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
    "ranAt": "2026-09-09T23:11:42.788Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-09-09T23:11:42.665Z"
   }
  ]
 }
