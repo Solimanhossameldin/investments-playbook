@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-11T06:27:00.196Z",
+ "fetchedAt": "2026-09-11T11:42:52.223Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -281,15 +281,6 @@
    "title": "Piero Cipollone: Interview with ilsussidiario.net",
    "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in260824~fa5acbddea.en.html",
    "published": "2026-08-24T06:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "ECB Consumer Expectations Survey results – July 2026",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260821~a044fdddd9.en.html",
-   "published": "2026-08-21T08:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
