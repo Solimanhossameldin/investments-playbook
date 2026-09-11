@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-11T21:20:01.846Z",
+ "fetchedAt": "2026-09-11T23:29:15.328Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -300,9 +300,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260825a.htm",
    "published": "2026-08-25T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Piero Cipollone: Interview with ilsussidiario.net",
