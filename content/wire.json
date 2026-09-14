@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-14T13:42:04.538Z",
+ "fetchedAt": "2026-09-14T18:53:30.928Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "SEC Grants Exemptive Relief from Certain Inline XBRL Filing or Submission Requirements",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-88-sec-grants-exemptive-relief-certain-inline-xbrl-filing-or-submission-requirements",
+   "published": "2026-09-14T16:47:00.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
+  {
+   "title": "Christine Lagarde: A new age of capital: growth, sovereignty and AI",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260914_2~a3f0efbee4.en.html",
+   "published": "2026-09-14T15:15:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Piero Cipollone: The future of euro cash: trusted today, designed for tomorrow",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260914_1~91d3436449.en.html",
