@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-14T06:46:47.331Z",
+ "fetchedAt": "2026-09-14T13:42:04.538Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Piero Cipollone: The future of euro cash: trusted today, designed for tomorrow",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260914_1~91d3436449.en.html",
+   "published": "2026-09-14T13:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Isabel Schnabel: Macroeconomic, fiscal and financial stability in a shock-prone world",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260914~0ffd556bc8.en.pdf",
+   "published": "2026-09-14T09:15:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Christine Lagarde: Interview with Ouest-France",
    "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in260912~3cc706f4d6.en.html",
