@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-14T01:23:47.953Z",
+ "fetchedAt": "2026-09-14T06:46:47.331Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -321,15 +321,6 @@
    "sourceLabel": "Press releases",
    "category": "rates",
    "feed": "fed-all"
-  },
-  {
-   "title": "Piero Cipollone: Interview with ilsussidiario.net",
-   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in260824~fa5acbddea.en.html",
-   "published": "2026-08-24T06:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
