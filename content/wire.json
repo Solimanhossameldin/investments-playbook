@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-15T15:35:48.175Z",
+ "fetchedAt": "2026-09-15T19:13:30.583Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -366,15 +366,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Minutes of the Board's discount rate meetings on July 20 and July 29, 2026",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260825a.htm",
-   "published": "2026-08-25T18:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
-   "category": "rates",
-   "feed": "fed-monetary"
   }
  ]
 }
