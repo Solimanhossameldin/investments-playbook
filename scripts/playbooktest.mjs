@@ -13,6 +13,7 @@ import * as rc from "../src/rentcap.mjs";
 import * as aq from "../src/acquisition.mjs";
 import * as dp from "../src/disposal.mjs";
 import * as jp from "../src/jointproperty.mjs";
+import * as op from "../src/offplan.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -102,6 +103,7 @@ const STATUTORY_PAGES = [
   ["net-rental-yield", aq],
   ["selling-well", dp],
   ["service-charge-and-reserves", jp],
+  ["off-plan-irr", op],
 ];
 
 for (const [slug, mod] of STATUTORY_PAGES) {
@@ -666,6 +668,126 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     ok("service charge: no table on the page publishes a per-building or per-community rate",
       !tables.some((t) => /communit|project|building|tower|area/i.test(t.head[0] || "")),
       JSON.stringify(tables.map((t) => t.head[0])));
+  }
+}
+
+/* ---- the off-plan page and Article 11 ----
+
+   The statutory half is covered by STATUTORY_PAGES above. What is left is
+   the arithmetic, and it turns on one drafting choice: Article 11 expresses
+   every retention band as a ceiling on the unit's contract price, not on
+   the amounts the buyer has handed over. */
+{
+  const p = playbooks.find((x) => x.slug === "off-plan-irr");
+  ok("off-plan: the page exists", !!p);
+  if (p) {
+    const E = op.EXAMPLE_PLAN;
+    const price = E.price;
+    const tables = tablesIn(p.body);
+
+    const pv = tables.find((t) => /Measure/i.test(t.head[0] || ""));
+    ok("off-plan: the present value table is present", !!pv);
+    if (pv) {
+      const pvA = op.planPresentValue(price, E.a, E.discountRate, E.months);
+      const pvB = op.planPresentValue(price, E.b, E.discountRate, E.months);
+      const row = (label) => pv.rows.find((r) => new RegExp(label, "i").test(r[0]));
+      const head = row("Headline price");
+      const cost = row("Cost in today's money");
+      const eff = row("Effective discount");
+      ok("off-plan: the table's headline price is the module's price",
+        !!head && cellNum(head[1]) === price && cellNum(head[2]) === price);
+      ok("off-plan: plan A's present value is the module's, to the dirham",
+        !!cost && cellNum(cost[1]) === Math.round(pvA), `${cost && cost[1]} vs ${Math.round(pvA)}`);
+      ok("off-plan: plan B's present value is the module's, to the dirham",
+        !!cost && cellNum(cost[2]) === Math.round(pvB), `${cost && cost[2]} vs ${Math.round(pvB)}`);
+      ok("off-plan: the effective discounts are the module's",
+        !!eff && Math.abs(cellNum(eff[1]) - op.effectiveDiscount(price, pvA) * 100) < 0.05
+             && Math.abs(cellNum(eff[2]) - op.effectiveDiscount(price, pvB) * 100) < 0.05,
+        JSON.stringify(eff));
+    }
+
+    const bands = tables.find((t) => /Completion of the project/i.test(t.head[0] || ""));
+    ok("off-plan: the retention band table is present", !!bands);
+    if (bands) {
+      ok("off-plan: the band table has a row for every band in the module",
+        bands.rows.length === op.BANDS.length, String(bands.rows.length));
+      ok("off-plan: the published retention percentages are the module's",
+        same(col(bands, 1), op.BANDS.map((b) => b.retain * 100)), JSON.stringify(col(bands, 1)));
+      ok("off-plan: every band says the percentage is taken on the unit's price",
+        bands.rows.every((r) => /contract price of the unit/i.test(r[2])),
+        JSON.stringify(bands.rows.map((r) => r[2])));
+    }
+
+    const grid = tables.find((t) => /Paid so far/i.test(t.head[0] || ""));
+    ok("off-plan: the refund grid is present", !!grid);
+    if (grid) {
+      const paid = col(grid, 0);
+      const rows = op.refundGrid(price, paid, 50);
+      ok("off-plan: the grid's retained column is the module's",
+        same(col(grid, 1), rows.map((r) => r.retained)), JSON.stringify(col(grid, 1)));
+      ok("off-plan: the grid's refund column is the module's",
+        same(col(grid, 2), rows.map((r) => r.refund)), JSON.stringify(col(grid, 2)));
+      ok("off-plan: the grid's share-lost column is the module's",
+        same(col(grid, 3), rows.map((r) => Number((r.shareOfPaidLost * 100).toFixed(1)))),
+        JSON.stringify(col(grid, 3)));
+      ok("off-plan: the grid opens on a payment inside the ceiling, which is the page's first claim",
+        paid[0] === price * 0.20 && rows[0].refund === 0, JSON.stringify(rows[0]));
+    }
+
+    const ceilings = [0, 1, 300000, 375000, 900000, 1500000, 3000000]
+      .map((paid) => op.onTermination(price, paid, 50).ceiling);
+    ok("off-plan: the retention ceiling does not change with the amount paid",
+      ceilings.every((c) => c === ceilings[0] && c === price * 0.25), JSON.stringify(ceilings));
+    ok("off-plan: the retention ceiling scales with the price and only with the price",
+      [750000, 1500000, 4000000].every((pr) =>
+        op.onTermination(pr, 100000, 50).ceiling === pr * 0.25), null);
+
+    ok("off-plan: retained plus refunded is always what was paid",
+      [0, 250000, 375000, 480000, 1500000].every((paid) => {
+        const t = op.onTermination(price, paid, 50);
+        return Math.abs(t.retained + t.refund - paid) < 1e-9;
+      }));
+
+    ok("off-plan: a payment at or below the ceiling is refunded nothing",
+      [1, 100000, 374999, 375000].every((paid) => op.onTermination(price, paid, 50).refund === 0));
+    ok("off-plan: a refund begins the dirham above the ceiling",
+      op.onTermination(price, 375001, 50).refund === 1);
+    ok("off-plan: the refund threshold is the ceiling itself, on every band",
+      [50, 70, 85].every((pc) =>
+        op.refundStartsAt(price, pc) === op.onTermination(price, 0, pc).ceiling));
+
+    const step = op.bandStep(price, op.paidByMonth(price, E.a, 18, E.months), 59, 61);
+    ok("off-plan: crossing sixty percent costs the buyer the full fifteen point step",
+      step.drop === price * 0.15 && step.maxDrop === price * 0.15,
+      JSON.stringify(step));
+    ok("off-plan: the step cannot take back more than was refundable",
+      [100000, 400000, 610000, 1500000].every((paid) => {
+        const st = op.bandStep(price, paid, 59, 61);
+        return st.drop >= 0 && st.drop <= st.before && st.drop <= st.maxDrop + 1e-9;
+      }));
+
+    const t18 = op.onTermination(price, op.paidByMonth(price, E.a, 18, E.months), 50);
+    const t18b = op.onTermination(price, op.paidByMonth(price, E.a, 18, E.months), 65);
+    const claims = [
+      ["the ceiling on the illustrative unit", `which is **AED ${op.money(price * 0.25)}**`],
+      ["the deposit that sits inside it", `Twenty percent of the price is AED ${op.money(price * 0.20)}`],
+      ["the refund before the band is crossed", `AED ${op.money(t18.refund)} to AED ${op.money(t18b.refund)}`],
+      ["the size of the step", `**AED ${op.money(step.maxDrop)}**`],
+      ["the registration fee on each side", `AED ${op.money(op.initialRegistration(price).seller)} on each side`],
+    ];
+    for (const [what, phrase] of claims) {
+      ok(`off-plan: the prose carries ${what}`, p.body.includes(phrase), phrase);
+    }
+
+    ok("off-plan: no band in the module is measured against the amounts paid",
+      op.BANDS.every((b) => typeof b.retain === "number" && b.retain > 0 && b.retain <= 1));
+    ok("off-plan: the page names the thirty percent band as the superseded text",
+      /thirty percent of the amounts paid/i.test(p.body) && /It is the 2017 text/.test(p.body));
+    ok("off-plan: the page gives the replacement in the instrument's words",
+      p.body.includes("the Developer must refund all payments made by the purchasers"));
+
+    ok("off-plan: the worked example is the net yield page's unit",
+      op.EXAMPLE_PLAN.price === aq.EXAMPLE.price, String(op.EXAMPLE_PLAN.price));
   }
 }
 

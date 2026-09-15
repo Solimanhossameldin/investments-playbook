@@ -17,6 +17,7 @@ import * as rc from "./rentcap.mjs";
 import * as hh from "./holidayhome.mjs";
 import * as dp from "./disposal.mjs";
 import * as jp from "./jointproperty.mjs";
+import * as op from "./offplan.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -103,6 +104,26 @@ const ENTRIES = [
     what: "The bylaw under which holiday homes are licensed and classified, with the operating conditions a permit carries.",
     applied: "short-let-vs-long-let",
   },
+  {
+    mod: op, key: "law19", year: 2020, area: "Buying off-plan",
+    what: "Replaces Article 11 of the 2008 law, and sets the ceiling on what a developer may keep when an off-plan buyer stops paying, as a percentage of the unit's contract price banded by how far the building has got.",
+    applied: "off-plan-irr",
+  },
+  {
+    mod: op, key: "law13", year: 2008, area: "Buying off-plan",
+    what: "Creates the Interim Real Property Register and makes an unregistered disposition of an off-plan unit void rather than merely irregular.",
+    applied: "off-plan-irr",
+  },
+  {
+    mod: op, key: "escrow", year: 2007, area: "Buying off-plan",
+    what: "Requires off-plan purchasers' payments into a project escrow account, and holds back five percent of it for a year after units are registered.",
+    applied: "off-plan-irr",
+  },
+  {
+    mod: op, key: "dldInitialSale", year: null, area: "Buying off-plan",
+    what: "The Land Department's service page for registering an initial off-plan sale, which prints the 4% registration fee as two halves and files the Oqood charge as a developer cost.",
+    applied: "off-plan-irr",
+  },
 ];
 
 export function register() {
@@ -116,6 +137,6 @@ export function register() {
 
 /* The playbooks that cite instruments. Kept here so the page and the suite
    agree on what "every instrument the site cites" means. */
-export const APPLIED = ["net-rental-yield", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let"];
+export const APPLIED = ["net-rental-yield", "off-plan-irr", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let"];
 
-export const AREAS = ["Buying and selling", "Owning in a building", "Renting", "Holiday homes"];
+export const AREAS = ["Buying and selling", "Buying off-plan", "Owning in a building", "Renting", "Holiday homes"];
