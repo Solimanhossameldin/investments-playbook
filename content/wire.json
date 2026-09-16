@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-16T14:59:45.531Z",
+ "fetchedAt": "2026-09-16T18:49:35.732Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Federal Reserve issues FOMC statement",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
+   "published": "2026-09-16T18:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
+  {
+   "title": "Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916b.htm",
+   "published": "2026-09-16T18:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
   {
    "title": "Chancellor announces Bank of England appointments",
    "url": "https://www.bankofengland.co.uk/news/2026/september/chancellor-announces-boe-appointments",
