@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-16T05:18:37.205Z",
+ "fetchedAt": "2026-09-16T10:11:43.075Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "ECB wage tracker at 2.7% in H1 2027, pointing to a modest uptick in negotiated wage growth",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260916~7bc58ebef4.en.html",
+   "published": "2026-09-16T08:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Statistical Notice 2026/08 - Changes to the criteria for monthly form BT reporting",
    "url": "https://www.bankofengland.co.uk/statistics/notice/2026/statistical-notice-2026-08",
