@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-17T18:36:41.308Z",
+ "fetchedAt": "2026-09-17T21:47:01.083Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -93,18 +93,18 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916b.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Chancellor announces Bank of England appointments",
@@ -429,15 +429,6 @@
    "sourceLabel": "Speeches",
    "category": "rates",
    "feed": "fed-speeches"
-  },
-  {
-   "title": "SEC: 38 Entities Feigned Legitimacy as U.S. Advisers Through False Filings to Lure Retail Investors",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-78-sec-38-entities-feigned-legitimacy-us-advisers-through-false-filings-lure-retail-investors",
-   "published": "2026-08-27T21:30:00.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
   }
  ]
 }
