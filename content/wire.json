@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-17T21:47:01.083Z",
+ "fetchedAt": "2026-09-17T23:56:02.843Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -71,8 +71,8 @@
    "feed": "boe"
   },
   {
-   "title": "Asset Purchase Facility: Gilt Sales – Market Notice 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/asset-purchase-facility-gilt-sales-market-notice-17-september-2026",
+   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
+   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
@@ -80,8 +80,8 @@
    "feed": "boe"
   },
   {
-   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
-   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
+   "title": "Asset Purchase Facility: Gilt Sales – Market Notice 17 September 2026",
+   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/asset-purchase-facility-gilt-sales-market-notice-17-september-2026",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
@@ -93,18 +93,18 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916b.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Chancellor announces Bank of England appointments",
