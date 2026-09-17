@@ -14,6 +14,7 @@ import * as aq from "../src/acquisition.mjs";
 import * as dp from "../src/disposal.mjs";
 import * as jp from "../src/jointproperty.mjs";
 import * as op from "../src/offplan.mjs";
+import * as mg from "../src/mortgage.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -104,6 +105,7 @@ const STATUTORY_PAGES = [
   ["selling-well", dp],
   ["service-charge-and-reserves", jp],
   ["off-plan-irr", op],
+  ["mortgage-capacity", mg],
 ];
 
 for (const [slug, mod] of STATUTORY_PAGES) {
@@ -834,6 +836,148 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   for (const slug of APPLIED) {
     const p = playbooks.find((x) => x.slug === slug);
     ok(`law register: ${slug} links back to the register`, !!p && p.body.includes("](/dubai-property-law/)"));
+  }
+}
+
+
+/* ---- mortgage capacity, and the three caps in Article 3 ----
+
+   The statutory half is covered by STATUTORY_PAGES above, which makes the
+   page carry all eleven quotations word for word and cite both articles.
+   What is left is the arithmetic, and it has one property that is the whole
+   reason the page exists: which of the two income caps binds depends on the
+   stressed rate and on nothing else. Both caps are proportional to income,
+   so the crossover survives any income and any price, and an edit that made
+   it depend on either would still produce a plausible-looking table. So the
+   independence is checked directly, at two incomes and two prices, rather
+   than inferred from the table matching. */
+{
+  const p = playbooks.find((x) => x.slug === "mortgage-capacity");
+  ok("mortgage: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+    const find = (pred) => tables.find(pred);
+
+    /* The worked example is the net rental yield page's flat. If the two
+       drift apart the pages stop chaining and the cash figure stops being
+       comparable to the fee stack it is built from. */
+    ok("mortgage: the example unit is the acquisition example",
+      p.body.includes(`AED ${aq.money(aq.EXAMPLE.price)}`), String(aq.EXAMPLE.price));
+
+    /* 1. The bands, against the module rather than against themselves. */
+    const bandTable = find((t) => /Maximum loan to value/i.test(t.head[1] || ""));
+    ok("mortgage: the loan to value band table is present", !!bandTable);
+    if (bandTable) {
+      const want = [
+        mg.ltvCapRate({ status: "national", first: true, price: mg.CAPS.bandPrice }),
+        mg.ltvCapRate({ status: "national", first: true, price: mg.CAPS.bandPrice + 1 }),
+        mg.ltvCapRate({ status: "national", first: false }),
+        mg.ltvCapRate({ status: "expatriate", first: true, price: mg.CAPS.bandPrice - 1 }),
+        mg.ltvCapRate({ status: "expatriate", first: true, price: mg.CAPS.bandPrice + 1 }),
+        mg.ltvCapRate({ status: "expatriate", first: false }),
+        mg.ltvCapRate({ offPlan: true }),
+      ].map((r) => Math.round(r * 100));
+      ok("mortgage: the band table matches the module band for band",
+        same(col(bandTable, 1), want), JSON.stringify(col(bandTable, 1)));
+    }
+
+    /* 2. The minimum-income table, cell by cell, including which cap binds.
+       The last column is the claim; the numbers are only its evidence. */
+    const incTable = find((t) => /Stressed rate/i.test(t.head[0] || ""));
+    ok("mortgage: the minimum income table is present", !!incTable);
+    if (incTable) {
+      const rows = mg.incomeTable();
+      ok("mortgage: the income table is computed at the module's rates",
+        same(col(incTable, 0), rows.map((r) => r.ratePct)), JSON.stringify(col(incTable, 0)));
+      ok("mortgage: the stressed payments match the module",
+        same(col(incTable, 1), rows.map((r) => r.payment)), JSON.stringify(col(incTable, 1)));
+      ok("mortgage: the income the ratio needs matches the module",
+        same(col(incTable, 2), rows.map((r) => r.byFlow)), JSON.stringify(col(incTable, 2)));
+      ok("mortgage: the income the multiple needs matches the module",
+        same(col(incTable, 3), rows.map((r) => r.byStock)), JSON.stringify(col(incTable, 3)));
+      ok("mortgage: every row names the cap the module says binds",
+        incTable.rows.every((r, i) => r[4] === rows[i].binds),
+        incTable.rows.map((r) => r[4]).join(" | "));
+      /* The page's argument needs the swap to be visible in the table. A
+         table where one cap binds throughout would match the module and
+         prove nothing to the reader. */
+      ok("mortgage: the table straddles the crossover",
+        new Set(rows.map((r) => r.binds)).size === 2, rows.map((r) => r.binds).join(", "));
+    }
+
+    /* 3. The crossover, printed to two places, and independent of income and
+          of price. This is the claim the page is built on. */
+    ok("mortgage: the page prints the computed crossover rate",
+      p.body.includes(`${mg.crossoverRatePct().toFixed(2)}%`), mg.crossoverRatePct().toFixed(2));
+
+    const x = mg.crossoverRatePct();
+    const probe = (monthlyIncome, price, rate) =>
+      mg.caps({ price, monthlyIncome, stressedRatePct: rate, otherMonthlyDebt: 0 }).binding;
+    for (const [income, price] of [[40000, 6000000], [90000, 12000000]]) {
+      ok(`mortgage: below the crossover the multiple binds (${income}/${price})`,
+        probe(income, price, x - 1) === "the income multiple",
+        probe(income, price, x - 1));
+      ok(`mortgage: above the crossover the ratio binds (${income}/${price})`,
+        probe(income, price, x + 1) === "the debt burden ratio",
+        probe(income, price, x + 1));
+    }
+
+    /* 4. caps() has to be a minimum of three, not of two. Each cap is made
+          the binding one in turn, so dropping one from the minimum fails. */
+    ok("mortgage: the loan to value cap can bind",
+      mg.caps({ price: 1000000, monthlyIncome: 500000, stressedRatePct: 6 }).binding === "the loan to value cap");
+    ok("mortgage: the debt burden ratio can bind",
+      mg.caps({ price: 5000000, monthlyIncome: 30000, stressedRatePct: 9 }).binding === "the debt burden ratio");
+    ok("mortgage: the income multiple can bind",
+      mg.caps({ price: 5000000, monthlyIncome: 30000, stressedRatePct: 3 }).binding === "the income multiple");
+
+    /* 5. Cash to close, line by line, and the gap the page leads on. */
+    const cash = mg.cashToClose();
+    const cashTable = find((t) => t.rows.length && /^Deposit,/.test(t.rows[0][0]));
+    ok("mortgage: the cash to close table is present", !!cashTable);
+    if (cashTable) {
+      ok("mortgage: the cash to close table matches the module line by line",
+        same(col(cashTable, 1), [cash.deposit, cash.buying, cash.borrowing, cash.total]),
+        JSON.stringify(col(cashTable, 1)));
+    }
+    ok("mortgage: the page prints the computed cash percentage",
+      p.body.includes(`${cash.actualPct.toFixed(2)}%`), cash.actualPct.toFixed(2));
+    ok("mortgage: the page prints the computed gap in points",
+      p.body.includes(`${cash.gapPoints.toFixed(2)} percentage points`), cash.gapPoints.toFixed(2));
+    ok("mortgage: the page prints the cash the deposit figure omits",
+      p.body.includes(`AED ${aq.money(cash.total - cash.deposit)}`), String(cash.total - cash.deposit));
+
+    /* The fees are the thing that cannot be borrowed, so the cash figure has
+       to exceed the deposit by exactly the two fee stacks. An edit that
+       quietly folded them into the loan would still produce a total. */
+    ok("mortgage: the cash requirement is the deposit plus both fee stacks",
+      cash.total - cash.deposit === cash.buying + cash.borrowing,
+      `${cash.total} - ${cash.deposit}`);
+    ok("mortgage: the buying stack is the acquisition page's, unchanged",
+      cash.buying === aq.acquisition().total, `${cash.buying} vs ${aq.acquisition().total}`);
+
+    /* 6. Off plan, where Article 3 overrides every band. */
+    const off = mg.cashToClose({ offPlan: true });
+    ok("mortgage: off plan is capped at the module's off plan band",
+      off.ltvRate === mg.CAPS.ltv.offPlan, String(off.ltvRate));
+    ok("mortgage: the page prints the off plan cash requirement",
+      p.body.includes(`AED ${aq.money(off.total)}`), String(off.total));
+    ok("mortgage: the page prints the off plan cash percentage",
+      p.body.includes(`${off.actualPct.toFixed(2)}%`), off.actualPct.toFixed(2));
+
+    /* 7. The rental deduction is a share of the year, not of the rent. */
+    const cr = mg.countableRent();
+    ok("mortgage: the page prints the countable rent",
+      p.body.includes(aq.money(cr.amount)), String(cr.amount));
+    ok("mortgage: the page prints the deducted rent",
+      p.body.includes(aq.money(cr.deducted)), String(cr.deducted));
+    ok("mortgage: the deduction is two months of whatever the rent is",
+      mg.countableRent(240000).amount === 200000, String(mg.countableRent(240000).amount));
+
+    /* 8. The page is a junction, so the chain is checked rather than hoped. */
+    for (const target of ["net-rental-yield", "off-plan-irr", "selling-well", "due-diligence-before-an-offer", "transaction-cost-drag"]) {
+      ok(`mortgage: links to /playbooks/${target}/`, p.body.includes(`](/playbooks/${target}/)`));
+    }
   }
 }
 

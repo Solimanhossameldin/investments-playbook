@@ -18,6 +18,7 @@ import * as hh from "./holidayhome.mjs";
 import * as dp from "./disposal.mjs";
 import * as jp from "./jointproperty.mjs";
 import * as op from "./offplan.mjs";
+import * as mg from "./mortgage.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -58,6 +59,16 @@ const ENTRIES = [
     mod: dp, key: "dldRelease", year: null, area: "Buying and selling",
     what: "The service page for discharging a mortgage on its own, rather than as part of a sale.",
     applied: "selling-well",
+  },
+  {
+    mod: mg, key: "cbuaeMortgage", year: 2013, area: "Borrowing",
+    what: "Sets every cap on the size of a mortgage: the loan to value bands by nationality, price and whether the property is off plan, the debt burden ratio the payment must fit inside, the maximum financing amount as a multiple of annual income, the twenty-five year term, the stress test the payment is qualified at, and what may and may not be counted as income.",
+    applied: "mortgage-capacity",
+  },
+  {
+    mod: mg, key: "cbuaeDisclosure", year: 2013, area: "Borrowing",
+    what: "Requires the lender to give the borrower the lifetime cost of the loan and a separate schedule of fees and charges, and points the cap on early repayment charges back at the consumer lending regulation.",
+    applied: "mortgage-capacity",
   },
   {
     mod: jp, key: "law6", year: 2019, area: "Owning in a building",
@@ -137,6 +148,6 @@ export function register() {
 
 /* The playbooks that cite instruments. Kept here so the page and the suite
    agree on what "every instrument the site cites" means. */
-export const APPLIED = ["net-rental-yield", "off-plan-irr", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let"];
+export const APPLIED = ["net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let"];
 
-export const AREAS = ["Buying and selling", "Buying off-plan", "Owning in a building", "Renting", "Holiday homes"];
+export const AREAS = ["Buying and selling", "Buying off-plan", "Borrowing", "Owning in a building", "Renting", "Holiday homes"];
