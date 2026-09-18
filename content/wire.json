@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-18T21:53:28.780Z",
+ "fetchedAt": "2026-09-18T23:54:47.872Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -125,6 +125,15 @@
    "feed": "sec"
   },
   {
+   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
+   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
+   "published": "2026-09-17T11:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
    "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
    "published": "2026-09-17T11:00:00.000Z",
@@ -136,15 +145,6 @@
   {
    "title": "Exchange of letters between the Governor and the Chancellor regarding QT and the APF - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/exchange-of-letters-between-the-governor-and-the-chancellor-regarding-qt-and-the-apf",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
-   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
@@ -165,18 +165,18 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916b.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Chancellor announces Bank of England appointments",
