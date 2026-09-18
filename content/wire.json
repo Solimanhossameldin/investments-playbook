@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-18T08:49:33.355Z",
+ "fetchedAt": "2026-09-18T13:26:17.363Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Minutes of the Transaction and Post-trade Reporting Harmonisation Taskforce - July 2026",
+   "url": "https://www.bankofengland.co.uk/minutes/2026/july/minutes-of-the-transaction-and-post-trade-reporting-harmonisation-taskforce-july-2026",
+   "published": "2026-09-18T11:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
   {
    "title": "ECB Consumer Expectations Survey results – August 2026",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260918~295b3ab978.en.html",
@@ -71,6 +80,15 @@
    "feed": "sec"
   },
   {
+   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
+   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
+   "published": "2026-09-17T11:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
    "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
    "published": "2026-09-17T11:00:00.000Z",
@@ -82,15 +100,6 @@
   {
    "title": "Exchange of letters between the Governor and the Chancellor regarding QT and the APF - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/exchange-of-letters-between-the-governor-and-the-chancellor-regarding-qt-and-the-apf",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
-   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
