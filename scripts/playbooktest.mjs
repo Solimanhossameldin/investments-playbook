@@ -15,6 +15,7 @@ import * as dp from "../src/disposal.mjs";
 import * as jp from "../src/jointproperty.mjs";
 import * as op from "../src/offplan.mjs";
 import * as mg from "../src/mortgage.mjs";
+import * as ht from "../src/hometax.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -108,7 +109,23 @@ const STATUTORY_PAGES = [
   ["mortgage-capacity", mg],
 ];
 
-for (const [slug, mod] of STATUTORY_PAGES) {
+/* Pages whose instruments are statute somewhere other than Dubai. They get
+   the same word-for-word treatment as the list above, and they are kept out
+   of it deliberately: the law register is a register of Dubai property law,
+   and a UK tax convention filed under that heading would be wrong for the
+   reader who went there looking for the decree behind a fee. Keeping two
+   lists makes that a decision rather than an accident, and the checks below
+   make it one that cannot be made by mistake in either direction. */
+const FOREIGN_STATUTORY_PAGES = [
+  ["residency-and-tax", ht],
+];
+
+const ALL_STATUTORY_PAGES = [...STATUTORY_PAGES, ...FOREIGN_STATUTORY_PAGES];
+
+ok("statutory pages: no page is in both the Dubai and the foreign list",
+  !FOREIGN_STATUTORY_PAGES.some(([s]) => STATUTORY_PAGES.some(([d]) => d === s)));
+
+for (const [slug, mod] of ALL_STATUTORY_PAGES) {
   const p = playbooks.find((x) => x.slug === slug);
   ok(`${slug}: the page exists`, !!p);
   if (!p) continue;
@@ -822,6 +839,17 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   ok("law register: every applied slug is a statutory page",
     APPLIED.every((slug) => STATUTORY_PAGES.some(([s]) => s === slug)), APPLIED.join(", "));
 
+  /* The register is Dubai property law. A foreign instrument appearing in it
+     would send a reader looking for the decree behind a Dubai fee to a UK
+     tax convention, so it is excluded by name rather than by omission. */
+  for (const [slug, mod] of FOREIGN_STATUTORY_PAGES) {
+    ok(`law register: ${slug} is not in the applied list`, !APPLIED.includes(slug));
+    for (const [key, inst] of Object.entries(mod.INSTRUMENTS)) {
+      ok(`law register: does not list ${slug}'s foreign instrument "${key}"`,
+        !listed.has(inst.url), inst.url);
+    }
+  }
+
   for (const e of reg) {
     const p = playbooks.find((x) => x.slug === e.applied);
     ok(`law register: "${e.key}" is applied by a page that exists`, !!p, e.applied);
@@ -985,6 +1013,101 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 ok("every calculator points at a playbook that exists",
   CALCULATORS.every((c) => !c.playbook || slugs.has(c.playbook)),
   CALCULATORS.filter((c) => c.playbook && !slugs.has(c.playbook)).map((c) => c.slug).join(", "));
+
+
+/* ---- tax on Dubai rental income ----
+
+   The statutory half is covered by ALL_STATUTORY_PAGES above, which makes the
+   page carry the treaty's own wording and cite the convention. What is left
+   is the arithmetic, and it has one property worth guarding directly: the
+   whole argument is that the relief is nil BECAUSE the UAE charge is nil, so
+   the page must not at any point compute a credit. A future edit that
+   introduced one would still produce a plausible table with smaller numbers
+   in it, which is exactly the failure a table comparison would not catch.
+
+   The yields are not recomputed here. They are read out of hometax.mjs,
+   which reads them out of acquisition.mjs, so the flagship page and this one
+   cannot drift: change the service charge on the example flat and both move
+   together or the suite names the one that did not. */
+{
+  const p = playbooks.find((x) => x.slug === "residency-and-tax");
+  ok("tax on rent: the page exists", !!p);
+  if (p) {
+    const y = aq.yields();
+    const g = ht.grid();
+    const cmp = ht.againstTransactionStack("higher");
+
+    ok("tax on rent: the untaxed yield is the net rental yield page's own",
+      g.every((r) => r.noi === y.noi), `${g[0].noi} vs ${y.noi}`);
+
+    /* The table the reader sees, against the module, cell by cell. Row one is
+       the UAE resident and is the zero case; the rest are the bands in order. */
+    const t = tablesIn(p.body).find((x) => (x.head[0] || "").includes("Owner's position"));
+    ok("tax on rent: the page carries the band table", !!t);
+    if (t) {
+      ok("tax on rent: the table has a row per band plus the untaxed case",
+        t.rows.length === ht.UK.bands.length + 1, String(t.rows.length));
+      ok("tax on rent: the first row is the untaxed UAE resident",
+        cellNum(t.rows[0][1]) === 0 && cellNum(t.rows[0][2]) === 0 &&
+        cellNum(t.rows[0][3]) === y.noi && cellNum(t.rows[0][4]) === y.net,
+        JSON.stringify(t.rows[0]));
+      g.forEach((r, i) => {
+        const row = t.rows[i + 1] || [];
+        const n = r.band.name.toLowerCase().replace(" rate", "");
+        ok(`tax on rent: the ${r.band.key} row names its band`,
+          (row[0] || "").toLowerCase().includes(n), row[0]);
+        ok(`tax on rent: the ${r.band.key} row prints the published rate`,
+          cellNum(row[1]) === r.band.rate * 100, row[1]);
+        ok(`tax on rent: the ${r.band.key} row's tax is the module's`,
+          cellNum(row[2]) === r.tax, row[2]);
+        ok(`tax on rent: the ${r.band.key} row's kept income is the module's`,
+          cellNum(row[3]) === r.kept, row[3]);
+        ok(`tax on rent: the ${r.band.key} row's net yield is the module's`,
+          cellNum(row[4]) === r.net, row[4]);
+        ok(`tax on rent: the ${r.band.key} row's points lost is the module's`,
+          cellNum(row[5]) === r.cost, row[5]);
+        /* Kept income and tax must reconcile to the profit, so a hand edit to
+           one cell cannot pass by matching a module value in the other. */
+        ok(`tax on rent: the ${r.band.key} row reconciles, tax plus kept is the profit`,
+          cellNum(row[2]) + cellNum(row[3]) === y.noi);
+      });
+    }
+
+    /* The identity the page is built on, checked as an identity rather than
+       inferred from the prose matching. The charge is the marginal rate
+       applied to the profit with no credit subtracted, because no credit is
+       available. If a credit is ever introduced this fails immediately. */
+    for (const r of g) {
+      ok(`tax on rent: ${r.band.key} is the full marginal charge, no credit given`,
+        r.tax === Math.round(r.noi * r.band.rate));
+    }
+
+    ok("tax on rent: the higher rate charge outweighs the whole transaction stack",
+      cmp.taxPoints > cmp.transactionPoints);
+    ok("tax on rent: the page prints the ratio the module computes",
+      p.body.includes(`${cmp.ratio} times the whole transaction stack`), String(cmp.ratio));
+    ok("tax on rent: the page prints the transaction stack figure the yield page computes",
+      p.body.includes(`takes **${aq.drag().transaction}**`), String(aq.drag().transaction));
+    ok("tax on rent: the page prints the running cost figure the yield page computes",
+      p.body.includes(`**${aq.drag().running} percentage points**`), String(aq.drag().running));
+
+    /* The finance cost gap is the owner's rate less the basic rate value, so
+       it is zero at the basic rate and cannot be negative below it. The page
+       prints the higher rate case on a stated interest figure. */
+    ok("tax on rent: the finance cost gap is nil at the basic rate",
+      ht.financeCostGap(50000, "basic").cost === 0);
+    ok("tax on rent: the page's finance cost example is the module's",
+      p.body.includes(`**AED ${ht.money(ht.financeCostGap(50000, "higher").cost)} a year**`));
+
+    /* The page must not claim the treaty relieves anything, because the whole
+       finding is that it does not. Guarded by wording rather than by a number
+       because this is the claim a well meaning edit would soften. */
+    ok("tax on rent: the page says the credit is nil",
+      /credit against the UK charge is nil/.test(p.body));
+    ok("tax on rent: the page keeps the permissive reading of Article 6",
+      p.body.includes("*may be taxed*, not *shall be taxable only*"));
+  }
+}
 
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);
