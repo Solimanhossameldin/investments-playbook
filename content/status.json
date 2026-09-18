@@ -4,6 +4,12 @@
    "job": "fetch-wire",
    "status": "ok",
    "detail": "49 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-09-18T21:53:28.780Z"
+  },
+  {
+   "job": "fetch-wire",
+   "status": "ok",
+   "detail": "49 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-18T19:36:47.956Z"
   },
   {
@@ -233,12 +239,6 @@
    "status": "incomplete",
    "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
    "ranAt": "2026-09-16T23:38:04.471Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "partial",
-   "detail": "18 figures refreshed. Notes: fred-DGS2 DGS30 The operation was aborted due to timeout",
-   "ranAt": "2026-09-16T23:38:04.314Z"
   }
  ]
 }
