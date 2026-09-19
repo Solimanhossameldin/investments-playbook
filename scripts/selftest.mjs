@@ -729,6 +729,41 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
     }
     check("no built page publishes a description cut off mid-sentence",
       dangling.length === 0, `${dangling.length}: ${dangling.slice(0, 4).join(", ")}`);
+
+    /* The same fault, one class along. A full stop inside "Law No. (7) of
+       2006" is not the end of a sentence, but the clamp used to read it as
+       one and publish a description that stopped at "which Law No." This
+       site cites laws by number on most of its property pages, so the fault
+       reappears with every new one. */
+    const cutAtAbbreviation = [];
+    for (const f of fs.readdirSync(distDir, { recursive: true })
+      .filter((x) => String(x).endsWith(".html"))) {
+      const html = fs.readFileSync(path.join(distDir, String(f)), "utf8");
+      const m = html.match(/<meta name="description" content="([^"]*)"/);
+      if (m && /(^|\s)(No|Nos|Art|Arts|Dr|Mr|Mrs|Ms|Prof|St|Inc|Ltd|Co|Jr|Sr|vs|approx|cf|etc|Fig|Vol)\.$/.test(m[1].trim()))
+        cutAtAbbreviation.push(String(f));
+    }
+    check("no built page publishes a description that stops at an abbreviation",
+      cutAtAbbreviation.length === 0,
+      `${cutAtAbbreviation.length}: ${cutAtAbbreviation.slice(0, 4).join(", ")}`);
+  }
+
+  /* And the clamp itself, directly, because the two checks above can only
+     see the summaries the site happens to have today. */
+  {
+    const { clampDescription } = await import(new URL("../src/lib.mjs", import.meta.url));
+    /* The fragment before the abbreviation is deliberately long enough to
+       satisfy the clamp's own minimum on its own, so that a broken join is
+       caught here rather than rescued by the fallback path below it. */
+    const withLaw = clampDescription(
+      "This page sets out every fee that the Land Department charges under Law No. (7) of 2006 and explains which of them a buyer can actually negotiate away before signing.");
+    check("the clamp does not treat a law number as the end of a sentence",
+      !/\bNo\.$/.test(withLaw) && withLaw.length > 60, withLaw);
+
+    const longSentence = clampDescription(
+      "Dubai land law decides the first half of due diligence outright because an unrecorded transaction is not valid, and it leaves the second half to arithmetic that this page sets out in full below.");
+    check("the clamp stops at a clause boundary rather than mid-phrase",
+      longSentence.endsWith("not valid"), longSentence);
   }
 }
 

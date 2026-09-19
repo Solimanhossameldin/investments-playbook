@@ -16,6 +16,7 @@ import * as jp from "../src/jointproperty.mjs";
 import * as op from "../src/offplan.mjs";
 import * as mg from "../src/mortgage.mjs";
 import * as ht from "../src/hometax.mjs";
+import * as dd from "../src/diligence.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -107,6 +108,7 @@ const STATUTORY_PAGES = [
   ["service-charge-and-reserves", jp],
   ["off-plan-irr", op],
   ["mortgage-capacity", mg],
+  ["due-diligence-before-an-offer", dd],
 ];
 
 /* Pages whose instruments are statute somewhere other than Dubai. They get
@@ -1106,6 +1108,93 @@ ok("every calculator points at a playbook that exists",
       /credit against the UK charge is nil/.test(p.body));
     ok("tax on rent: the page keeps the permissive reading of Article 6",
       p.body.includes("*may be taxed*, not *shall be taxable only*"));
+  }
+}
+
+/* ---- due diligence, and the two kinds of check ----
+
+   The statutory half is covered by STATUTORY_PAGES above, which makes the
+   page carry all seven quotations from Law No. (7) of 2006 word for word and
+   cite the instrument. What is left is the page's actual argument, which is
+   a ranking, and a ranking has a property worth guarding: it is only useful
+   if it comes out the same way round as the arithmetic. A page that printed
+   the numbers correctly but drew the opposite conclusion from them would
+   look entirely plausible, so the direction is checked as well as the
+   values.
+
+   The values themselves all descend from the one illustrative flat in
+   acquisition.mjs, so an edit there moves this page, and these checks are
+   what names it when the page does not move with it. */
+{
+  const p = playbooks.find((x) => x.slug === "due-diligence-before-an-offer");
+  if (p) {
+    const sc = dd.serviceChargeCheck();
+    const rt = dd.rentCheck();
+    const f = dd.feeSplitCheck();
+    const t = dd.together();
+    const vc = dd.versusCommission();
+
+    /* A check the reader cannot perform is not a check. Each Land Department
+       service has to be named in the prose and cited in the page's sources,
+       and the services are kept out of INSTRUMENTS so that the law register
+       stays a register of law rather than of service pages. */
+    const urls = new Set((p.sources || []).map((x) => x.url));
+    for (const svc of dd.SERVICES) {
+      ok(`due diligence: names the service "${svc.name}"`, p.body.includes(svc.name));
+      ok(`due diligence: cites the page for "${svc.key}"`, urls.has(svc.url), svc.url);
+    }
+    ok("due diligence: the services are not instruments",
+      dd.SERVICES.every((svc) => !Object.values(dd.INSTRUMENTS).some((i) => i.url === svc.url)));
+
+    /* The ranking table, cell by cell against the module. Reading a figure
+       out of the prose would pass on a table whose rows had been reordered
+       or whose columns had drifted apart, which is exactly the edit that
+       would reverse the argument while keeping every number on the page. */
+    const rank = tablesIn(p.body).find((x) => /^Finding$/.test(x.head[0] || ""));
+    ok("due diligence: the ranking table is present", !!rank);
+    if (rank) {
+      ok("due diligence: the ranking table's net yields are the module's",
+        same(col(rank, 1), [sc.base, sc.net, rt.net, null]), JSON.stringify(col(rank, 1)));
+      ok("due diligence: the ranking table's points are the module's",
+        same(col(rank, 2), [0, sc.points, rt.points, t.points]), JSON.stringify(col(rank, 2)));
+      ok("due diligence: the ranking table's annual figures are the module's",
+        same(col(rank, 3), [0, sc.perYear, rt.perYear, sc.perYear + rt.perYear]),
+        JSON.stringify(col(rank, 3)));
+      ok("due diligence: the ranking table's capitalised figures are the module's",
+        same(col(rank, 4),
+          [0, dd.capitalised(sc.perYear), dd.capitalised(rt.perYear), t.documents]),
+        JSON.stringify(col(rank, 4)));
+
+      /* The two rows must sum to the total row. A hand edit that matched one
+         module value in one cell would still break this, because the column
+         has to reconcile as well as match. */
+      ok("due diligence: the total row is the sum of the two findings",
+        col(rank, 3)[3] === col(rank, 3)[1] + col(rank, 3)[2] &&
+        col(rank, 4)[3] === col(rank, 4)[1] + col(rank, 4)[2]);
+    }
+
+    /* The argument, in the direction the arithmetic actually runs. */
+    ok("due diligence: the recurring checks beat the one-off negotiation",
+      t.documents > t.negotiation && t.ratio > 1);
+    ok("due diligence: the page prints the ratio the module computes",
+      p.body.includes(`worth ${t.ratio} times the negotiation`), String(t.ratio));
+    ok("due diligence: the page prints the fee split as the module has it",
+      p.body.includes(`AED ${dd.money(f.once)}`) &&
+      p.body.includes(`from ${dd.pctText(f.base)} to ${dd.pctText(f.net)}, or ${f.points} points`));
+    ok("due diligence: the page prints the budget line against the commission",
+      p.body.includes(`AED ${dd.money(vc.capitalised)} of purchase price`) &&
+      p.body.includes(`AED ${dd.money(vc.commission)}`));
+
+    /* The two categories are the page. A page that quietly dropped the
+       distinction would still read as a competent checklist, which is the
+       failure mode worth naming. */
+    ok("due diligence: the validity checks are separated from the price checks",
+      /checks that decide whether you own anything/i.test(p.body) &&
+      /checks that decide (what it is worth|the price)/i.test(p.body));
+    ok("due diligence: the page says an unrecorded transfer is not valid",
+      /will not be deemed valid unless recorded in the Property Register/.test(p.body));
+    ok("due diligence: the page keeps freehold as a property of the location",
+      /freehold\]\(\/glossary\/freehold\/\) is a property of the location, not a term a seller can offer/.test(p.body));
   }
 }
 

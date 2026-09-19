@@ -19,6 +19,7 @@ import * as dp from "./disposal.mjs";
 import * as jp from "./jointproperty.mjs";
 import * as op from "./offplan.mjs";
 import * as mg from "./mortgage.mjs";
+import * as dd from "./diligence.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -135,6 +136,11 @@ const ENTRIES = [
     what: "The Land Department's service page for registering an initial off-plan sale, which prints the 4% registration fee as two halves and files the Oqood charge as a developer cost.",
     applied: "off-plan-irr",
   },
+  {
+    mod: dd, key: "law7", year: 2006, area: "Buying and selling",
+    what: "The foundation of Dubai property ownership: it says who may own real property and where, makes the Property Register conclusive against everyone, and makes an unrecorded transaction invalid rather than merely unregistered.",
+    applied: "due-diligence-before-an-offer",
+  },
 ];
 
 export function register() {
@@ -148,6 +154,6 @@ export function register() {
 
 /* The playbooks that cite instruments. Kept here so the page and the suite
    agree on what "every instrument the site cites" means. */
-export const APPLIED = ["net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let"];
+export const APPLIED = ["due-diligence-before-an-offer", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let"];
 
 export const AREAS = ["Buying and selling", "Buying off-plan", "Borrowing", "Owning in a building", "Renting", "Holiday homes"];

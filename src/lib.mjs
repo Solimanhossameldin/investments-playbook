@@ -277,6 +277,10 @@ export const INTENTS = [
 export const TITLE_MAX = 60;
 export const DESC_MAX = 155;
 
+/* The shortest clause cut worth preferring over a word-boundary cut. Below
+   this a description has lost too much to be worth the tidier ending. */
+export const CLAUSE_MIN = 110;
+
 /* Append the site name only when it fits. A long, specific title with no
    brand on it beats a truncated one, and the domain is shown next to the
    result anyway. */
@@ -288,11 +292,31 @@ export function pageTitle(base, siteName, max = TITLE_MAX) {
 
 /* Trim to whole sentences where possible, and to a word boundary when a
    single sentence is already too long. Never cuts mid-word. */
+/* Words that cannot end a sentence. Used both to walk a word-boundary cut
+   back off a dangling conjunction and to decide whether a clause boundary
+   is worth stopping at. */
+export const DANGLING = /(^|\s)(and|or|but|with|without|for|from|to|of|in|on|at|by|as|the|a|an|its|their|his|her|which|that|than|while|when|each|every|both|into|onto|over|under|per|via)$/i;
+
+const ABBREVIATIONS =
+  /(^|\s)(No|Nos|Art|Arts|Dr|Mr|Mrs|Ms|Prof|St|Inc|Ltd|LLC|Co|Jr|Sr|vs|approx|cf|ca|est|e\.g|i\.e|etc|Fig|Vol|pp)\.\s*$/;
+
 export function clampDescription(text, max = DESC_MAX) {
   const t = copy(String(text || "")).trim().replace(/\s+/g, " ");
   if (t.length <= max) return t;
 
-  const sentences = t.match(/[^.!?]+[.!?]+(\s|$)/g) || [];
+  /* A full stop is not always the end of a sentence. This site cites "Law
+     No. (7) of 2006" and "Decree No. (43) of 2013" constantly, and a naive
+     split on the stop after "No" published a description reading "...which
+     Law No." and stopping there. Fragments like that are what a searcher
+     sees, so any sentence that ends on a known abbreviation is joined to the
+     one after it before the clamp chooses where to stop. */
+  const parts = t.match(/[^.!?]+[.!?]+(\s|$)/g) || [];
+  const sentences = [];
+  for (const part of parts) {
+    if (sentences.length && ABBREVIATIONS.test(sentences[sentences.length - 1])) {
+      sentences[sentences.length - 1] += part;
+    } else sentences.push(part);
+  }
   let out = "";
   for (const s of sentences) {
     if ((out + s).trim().length > max) break;
@@ -300,6 +324,21 @@ export function clampDescription(text, max = DESC_MAX) {
   }
   out = out.trim();
   if (out.length >= 70) return out;
+
+  /* A single sentence too long for the budget still has clause boundaries in
+     it, and a description that stops at one reads like a finished thought
+     where a word-boundary cut reads like a truncation. Take the last comma
+     that still leaves a substantial description; otherwise fall through to
+     the word walk below. */
+  const clause = t.slice(0, max).lastIndexOf(", ");
+  if (clause >= CLAUSE_MIN) {
+    const upToClause = t.slice(0, clause);
+    /* Only if it reads as a finished thought. "...the cash you actually put
+       in" is a fine ending and "...divided by the" is not, and the site
+       already has one rule for telling those apart, so it decides here too
+       rather than a second rule being invented next to it. */
+    if (!DANGLING.test(upToClause)) return upToClause;
+  }
 
   const cut = t.slice(0, max);
   const at = cut.lastIndexOf(" ");
@@ -309,7 +348,6 @@ export function clampDescription(text, max = DESC_MAX) {
      linking to" or "...the tax treatment and" is grammatical nowhere, and it
      is what search results were showing on 30 pages. Walk back off any word
      that cannot end a sentence, then off the punctuation that word left. */
-  const DANGLING = /(^|\s)(and|or|but|with|without|for|from|to|of|in|on|at|by|as|the|a|an|its|their|his|her|which|that|than|while|when|each|every|both|into|onto|over|under|per|via)$/i;
   while (DANGLING.test(tail)) {
     const back = tail.lastIndexOf(" ");
     if (back <= 40) break;
