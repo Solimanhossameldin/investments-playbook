@@ -17,6 +17,7 @@ import * as op from "../src/offplan.mjs";
 import * as mg from "../src/mortgage.mjs";
 import * as ht from "../src/hometax.mjs";
 import * as dd from "../src/diligence.mjs";
+import * as ua from "../src/unitarea.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -109,6 +110,7 @@ const STATUTORY_PAGES = [
   ["off-plan-irr", op],
   ["mortgage-capacity", mg],
   ["due-diligence-before-an-offer", dd],
+  ["price-per-square-foot", ua],
 ];
 
 /* Pages whose instruments are statute somewhere other than Dubai. They get
@@ -1197,6 +1199,153 @@ ok("every calculator points at a playbook that exists",
       /freehold\]\(\/glossary\/freehold\/\) is a property of the location, not a term a seller can offer/.test(p.body));
   }
 }
+
+/* ---- price per square foot, and the denominator Article 13 governs ----
+
+   The statutory half is covered by STATUTORY_PAGES above, which makes the
+   page carry each paragraph of Article 13 word for word and cite the
+   Resolution. What is left is the arithmetic, and it has two properties
+   that are the whole reason the page is worth reading.
+
+   The first is that a shortfall out of the denominator raises the rate by
+   MORE than the shortfall. The second is that a wrong area understates the
+   price per foot and the service charge per foot by exactly the same
+   fraction, in the same flattering direction. A future edit that replaced
+   either identity with the naive one would produce a table that still looks
+   right, so both are checked as arithmetic rather than inferred from the
+   table matching. */
+{
+  const p = playbooks.find((x) => x.slug === "price-per-square-foot");
+  ok("price per foot: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+    const E = aq.EXAMPLE;
+    const num1 = (c) => {
+      const m = String(c).replace(/,/g, "").match(/-?\d+(\.\d+)?/);
+      return m ? Number(m[0]) : null;
+    };
+    const coln = (t, n) => t.rows.map((r) => num1(r[n]));
+
+    /* The published shortfall table, cell by cell, against the module. */
+    const sf = tables.find((t) => /^Shortfall$/i.test(t.head[0] || ""));
+    ok("price per foot: the shortfall table is present", !!sf);
+    if (sf) {
+      const rows = ua.shortfallTable(E);
+      ok("price per foot: the shortfall table is labelled with the shortfalls it computed",
+        same(coln(sf, 0), ua.SHORTFALLS), JSON.stringify(coln(sf, 0)));
+      ok("price per foot: the delivered areas match the module",
+        same(coln(sf, 1), rows.map((r) => r.delivered)), JSON.stringify(coln(sf, 1)));
+      ok("price per foot: the realised rates match the module",
+        same(coln(sf, 2), rows.map((r) => Number(r.realised.toFixed(2)))), JSON.stringify(coln(sf, 2)));
+      ok("price per foot: the uplifts match the module",
+        same(coln(sf, 3), rows.map((r) => Number(r.upliftPct.toFixed(2)))), JSON.stringify(coln(sf, 3)));
+      ok("price per foot: the undelivered area values match the module",
+        same(coln(sf, 4), rows.map((r) => Math.round(r.missingValue))), JSON.stringify(coln(sf, 4)));
+      ok("price per foot: each row says whether Article 13(3) compensates it",
+        same(sf.rows.map((r) => /compensation due/.test(r[5])), rows.map((r) => r.compensable)),
+        JSON.stringify(sf.rows.map((r) => r[5])));
+    }
+
+    /* The published area-basis table, cell by cell. */
+    const bt = tables.find((t) => /Quoted area larger by/i.test(t.head[0] || ""));
+    ok("price per foot: the area-basis table is present", !!bt);
+    if (bt) {
+      const rows = ua.basisTable(E);
+      ok("price per foot: the area-basis table is labelled with the gaps it computed",
+        same(coln(bt, 0), ua.BASIS_GAPS), JSON.stringify(coln(bt, 0)));
+      ok("price per foot: the quoted areas match the module",
+        same(coln(bt, 1), rows.map((r) => Math.round(r.quotedArea))), JSON.stringify(coln(bt, 1)));
+      ok("price per foot: the rates each quoted area reads match the module",
+        same(coln(bt, 2), rows.map((r) => Number(r.ppsfRead.toFixed(2)))), JSON.stringify(coln(bt, 2)));
+      ok("price per foot: the service charges each quoted area reads match the module",
+        same(coln(bt, 3), rows.map((r) => Number(r.scRead.toFixed(2)))), JSON.stringify(coln(bt, 3)));
+      ok("price per foot: the understatements match the module",
+        same(coln(bt, 4), rows.map((r) => Number(r.understatedPct.toFixed(2)))), JSON.stringify(coln(bt, 4)));
+    }
+
+    /* Identity one: the uplift is strictly larger than the shortfall that
+       produced it, at every shortfall, because the shortfall comes out of
+       the denominator. The page says this in words; it is true here. */
+    ok("price per foot: a shortfall raises the rate by more than the shortfall",
+      ua.SHORTFALLS.every((s) => ua.upliftFromShortfall(s) > s));
+    ok("price per foot: the uplift is the shortfall over what is left of the area",
+      [1, 5, 12.5, 30].every((s) => {
+        const paid = ua.ppsf(E.price, E.sqft * (1 - s / 100));
+        const quoted = ua.ppsf(E.price, E.sqft);
+        return Math.abs((paid / quoted - 1) * 100 - ua.upliftFromShortfall(s)) < 1e-9;
+      }));
+
+    /* Identity two: the two understatements are the same fraction. A table
+       where the price per foot and the service charge per foot drifted
+       apart would still look plausible to a reader. */
+    ok("price per foot: a wrong area understates the rate and the service charge equally",
+      ua.BASIS_GAPS.filter((g) => g > 0).every((g) => {
+        const r = ua.basisRow(g, E);
+        const ppsfErr = (1 - r.ppsfRead / ua.ppsf(E.price, E.sqft)) * 100;
+        const scErr = (1 - r.scRead / E.serviceChargePerSqft) * 100;
+        return Math.abs(ppsfErr - scErr) < 1e-9 &&
+          Math.abs(ppsfErr - ua.understatementFromBasisGap(g)) < 1e-9;
+      }));
+    ok("price per foot: a wrong area never flatters the property in the other direction",
+      ua.BASIS_GAPS.filter((g) => g > 0).every((g) => {
+        const r = ua.basisRow(g, E);
+        return r.ppsfRead < ua.ppsf(E.price, E.sqft) && r.scRead < E.serviceChargePerSqft;
+      }));
+
+    /* The threshold is "more than five percent (5%)", so five percent
+       itself is free. An edit to >= would change the page's central claim
+       while leaving every figure in the table intact. */
+    ok("price per foot: a shortfall of exactly the threshold carries no compensation",
+      ua.compensable(ua.TOLERANCE_PCT) === false);
+    ok("price per foot: a shortfall above the threshold carries compensation",
+      ua.compensable(ua.TOLERANCE_PCT + 0.01) === true);
+    ok("price per foot: the largest free shortfall is in the published table",
+      ua.SHORTFALLS.includes(ua.TOLERANCE_PCT));
+
+    /* The prose figures, each drawn from the module and the acquisition
+       module rather than typed, so the two pages cannot state different
+       numbers for the same property. */
+    const free = ua.freeShortfall(E);
+    const acq = aq.acquisition();
+    const claims = [
+      ["the value of the largest free shortfall",
+        `**AED ${ua.money(free.missingValue)} of area, paid for and not delivered`],
+      ["the uplift that shortfall causes",
+        `the price per foot actually paid is ${ua.pc2(free.upliftPct)} above the price per foot agreed`],
+      ["the registration fee it is set against",
+        `registration fee on this purchase is AED ${ua.money(acq.transfer)}`],
+      ["the whole acquisition cost it is set against",
+        `the agency commission included, is AED ${ua.money(acq.total)}`],
+      ["that shortfall as a share of the registration fee",
+        `**${ua.pc2trim(ua.shareOf(free.missingValue, acq.transfer))} of the entire registration fee**`],
+      ["that shortfall as a share of the transaction stack",
+        `${ua.pc2(ua.shareOf(free.missingValue, acq.total))} of the complete transaction stack`],
+      ["the quoted rate the tables start from",
+        `AED ${ua.money2(ua.ppsf(E.price, E.sqft))}`],
+      ["the unit the tables are computed on",
+        `AED ${ua.money(E.price)} over a registered ${E.sqft} sq ft`],
+      ["the service charge rate the tables are computed on",
+        `service charge at AED ${E.serviceChargePerSqft} a foot`],
+    ];
+    for (const [what, phrase] of claims) {
+      ok(`price per foot: the prose carries ${what}`, p.body.includes(phrase), phrase);
+    }
+
+    /* The page's own rule. It publishes identities, not a measurement of
+       how far apart quoted and registered areas actually are in Dubai,
+       because it holds no dataset that would support one. A table of
+       communities and rates here would be the unsourced figure the site is
+       positioned against. */
+    ok("price per foot: no table on the page publishes a per-community or per-building rate",
+      !tables.some((t) => /communit|project|building|tower|district/i.test(t.head[0] || "")),
+      JSON.stringify(tables.map((t) => t.head[0])));
+    ok("price per foot: the page says the tables are arithmetic rather than a market measurement",
+      /arithmetic\. They are not a claim about how far apart the two areas typically are/.test(p.body));
+    ok("price per foot: the page says the Resolution does not define net area",
+      /adopts net area without defining it/.test(p.body));
+  }
+}
+
 
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);
