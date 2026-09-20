@@ -300,10 +300,26 @@ export const DANGLING = /(^|\s)(and|or|but|with|without|for|from|to|of|in|on|at|
 const ABBREVIATIONS =
   /(^|\s)(No|Nos|Art|Arts|Dr|Mr|Mrs|Ms|Prof|St|Inc|Ltd|LLC|Co|Jr|Sr|vs|approx|cf|ca|est|e\.g|i\.e|etc|Fig|Vol|pp)\.\s*$/;
 
+/* A decimal point is a full stop that ends no sentence, and the sentence
+   splitter below cannot see the difference. On a summary reading "...raises
+   the price per foot by 5.26%, so the denominator carries an error band..."
+   the split failed at the stop inside the figure, restarted after it, and
+   the site published a description beginning "26%, so the denominator". A
+   description that opens mid-number is worse than a truncated one, because
+   a searcher reads it as a broken page rather than a long sentence.
+
+   The stop is hidden from the splitter and put back at the single exit,
+   which keeps one rule for where a sentence ends instead of two. */
+const DECIMAL_STOP = "\u0000";
+
 export function clampDescription(text, max = DESC_MAX) {
   const t = copy(String(text || "")).trim().replace(/\s+/g, " ");
   if (t.length <= max) return t;
+  return clampSentences(t.replace(/(\d)\.(\d)/g, `$1${DECIMAL_STOP}$2`), max)
+    .split(DECIMAL_STOP).join(".");
+}
 
+function clampSentences(t, max) {
   /* A full stop is not always the end of a sentence. This site cites "Law
      No. (7) of 2006" and "Decree No. (43) of 2013" constantly, and a naive
      split on the stop after "No" published a description reading "...which

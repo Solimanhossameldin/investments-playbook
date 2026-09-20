@@ -760,6 +760,17 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
     check("the clamp does not treat a law number as the end of a sentence",
       !/\bNo\.$/.test(withLaw) && withLaw.length > 60, withLaw);
 
+    /* A figure with a decimal in it used to defeat the sentence splitter
+       outright: the first stop it found was inside the number, nothing
+       matched from the start of the text, and the clamp published the tail
+       after the decimal point as though it were a sentence. */
+    const withDecimal = clampDescription(
+      "Dubai law lets a developer deliver a unit five percent smaller than the area you bought and owe you nothing for it, which raises the price per foot actually paid by 5.26%, so the denominator of this calculation carries a one-sided error band of its own.");
+    check("the clamp does not treat a decimal point as the end of a sentence",
+      withDecimal.startsWith("Dubai law lets a developer"), withDecimal);
+    check("the clamp keeps a decimal figure intact when it publishes one",
+      !/(^|\s)\d+%/.test(withDecimal) || /\d\.\d+%/.test(withDecimal), withDecimal);
+
     const longSentence = clampDescription(
       "Dubai land law decides the first half of due diligence outright because an unrecorded transaction is not valid, and it leaves the second half to arithmetic that this page sets out in full below.");
     check("the clamp stops at a clause boundary rather than mid-phrase",
