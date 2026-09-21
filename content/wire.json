@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-21T13:10:19.856Z",
+ "fetchedAt": "2026-09-21T18:42:46.230Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -492,15 +492,6 @@
    "sourceLabel": "Speeches",
    "category": "rates",
    "feed": "fed-speeches"
-  },
-  {
-   "title": "SEC and FDA Announce MOU to Bolster Cooperation and Ensure Market Integrity",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-80-sec-fda-announce-mou-bolster-cooperation-ensure-market-integrity",
-   "published": "2026-08-31T18:24:32.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
   }
  ]
 }
