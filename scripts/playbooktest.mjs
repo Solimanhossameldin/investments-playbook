@@ -18,6 +18,7 @@ import * as mg from "../src/mortgage.mjs";
 import * as ht from "../src/hometax.mjs";
 import * as dd from "../src/diligence.mjs";
 import * as ua from "../src/unitarea.mjs";
+import * as orr from "../src/offplanready.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -1343,6 +1344,122 @@ ok("every calculator points at a playbook that exists",
       /arithmetic\. They are not a claim about how far apart the two areas typically are/.test(p.body));
     ok("price per foot: the page says the Resolution does not define net area",
       /adopts net area without defining it/.test(p.body));
+  }
+}
+
+
+/* ---- off-plan against ready, solved as one comparison ----
+
+   The page's claim is that the break-even discount is small, sometimes
+   negative, and that handover value moves it more than delay does. Every
+   one of those is a property of the module, so each is checked as
+   arithmetic, and the three published tables are compared to the module
+   cell by cell. The failure worth guarding hardest is the old one: the
+   undiscounted "net yield times years" figure creeping back in as the
+   answer, because it produces a confident, plausible and wrong number. */
+{
+  const p = playbooks.find((x) => x.slug === "off-plan-vs-ready");
+  ok("off-plan vs ready: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+    const num1 = (c) => {
+      const m = String(c).replace(/,/g, "").match(/-?\d+(\.\d+)?/);
+      return m ? Number(m[0]) : null;
+    };
+    const signed = (c) => (/above/.test(c) ? -1 : 1) * num1(c);
+    const coln = (t, n, f = num1) => t.rows.map((r) => f(r[n]));
+    const r2 = (x) => Number(x.toFixed(2));
+
+    const checkTable = (label, headRe, rows, keyOf) => {
+      const t = tables.find((x) => headRe.test(x.head[0] || ""));
+      ok(`off-plan vs ready: the ${label} table is present`, !!t);
+      if (!t) return;
+      ok(`off-plan vs ready: the ${label} table is labelled with what it computed`,
+        same(coln(t, 0), rows.map(keyOf)), JSON.stringify(coln(t, 0)));
+      ok(`off-plan vs ready: the ${label} table's plan A prices match the module`,
+        same(coln(t, 1), rows.map((r) => Math.round(r.a.price))), JSON.stringify(coln(t, 1)));
+      ok(`off-plan vs ready: the ${label} table's plan A discounts match the module, sign included`,
+        same(coln(t, 2, signed), rows.map((r) => r2(r.a.discount))), JSON.stringify(coln(t, 2, signed)));
+      ok(`off-plan vs ready: the ${label} table's plan B prices match the module`,
+        same(coln(t, 3), rows.map((r) => Math.round(r.b.price))), JSON.stringify(coln(t, 3)));
+      ok(`off-plan vs ready: the ${label} table's plan B discounts match the module, sign included`,
+        same(coln(t, 4, signed), rows.map((r) => r2(r.b.discount))), JSON.stringify(coln(t, 4, signed)));
+    };
+    /* The headline table, which states the page's answer before any of the
+       sensitivity tables. A break-test found it unguarded: a sign flipped
+       here, turning "above" into "below", passed while every table under
+       it was checked. */
+    {
+      const t = tables.find((x) => /^Plan$/.test(x.head[0] || ""));
+      const g0 = orr.grid()[0];
+      ok("off-plan vs ready: the headline table is present", !!t && t.rows.length === 2);
+      if (t && t.rows.length === 2) {
+        ok("off-plan vs ready: the headline table names plan A then plan B",
+          /^A,/.test(t.rows[0][0]) && /^B,/.test(t.rows[1][0]), JSON.stringify(t.rows.map((r) => r[0])));
+        ok("off-plan vs ready: the headline break-even prices match the module",
+          same(coln(t, 1), [Math.round(g0.a.price), Math.round(g0.b.price)]), JSON.stringify(coln(t, 1)));
+        ok("off-plan vs ready: the headline discounts match the module, sign included",
+          same(coln(t, 2, signed), [r2(g0.a.discount), r2(g0.b.discount)]), JSON.stringify(coln(t, 2, signed)));
+      }
+    }
+    checkTable("delay", /^Handover$/, orr.grid(), (r) => r.delay || null);
+    checkTable("discount rate", /otherwise earn/, orr.byRate(), (r) => r.rate);
+    checkTable("handover value", /worth less than ready/, orr.byHaircut(), (r) => r.haircut);
+
+    /* The closed form is a solve, not an approximation: the off-plan cost at
+       the break-even price equals the ready cost, in every cell. */
+    const all = [...orr.grid().flatMap((r) => [r.a, r.b]), ...orr.byRate().flatMap((r) => [r.a, r.b]),
+      ...orr.byHaircut().flatMap((r) => [r.a, r.b])];
+    ok("off-plan vs ready: every break-even price makes the two costs equal",
+      all.every((b) => Math.abs(b.check - b.ready.net) < 1e-6));
+
+    /* The inputs are the other two pages', not typed here. */
+    ok("off-plan vs ready: the ready unit is the net yield page's unit",
+      orr.grid()[0].a.ready.price === aq.EXAMPLE.price && orr.grid()[0].a.ready.noi === aq.operating().net);
+    ok("off-plan vs ready: the ready stack is the net yield page's stack",
+      orr.grid()[0].a.ready.acquisition === aq.acquisition().total);
+    ok("off-plan vs ready: the plans are the off-plan page's plans",
+      orr.grid()[0].a.plan === op.EXAMPLE_PLAN.a && orr.grid()[0].b.plan === op.EXAMPLE_PLAN.b);
+
+    /* The findings, as arithmetic. */
+    const g = orr.grid(), h = orr.byHaircut();
+    ok("off-plan vs ready: a delay raises the front-loaded break-even discount",
+      g[0].a.discount < g[1].a.discount && g[1].a.discount < g[2].a.discount);
+    ok("off-plan vs ready: a five percent haircut moves plan A further than a two year delay",
+      h[1].a.discount - h[0].a.discount > g[2].a.discount - g[0].a.discount);
+    ok("off-plan vs ready: the post-handover plan breaks even above the ready price",
+      g[0].b.discount < 0);
+    ok("off-plan vs ready: a zero haircut is the on-time case",
+      Math.abs(h[0].a.price - g[0].a.price) < 1e-6 && Math.abs(h[0].b.price - g[0].b.price) < 1e-6);
+    ok("off-plan vs ready: removing the agency commission raises the break-even discount",
+      orr.withoutAgency().discount > g[0].a.discount);
+
+    /* The old answer must not come back as the answer. It may be named, as
+       the thing that is wrong, but the page's own break-even must be the
+       figure it publishes against the plans. */
+    const naive = orr.pc2(orr.naiveGap());
+    ok("off-plan vs ready: the undiscounted figure is named only as the wrong one",
+      !p.body.includes(naive) || p.body.includes(`that arithmetic gives ${naive}. It is wrong`), naive);
+    ok("off-plan vs ready: the summary makes no undiscounted foregone-rent claim",
+      !/foregone net yield|forgone net yield/i.test(p.summary + p.formula));
+
+    const b = g[0].a;
+    const claims = [
+      ["the rent the ready buyer collects", `that rent is worth AED ${orr.money(b.ready.rent)} in today's money`],
+      ["the ready purchase's net cost", `costs you AED ${orr.money(b.ready.net)} net`],
+      ["the acquisition stack", `AED ${orr.money(b.ready.acquisition)} of fees`],
+      ["the net operating income", `AED ${orr.money(b.ready.noi)} a year of net operating income`],
+      ["the no-commission break-even", `breaks even at ${orr.pc2(orr.withoutAgency().discount)} below`],
+      ["the delay's effect in points", `moves the front-loaded plan by ${(g[2].a.discount - g[0].a.discount).toFixed(2)} points`],
+      ["the haircut's effect in points", `moves plan A by ${(h[1].a.discount - h[0].a.discount).toFixed(2)} points, more than a two year delay does`],
+    ];
+    for (const [what, phrase] of claims) {
+      ok(`off-plan vs ready: the prose carries ${what}`, p.body.includes(phrase), phrase);
+    }
+    ok("off-plan vs ready: the page states the assumption the method rests on",
+      /assumes the off-plan unit is worth what a comparable ready unit is worth on the day it is delivered/.test(p.body));
+    ok("off-plan vs ready: the page links the pages whose inputs it uses",
+      ["/playbooks/net-rental-yield/", "/playbooks/off-plan-irr/"].every((u) => p.body.includes(`](${u})`)));
   }
 }
 
