@@ -19,6 +19,7 @@ import * as ht from "../src/hometax.mjs";
 import * as dd from "../src/diligence.mjs";
 import * as ua from "../src/unitarea.mjs";
 import * as orr from "../src/offplanready.mjs";
+import * as ld from "../src/london.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -123,6 +124,7 @@ const STATUTORY_PAGES = [
    make it one that cannot be made by mistake in either direction. */
 const FOREIGN_STATUTORY_PAGES = [
   ["residency-and-tax", ht],
+  ["dubai-vs-london", ld],
 ];
 
 const ALL_STATUTORY_PAGES = [...STATUTORY_PAGES, ...FOREIGN_STATUTORY_PAGES];
@@ -1460,6 +1462,119 @@ ok("every calculator points at a playbook that exists",
       /assumes the off-plan unit is worth what a comparable ready unit is worth on the day it is delivered/.test(p.body));
     ok("off-plan vs ready: the page links the pages whose inputs it uses",
       ["/playbooks/net-rental-yield/", "/playbooks/off-plan-irr/"].every((u) => p.body.includes(`](${u})`)));
+  }
+}
+
+
+/* ---- Dubai against London, for an owner who lives in Dubai ----
+
+   The statutory half is covered by FOREIGN_STATUTORY_PAGES above: the
+   surcharges, the day count, the withholding, the 2027 rates, the CGT
+   allowance and the sixty days, word for word, each with its HMRC page.
+   What is left is the arithmetic and where its inputs come from. Every
+   table is parsed and compared to src/london.mjs cell by cell, the London
+   inputs must be the ONS figures the source list names, and the Dubai side
+   must be the net yield and residency pages' own numbers, imported. */
+{
+  const p = playbooks.find((x) => x.slug === "dubai-vs-london");
+  ok("dubai vs london: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+    const byHead = (re) => tables.find((t) => re.test(t.head[0] || ""));
+    const n = (c) => cellNum(c);
+    const r2 = (x) => Number(Number(x).toFixed(2));
+
+    const st = ld.sdlt(ld.ONS.price);
+    const t1 = byHead(/^Slice of the/);
+    ok("dubai vs london: the stamp duty table is present", !!t1);
+    if (t1) {
+      ok("dubai vs london: the stamp duty table has one row per band and a total",
+        t1.rows.length === st.lines.length + 1, String(t1.rows.length));
+      ok("dubai vs london: the stamp duty rates match the module, surcharges included",
+        same(t1.rows.slice(0, -1).map((r) => n(r[1])), st.lines.map((l) => r2(l.rate * 100))), JSON.stringify(t1.rows.map((r) => r[1])));
+      ok("dubai vs london: the stamp duty per band matches the module",
+        same(t1.rows.slice(0, -1).map((r) => n(r[2])), st.lines.map((l) => l.tax)), JSON.stringify(t1.rows.map((r) => r[2])));
+      ok("dubai vs london: the stamp duty slices match the module",
+        same(t1.rows.slice(0, -1).map((r) => Number(String(r[0]).replace(/[^\d]/g, ""))), st.lines.map((l) => l.slice)));
+      ok("dubai vs london: the stamp duty total matches the module", n(t1.rows.at(-1)[2]) === st.total, t1.rows.at(-1)[2]);
+    }
+    ok("dubai vs london: the stamp duty is a sum of bands, not a flat rate",
+      st.total === st.lines.reduce((a, l) => a + l.tax, 0) && st.lines.length === 3);
+    ok("dubai vs london: every band carries both surcharges",
+      st.lines.every((l, k) => Math.abs(l.rate - (ld.SDLT.bands[k].rate + 0.07)) < 1e-9));
+    ok("dubai vs london: the prose states the stamp duty and its rate",
+      p.body.includes(`£${ld.money(st.total)}, ${ld.pctText(st.rate)} of the price`));
+    ok("dubai vs london: the prose states the resident buyer's stamp duty",
+      p.body.includes(`pays £${ld.money(ld.sdlt(ld.ONS.price, { nonResident: false }).total)}`));
+
+    const rows = ld.taxRows();
+    const t2 = byHead(/^Tax year and allowance/);
+    ok("dubai vs london: the tax table is present", !!t2 && t2.rows.length === rows.length);
+    if (t2) {
+      ok("dubai vs london: the tax table's UK tax matches the module", same(col(t2, 1), rows.map((r) => r.tax)), JSON.stringify(col(t2, 1)));
+      ok("dubai vs london: the tax table's kept rent matches the module", same(col(t2, 2), rows.map((r) => r.kept)), JSON.stringify(col(t2, 2)));
+      ok("dubai vs london: the tax table's net yields match the module", same(col(t2, 3), rows.map((r) => r.net)), JSON.stringify(col(t2, 3)));
+      ok("dubai vs london: the tax table's rows are labelled in the module's order",
+        t2.rows.every((r, k) => r[0].startsWith(rows[k].label.slice(0, 12)) &&
+          /with allowance/.test(r[0]) === /with personal allowance/.test(rows[k].label)));
+    }
+    ok("dubai vs london: the prose carries the London net operating income",
+      p.body.includes(`£${ld.money(rows[0].noi)} of net operating income`));
+
+    const d = ld.dubai(), l = rows[0];
+    const t3 = byHead(/^For a Dubai resident/);
+    ok("dubai vs london: the side by side table is present", !!t3 && t3.rows.length === 5);
+    if (t3) {
+      ok("dubai vs london: the side by side Dubai column matches the module",
+        same(col(t3, 1), [d.gross, d.onPrice, d.stampRate, d.net, d.entryYears]), JSON.stringify(col(t3, 1)));
+      ok("dubai vs london: the side by side London column matches the module",
+        same(col(t3, 2), [l.gross, l.onPrice, l.stampRate, l.net, l.entryYears]), JSON.stringify(col(t3, 2)));
+    }
+
+    const m = ld.matrix();
+    const t4 = byHead(/^Owner lives in/);
+    ok("dubai vs london: the residence table is present", !!t4 && t4.rows.length === 2);
+    if (t4) {
+      ok("dubai vs london: the residence table's Dubai column matches the module", same(col(t4, 1), [m.dubaiResDubai, m.ukResDubai]), JSON.stringify(col(t4, 1)));
+      ok("dubai vs london: the residence table's London column matches the module", same(col(t4, 2), [m.dubaiResLondon, m.ukResLondon]), JSON.stringify(col(t4, 2)));
+      ok("dubai vs london: the residence table's leads match the module", same(col(t4, 3), [m.gapIfDubaiRes, m.gapIfUkRes]), JSON.stringify(col(t4, 3)));
+    }
+    ok("dubai vs london: the leads are differences of the table's own yields",
+      m.gapIfDubaiRes === r2(m.dubaiResDubai - m.dubaiResLondon) && m.gapIfUkRes === r2(m.ukResDubai - m.ukResLondon));
+    ok("dubai vs london: a UK resident's lead is smaller, which is the page's claim", m.gapIfUkRes < m.gapIfDubaiRes);
+    ok("dubai vs london: the short answer carries both leads",
+      p.body.includes(`narrows from **${m.gapIfDubaiRes.toFixed(2)}** points to **${m.gapIfUkRes.toFixed(2)}**`));
+    ok("dubai vs london: the short answer carries this year's and 2027's London yield and the Dubai yield",
+      p.body.includes(`**${ld.pctText(rows[0].net)}**`) && p.body.includes(`**${ld.pctText(rows[2].net)}** from April 2027`) &&
+      p.body.includes(`keeps **${ld.pctText(d.net)}**`));
+    ok("dubai vs london: the summary's figures are the module's",
+      p.summary.includes(`£${ld.money(st.total)} stamp duty`) && p.summary.includes(`keeps ${ld.pctText(rows[0].net)} after UK tax, ${ld.pctText(rows[2].net)} from 2027`) &&
+      p.summary.includes(`keeps ${ld.pctText(d.net)} untaxed`), p.summary);
+    ok("dubai vs london: the short answer carries the years to recover the stamp duty",
+      p.body.includes(`**${rows[0].entryYears} years**`));
+
+    /* Inputs are other modules' and the ONS's, never typed here. */
+    ok("dubai vs london: the Dubai side is the net yield page's unit",
+      d.net === aq.yields().net && d.noi === aq.operating().net && d.entryYears === aq.payback().entry);
+    ok("dubai vs london: the UK resident's Dubai yield is the residency page's", m.ukResDubai === ht.afterTax("higher").net);
+    ok("dubai vs london: London gets exactly the Dubai running cost ratio",
+      rows[0].noi === Math.round(ld.ONS.monthlyRent * 12 * aq.operating().net / aq.EXAMPLE.rent));
+    ok("dubai vs london: the ONS source is cited with its retrieval date",
+      (p.sources || []).some((x) => x.url === ld.ONS.url && x.name === ld.ONS.name && /retrieved \d+ \w+ \d{4}/.test(x.name)));
+    ok("dubai vs london: the ONS rent and price are on the page with their months",
+      p.body.includes(`**£${ld.money(ld.ONS.monthlyRent)} a month** in ${ld.ONS.rentMonth}`) &&
+      p.body.includes(`**£${ld.money(ld.ONS.price)}** in ${ld.ONS.priceMonth}`));
+    ok("dubai vs london: the ONS price fall is quoted as the ONS states it",
+      p.body.includes(`down ${Math.abs(ld.ONS.priceChange)}% in the twelve months to July 2026`) && p.body.includes(`£${ld.money(ld.ONS.belowPeak)} below`));
+    ok("dubai vs london: the capital gains figures are the module's",
+      p.body.includes(`**£${ld.money(ld.cgtOnNetGain(100000, ld.UKTAX.cgtHigh))}** at 24%`) &&
+      p.body.includes(`**£${ld.money(ld.cgtOnNetGain(100000, ld.UKTAX.cgtLow))}** at 18%`));
+    ok("dubai vs london: no brokerage blog stands in as a yield source",
+      !(p.sources || []).some((x) => /investropa|blog/i.test(x.url)));
+    ok("dubai vs london: the page states the running cost assumption and who it flatters",
+      /exactly the same running cost ratio/.test(p.body) && /this flatters London/.test(p.body));
+    ok("dubai vs london: the page links the pages whose numbers it uses",
+      ["/playbooks/net-rental-yield/", "/playbooks/residency-and-tax/", "/calculators/net-rental-yield/"].every((u) => p.body.includes(`](${u})`)));
   }
 }
 
