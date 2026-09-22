@@ -3,6 +3,12 @@
   {
    "job": "fetch-wire",
    "status": "ok",
+   "detail": "53 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-09-22T06:14:10.046Z"
+  },
+  {
+   "job": "fetch-wire",
+   "status": "ok",
    "detail": "52 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-22T01:01:25.603Z"
   },
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
    "ranAt": "2026-09-20T23:12:28.202Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-09-20T23:12:28.154Z"
   }
  ]
 }
