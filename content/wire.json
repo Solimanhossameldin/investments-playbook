@@ -1,7 +1,7 @@
 {
- "fetchedAt": "2026-09-22T11:46:38.228Z",
+ "fetchedAt": "2026-09-22T16:24:44.267Z",
  "sourcesTotal": 7,
- "sourcesOk": 6,
+ "sourcesOk": 7,
  "retired": [
   {
    "name": "U.S. Treasury",
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Foreign Currency Reserves 2026 – Market Notice 22 September 2026",
+   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/september/foreign-currency-reserves-2026-market-notice-22-september-2026",
+   "published": "2026-09-22T15:30:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "Jefferson, Discount Window Modernization and Treasury Market Functioning",
+   "url": "https://www.federalreserve.gov/newsevents/speech/jefferson20260922a.htm",
+   "published": "2026-09-22T14:20:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
+  },
   {
    "title": "Philip R. Lane: Interview with Le Temps",
    "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in260922~5f89d300ee.en.html",
@@ -98,8 +116,8 @@
    "feed": "bls"
   },
   {
-   "title": "Bowman, Initial Findings from Independent Review of Silicon Valley Bank",
-   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260918b.htm",
+   "title": "Bowman, The Final Chapter on Modernizing Bank Regulatory Stress Testing",
+   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260918a.htm",
    "published": "2026-09-18T13:30:00.000Z",
    "source": "Federal Reserve",
    "sourceLabel": "Speeches",
@@ -107,8 +125,8 @@
    "feed": "fed-speeches"
   },
   {
-   "title": "Bowman, The Final Chapter on Modernizing Bank Regulatory Stress Testing",
-   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260918a.htm",
+   "title": "Bowman, Initial Findings from Independent Review of Silicon Valley Bank",
+   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260918b.htm",
    "published": "2026-09-18T13:30:00.000Z",
    "source": "Federal Reserve",
    "sourceLabel": "Speeches",
@@ -170,15 +188,6 @@
    "feed": "sec"
   },
   {
-   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
-   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
    "published": "2026-09-17T11:00:00.000Z",
@@ -190,6 +199,15 @@
   {
    "title": "Exchange of letters between the Governor and the Chancellor regarding QT and the APF - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/exchange-of-letters-between-the-governor-and-the-chancellor-regarding-qt-and-the-apf",
+   "published": "2026-09-17T11:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
+   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
@@ -474,33 +492,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Boris Vujčić: Listening to households: expectations, behaviour and monetary policy",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260901~bb28f33f54.en.html",
-   "published": "2026-09-01T16:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "SEC Proposes to Modernize Rules for Registered Transfer Agents",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-81-sec-proposes-modernize-rules-registered-transfer-agents",
-   "published": "2026-09-01T14:57:00.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "Barr, Unlocking Opportunities for Workers and Entrepreneurs with a Criminal Record",
-   "url": "https://www.federalreserve.gov/newsevents/speech/barr20260901a.htm",
-   "published": "2026-09-01T13:05:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
   }
  ]
 }
