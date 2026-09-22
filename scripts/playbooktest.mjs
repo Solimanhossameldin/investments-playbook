@@ -20,6 +20,7 @@ import * as dd from "../src/diligence.mjs";
 import * as ua from "../src/unitarea.mjs";
 import * as orr from "../src/offplanready.mjs";
 import * as ld from "../src/london.mjs";
+import * as sg from "../src/singapore.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 
 let pass = 0, fail = 0;
@@ -125,6 +126,7 @@ const STATUTORY_PAGES = [
 const FOREIGN_STATUTORY_PAGES = [
   ["residency-and-tax", ht],
   ["dubai-vs-london", ld],
+  ["dubai-vs-singapore", sg],
 ];
 
 const ALL_STATUTORY_PAGES = [...STATUTORY_PAGES, ...FOREIGN_STATUTORY_PAGES];
@@ -1575,6 +1577,157 @@ ok("every calculator points at a playbook that exists",
       /exactly the same running cost ratio/.test(p.body) && /this flatters London/.test(p.body));
     ok("dubai vs london: the page links the pages whose numbers it uses",
       ["/playbooks/net-rental-yield/", "/playbooks/residency-and-tax/", "/calculators/net-rental-yield/"].every((u) => p.body.includes(`](${u})`)));
+  }
+}
+
+
+/* ---- Dubai against Singapore, for an owner who lives in Dubai ----
+
+   The statutory half is covered by FOREIGN_STATUTORY_PAGES above: the ABSD
+   and BSD effective dates, the SSD date, the stamp duty base, the FTA list,
+   the property tax rates, the non-resident rate, the annual value and the
+   deemed 15%, word for word, each with its Singapore source. What is left is
+   the arithmetic. Every table is parsed and compared to src/singapore.mjs
+   cell by cell, the break-even yields are checked as solves by their
+   residual, and the Dubai side must be the net yield page's unit, imported. */
+{
+  const p = playbooks.find((x) => x.slug === "dubai-vs-singapore");
+  ok("dubai vs singapore: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+    const byHead = (re) => tables.find((t) => re.test(t.head[0] || ""));
+    const n = (c) => cellNum(c);
+    const r2 = (x) => Number(Number(x).toFixed(2));
+    const S = (x) => sg.money(x);
+    const s = sg.singapore();
+    const d = sg.dubai();
+    const b = sg.buyers();
+
+    const bs = sg.bsd(s.price);
+    const t1 = byHead(/^Slice of the price/);
+    ok("dubai vs singapore: the buyer's stamp duty table is present", !!t1);
+    if (t1) {
+      ok("dubai vs singapore: the BSD table has one row per band reached and a total",
+        t1.rows.length === bs.lines.length + 1, String(t1.rows.length));
+      ok("dubai vs singapore: the BSD slices match the module",
+        same(t1.rows.slice(0, -1).map((r) => n(r[0])), bs.lines.map((l) => l.slice)), JSON.stringify(col(t1, 0)));
+      ok("dubai vs singapore: the BSD rates match the module",
+        same(t1.rows.slice(0, -1).map((r) => n(r[1])), bs.lines.map((l) => r2(l.rate * 100))), JSON.stringify(col(t1, 1)));
+      ok("dubai vs singapore: the BSD per band matches the module",
+        same(t1.rows.slice(0, -1).map((r) => n(r[2])), bs.lines.map((l) => l.tax)), JSON.stringify(col(t1, 2)));
+      ok("dubai vs singapore: the BSD total matches the module", n(t1.rows.at(-1)[2]) === bs.total, t1.rows.at(-1)[2]);
+    }
+    ok("dubai vs singapore: BSD is a sum of bands, not a flat rate", bs.lines.length === 3 && bs.total === s.bsd);
+    ok("dubai vs singapore: the ABSD is 60% of the price for a foreigner", s.absd === Math.round(s.price * 0.60));
+    ok("dubai vs singapore: the prose states ABSD, total stamp duty and its share",
+      p.body.includes(`**S$${S(s.absd)}**`) && p.body.includes(`**S$${S(s.stamp)}**, **${sg.pctText(s.stampRate)}** of the price`));
+    ok("dubai vs singapore: the price is the Dubai unit's money at the published rates",
+      s.price === Math.round(aq.EXAMPLE.price / sg.FX.aedPerUsd * sg.FX.sgdPerUsd) && p.body.includes(`**S$${S(s.price)}**`) &&
+      p.body.includes(`${sg.FX.aedPerUsd} dirhams to the dollar`) && p.body.includes(`${sg.FX.sgdPerUsd} Singapore dollars on ${sg.FX.sgdDate}`));
+    ok("dubai vs singapore: both exchange rate sources are cited",
+      [sg.FX.aedSource, sg.FX.sgdSource].every((x) => (p.sources || []).some((y) => y.url === x.url && y.name === x.name)));
+
+    const pt = sg.propertyTax(s.rent);
+    const t2 = byHead(/^Slice of the annual value/);
+    ok("dubai vs singapore: the property tax table is present", !!t2);
+    if (t2) {
+      ok("dubai vs singapore: the property tax table has one row per band reached and a total", t2.rows.length === pt.lines.length + 1);
+      ok("dubai vs singapore: the property tax slices, rates and amounts match the module",
+        same(t2.rows.slice(0, -1).map((r) => [n(r[0]), n(r[1]), n(r[2])]), pt.lines.map((l) => [l.slice, r2(l.rate * 100), l.tax])), JSON.stringify(t2.rows));
+      ok("dubai vs singapore: the property tax total matches the module", n(t2.rows.at(-1)[2]) === s.ptax);
+    }
+    ok("dubai vs singapore: the annual value is the rent, and the prose says both",
+      p.body.includes(`Taking the annual value as the flat's rent, S$${S(s.rent)}`) && p.body.includes(`**${sg.pctText(s.ptaxShare)}** of the rent`));
+
+    const t3 = byHead(/^Line$/);
+    ok("dubai vs singapore: the annual income table is present", !!t3 && t3.rows.length === 6);
+    if (t3) {
+      ok("dubai vs singapore: the annual income table matches the module",
+        same(col(t3, 1), [s.rent, s.rent - s.noiBeforeTax, s.ptax, s.noi, s.tax, s.kept]), JSON.stringify(col(t3, 1)));
+    }
+    ok("dubai vs singapore: the table adds up", s.rent - (s.rent - s.noiBeforeTax) - s.ptax === s.noi && s.noi - s.tax === s.kept);
+    ok("dubai vs singapore: income tax takes the cheaper of the two deductions, and the prose names both",
+      s.tax === Math.min(s.taxActual, s.taxDeemed) && s.usedActual &&
+      p.body.includes(`S$${S(s.taxActual)} of tax against S$${S(s.taxDeemed)} on the deemed 15%`));
+    ok("dubai vs singapore: the deemed alternative is 15% off the rent collected, at 24%",
+      s.taxDeemed === Math.round(s.collected * 0.85 * 0.24));
+
+    const t4 = byHead(/^For a Dubai resident/);
+    ok("dubai vs singapore: the side by side table is present", !!t4 && t4.rows.length === 5);
+    if (t4) {
+      ok("dubai vs singapore: the side by side Dubai column matches the module",
+        same(col(t4, 1), [d.gross, d.onPrice, d.stampRate, d.net, d.entryYears]), JSON.stringify(col(t4, 1)));
+      ok("dubai vs singapore: the side by side foreigner column matches the module",
+        same(col(t4, 2), [b[0].gross, b[0].onPrice, b[0].stampRate, b[0].net, b[0].entryYears]), JSON.stringify(col(t4, 2)));
+      ok("dubai vs singapore: the side by side US and EFTA column matches the module",
+        same(col(t4, 3), [b[2].gross, b[2].onPrice, b[2].stampRate, b[2].net, b[2].entryYears]), JSON.stringify(col(t4, 3)));
+    }
+
+    const lds = sg.leads();
+    const t5 = byHead(/^Singapore buyer$/);
+    const t5b = tables.filter((t) => /^Singapore buyer$/.test(t.head[0] || ""));
+    ok("dubai vs singapore: the three buyers table is present", t5b.length === 2 && t5b[0].rows.length === 3);
+    if (t5) {
+      ok("dubai vs singapore: the buyers' stamp duty matches the module", same(col(t5, 1), b.map((x) => x.stamp)), JSON.stringify(col(t5, 1)));
+      ok("dubai vs singapore: the buyers' net yields match the module", same(col(t5, 2), b.map((x) => x.net)), JSON.stringify(col(t5, 2)));
+      ok("dubai vs singapore: Dubai's leads match the module", same(col(t5, 3), lds.map((x) => x.lead)), JSON.stringify(col(t5, 3)));
+      ok("dubai vs singapore: the buyers are labelled in the module's order", t5.rows.every((r, k) => r[0] === b[k].label));
+    }
+    ok("dubai vs singapore: the leads are differences of the printed yields",
+      lds.every((x, k) => x.lead === r2(d.net - b[k].net)));
+    ok("dubai vs singapore: ABSD rates are the three the page names",
+      b[0].absd === Math.round(s.price * 0.60) && b[1].absd === Math.round(s.price * 0.65) && b[2].absd === 0);
+
+    const be = [sg.ABSD.foreigner, sg.ABSD.entity, sg.ABSD.fta].map((a) => sg.breakEvenGross(a));
+    ok("dubai vs singapore: every break-even yield is a solve, not a rounding",
+      be.every((x) => Math.abs(x.residual) < 1e-5), JSON.stringify(be));
+    ok("dubai vs singapore: the break-even solve recomputes property tax, it is not linear in the yield",
+      (() => { const lo = sg.singapore({ gross: 0.07 }), hi = sg.singapore({ gross: 0.14 }); return hi.ptax !== 2 * lo.ptax; })());
+    const t6 = t5b[1];
+    ok("dubai vs singapore: the break-even table is present", !!t6 && t6.rows.length === 3);
+    if (t6) ok("dubai vs singapore: the break-even table matches the solve", same(col(t6, 1), be.map((x) => x.gross)), JSON.stringify(col(t6, 1)));
+    ok("dubai vs singapore: even the buyer with no ABSD needs more than Dubai's gross yield", be[2].gross > d.gross);
+
+    const bud = sg.atBudgets();
+    const t7 = byHead(/^Budget \(AED\)/);
+    ok("dubai vs singapore: the budgets table is present", !!t7 && t7.rows.length === bud.length);
+    if (t7) {
+      ok("dubai vs singapore: the budgets table matches the module cell by cell",
+        same(t7.rows.map((r) => r.map(n)), bud.map((x) => [x.aed, x.sgd, x.stampRate, x.ptaxShare, x.net, x.breakEven])), JSON.stringify(t7.rows));
+    }
+    ok("dubai vs singapore: the gap widens with the budget, which is the section's claim",
+      bud.every((x, k) => k === 0 || (x.net < bud[k - 1].net && x.breakEven > bud[k - 1].breakEven)));
+
+    const ss = sg.ssdRows();
+    const t8 = byHead(/^Sold within/);
+    ok("dubai vs singapore: the seller's stamp duty table is present", !!t8 && t8.rows.length === 4);
+    if (t8) ok("dubai vs singapore: the SSD table matches the module",
+      same(t8.rows.map((r) => [n(String(r[0]).replace(/\D/g, "")), n(r[1]), n(r[2])]), ss.map((x) => [x.upTo, x.rate, x.duty])), JSON.stringify(t8.rows));
+    ok("dubai vs singapore: SSD is the four-year schedule from July 2025", same(sg.SSD.map((x) => x.rate), [0.16, 0.12, 0.08, 0.04]));
+    ok("dubai vs singapore: property tax is the non-owner-occupied scale from 2024",
+      same(sg.PTAX.map((x) => [x.to, x.rate]), [[30000, 0.12], [45000, 0.20], [60000, 0.28], [Infinity, 0.36]]));
+    ok("dubai vs singapore: buyer's stamp duty is the scale from 15 February 2023",
+      same(sg.BSD.map((x) => [x.to, x.rate]), [[180000, 0.01], [360000, 0.02], [1000000, 0.03], [1500000, 0.04], [3000000, 0.05], [Infinity, 0.06]]));
+
+    ok("dubai vs singapore: the short answer carries both yields, the lead, the payback and the break-even",
+      p.body.includes(`keeps **${sg.pctText(b[0].net)}** of what it cost`) && p.body.includes(`keeps **${sg.pctText(d.net)}**, untaxed`) &&
+      p.body.includes(`a lead of **${lds[0].lead.toFixed(2)}** points`) && p.body.includes(`**${b[0].entryYears} years**`) &&
+      p.body.includes(`gross yield of **${be[0].gross.toFixed(2)}%**`) && p.body.includes(`still keeps **${sg.pctText(b[2].net)}**`));
+    ok("dubai vs singapore: the summary's figures are the module's",
+      p.summary.includes(`S$${S(s.stamp)} stamp duty on a S$${S(s.price)}`) && p.summary.includes(`keeps ${sg.pctText(s.net)}`) &&
+      p.summary.includes(`keeps ${sg.pctText(d.net)}`), p.summary);
+
+    ok("dubai vs singapore: the Dubai side is the net yield page's unit",
+      d.net === aq.yields().net && d.noi === aq.operating().net && d.entryYears === aq.payback().entry);
+    ok("dubai vs singapore: Singapore gets exactly the Dubai gross yield and running cost ratio",
+      s.rent === Math.round(s.price * aq.EXAMPLE.rent / aq.EXAMPLE.price) &&
+      s.noiBeforeTax === Math.round(s.rent * aq.operating().net / aq.EXAMPLE.rent));
+    ok("dubai vs singapore: the page states the assumption and who it flatters",
+      /exactly the Dubai unit's gross yield/.test(p.body) && /exactly the same running cost ratio/.test(p.body) && /This flatters Singapore twice/.test(p.body));
+    ok("dubai vs singapore: no law firm or brokerage stands in as a source",
+      !(p.sources || []).some((x) => /withers|blog|realty|properties\.ae/i.test(x.url)));
+    ok("dubai vs singapore: the page links the pages whose numbers it uses",
+      ["/playbooks/net-rental-yield/", "/playbooks/dubai-vs-london/", "/playbooks/selling-well/", "/calculators/net-rental-yield/"].every((u) => p.body.includes(`](${u})`)));
   }
 }
 
