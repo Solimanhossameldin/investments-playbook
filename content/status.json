@@ -1,6 +1,36 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-09-22T00:03:10.495Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-09-22, so there is nothing to send.",
+   "ranAt": "2026-09-22T00:03:10.430Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-09-22T00:03:10.372Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-09-22T00:03:10.327Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-09-22T00:03:10.183Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "ok",
    "detail": "52 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
@@ -209,36 +239,6 @@
    "status": "ok",
    "detail": "49 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-20T20:49:29.552Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "49 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-20T18:01:09.945Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "49 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-20T14:53:36.060Z"
-  },
-  {
-   "job": "pipeline",
-   "status": "ok",
-   "detail": "update=success, deploy=success, submit=success",
-   "ranAt": "2026-09-20T13:02:26.693Z"
-  },
-  {
-   "job": "indexnow",
-   "status": "ok",
-   "detail": "submitted 147 urls, HTTP 200",
-   "ranAt": "2026-09-20T13:02:16.665Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-09-20T13:01:31.674Z"
   }
  ]
 }
