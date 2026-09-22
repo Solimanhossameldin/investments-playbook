@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "indexnow",
+   "status": "ok",
+   "detail": "submitted 147 urls, HTTP 200",
+   "ranAt": "2026-09-22T08:27:26.225Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "19 figures refreshed",
    "ranAt": "2026-09-21T05:28:12.192Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "49 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-21T01:05:38.953Z"
   }
  ]
 }
