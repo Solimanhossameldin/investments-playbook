@@ -1,6 +1,36 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-09-23T08:28:51.527Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-09-23, so there is nothing to send.",
+   "ranAt": "2026-09-23T08:28:51.463Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-09-23T08:28:51.400Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-09-23T08:28:51.349Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-09-23T08:28:51.196Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "ok",
    "detail": "52 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
@@ -209,36 +239,6 @@
    "status": "skipped",
    "detail": "no api key",
    "ranAt": "2026-09-21T08:49:41.234Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-09-21, so there is nothing to send.",
-   "ranAt": "2026-09-21T08:49:41.161Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-09-21T08:49:41.093Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-09-21T08:49:41.034Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-09-21T08:49:40.849Z"
-  },
-  {
-   "job": "pipeline",
-   "status": "ok",
-   "detail": "update=success, deploy=success, submit=success",
-   "ranAt": "2026-09-21T07:34:18.489Z"
   }
  ]
 }
