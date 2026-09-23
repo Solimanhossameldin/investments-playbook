@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-23T06:22:46.564Z",
+ "fetchedAt": "2026-09-23T11:57:28.571Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Almost ten million people took part in ECB survey on new euro banknotes",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260923~6ebddaf01e.en.html",
+   "published": "2026-09-23T09:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Federal Reserve Board announces approval of application by BancFirst Corporation",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20260922a.htm",
@@ -206,6 +215,15 @@
    "feed": "sec"
   },
   {
+   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
+   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
+   "published": "2026-09-17T11:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
    "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
    "published": "2026-09-17T11:00:00.000Z",
@@ -226,15 +244,6 @@
   {
    "title": "Asset Purchase Facility: Gilt Sales – Market Notice 17 September 2026",
    "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/asset-purchase-facility-gilt-sales-market-notice-17-september-2026",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
-   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
