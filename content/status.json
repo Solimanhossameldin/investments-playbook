@@ -3,6 +3,12 @@
   {
    "job": "fetch-wire",
    "status": "ok",
+   "detail": "60 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-09-24T19:49:48.826Z"
+  },
+  {
+   "job": "fetch-wire",
+   "status": "ok",
    "detail": "59 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-24T15:50:16.063Z"
   },
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "52 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-09-22T22:45:39.660Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "51 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-22T19:49:25.419Z"
   }
  ]
 }
