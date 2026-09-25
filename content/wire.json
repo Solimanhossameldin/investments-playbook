@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-25T17:25:55.891Z",
+ "fetchedAt": "2026-09-25T20:39:42.201Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Federal Reserve Board announces approval of application by Peoples Bancorp Inc.",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20260925a.htm",
+   "published": "2026-09-25T20:30:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
   {
    "title": "Major Economic Indicators Latest Numbers",
    "url": "https://www.bls.gov/bls/",
@@ -345,18 +354,18 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916b.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Chancellor announces Bank of England appointments",
