@@ -142,3 +142,65 @@ export function netAtOccupancy(occupancy, i = EXAMPLE.shortLet) {
 }
 
 export const money = (n) => Number(n).toLocaleString("en-US");
+
+/* ---- break-even occupancy, and the benchmark almost every page gets wrong ----
+
+   Break-even occupancy is normally computed against zero: the share of the
+   year at which income stops being less than cost. For a holiday home that
+   is the wrong benchmark, because the alternative to an empty short let is
+   not an empty flat. It is the annual tenancy the owner gave up in order to
+   run one, which pays a known net with no nights to sell. So there are two
+   break-evens here, and the distance between them is the whole argument:
+   the first says when the unit stops losing money, and the second says when
+   the work was worth doing.
+
+   The shape of the costs is what makes the gap large. One block is a share
+   of gross, one block is per night, and one block is fixed, and only the
+   third is recovered by occupancy. The per-night block matters structurally
+   rather than in size: the tourism dirham is a statutory charge that falls
+   on occupied nights, so it reduces what each night contributes instead of
+   raising what the year has to recover. A page that files it with the
+   permit as an annual cost of compliance has put it on the wrong side of
+   the division.
+
+   Everything below is solved by search against the same line items the
+   page prints, for the reason the night count already is: the module
+   rounds stays and nights, so a closed form agrees with the table only
+   approximately, and an answer that is a dirham short of clearing is not
+   a break even. */
+
+/* What one more night sold adds, after the operator's share of it and the
+   per-night charges on it. It is the number the fixed block is recovered at,
+   and the reason a nightly rate below a floor can never clear at any
+   occupancy: 365 nights of too small a contribution is still too small. */
+export function contributionPerNight(i = EXAMPLE.shortLet) {
+  return Math.round(i.nightlyRate * (1 - i.operatorRate) - shape(i).perNight);
+}
+
+export function breakEvenOccupancy(target, i = EXAMPLE.shortLet) {
+  const n = breakEvenNights(target, i);
+  return n === null ? null : n / 365;
+}
+
+/* The frontier: at a given nightly rate, the nights that clear the target.
+   null where no occupancy in the year does, which is a real answer and the
+   one an operator's forecast is least likely to volunteer. */
+export function breakEvenNightsAtRate(target, rate, i = EXAMPLE.shortLet) {
+  return breakEvenNights(target, { ...i, nightlyRate: rate });
+}
+
+/* The lowest whole dirham of nightly rate at which a full year clears the
+   target at all. Below it the question of occupancy does not arise. */
+export function lowestViableRate(target, i = EXAMPLE.shortLet) {
+  for (let r = 1; r <= 100000; r++) {
+    if (breakEvenNightsAtRate(target, r, i) !== null) return r;
+  }
+  return null;
+}
+
+/* The statutory share of the fixed annual block. Published because the
+   instinct it corrects is the common one: the permit is the cost people
+   expect to be the obstacle, and it is the smallest line in the block. */
+export function statutoryFixed(i = EXAMPLE.shortLet) {
+  return Math.min(PERMIT_PER_BEDROOM * i.bedrooms, PERMIT_CAP);
+}

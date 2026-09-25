@@ -367,6 +367,15 @@ export function briefPage({ site, brief, prev, next, briefs = [], playbooks = []
     <tbody>${brief.calendar.map((c) => `<tr><td style="width:120px">${esc(c.day)}</td><td>${esc(copy(c.event))}</td></tr>`).join("")}</tbody></table></div>`
     : "";
 
+  // An archive note is not a correction. Nothing in the issue is wrong; the
+  // issue simply was not written on the day it covers. It is rendered on the
+  // issue so a reader can never mistake a reconstruction for a call made at
+  // the time, and it is deliberately NOT read by The Record, which counts
+  // corrections only.
+  const archival = brief.archivalNote
+    ? `<div style="max-width:var(--prose);margin:26px 0 0;padding:14px 18px;border-left:3px solid var(--hair-light);background:rgba(127,127,127,.06)"><p style="margin:0;font-size:13px;line-height:1.65"><strong>Archive note.</strong> ${esc(copy(brief.archivalNote))}</p></div>`
+    : "";
+
   // A correction is published on the issue it corrects, not only in the next one.
   const correction = brief.correction
     ? `<div style="max-width:var(--prose);margin:26px 0 0;padding:14px 18px;border-left:3px solid var(--gold-muted);background:rgba(201,169,97,.07)"><p style="margin:0;font-size:13px;line-height:1.65"><strong>Correction.</strong> ${esc(copy(brief.correction))}</p></div>`
@@ -382,6 +391,7 @@ export function briefPage({ site, brief, prev, next, briefs = [], playbooks = []
   <p class="brief-sub">${esc(copy(brief.subtitle))}</p>
   <p class="byline">By ${esc(brief.author || site.author.name)}. ${esc(longDate(brief.date))}.</p>
   ${correction}
+  ${archival}
   ${numbers}
   <p style="font-size:12px;color:var(--muted);max-width:var(--prose)">Every figure above is drawn from the live table on the <a href="/data/" style="color:var(--gold-muted)">market data page</a>, where each row names its own source and timestamp.</p>
   ${brief.items.map((it, i) => itemHtml(it, i + 1, 2, playbooks)).join("")}

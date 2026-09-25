@@ -23,6 +23,9 @@ const stamp = (b) => b.publishedAt || `${b.date}T00:00:00Z`;
 // beats in the order the page uses, then its sources.
 function entryBody(brief) {
   const parts = [`<p><em>${esc(copy(brief.subtitle))}</em></p>`];
+  if (brief.archivalNote) {
+    parts.push(`<p><strong>Archive note.</strong> ${esc(copy(brief.archivalNote))}</p>`);
+  }
   if (brief.correction) {
     parts.push(`<p><strong>Correction.</strong> ${esc(copy(brief.correction))}</p>`);
   }

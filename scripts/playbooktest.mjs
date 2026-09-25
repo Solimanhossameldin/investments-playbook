@@ -1732,5 +1732,190 @@ ok("every calculator points at a playbook that exists",
 }
 
 
+/* ---- break-even occupancy ----
+
+   This page publishes two things that are easy to get wrong and impossible
+   to spot by reading: which side of the division each cost sits on, and
+   which benchmark the ratio is measured against. Both are load bearing.
+   The tourism dirham is charged per occupied night, so it reduces what a
+   night contributes rather than raising what the year must recover, and a
+   page that moved it into the fixed block would understate break-even
+   occupancy for every busy unit while still looking entirely sensible.
+   And the headline figure is measured against the annual tenancy the owner
+   gave up, not against zero, which is the claim the page is actually for.
+
+   So every figure in the prose and every cell in every table is compared to
+   the module that computed it, and the "Never" rows are compared to a null
+   rather than to the word, because a real answer of "no occupancy clears
+   this" is the finding and not a formatting accident. */
+{
+  const p = playbooks.find((x) => x.slug === "break-even-occupancy");
+  ok("break-even occupancy: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+    const find = (pred) => tables.find(pred);
+    const c = aq.letCosts();
+    const loan = aq.EXAMPLE.price * aq.EXAMPLE.ltv;
+    const RATES = [4, 4.5, 5, 5.5, 6];
+    const debt = (r) => Math.round(mg.paymentFromLoan(loan, r, mg.CAPS.maxTermYears) * 12);
+
+    /* ---- the annual tenancy half ---- */
+    const splitTable = find((t) => /Stops when the unit is empty/i.test(t.head[2] || ""));
+    ok("break-even occupancy: the fixed and scaling table is present", !!splitTable);
+    if (splitTable) {
+      ok("break-even occupancy: the split table matches the computed running costs",
+        same(col(splitTable, 1),
+          [c.serviceCharge, c.maintenance, c.insurance, c.fixed, Math.round(aq.EXAMPLE.rent * c.scalingRate)]),
+        JSON.stringify(col(splitTable, 1)));
+      /* The third column is the claim. A line moved from No to Yes is the
+         exact defect this page was written to correct, and it changes no
+         number on the page. */
+      ok("break-even occupancy: the split table puts the fixed lines on the fixed side",
+        same(splitTable.rows.map((r) => r[2]), ["No", "No", "No", "", "Yes"]),
+        JSON.stringify(splitTable.rows.map((r) => r[2])));
+    }
+
+    const rateTable = find((t) => /Mortgage rate/i.test(t.head[0] || ""));
+    ok("break-even occupancy: the mortgage table is present", !!rateTable);
+    if (rateTable) {
+      ok("break-even occupancy: the mortgage table is labelled with the rates it computed",
+        same(rateTable.rows.map((r) => r[0]), RATES.map((r) => `${r.toFixed(1)}%`)),
+        JSON.stringify(rateTable.rows.map((r) => r[0])));
+      ok("break-even occupancy: the mortgage table matches the computed instalments",
+        same(col(rateTable, 1), RATES.map(debt)), JSON.stringify(col(rateTable, 1)));
+      ok("break-even occupancy: the mortgage table matches the computed break-evens",
+        same(col(rateTable, 2), RATES.map((r) => {
+          const be = aq.breakEvenLetOccupancy(debt(r));
+          return be === null ? null : Number((be * 100).toFixed(2));
+        })), JSON.stringify(col(rateTable, 2)));
+      /* A rate the property cannot carry at any occupancy has to say so.
+         Printing 100%, or a blank, or a number capped at the top of the
+         range, would read as merely difficult and would be false. */
+      ok("break-even occupancy: an unreachable break-even is printed as Never, not as a capped number",
+        same(rateTable.rows.map((r) => r[2]), RATES.map((r) => {
+          const be = aq.breakEvenLetOccupancy(debt(r));
+          return be === null ? "Never" : `${(be * 100).toFixed(2)}%`;
+        })), JSON.stringify(rateTable.rows.map((r) => r[2])));
+    }
+
+    const unlev = aq.breakEvenLetOccupancy(0);
+    let highest = null;
+    for (let bp = 1; bp <= 2000; bp++) {
+      if (aq.breakEvenLetOccupancy(debt(bp / 100)) === null) { highest = (bp - 1) / 100; break; }
+    }
+    const letClaims = [
+      ["the unleveraged break-even", `**Break-even occupancy is ${(unlev * 100).toFixed(2)}%.**`],
+      ["what a full year leaves a lender", `leaves **AED ${aq.money(aq.servicableDebt())}** for a lender`],
+      ["the highest carryable rate", `at 75% loan to value is ${highest.toFixed(2)}%.**`],
+      ["the statutory maximum term", `"The maximum tenor of the mortgage loan is 25 years"`],
+    ];
+    for (const [what, phrase] of letClaims) {
+      ok(`break-even occupancy: the prose carries ${what}`, p.body.includes(phrase), phrase);
+    }
+
+    /* ---- the holiday home half ---- */
+    const L = hh.longLetNet();
+    const sh = hh.shape();
+    const zeroN = hh.breakEvenNights(0);
+    const tenancyN = hh.breakEvenNights(L.net);
+
+    const blockTable = find((t) => /Behaviour/i.test(t.head[2] || ""));
+    ok("break-even occupancy: the three-block table is present", !!blockTable);
+    if (blockTable) {
+      ok("break-even occupancy: the three-block table matches the computed shape",
+        same(blockTable.rows.map((r) => r[1]),
+          [`${Math.round(sh.grossShare * 100)}% of gross`, `${sh.perNight} a night`, hh.money(sh.fixed)]),
+        JSON.stringify(blockTable.rows.map((r) => r[1])));
+    }
+
+    const benchTable = find((t) => /Measured against/i.test(t.head[0] || ""));
+    ok("break-even occupancy: the two-benchmark table is present", !!benchTable);
+    if (benchTable) {
+      ok("break-even occupancy: the two-benchmark table matches the computed nights",
+        same(col(benchTable, 1), [zeroN, tenancyN]), JSON.stringify(col(benchTable, 1)));
+      ok("break-even occupancy: the two-benchmark table matches the computed occupancies",
+        same(col(benchTable, 2), [zeroN, tenancyN].map((n) => Number(((n / 365) * 100).toFixed(1)))),
+        JSON.stringify(col(benchTable, 2)));
+    }
+
+    const FRONT = [500, 600, 700, 750, 800, 900, 1000];
+    const nightsAt = (target, r) => hh.breakEvenNightsAtRate(target, r);
+    const occOf = (n) => (n === null ? null : Number(((n / 365) * 100).toFixed(1)));
+    const frontTable = find((t) => /Nightly rate/i.test(t.head[0] || ""));
+    ok("break-even occupancy: the frontier table is present", !!frontTable);
+    if (frontTable) {
+      ok("break-even occupancy: the frontier is labelled with the rates it computed",
+        same(col(frontTable, 0), FRONT), JSON.stringify(col(frontTable, 0)));
+      ok("break-even occupancy: the frontier matches the nights that cover costs",
+        same(col(frontTable, 1), FRONT.map((r) => nightsAt(0, r))), JSON.stringify(col(frontTable, 1)));
+      ok("break-even occupancy: the frontier matches the occupancy that covers costs",
+        same(col(frontTable, 2), FRONT.map((r) => occOf(nightsAt(0, r)))), JSON.stringify(col(frontTable, 2)));
+      ok("break-even occupancy: the frontier matches the nights that beat the tenancy",
+        same(col(frontTable, 3), FRONT.map((r) => nightsAt(L.net, r))), JSON.stringify(col(frontTable, 3)));
+      ok("break-even occupancy: the frontier matches the occupancy that beats the tenancy",
+        same(col(frontTable, 4), FRONT.map((r) => occOf(nightsAt(L.net, r)))), JSON.stringify(col(frontTable, 4)));
+      /* The row that carries the argument. A rate at which no occupancy in
+         the year wins has to read Never in both columns, because a blank or
+         a 100% there would read as merely difficult. */
+      ok("break-even occupancy: a rate that never beats the tenancy says so in both columns",
+        frontTable.rows.every((r) => (nightsAt(L.net, Number(r[0])) === null
+          ? r[3] === "Never" && r[4] === "Never" : r[3] !== "Never")),
+        JSON.stringify(frontTable.rows.map((r) => [r[0], r[3], r[4]])));
+    }
+
+    const hhClaims = [
+      ["the contribution per night", `**Each night contributes AED ${hh.contributionPerNight()}**`],
+      ["the fixed block recovered", `AED ${hh.money(sh.fixed)} at AED ${hh.contributionPerNight()} a night is **${zeroN} nights, or ${((zeroN / 365) * 100).toFixed(1)}% occupancy**`],
+      ["the tenancy net it must beat", `nets **AED ${hh.money(L.net)}** with no nights to sell`],
+      ["the sum it must recover", `AED ${hh.money(sh.fixed + L.net)} at AED ${hh.contributionPerNight()} a night`],
+      ["the headline break-even", `**That is ${tenancyN} nights, or ${((tenancyN / 365) * 100).toFixed(1)}% occupancy.**`],
+      ["the gap between the two", `**The gap is ${tenancyN - zeroN} nights.**`],
+      ["the permit share of the fixed block", `**AED ${hh.statutoryFixed()}, which is ${((hh.statutoryFixed() / sh.fixed) * 100).toFixed(1)}% of the AED ${hh.money(sh.fixed)} fixed block.**`],
+      ["the tourism dirham at break-even", `the tourism dirham comes to AED ${hh.money(hh.TOURISM_DIRHAM.standard * tenancyN)}`],
+      ["the lowest viable nightly rate", `Below **AED ${hh.lowestViableRate(L.net)} a night**`],
+    ];
+    for (const [what, phrase] of hhClaims) {
+      ok(`break-even occupancy: the prose carries ${what}`, p.body.includes(phrase), phrase);
+    }
+
+    /* The statutory wording the page leans on, word for word from the module
+       that holds the instrument. The page is deliberately not in
+       STATUTORY_PAGES: it uses three of the holiday home claims and has no
+       business reciting the fine for letting rooms rather than whole units,
+       so the three it does use are named here instead of all nine. */
+    const urls = new Set((p.sources || []).map((x) => x.url));
+    for (const key of ["permit", "permitCap", "tourismStandard"]) {
+      const item = hh.STATUTORY.find((s) => s.key === key);
+      ok(`break-even occupancy: carries the statutory claim "${item.claim}"`, p.body.includes(item.claim));
+      ok(`break-even occupancy: cites the instrument behind "${key}"`,
+        urls.has(hh.INSTRUMENTS[item.instrument].url));
+    }
+    const term = mg.STATUTORY.find((s) => s.key === "term");
+    ok("break-even occupancy: cites the instrument behind the maximum term",
+      p.body.includes(term.claim) && urls.has(mg.INSTRUMENTS[term.instrument].url));
+
+    /* The summary is what an answer engine lifts and what the meta
+       description is clamped from, so it is the one piece of prose most
+       likely to be edited for length by somebody who is not looking at the
+       module. Both of its figures are pinned here. */
+    ok("break-even occupancy: the summary figures are the module's",
+      p.summary.includes(`is ${((tenancyN / 365) * 100).toFixed(1)}% against the annual tenancy`) &&
+      p.summary.includes(`not the ${((zeroN / 365) * 100).toFixed(1)}% every page prints against zero`), p.summary);
+
+    ok("break-even occupancy: says the per-night charge belongs with the per-night costs",
+      /per occupied room per night" are the whole point/.test(p.body));
+    ok("break-even occupancy: no brokerage or listing site stands in as a source",
+      !(p.sources || []).some((x) => /blog|realty|properties\.ae|airdna|bayut|propertyfinder/i.test(x.url)));
+    ok("break-even occupancy: says plainly that it publishes no observed occupancy data",
+      /observed market data/.test(p.body) && /Nothing here substitutes for it/.test(p.body));
+    ok("break-even occupancy: links the pages whose numbers it uses",
+      ["/playbooks/net-rental-yield/", "/playbooks/short-let-vs-long-let/",
+       "/playbooks/service-charge-and-reserves/", "/playbooks/mortgage-capacity/",
+       "/playbooks/selling-well/"].every((u) => p.body.includes(`](${u})`)));
+  }
+}
+
+
+
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);

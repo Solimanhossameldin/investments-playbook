@@ -213,3 +213,56 @@ export const money = (n) => Number(n).toLocaleString("en-US");
 /* Percentages are printed to two places everywhere they appear, so the same
    string is in the table and in the sentence above it. */
 export const pctText = (n) => `${Number(n).toFixed(2)}%`;
+
+/* ---- break-even occupancy on an annual tenancy ----
+
+   The running-cost model above splits into two halves that behave
+   differently when the unit is empty, and the split is the whole of this
+   arithmetic. The service charge, the insurance and the maintenance reserve
+   are owed whether or not a tenant is present. The management fee is a share
+   of rent actually collected, so it falls away with the rent it was charged
+   on. Break-even occupancy is the first of those divided by what a fully let
+   year leaves after the second, and a mortgage instalment goes on the fixed
+   side entire.
+
+   Solved by search in basis points rather than by the closed form, for the
+   reason the holiday-home figures are: the model rounds collected rent and
+   the fee charged on it, so the algebra and the table agree to about a
+   tenth of a point and the published number should be the one the table
+   actually crosses at.
+
+   The function returns null when no occupancy in the year clears the costs.
+   That is not an error condition to be hidden behind a cap at 100%. It is
+   the answer, and on a leveraged unit at an ordinary rate it is a common
+   one. */
+export function letCosts(i = EXAMPLE) {
+  const serviceCharge = i.sqft * i.serviceChargePerSqft;
+  const maintenance = Math.round(i.rent * i.maintenanceRate);
+  return {
+    serviceCharge,
+    insurance: i.insurance,
+    maintenance,
+    fixed: serviceCharge + i.insurance + maintenance,
+    scalingRate: i.managementRate,
+  };
+}
+
+export function netAtLetOccupancy(occupancy, debtService = 0, i = EXAMPLE) {
+  const c = letCosts(i);
+  const collected = Math.round(i.rent * occupancy);
+  const management = Math.round(collected * c.scalingRate);
+  return collected - management - c.fixed - debtService;
+}
+
+export function breakEvenLetOccupancy(debtService = 0, i = EXAMPLE) {
+  for (let bp = 1; bp <= 10000; bp++) {
+    if (netAtLetOccupancy(bp / 10000, debtService, i) >= 0) return bp / 10000;
+  }
+  return null;
+}
+
+/* What a fully let year leaves for a lender, which is the ceiling on any
+   instalment the unit can carry out of its own rent. */
+export function servicableDebt(i = EXAMPLE) {
+  return netAtLetOccupancy(1, 0, i);
+}

@@ -177,6 +177,38 @@ for (const [label, st] of [["by email", { byEmail: true }], ["not by email", und
     !/not currently publishing|archive here is behind/i.test(fresh), "notice shown while up to date");
 }
 
+/* ---------- an archive note is not a correction ----------
+   Issues written after the day they cover carry an archive note so a reader
+   cannot mistake a reconstruction for a call made at the time. The Record
+   counts corrections, and a note saying "written later" is not an admission
+   that a figure was wrong. If these two ever merge, the corrections counter
+   starts lying in the direction that flatters nobody. */
+const { briefPage } = await import(`${new URL("../src/templates/pages.mjs", import.meta.url).href}`);
+const { recordPage } = await import(`${new URL("../src/templates/record.mjs", import.meta.url).href}`);
+
+const recStub = { ...siteStub, author: { name: "T" } };
+const archived = { ...issue("2026-09-01"), author: "T", archivalNote: "Compiled on 24 September 2026 from the data of record for this date." };
+const archivedHtml = briefPage({ site: recStub, brief: archived, briefs: [archived] }).body;
+
+check("an archive note is shown to the reader on the issue",
+  /Archive note/i.test(archivedHtml), "an issue written after the fact said nothing about it");
+check("an archive note is not labelled a correction on the issue",
+  !/<strong>Correction/i.test(archivedHtml), "a reconstruction was presented as a correction");
+
+const { feed: briefFeed } = await import(`${new URL("../src/templates/feed.mjs", import.meta.url).href}`);
+const feedXml = String(briefFeed({ site: { ...recStub, origin: "https://e.com" }, briefs: [archived] }) || "");
+check("the archive note travels with the issue into the feed",
+  /Archive note/i.test(feedXml), "a feed reader saw a reconstruction with no label");
+
+const recArchived = recordPage({ site: recStub, calls: [], results: [], briefs: [archived] }).body;
+check("an archive note is not counted as a correction on The Record",
+  /None issued/i.test(recArchived), "The Record counted a reconstruction as a correction");
+
+const recCorrected = recordPage({ site: recStub, calls: [], results: [],
+  briefs: [{ ...issue("2026-09-02"), correction: "A figure was wrong." }] }).body;
+check("a real correction still reaches The Record",
+  !/None issued/i.test(recCorrected), "a genuine correction went unreported");
+
 /* ---------- layout tripwires ----------
    These assert on the stylesheet source rather than on a rendered page,
    which is weaker than measuring, and they are here anyway because this
