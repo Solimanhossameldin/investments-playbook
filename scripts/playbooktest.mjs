@@ -1905,9 +1905,143 @@ ok("every calculator points at a playbook that exists",
     ok("break-even occupancy: says the per-night charge belongs with the per-night costs",
       /per occupied room per night" are the whole point/.test(p.body));
     ok("break-even occupancy: no brokerage or listing site stands in as a source",
-      !(p.sources || []).some((x) => /blog|realty|properties\.ae|airdna|bayut|propertyfinder/i.test(x.url)));
-    ok("break-even occupancy: says plainly that it publishes no observed occupancy data",
-      /observed market data/.test(p.body) && /Nothing here substitutes for it/.test(p.body));
+      !(p.sources || []).some((x) => /blog|realty|properties\.ae|bayut|propertyfinder/i.test(x.url)));
+
+    /* ---- observed market data ----
+
+       The page now runs three vendors' published Dubai averages through its
+       own cost model, which introduces the one class of figure this site
+       treats as radioactive: a number somebody else measured. So every one
+       of them is pinned to src/holidayhome.mjs, every vendor source has to
+       carry the period it covers and the date it was retrieved, and the
+       central claim is guarded by behaviour rather than by wording. If a
+       future edit to a published rate or occupancy makes any one of the
+       three actually beat the tenancy, the sentence saying all three fall
+       short has to fail, because at that point it is false. */
+    const OBS = hh.OBSERVED;
+    const runs = OBS.map((o) => hh.observedRun(o));
+    const pcOf = (x) => (x === null ? null : Number((x * 100).toFixed(1)));
+
+    const obsTable = find((t) => /Denominator stated/i.test(t.head[5] || ""));
+    ok("break-even occupancy: the observed publisher table is present", !!obsTable);
+    if (obsTable) {
+      ok("break-even occupancy: the observed table names the publishers the module holds",
+        same(obsTable.rows.map((r) => r[0]), OBS.map((o) => o.publisher)), JSON.stringify(obsTable.rows.map((r) => r[0])));
+      ok("break-even occupancy: the observed table carries each publisher's period",
+        obsTable.rows.every((r, k) => r[1] === OBS[k].period), JSON.stringify(obsTable.rows.map((r) => r[1])));
+      ok("break-even occupancy: the observed table matches the published listing counts",
+        same(col(obsTable, 2), OBS.map((o) => o.listings)), JSON.stringify(col(obsTable, 2)));
+      ok("break-even occupancy: the observed table matches the nightly rates the module converts",
+        same(col(obsTable, 3), OBS.map((o) => hh.observedAdrAed(o))), JSON.stringify(col(obsTable, 3)));
+      ok("break-even occupancy: the observed table matches the published occupancies",
+        same(col(obsTable, 4), OBS.map((o) => pcOf(o.occupancy))), JSON.stringify(col(obsTable, 4)));
+      /* The denominator is the whole point of the section: a vendor that
+         states one must be reported as stating it, and one that does not
+         must not be dressed up as if it had. */
+      ok("break-even occupancy: the observed table reports each publisher's stated denominator",
+        obsTable.rows.every((r, k) => r[5] === OBS[k].basis), JSON.stringify(obsTable.rows.map((r) => r[5])));
+    }
+
+    const runTable = find((t) => /Occupancy needed to beat it/i.test(t.head[5] || ""));
+    ok("break-even occupancy: the observed-run table is present", !!runTable);
+    if (runTable) {
+      ok("break-even occupancy: the observed run matches the module's nightly rates",
+        same(col(runTable, 1), runs.map((r) => r.adr)), JSON.stringify(col(runTable, 1)));
+      ok("break-even occupancy: the observed run matches the nights each occupancy buys",
+        same(col(runTable, 2), runs.map((r) => r.nights)), JSON.stringify(col(runTable, 2)));
+      ok("break-even occupancy: the observed run matches the net the model computes",
+        same(col(runTable, 3), runs.map((r) => r.net)), JSON.stringify(col(runTable, 3)));
+      ok("break-even occupancy: the observed run matches the distance from the tenancy",
+        same(col(runTable, 4), runs.map((r) => r.versusTenancy)), JSON.stringify(col(runTable, 4)));
+      ok("break-even occupancy: the observed run matches the occupancy each rate needs",
+        same(col(runTable, 5), runs.map((r) => pcOf(r.occupancyToBeat))), JSON.stringify(col(runTable, 5)));
+    }
+
+    /* The identity, and the reason the section exists. Only the publishers
+       whose own figures are mutually consistent belong in this table: one of
+       the three publishes a revenue that contradicts its own RevPAR, and
+       putting an implied occupancy beside it would be inventing a basis the
+       publisher did not give. */
+    const IMPLIED = OBS.filter((o) => o.key !== "airroi");
+    const impTable = find((t) => /Implied calendar occupancy/i.test(t.head[2] || ""));
+    ok("break-even occupancy: the implied-occupancy table is present", !!impTable);
+    if (impTable) {
+      ok("break-even occupancy: the implied table covers only the internally consistent publishers",
+        same(impTable.rows.map((r) => r[0]), IMPLIED.map((o) => o.publisher)), JSON.stringify(impTable.rows.map((r) => r[0])));
+      ok("break-even occupancy: the implied table matches the revenues the module converts",
+        same(col(impTable, 1), IMPLIED.map((o) => hh.observedRevenueAed(o))), JSON.stringify(col(impTable, 1)));
+      ok("break-even occupancy: the implied calendar occupancy is the module's identity",
+        same(col(impTable, 2), IMPLIED.map((o) => pcOf(hh.impliedCalendarOccupancy(o)))), JSON.stringify(col(impTable, 2)));
+      ok("break-even occupancy: the implied table restates the published occupancy beside it",
+        same(col(impTable, 3), IMPLIED.map((o) => pcOf(o.occupancy))), JSON.stringify(col(impTable, 3)));
+    }
+
+    /* The sensitivity that cuts for short letting, not against it. The model
+       assumes three-night stays and charges cleaning per stay; the observed
+       average stay is longer, which is money back to the short let. It is
+       published because a finding that only survives its own friendliest
+       assumption being wrong is not a finding. */
+    const obsStay = hh.OBSERVED_MIX.averageStayNights;
+    const longRuns = OBS.map((o) => hh.observedRun(o, obsStay));
+    const stayTable = find((t) => /observed 7\.7 nights/i.test(t.head[2] || ""));
+    ok("break-even occupancy: the stay-length table is present", !!stayTable);
+    if (stayTable) {
+      ok("break-even occupancy: the stay-length table matches the model's assumed stay",
+        same(col(stayTable, 1), runs.map((r) => r.versusTenancy)), JSON.stringify(col(stayTable, 1)));
+      ok("break-even occupancy: the stay-length table matches the observed stay",
+        same(col(stayTable, 2), longRuns.map((r) => r.versusTenancy)), JSON.stringify(col(stayTable, 2)));
+    }
+
+    /* Behaviour, not wording. The page's claim is that none of the three
+       published averages beats the tenancy, and it is only allowed to say so
+       while that is true of the module's own numbers, under both stay
+       assumptions. A vendor revising a rate upward should break this. */
+    const allShort = runs.every((r) => r.versusTenancy < 0) && longRuns.every((r) => r.versusTenancy < 0);
+    ok("break-even occupancy: the claim that all three fall short holds only while they do",
+      allShort === /\*\*All three land short\.\*\*/.test(p.body), "allShort=" + allShort);
+    ok("break-even occupancy: the narrowest observed shortfall is the module's",
+      p.body.includes("finishes **AED " + hh.money(-Math.max(...longRuns.map((r) => r.versusTenancy))) + " behind**"));
+    ok("break-even occupancy: the observed band is the module's range",
+      p.body.includes("between AED " + hh.money(-Math.max(...runs.map((r) => r.versusTenancy)))
+        + " and AED " + hh.money(-Math.min(...runs.map((r) => r.versusTenancy))) + " less"));
+
+    const obsClaims = [
+      ["the peg used for conversion", "**AED " + hh.AED_PER_USD + "**"],
+      ["AirDNA's own definition of occupancy", "share of **available** nights that get booked"],
+      ["the calendar occupancy AirDNA's own figures imply",
+        "**" + pcOf(hh.impliedCalendarOccupancy(OBS.find((o) => o.key === "airdna"))) + "% of the year**"],
+      ["the observed average length of stay", "**" + obsStay + " nights**"],
+      ["the one-bedroom share of the market",
+        "**" + pcOf(hh.OBSERVED_MIX.oneBedroomShare) + "% of Dubai's active listings**"],
+      ["the reason AirROI is excluded from the identity", "there is no way to tell which from the page itself"],
+      ["the pairing named as the weak joint", "The weak joint is the pairing"],
+    ];
+    for (const [what, phrase] of obsClaims) {
+      ok("break-even occupancy: the prose carries " + what, p.body.includes(phrase), phrase);
+    }
+
+    /* Attribution. A measured figure without a publisher, a period and a
+       retrieval date does not publish on this site, and a vendor source that
+       is not the one the module holds is a source nobody checked. */
+    for (const o of OBS) {
+      ok("break-even occupancy: cites " + o.publisher + " exactly as the module pins it",
+        (p.sources || []).some((x) => x.url === o.source.url && x.name === o.source.name));
+      ok("break-even occupancy: the " + o.publisher + " citation carries a retrieval date",
+        /retrieved \d+ \w+ \d{4}/.test(o.source.name), o.source.name);
+    }
+    ok("break-even occupancy: cites the Central Bank for the rate it converts at",
+      (p.sources || []).some((x) => x.url === hh.PEG_SOURCE.url && x.name === hh.PEG_SOURCE.name));
+    /* The short let page carries the same cost stack and is where a reader
+       arrives from a holiday-home search, so the observed-data finding has to
+       be reachable from it rather than only from here. */
+    const sl = playbooks.find((x) => x.slug === "short-let-vs-long-let");
+    ok("break-even occupancy: the short let page points at the observed finding",
+      !!sl && sl.body.includes("](/playbooks/break-even-occupancy/)")
+      && /all three of them, run through this cost stack at their own published figures, land below the annual tenancy/.test(sl.body));
+
+    ok("break-even occupancy: every source is either an official instrument or a module-pinned dataset",
+      (p.sources || []).every((x) => /\.gov\.ae|centralbank\.ae/.test(x.url)
+        || OBS.some((o) => o.source.url === x.url)), JSON.stringify((p.sources || []).map((x) => x.url)));
     ok("break-even occupancy: links the pages whose numbers it uses",
       ["/playbooks/net-rental-yield/", "/playbooks/short-let-vs-long-let/",
        "/playbooks/service-charge-and-reserves/", "/playbooks/mortgage-capacity/",

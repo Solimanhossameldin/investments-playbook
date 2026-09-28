@@ -204,3 +204,124 @@ export function lowestViableRate(target, i = EXAMPLE.shortLet) {
 export function statutoryFixed(i = EXAMPLE.shortLet) {
   return Math.min(PERMIT_PER_BEDROOM * i.bedrooms, PERMIT_CAP);
 }
+
+/* ---- observed market data, and the denominator nobody states ----
+
+   Everything above is an illustrative unit. The three firms that sell Dubai
+   short-let data publish an emirate-wide average nightly rate and an
+   emirate-wide average occupancy, and those two numbers are what an owner is
+   actually quoted. They are published here so the frontier above can be run
+   at an observed rate instead of an assumed one.
+
+   Two cautions are structural rather than incidental, and the page states
+   both. The cost stack these rates are run through belongs to the
+   illustrative one bedroom, not to the average listing in the dataset. And
+   the word "occupancy" does not mean the same thing in all three: AirDNA
+   defines it as the share of *available* nights booked, which is not the
+   share of the year, and a break-even measured against a twelve-month
+   tenancy is measured against the year. Where a source publishes an annual
+   revenue and a nightly rate, dividing the first by the second over 365
+   recovers the calendar occupancy its own figures imply, which is the only
+   basis on which the two can be compared. */
+
+/* The conversion. The dirham is not floated against the dollar, so this is a
+   published band rather than a market quote: the Central Bank's own
+   intervention rates are USD/AED 3.672 buying and 3.673 selling, and the
+   midpoint is used. A market rate would be spurious precision on a peg. */
+export const AED_PER_USD = 3.6725;
+export const PEG_SOURCE = {
+  name: "Central Bank of the UAE, Domestic Market Operations, automatic intervention rates USD/AED 3.672 buying and 3.673 selling, retrieved 28 September 2026",
+  url: "https://centralbank.ae/en/our-operations/monetary-policy-and-domestic-markets/domestic-market-operations/",
+};
+
+export const OBSERVED = [
+  {
+    key: "airdna",
+    publisher: "AirDNA",
+    period: "twelve months to August 2026",
+    listings: 18879,
+    adrUsd: 179,
+    occupancy: 0.69,
+    basis: "share of available nights booked",
+    revenueUsd: 37400,
+    source: {
+      name: "AirDNA, Dubai short-term rental overview, trailing twelve months to August 2026, page updated 22 September 2026, retrieved 28 September 2026",
+      url: "https://www.airdna.co/vacation-rental-data/app/ae/default/dubai/overview",
+    },
+  },
+  {
+    key: "airroi",
+    publisher: "AirROI",
+    period: "August 2025 to July 2026",
+    listings: 20018,
+    adrUsd: 286,
+    occupancy: 0.399,
+    basis: "not stated",
+    revenueUsd: 20441,
+    revparUsd: 112,
+    source: {
+      name: "AirROI, Dubai Airbnb market report, 2026 dataset covering August 2025 to July 2026, page updated 12 September 2026, retrieved 28 September 2026",
+      url: "https://www.airroi.com/airbnb-data/united-arab-emirates/dubai/dubai",
+    },
+  },
+  {
+    key: "airbtics",
+    publisher: "Airbtics",
+    period: "February 2025 to January 2026",
+    listings: 22719,
+    adrAed: 638,
+    occupancy: 0.73,
+    basis: "not stated",
+    revenueAed: 172000,
+    revenueIsMedian: true,
+    source: {
+      name: "Airbtics, Dubai Airbnb data, revenue for February 2025 to January 2026 and rate and occupancy as at January 2026, data dated 12 March 2026, retrieved 28 September 2026",
+      url: "https://airbtics.com/annual-airbnb-revenue-in-dubai-united-arab-emirates/",
+    },
+  },
+];
+
+/* The two observed facts that decide whether the comparison is fair at all.
+   The share of listings that are one bedroom says whether the illustrative
+   unit is the typical one, and the average length of stay drives the cleaning
+   cost, which the worked example assumes rather than observes. Both come from
+   AirROI, which is the only one of the three that publishes them. */
+export const OBSERVED_MIX = {
+  oneBedroomShare: 0.511,
+  oneAndTwoBedroomShare: 0.771,
+  averageStayNights: 7.7,
+  source: OBSERVED.find((o) => o.key === "airroi").source,
+};
+
+export const observedAdrAed = (o) => o.adrAed ?? Math.round(o.adrUsd * AED_PER_USD);
+export const observedRevenueAed = (o) => o.revenueAed ?? Math.round(o.revenueUsd * AED_PER_USD);
+
+/* The calendar occupancy a source's own two published figures imply. Annual
+   revenue divided by a full year at the published nightly rate: an identity,
+   not an estimate. Where it disagrees with the published occupancy, the
+   published occupancy is on some other denominator. */
+export function impliedCalendarOccupancy(o) {
+  return observedRevenueAed(o) / (observedAdrAed(o) * 365);
+}
+
+/* One observed pair run through the same model the frontier uses, at a given
+   average length of stay. Returns what the published occupancy earns on the
+   illustrative unit and how that lands against the tenancy it replaced. */
+export function observedRun(o, stayNights = EXAMPLE.shortLet.averageStayNights) {
+  const i = { ...EXAMPLE.shortLet, nightlyRate: observedAdrAed(o), averageStayNights: stayNights };
+  const tenancy = longLetNet().net;
+  const nights = Math.floor(365 * o.occupancy);
+  const net = netAtNights(nights, i);
+  const nightsToBeat = breakEvenNights(tenancy, i);
+  return {
+    adr: observedAdrAed(o),
+    nights,
+    net,
+    tenancy,
+    versusTenancy: net - tenancy,
+    nightsToCover: breakEvenNights(0, i),
+    nightsToBeat,
+    occupancyToBeat: nightsToBeat === null ? null : nightsToBeat / 365,
+    contribution: contributionPerNight(i),
+  };
+}

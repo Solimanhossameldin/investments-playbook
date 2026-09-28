@@ -133,6 +133,8 @@ Holding the nightly rate at AED 750 and moving only how full the unit is:
 
 The annual tenancy nets 78,550 and does it without an occupancy assumption at all. Ten points of occupancy is worth about AED 20,000 here, which is why the operator's forecast is the number to interrogate hardest, and why an operator paid on gross has no reason to interrogate it at all.
 
+The three firms that sell observed Dubai occupancy and nightly rates publish emirate-wide averages, and all three of them, run through this cost stack at their own published figures, land below the annual tenancy. [Break-even occupancy](/playbooks/break-even-occupancy/) sets out each one with its period, its source and the denominator it is counting, which is the detail that decides whether a quoted occupancy means what a reader thinks it means.
+
 ## The question you will ask next
 
 **Does the rent cap apply to a short let?** No. The RERA rental index governs renewal increases on an annual tenancy, which is a constraint on the long let and part of what makes its income predictable. The short let has no cap and no floor. See [rent increase caps](/playbooks/rent-increase-caps/).

@@ -6,14 +6,14 @@
   "category": "property",
   "tier": 1,
   "calculator": "net-rental-yield",
-  "reviewed": "25 September 2026",
+  "reviewed": "28 September 2026",
   "summary": "Break-even occupancy on a Dubai holiday home is 67.9% against the annual tenancy it replaced, not the 28.2% every page prints against zero.",
   "formula": "Break-even occupancy\n  =        Fixed annual costs\n    ------------------------------------\n     Income at full occupancy\n     - costs that scale with occupancy\n\n  Fixed, owed with the unit empty\n    service charge\n    maintenance reserve\n    insurance and standing charges\n    the mortgage instalment, entire\n    the holiday home permit\n\n  Scaling, charged on what comes in\n    management or operator fee\n    cleaning, per stay\n    tourism dirham, per occupied night\n\nTwo benchmarks, not one\n  against zero          when the unit stops losing money\n  against the tenancy   when the work was worth doing\n\n  The second is the decision. The alternative to an empty\n  short let is not an empty flat, it is the annual tenancy\n  that was given up in order to run one.\n\nOn the illustrative one bedroom\n  annual tenancy, no mortgage        23.01%\n  annual tenancy, 75% at 5.0%        no occupancy clears it\n  holiday home, against zero         28.2%\n  holiday home, against the tenancy  67.9%",
   "failureModes": [
     "The arithmetic assumes the rent and the nightly rate hold. A re-letting at a lower rent raises break-even occupancy even if the unit is never empty for a day, which is the same risk arriving quietly.",
     "A repayment instalment is treated here as cost in full, when part of it is capital repaid to the owner. Using interest only makes every ratio on this page look better and is defensible, but the two cannot be mixed inside one comparison.",
     "Service charges rise, and a special levy for a chiller replacement can move the ratio several points in one letter. A break-even calculated on this year's charge is a snapshot rather than a property of the asset.",
-    "The holiday home figures use an illustrative nightly rate and an illustrative occupancy, not an observed market. Nothing on this page is a forecast of what any unit will actually achieve, and the frontier table exists so a reader can test a forecast somebody else has made.",
+    "The observed nightly rates and occupancies below are emirate-wide averages across every listing size, run against one illustrative one bedroom's cost stack. That pairing is the weakest joint in the comparison and the page says so: a unit with a materially lower service charge, an achievable rate above the city average, or no annual tenancy available to it is a different calculation. Nothing here is a forecast of what any individual unit will achieve.",
     "Break-even occupancy says nothing about capital value. A property with an excellent ratio in a falling market is still losing money, just not in cash, and the two losses are not offset against each other anywhere except in the owner's account.",
     "Portfolio level netting hides a single bad asset inside a healthy average, so the ratio is worth running both ways. A market wide soft patch is the case where several units go quiet together rather than one.",
     "The developer or community may refuse short letting outright, in which case the holiday home half of this page is arithmetic about something the title deed does not permit. That restriction is established before a furnishing budget, not after."
@@ -39,6 +39,22 @@
     {
       "name": "Executive Council Resolution No. (30) of 2013 Approving Fees of the Land Department",
       "url": "https://dlp.dubai.gov.ae/Legislation%20Reference/2013/ECR%2030%20of%202013.html"
+    },
+    {
+      "name": "Central Bank of the UAE, Domestic Market Operations, automatic intervention rates USD/AED 3.672 buying and 3.673 selling, retrieved 28 September 2026",
+      "url": "https://centralbank.ae/en/our-operations/monetary-policy-and-domestic-markets/domestic-market-operations/"
+    },
+    {
+      "name": "AirDNA, Dubai short-term rental overview, trailing twelve months to August 2026, page updated 22 September 2026, retrieved 28 September 2026",
+      "url": "https://www.airdna.co/vacation-rental-data/app/ae/default/dubai/overview"
+    },
+    {
+      "name": "AirROI, Dubai Airbnb market report, 2026 dataset covering August 2025 to July 2026, page updated 12 September 2026, retrieved 28 September 2026",
+      "url": "https://www.airroi.com/airbnb-data/united-arab-emirates/dubai/dubai"
+    },
+    {
+      "name": "Airbtics, Dubai Airbnb data, revenue for February 2025 to January 2026 and rate and occupancy as at January 2026, data dated 12 March 2026, retrieved 28 September 2026",
+      "url": "https://airbtics.com/annual-airbnb-revenue-in-dubai-united-arab-emirates/"
     }
   ]
 }
@@ -145,13 +161,74 @@ One nightly rate gives one answer, and an operator's forecast will not use the r
 
 The top row is the one worth sitting with. **At AED 500 a night there is no occupancy in the year that beats the annual tenancy**, including 365 nights out of 365. Each night contributes AED 340 after the operator's share and the per night charges, and a full year of that does not reach AED 133,850. Below **AED 534 a night** the question of occupancy does not arise at all, and a forecast quoting a rate under that is answering a question the owner did not ask.
 
+## What Dubai holiday homes actually achieve
+
+Everything above runs on an illustrative AED 750 a night. Three firms sell observed Dubai data, and each publishes an emirate-wide average nightly rate and an emirate-wide average occupancy. Those are the numbers an owner is actually quoted, so the honest test of this page is to put them through the frontier in place of an assumed rate.
+
+| Publisher | Period | Active listings | Nightly rate | Published occupancy | Denominator stated |
+|---|---|---|---|---|---|
+| AirDNA | twelve months to August 2026 | 18,879 | 657 | 69.0% | share of available nights booked |
+| AirROI | August 2025 to July 2026 | 20,018 | 1,050 | 39.9% | not stated |
+| Airbtics | February 2025 to January 2026 | 22,719 | 638 | 73.0% | not stated |
+
+Dollar rates are converted at **AED 3.6725**, the midpoint of the Central Bank's published automatic intervention rates of 3.672 buying and 3.673 selling. The dirham is pegged, so a market quote here would be spurious precision rather than accuracy.
+
+Two of those occupancies are about seventy percent and one is forty, on the same city over overlapping years. The spread is not the finding on its own, because the periods differ and one of the three is counting a different denominator. The finding is what each pair does to the arithmetic.
+
+### Each pair through this page's own model
+
+The cost stack is the illustrative one bedroom's, unchanged: AED 55,300 fixed, twenty percent to the operator, AED 60 a night. Only the nightly rate moves.
+
+| Publisher | Nightly rate | Nights at its own occupancy | Net on the illustrative unit | Against the tenancy's AED 78,550 | Occupancy needed to beat it |
+|---|---|---|---|---|---|
+| AirDNA | 657 | 251 | 61,150 | -17,400 | 78.9% |
+| AirROI | 1,050 | 145 | 57,850 | -20,700 | 47.1% |
+| Airbtics | 638 | 266 | 64,456 | -14,094 | 81.6% |
+
+**All three land short.** Every one of them clears the break-even that every competing page prints, the one measured against zero, with room to spare. And every one of them, on this unit's costs, leaves **between AED 14,094 and AED 20,700 less than the twelve month tenancy** that took an afternoon to sign.
+
+Note what AirROI's row does, because it is the one that looks like the exception. Its nightly rate is the highest of the three by sixty percent, which drags the occupancy needed to beat the tenancy all the way down to 47.1%, the only figure in that column a normal year could plausibly reach. And its own published occupancy is 39.9%, which is below it. A high rate does not rescue a low occupancy; it lowers the bar and then the occupancy fails to clear the lowered bar.
+
+### The denominator, which is where the seventy percent goes
+
+AirDNA states its definition, and it is not the one most readers will assume: occupancy is the share of **available** nights that get booked. That is not the share of the year. A unit blocked by its owner for two months, or listed for only nine, can report a high occupancy on a modest count of nights sold, and a break-even measured against a twelve month tenancy is measured against twelve months.
+
+Where a publisher gives both an annual revenue and a nightly rate, the calendar occupancy its own figures imply can be recovered by division: revenue over a full year at that rate. That is an identity, not an estimate.
+
+| Publisher | Annual revenue published | Implied calendar occupancy | Published occupancy |
+|---|---|---|---|
+| AirDNA | 137,352 | 57.3% | 69.0% |
+| Airbtics | 172,000 | 73.9% | 73.0% |
+
+**Airbtics' figures agree with each other. AirDNA's do not**, and its own definition says why. Sixty nine percent of available nights is **57.3% of the year** on AirDNA's own revenue figure, a difference of 43 nights. An owner handed "69% occupancy in Dubai" and reading it as 251 nights sold is reading it as something AirDNA did not say.
+
+AirROI is absent from that table deliberately. Its rate, occupancy and RevPAR agree with one another, since USD 286 at 39.9% is about USD 114 a night against a published RevPAR of USD 112. But its published annual revenue of USD 20,441 is roughly half of what that RevPAR produces over a year, and the page does not say which of the two sits on a different basis. One of those figures is not comparable with the other, there is no way to tell which from the page itself, and so neither is used here as a calendar occupancy.
+
+### The assumption that cuts the other way
+
+The model above assumes a three night average stay, and cleaning is charged per stay rather than per night. AirROI publishes the observed figure: guests in Dubai stay **7.7 nights** on average. Longer stays mean fewer cleans for the same nights sold, and that is money back to the short let. Running the same three pairs at the observed stay length is therefore the strongest case the published data can make for short letting, which is the reason to run it.
+
+| Publisher | Against the tenancy at three night stays | At the observed 7.7 nights |
+|---|---|---|
+| AirDNA | -17,400 | -9,750 |
+| AirROI | -20,700 | -16,350 |
+| Airbtics | -14,094 | -5,994 |
+
+**The gap narrows and does not close.** The best of the three still finishes **AED 5,994 behind** the tenancy on its own published figures, with the one assumption that favours short letting set as generously as the observed data allows. Which is the honest statement of the finding: not that a Dubai holiday home cannot beat an annual tenancy, but that **none of the three published market averages does**, on this unit, once the comparison is made against the tenancy rather than against zero.
+
+### What this is not
+
+The weak joint is the pairing, and it is worth naming exactly rather than burying. These are emirate-wide averages across every listing size, run against one illustrative one bedroom's cost stack. Two things make that defensible rather than arbitrary. AirROI reports that one bedroom units are **51.1% of Dubai's active listings**, and that one and two bedrooms together are 77.1%, so the modal listing is close to the unit modelled here. And this unit's AED 105,000 tenancy and AED 18 a foot service charge are stated rather than hidden, so a reader with a real service charge and a real achievable rent can redo every row.
+
+What the finding does not survive is substitution without arithmetic. A unit with a materially lower service charge, an achievable nightly rate above the city average, or no annual tenancy available to it at all is a different calculation. The frontier table above exists to be re-run, not quoted.
+
 ## What to do with somebody else's forecast
 
-The one thing the pages that rank for this query have and this page does not is observed market data: real occupancy and real average daily rates, by building and by season. That data is worth having, and it is sold by firms that collect it. Nothing here substitutes for it.
+A city average is not a forecast. An operator's forecast will use a rate and an occupancy for a specific building in a specific season, and it should, because that is the observed market data worth paying for and nothing above substitutes for it.
 
 What the frontier does is tell you what to do with it once you have it. Take the two numbers any operator or data provider gives you, the nightly rate and the occupancy, and find them in the table. If the pair sits below the fourth column, the forecast is describing a unit that would earn more on a twelve month contract, however profitable the forecast says it is. That is a question the forecast will not raise on its own, because the firm making it is not paid to.
 
-Three follow-ups worth asking in the same conversation. Whether the quoted occupancy is nights sold or nights available after owner use, because the two differ by however long the owner intends to stay. Whether the quoted rate is before or after platform commission, since a 20% difference moves every row in that table. And whether the building permits short letting at all, which is the developer's or the owners' association's decision and not the operator's.
+Three follow-ups worth asking in the same conversation. Whether the quoted occupancy is nights sold or nights available after owner use, because the two differ by however long the owner intends to stay, and because at least one of the three publishers above means the second and says so. Whether the quoted rate is before or after platform commission, since a 20% difference moves every row in that table. And whether the building permits short letting at all, which is the developer's or the owners' association's decision and not the operator's.
 
 ## Reading the answer
 
