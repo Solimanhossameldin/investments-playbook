@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-29T19:08:18.923Z",
+ "fetchedAt": "2026-09-29T22:57:33.136Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Agencies publish resolution plan feedback letters for 15 banking organizations",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260929a.htm",
+   "published": "2026-09-29T20:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
   {
    "title": "Waller, Payments in the Age of AI Agents",
    "url": "https://www.federalreserve.gov/newsevents/speech/waller20260928a.htm",
@@ -386,8 +395,17 @@
    "feed": "sec"
   },
   {
-   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
-   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
+   "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
+   "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
+   "published": "2026-09-17T11:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "Exchange of letters between the Governor and the Chancellor regarding QT and the APF - September 2026",
+   "url": "https://www.bankofengland.co.uk/letter/2026/exchange-of-letters-between-the-governor-and-the-chancellor-regarding-qt-and-the-apf",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
@@ -404,17 +422,8 @@
    "feed": "boe"
   },
   {
-   "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
-   "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Exchange of letters between the Governor and the Chancellor regarding QT and the APF - September 2026",
-   "url": "https://www.bankofengland.co.uk/letter/2026/exchange-of-letters-between-the-governor-and-the-chancellor-regarding-qt-and-the-apf",
+   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
+   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
