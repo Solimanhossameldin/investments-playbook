@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-01T09:19:39.039Z",
+ "fetchedAt": "2026-10-01T16:38:40.844Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,51 @@
   }
  ],
  "items": [
+  {
+   "title": "Isabel Schnabel: Central banks on-chain",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261001_1~a0be67193b.en.pdf",
+   "published": "2026-10-01T15:30:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "SEC’s Division of Examinations Announces New Exam Handbook",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-99-secs-division-examinations-announces-new-exam-handbook",
+   "published": "2026-10-01T15:03:35.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
+  {
+   "title": "Waller, The Data Version of Godzilla versus Kong: FRED Takes on AI",
+   "url": "https://www.federalreserve.gov/newsevents/speech/waller20261001a.htm",
+   "published": "2026-10-01T14:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
+  },
+  {
+   "title": "Christine Lagarde: Where AI risks meet",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261001~cf3c630379.en.html",
+   "published": "2026-10-01T13:30:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Minutes of the Meeting of the Court of Directors held on 16 July 2026",
+   "url": "https://www.bankofengland.co.uk/minutes/2026/july/court-minutes-16-july-2026",
+   "published": "2026-10-01T13:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
   {
    "title": "Cook, The Dual Mandate in Rural America",
    "url": "https://www.federalreserve.gov/newsevents/speech/cook20260930a.htm",
@@ -485,6 +530,15 @@
    "feed": "boe"
   },
   {
+   "title": "Asset Purchase Facility: Gilt Sales – Market Notice 17 September 2026",
+   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/asset-purchase-facility-gilt-sales-market-notice-17-september-2026",
+   "published": "2026-09-17T11:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
    "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
    "published": "2026-09-17T11:00:00.000Z",
@@ -503,31 +557,22 @@
    "feed": "boe"
   },
   {
-   "title": "Asset Purchase Facility: Gilt Sales – Market Notice 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/asset-purchase-facility-gilt-sales-market-notice-17-september-2026",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "Federal Reserve issues FOMC statement",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916b.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Chancellor announces Bank of England appointments",
@@ -672,24 +717,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
-   "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is260910~6a45359cfc.en.html",
-   "published": "2026-09-10T13:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Monetary policy decisions",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp260910~314e508016.en.html",
-   "published": "2026-09-10T12:15:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
