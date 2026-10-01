@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-01T02:27:22.329Z",
+ "fetchedAt": "2026-10-01T09:19:39.039Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -485,15 +485,6 @@
    "feed": "boe"
   },
   {
-   "title": "Asset Purchase Facility: Gilt Sales – Market Notice 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/asset-purchase-facility-gilt-sales-market-notice-17-september-2026",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
    "published": "2026-09-17T11:00:00.000Z",
@@ -505,6 +496,15 @@
   {
    "title": "Exchange of letters between the Governor and the Chancellor regarding QT and the APF - September 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/exchange-of-letters-between-the-governor-and-the-chancellor-regarding-qt-and-the-apf",
+   "published": "2026-09-17T11:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "Asset Purchase Facility: Gilt Sales – Market Notice 17 September 2026",
+   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/asset-purchase-facility-gilt-sales-market-notice-17-september-2026",
    "published": "2026-09-17T11:00:00.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
@@ -690,15 +690,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Announcement of the publication of the Governor's interview transcript",
-   "url": "https://www.bankofengland.co.uk/news/2026/september/statement-announcing-governors-interview",
-   "published": "2026-09-10T09:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
