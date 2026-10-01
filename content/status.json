@@ -1,6 +1,36 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-10-01T00:31:33.167Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-10-01, so there is nothing to send.",
+   "ranAt": "2026-10-01T00:31:33.099Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-10-01T00:31:33.027Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-10-01T00:31:32.966Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-10-01T00:31:32.786Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "ok",
    "detail": "75 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
@@ -209,36 +239,6 @@
    "status": "skipped",
    "detail": "No brief written for 2026-09-29, so there is nothing to send.",
    "ranAt": "2026-09-29T00:57:29.983Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-09-29T00:57:29.922Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-09-29T00:57:29.872Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "partial",
-   "detail": "17 figures refreshed. Notes: metals fetch failed",
-   "ranAt": "2026-09-29T00:57:29.719Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "62 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-28T21:14:30.948Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "60 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-09-28T15:10:05.317Z"
   }
  ]
 }
