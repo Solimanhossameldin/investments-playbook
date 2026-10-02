@@ -192,4 +192,98 @@ export function atPrice(price, s = SELLER) {
   return sellerStack({ ...s, price, outstanding: Math.round(price * SENSITIVITY_LTV) });
 }
 
+/* The price the seller has to achieve to come out level.
+
+   Every page on this query stops at the cost of the round trip, and a reader
+   told the round trip costs 9.72% of the price will reasonably assume a 9.72%
+   rise covers it. It does not, and the reason is worth a sentence rather than
+   a footnote: the agency commission and its VAT are charged on the price the
+   property sells for, not the price it was bought for, so a higher exit price
+   carries a higher exit cost, and the rise has to cover that too.
+
+   The required price is therefore the solution of
+
+     S - agencyRate * (1 + VAT) * S - fixed = price + entry
+
+   and not a ratio of costs to price. It is solved, not searched, and the gap
+   against the naive ratio is returned so the page can print the difference
+   instead of leaving the reader to assume it away.
+
+   The second figure is the same solve with the statutory half added to the
+   rate, because in the minority of sales where the buyer reopens Article 3
+   the seller pays 2% of the price it sells for. Both rates are taken from the
+   acquisition module rather than retyped, so the entry and exit pages cannot
+   disagree about either. */
+export function breakEven(s = SELLER) {
+  const stack = sellerStack(s);
+  const buy = acquisition({ ...BUY, price: s.price });
+  const entry = buy.total + mortgageCosts({ ...BUY, price: s.price }).total;
+  const fixed = stack.total - stack.agency;
+  const exitRate = s.agencyRate * (1 + FEES.vatRate);
+  const statutoryRate = buy.sellerShare / s.price;
+  const sunk = s.price + entry + fixed;
+  const solve = (rate) => Math.round(sunk / (1 - rate));
+  const rise = (p) => Number(((p / s.price - 1) * 100).toFixed(2));
+  const price = solve(exitRate);
+  const withShare = solve(exitRate + statutoryRate);
+  const trip = roundTrip(s);
+  return {
+    entry, fixed, sunk, exitRate, statutoryRate,
+    price, withShare,
+    rise: rise(price),
+    riseWithShare: rise(withShare),
+    tripRate: trip.rate,
+    gap: Number((rise(price) - trip.rate).toFixed(2)),
+    extraCommission: Math.round((price - s.price) * exitRate),
+    spread: withShare - price,
+  };
+}
+
+/* How long the required rise has actually taken, in the one Dubai series this
+   site publishes.
+
+   Observed, not modelled. This finds the first month the index genuinely stood
+   that far above a starting month and counts the gap in months. No compound
+   rate is fitted, nothing is extrapolated past the end of the series, and the
+   analysed index is passed in rather than read from disk so this stays a pure
+   function of the points.
+
+   The pair of answers is the reason the function exists. Measured from the
+   trough the required rise arrives almost at once. Measured from the pre-slide
+   peak it arrives well after the index has regained that peak, because
+   regaining the purchase price is not the same event as breaking even on the
+   sale -- the round trip still has to be paid out of the difference. The gap
+   between those two month counts is the cost of the round trip expressed as
+   time, and it appears on no competing page. */
+export function breakEvenAgainstIndex(pi, s = SELLER) {
+  const be = breakEven(s);
+  const points = pi?.byKey?.all?.points;
+  if (!points?.length)
+    throw new Error("disposal: the price index analysis carries no all-residential points");
+  if (!pi.recovered)
+    throw new Error("disposal: the price index no longer reports a recovery, so there is no peak to measure from");
+  const ratio = be.price / s.price;
+  const month = (iso) => +iso.slice(0, 4) * 12 + +iso.slice(5, 7);
+  const after = (fromDate, baseValue) => {
+    const hit = points.find((p) => p[0] > fromDate && p[1] >= baseValue * ratio);
+    return hit ? { date: hit[0], value: hit[1], months: month(hit[0]) - month(fromDate) } : null;
+  };
+  const fromTrough = after(pi.trough.date, pi.trough.value);
+  const fromPeak = after(pi.peak.date, pi.peak.value);
+  /* If a revised series stops clearing the break-even rise from either end,
+     the honest outcome is a failed build and a rewrite, not a page that
+     quietly prints a null. */
+  if (!fromTrough || !fromPeak)
+    throw new Error(
+      "disposal: the index no longer clears the break-even rise from both the peak and the trough. The page's timing comparison must be rewritten, not rebuilt."
+    );
+  return {
+    ratio, fromTrough, fromPeak,
+    peak: pi.peak, trough: pi.trough,
+    recoveredMonths: pi.recovered.months,
+    extra: fromPeak.months - pi.recovered.months,
+    ends: pi.last,
+  };
+}
+
 export { money };

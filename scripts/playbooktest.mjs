@@ -22,6 +22,18 @@ import * as orr from "../src/offplanready.mjs";
 import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
+import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
+import { readFileSync } from "node:fs";
+
+/* The selling page's timing claims are measured against the published index,
+   so the suite analyses the same points the build does rather than trusting a
+   copy of the conclusions. If the series is revised, both move together and
+   the page's month counts fail here rather than going stale in print. */
+const PRICE_INDEX = analysePriceIndex(
+  JSON.parse(readFileSync(new URL("../content/dld-price-index.json", import.meta.url), "utf8"))
+);
+const monthYear = (iso) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
 
 let pass = 0, fail = 0;
 const ok = (name, cond, got) => {
@@ -486,6 +498,8 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     const S = dp.sellerStack();
     const C = dp.contingent();
     const R = dp.roundTrip();
+    const B = dp.breakEven();
+    const X = dp.breakEvenAgainstIndex(PRICE_INDEX);
     const tables = tablesIn(p.body);
 
     const stack = tables.find((t) => t.rows.length && /Agency commission/.test(t.rows[0][0]));
@@ -543,6 +557,24 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       ["the round trip in years of net rent", `which is **${R.years.toFixed(2)} years** of net rent`],
       ["the acquisition side of the round trip", `costs AED ${dp.money(R.buy)} in acquisition fees`],
       ["the mortgage registration side", `a further AED ${dp.money(R.debt)} to register the mortgage`],
+      ["the round trip's share, as the rise it does not equal", `A round trip costing **${R.rate.toFixed(2)}% of the price**`],
+      ["the break-even sale price", `a sale at **AED ${dp.money(B.price)}**`],
+      ["the required rise", `a rise of **${B.rise.toFixed(2)}%**`],
+      ["the gap against the cost ratio", `That is **${B.gap.toFixed(2)} points** more than the round trip costs`],
+      ["the commission charged on the gain", `the **AED ${dp.money(B.extraCommission)}** of commission and VAT charged on the gain`],
+      ["the break-even price with the statutory half", `becomes **AED ${dp.money(B.withShare)}**`],
+      ["the required rise with the statutory half", `a rise of **${B.riseWithShare.toFixed(2)}%**`],
+      ["the statutory half as asking price", `worth **AED ${dp.money(B.spread)}** of asking price`],
+      ["the length of the index series", `runs ${PRICE_INDEX.months} months`],
+      ["the trough the timing is measured from", `From the trough of ${monthYear(X.trough.date)}`],
+      ["the months to the rise from the trough",
+        `stood ${B.rise.toFixed(2)}% higher within **${X.fromTrough.months} months**, by ${monthYear(X.fromTrough.date)}`],
+      ["the peak the timing is measured from", `From the pre-slide peak of ${monthYear(X.peak.date)}`],
+      ["the months to regain the peak", `needed **${X.recoveredMonths} months** to regain that peak`],
+      ["the months to the rise from the peak",
+        `did not stand ${B.rise.toFixed(2)}% above it until ${monthYear(X.fromPeak.date)}, **${X.fromPeak.months} months** after`],
+      ["the difference between recovering and breaking even", `The **${X.extra} months** between those two figures`],
+      ["where the series ends", `**ends in ${monthYear(PRICE_INDEX.last)}**`],
     ];
     for (const [label, phrase] of claims) {
       ok(`selling: prose carries ${label}`, p.body.includes(phrase), phrase);
@@ -565,6 +597,67 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       JSON.stringify([900000, 2400000].map((x) => dp.contingent({ ...dp.SELLER, price: x }).share)));
     ok("selling: the mortgaged round trip costs more than the cash one",
       R.total > aq.payback().exitTotal, `${R.total} vs ${aq.payback().exitTotal}`);
+
+    /* The break-even price, as behaviour rather than as a printed number.
+
+       The algebra could be wrong in a way that still prints consistently, so
+       this does not re-derive it. It sells the property at the price the page
+       names, pays the exit stack computed on THAT price, and checks the cash
+       returned is the purchase price plus the entry costs -- and that one
+       dirham less is not enough. That is the definition of breaking even, and
+       it is tested against the same sellerStack the page's own table uses. */
+    const proceeds = (sale) => sale - dp.sellerStack({ ...dp.SELLER, price: sale }).total;
+    ok("selling: at the break-even price the sale returns the price paid plus the entry costs",
+      Math.abs(proceeds(B.price) - (dp.SELLER.price + B.entry)) <= 1,
+      `${proceeds(B.price)} vs ${dp.SELLER.price + B.entry}`);
+    ok("selling: one dirham below the break-even price it does not break even",
+      proceeds(B.price - 1) < dp.SELLER.price + B.entry);
+    ok("selling: the break-even price holds at other prices too",
+      [900000, 2400000, 7000000].every((x) => {
+        const b = dp.breakEven({ ...dp.SELLER, price: x });
+        return Math.abs((b.price - dp.sellerStack({ ...dp.SELLER, price: b.price }).total) - (x + b.entry)) <= 1;
+      }));
+
+    /* The page's new claim is that the required rise is LARGER than the round
+       trip's share of the price, and that the commission charged on the exit
+       price is why. Asserting the gap is positive would pass on a typo, so
+       this proves the mechanism: remove the exit commission and the two
+       numbers have to converge, because nothing else scales with the sale. */
+    ok("selling: the required rise exceeds the round trip's share of the price",
+      B.rise > B.tripRate, `${B.rise} vs ${B.tripRate}`);
+    const noCommission = dp.breakEven({ ...dp.SELLER, agencyRate: 0 });
+    ok("selling: with no exit commission the required rise and the cost ratio converge",
+      Math.abs(noCommission.rise - noCommission.tripRate) <= 0.01,
+      `${noCommission.rise} vs ${noCommission.tripRate}`);
+    ok("selling: the statutory half raises the break-even price by the spread the page prints",
+      B.withShare > B.price && B.spread === B.withShare - B.price);
+
+    /* The timing, as observed data rather than as a month name. The month the
+       page names has to clear the rise, and -- the part that matters -- no
+       earlier month after the same starting point may clear it, or "first"
+       is a false word. */
+    const pts = PRICE_INDEX.byKey.all.points;
+    const firstClear = (fromDate, baseValue, named) => {
+      const target = baseValue * X.ratio;
+      const i = pts.findIndex((q) => q[0] === named);
+      return i >= 0 && pts[i][1] >= target &&
+        !pts.slice(0, i).some((q) => q[0] > fromDate && q[1] >= target);
+    };
+    ok("selling: the month named as clearing the rise from the peak is the first that does",
+      firstClear(X.peak.date, X.peak.value, X.fromPeak.date), X.fromPeak.date);
+    ok("selling: the month named as clearing the rise from the trough is the first that does",
+      firstClear(X.trough.date, X.trough.value, X.fromTrough.date), X.fromTrough.date);
+    ok("selling: breaking even from the peak took longer than regaining the peak",
+      X.fromPeak.months > X.recoveredMonths && X.extra === X.fromPeak.months - X.recoveredMonths,
+      `${X.fromPeak.months} vs ${X.recoveredMonths}`);
+
+    /* A page that compares a fee stack to a market index can mislead in three
+       specific ways, so it is required to say all three out loud. */
+    ok("selling: the index comparison says the series is nominal", p.body.includes("is **nominal**"));
+    ok("selling: the index comparison says it is a market index, not this property",
+      p.body.includes("**all-residential market index**, not this flat"));
+    ok("selling: the page links the price index it measures against",
+      p.body.includes("](/dubai-price-index/)"));
 
     /* The cap, as behaviour rather than as a printed number. The ceiling has
        to bind at the balance the page names and not one dirham earlier, the

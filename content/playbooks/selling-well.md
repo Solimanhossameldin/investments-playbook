@@ -129,6 +129,24 @@ That is the number to hold against any projected gain. [Net rental yield](/playb
 
 [Transaction cost drag](/playbooks/transaction-cost-drag/) is the general form of the argument, and [the year you sell](/playbooks/the-year-you-sell/) is the timing question that sits on top of it.
 
+## The price you have to sell at
+
+A round trip costing **9.72% of the price** does not mean a 9.72% rise covers it. The commission and its VAT are charged on the price the property sells for, not the price it was bought for, so a higher exit price carries a higher exit cost and the rise has to cover that as well. What the seller needs is the solution of an equation, not a ratio of costs to price.
+
+On this one bedroom, bought at AED 1,500,000 with a mortgage and sold with one still outstanding, coming out level takes a sale at **AED 1,648,915**, a rise of **9.93%**. That is **0.21 points** more than the round trip costs, and the difference is the **AED 3,127** of commission and VAT charged on the gain itself. Below that price the sale returns less cash than the purchase consumed, whatever the index has done.
+
+If the buyer reopens the registration fee, which is the AED 30,000 the law assigns to the seller and the contract almost always does not, the break-even sale price becomes **AED 1,683,303**, a rise of **12.22%**. The Article 3 default is worth **AED 34,388** of asking price, which is the same argument as the section above in the units a seller actually negotiates in.
+
+### How long that rise has taken
+
+The Land Department's own residential sale index runs 159 months, and this site publishes it at [the Dubai price index](/dubai-price-index/). Asking it how long a 9.93% rise took gives two answers, and the distance between them is the entire case for timing a sale.
+
+From the trough of June 2021, the index stood 9.93% higher within **6 months**, by December 2021. In the fastest leg the series contains, the round trip was covered in half a year.
+
+From the pre-slide peak of May 2015, it was not. The index needed **85 months** to regain that peak, and it did not stand 9.93% above it until May 2023, **96 months** after. A buyer who bought at the peak and had to sell without losing money was not waiting 85 months for a recovery. They were waiting 96. The **11 months** between those two figures are the round trip expressed as time instead of money, and they are missing from every account of that peak, because regaining your purchase price and breaking even on the sale are two different events.
+
+Three limits on that comparison, all of which matter. The index is **nominal**, so it says nothing about what the money was worth by the time it came back. It is an **all-residential market index**, not this flat: an individual unit in an individual building did neither of these things exactly. And the official series **ends in May 2024**, as [the price index page](/dubai-price-index/) states above the fold, and nothing here extends it, and no month after that has been assumed.
+
 ## Two decisions that move more money than every fee above
 
 The whole stack is 2.82% of the price. Getting the asking price wrong by five per cent costs nearly twice that, in one decision, and it is made in an afternoon.
