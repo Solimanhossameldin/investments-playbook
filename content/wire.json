@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-05T04:25:34.505Z",
+ "fetchedAt": "2026-10-05T11:45:19.788Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Philip R. Lane: Diagnostic Challenges for ECB Monetary Policy",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261005~1d8d998ef4.en.html",
+   "published": "2026-10-05T08:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Federal Reserve Board announces approval of application by Fleur Capital Corporation",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20261002a.htm",
@@ -642,18 +651,18 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916b.htm",
    "published": "2026-09-16T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Chancellor announces Bank of England appointments",
@@ -722,15 +731,6 @@
    "title": "Piero Cipollone: The future of euro cash: trusted today, designed for tomorrow",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260914_1~91d3436449.en.html",
    "published": "2026-09-14T13:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Isabel Schnabel: Macroeconomic, fiscal and financial stability in a shock-prone world",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260914~0ffd556bc8.en.pdf",
-   "published": "2026-09-14T09:15:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
