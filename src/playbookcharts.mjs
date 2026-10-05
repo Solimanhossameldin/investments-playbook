@@ -18,6 +18,12 @@ import { dubai as ldDubai, london } from "./london.mjs";
 import { incomeTable, STRESSED_RATES } from "./mortgage.mjs";
 import { sellerStack, roundTrip } from "./disposal.mjs";
 import { EXAMPLE_PLAN, paidByMonth } from "./offplan.mjs";
+import { byRate } from "./offplanready.mjs";
+import { grid as taxGrid } from "./hometax.mjs";
+import { shortLetNet, longLetNet } from "./holidayhome.mjs";
+import { TIERS } from "./rentcap.mjs";
+import { shortfallTable } from "./unitarea.mjs";
+import { EXAMPLE as AQ_EXAMPLE, yields as aqYields } from "./acquisition.mjs";
 
 const pct0 = (v) => `${Number(v).toFixed(0)}%`;
 const pct = (v) => `${Number(v).toFixed(2)}%`;
@@ -189,6 +195,106 @@ function offPlanIrr() {
   ];
 }
 
+/* Off-plan against ready: the discount off-plan has to give you before it
+   beats buying something finished, at each rate you could otherwise earn.
+   The bar going negative is the whole page -- above a certain hurdle rate,
+   off-plan has to be dearer than ready to be worth it, which is the opposite
+   of how it is sold. */
+function offPlanVsReady() {
+  const rows = byRate();
+  return [
+    {
+      key: "offplan-discount-needed",
+      label: "The discount off-plan must give you to beat buying ready, at each rate you could otherwise earn",
+      reference: 0,
+      referenceLabel: "no discount needed",
+      format: pct,
+      bars: rows.map((r) => ({ label: `If you could earn ${pct0(r.rate)}`, value: r.a.discount })),
+      caption:
+        "Below the line, off-plan needs a discount to be worth the wait. Above it, the arithmetic reverses and off-plan would have to be more expensive than ready to leave you level — which is not an argument anyone selling it makes.",
+    },
+  ];
+}
+
+/* Residency and tax: what the same Dubai property nets a UK resident, by
+   band, against what it nets somebody who owes no tax on it. The property
+   does not change. The passport does. */
+function residencyAndTax() {
+  const g = taxGrid();
+  return [
+    {
+      key: "uk-bands-net",
+      label: "What the same Dubai property nets, by the owner's UK tax band",
+      reference: aqYields().net,
+      referenceLabel: `${pct(aqYields().net)}, owing no tax on it`,
+      format: pct,
+      bars: g.map((r) => ({ label: r.band.name, value: r.net })),
+      caption:
+        "The building, the rent and the service charge are identical in every bar. The only thing that changes is where the owner is tax resident, and the UK taxes this income whether or not a dirham of it ever reaches the UK.",
+    },
+  ];
+}
+
+/* Short let against long let. The bars are deliberately close, because the
+   finding is that they are close: the gap is thinner than the work. */
+function shortLetVsLongLet() {
+  const s = shortLetNet(), l = longLetNet();
+  return [
+    {
+      key: "short-vs-long",
+      label: "What a year of each nets on the same apartment",
+      reference: l.net,
+      referenceLabel: "the annual tenancy",
+      format: aed0,
+      bars: [
+        { label: "Short let, at the illustrative rate", value: s.net },
+        { label: "Annual tenancy", value: l.net },
+      ],
+      caption:
+        `A difference of AED ${Math.abs(Math.round(s.net - l.net)).toLocaleString("en-AE")} on the year, before the owner's own time, the furniture, the permit renewals and the guest who does not leave. The bars are close because the finding is that they are close.`,
+    },
+  ];
+}
+
+/* Rent caps: the statutory ladder. How far below the market index a rent
+   sits decides, by decree rather than by negotiation, what can be added. */
+function rentIncreaseCaps() {
+  return [
+    {
+      key: "rent-cap-ladder",
+      label: "The increase Decree 43 permits, by how far the rent sits below the market index",
+      reference: 0,
+      referenceLabel: "no increase permitted",
+      format: pct0,
+      bars: TIERS.map((t) => ({
+        label: t.upTo === null ? "More than 40% below" : `Up to ${t.upTo}% below`,
+        value: t.increase,
+      })),
+      caption:
+        "These are the statutory steps, not a negotiating range. A rent within ten percent of the index cannot be raised at all, however long the tenant has been there and whatever the landlord's costs have done.",
+    },
+  ];
+}
+
+/* Price per square foot: what a shortfall in delivered area does to the rate
+   actually paid. The quoted figure is computed on the area in the brochure;
+   the realised one on the area that exists. */
+function pricePerSquareFoot() {
+  const rows = shortfallTable(AQ_EXAMPLE);
+  return [
+    {
+      key: "ppsf-uplift",
+      label: "How much more per square foot you actually paid, by how short the delivered area came",
+      reference: 0,
+      referenceLabel: "the rate you were quoted",
+      format: pct,
+      bars: rows.map((r) => ({ label: `${r.shortfallPct}% short`, value: r.upliftPct })),
+      caption:
+        "The price does not move. The area does, so the rate per square foot you actually paid rises by the same proportion the area fell short — and below the statutory tolerance none of it is compensable.",
+    },
+  ];
+}
+
 const REGISTRY = {
   "break-even-occupancy": breakEvenOccupancy,
   "net-rental-yield": netRentalYield,
@@ -197,6 +303,11 @@ const REGISTRY = {
   "mortgage-capacity": mortgageCapacity,
   "selling-well": sellingWell,
   "off-plan-irr": offPlanIrr,
+  "off-plan-vs-ready": offPlanVsReady,
+  "residency-and-tax": residencyAndTax,
+  "short-let-vs-long-let": shortLetVsLongLet,
+  "rent-increase-caps": rentIncreaseCaps,
+  "price-per-square-foot": pricePerSquareFoot,
 };
 
 /* Returns rendered figures for a playbook, or "" when the page has none. */

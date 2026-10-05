@@ -2196,6 +2196,21 @@ ok("every calculator points at a playbook that exists",
       label: `Stressed at ${pctf(r.ratePct)}`, shown: aedf(r.byFlow),
     })),
     "selling-well": dp.sellerStack().lines.map(([label, v]) => ({ label, shown: aedf(v) })),
+    "off-plan-vs-ready": orr.byRate().map((r) => ({
+      label: `If you could earn ${Number(r.rate).toFixed(0)}%`, shown: pctf(r.a.discount),
+    })),
+    "residency-and-tax": ht.grid().map((r) => ({ label: r.band.name, shown: pctf(r.net) })),
+    "short-let-vs-long-let": [
+      { label: "Short let, at the illustrative rate", shown: aedf(hh.shortLetNet().net) },
+      { label: "Annual tenancy", shown: aedf(hh.longLetNet().net) },
+    ],
+    "rent-increase-caps": rc.TIERS.map((t) => ({
+      label: t.upTo === null ? "More than 40% below" : `Up to ${t.upTo}% below`,
+      shown: `${Number(t.increase).toFixed(0)}%`,
+    })),
+    "price-per-square-foot": ua.shortfallTable(aq.EXAMPLE).map((r) => ({
+      label: `${r.shortfallPct}% short`, shown: pctf(r.upliftPct),
+    })),
   };
 
   /* Line charts plot hundreds of points, so pinning every one is neither
