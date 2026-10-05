@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "pipeline",
+   "status": "failed",
+   "detail": "update=success, deploy=abandoned, submit=skipped. The failing job is deploy; its log says why.",
+   "ranAt": "2026-10-05T19:43:48.279Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "No brief written for 2026-10-05, so there is nothing to send.",
    "ranAt": "2026-10-05T18:29:09.397Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-10-05T18:29:09.338Z"
   }
  ]
 }
