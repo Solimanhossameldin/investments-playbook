@@ -3,6 +3,32 @@ import { leadBand, authorBand, briefForm, captureBlock } from "./layout.mjs";
 import BRIEF_FRAMEWORKS from "../../content/brief-frameworks.mjs";
 import { playbookCharts } from "../playbookcharts.mjs";
 
+/* A photograph carries its own provenance, for the same reason every figure
+   does. The credit line is not decoration and not a courtesy to the
+   photographer alone: it is what lets a reader check that the picture is of
+   the thing it sits beside. A synthetic image says so in the caption, in
+   words, every time. */
+function photoFigures(list = []) {
+  if (!list.length) return "";
+  return list
+    .map((ph) => {
+      const src = `/photos/${esc(ph.file)}`;
+      const place = ph.place ? `${esc(ph.place)}. ` : "";
+      const synth = ph.synthetic ? "<b>Generated image, not a photograph.</b> " : "";
+      const credit =
+        ph.licence === "owned"
+          ? `${esc(ph.credit)}.`
+          : `${esc(ph.credit)}, <a href="${esc(ph.sourceUrl)}" rel="nofollow noopener">${esc(ph.licence)}</a>.`;
+      return `<figure class="pfig">
+<img src="${src}" alt="${esc(ph.alt)}" loading="lazy" decoding="async"${
+        ph.width && ph.height ? ` width="${ph.width}" height="${ph.height}"` : ""
+      }>
+<figcaption class="cb__src">${place}${synth}${credit}</figcaption>
+</figure>`;
+    })
+    .join("");
+}
+
 // Google's Article guidance asks for a publisher logo as an ImageObject with a
 // real raster behind it. The SVG favicon is the same mark but scrapers vary on
 // SVG, so this points at the 512px render.
@@ -465,7 +491,7 @@ ${captureBlock(site, { source: "playbooks-index", heading: "Take the whole libra
   return { title: pageTitle("Investing frameworks, with the arithmetic", site.name), description: "A library of investing frameworks for markets and property. Each page gives the rule, the arithmetic, and where it breaks.", path: "/playbooks/", body };
 }
 
-export function playbookPage({ site, pb, calcName, related = [], briefs = [], liveBand = "" }) {
+export function playbookPage({ site, pb, calcName, related = [], briefs = [], liveBand = "", photos = [] }) {
   const cad = cadence(briefs, undefined, site.brief);
   const nextLine = cad.next;
   const jump = [
@@ -499,6 +525,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
   <div class="article">
     <div class="definition">${esc(copy(pb.summary))}</div>
     <h2 id="the-rule">The rule</h2>
+    ${photoFigures(photos)}
     ${md(pb.body)}
     ${playbookCharts(pb.slug)}
     ${pb.formula ? `<h2 id="the-arithmetic">The arithmetic</h2><div class="formula" tabindex="0" role="region" aria-label="The arithmetic, scrolls sideways">${esc(copy(pb.formula))}</div>` : ""}

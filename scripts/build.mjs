@@ -15,6 +15,7 @@ import { communityIndex, communityPage } from "../src/templates/communities.mjs"
 import { chartbookPage } from "../src/templates/chartbook.mjs";
 import { serviceChargePage } from "../src/templates/service-charges.mjs";
 import { validate as validateServiceCharges } from "../src/servicecharges.mjs";
+import { validate as validatePhotos } from "../src/photos.mjs";
 import { priceIndexPage } from "../src/templates/price-index.mjs";
 import { propertyLawPage } from "../src/templates/property-law.mjs";
 import { APPLIED } from "../src/lawregister.mjs";
@@ -50,6 +51,12 @@ const callResults = read("content/call-results.json", { resolvedAt: null, result
 const chartbook = read("content/chartbook.json", { asOf: null, windowYears: 12, series: {}, errors: {} });
 const serviceCharges = read("content/service-charges.json", { records: [] });
 const priceIndex = read("content/dld-price-index.json", null);
+
+/* Photographs on the same terms as every figure: an image without a named
+   owner, a permitting licence and a resolvable source fails the build rather
+   than shipping uncredited. An empty set is a state of the world, not an
+   error -- the pages simply carry no photograph. */
+const photoIndex = validatePhotos(read("content/photos.json", { photos: [] }).photos || []);
 const communities = read("content/communities.json", { source: "none", communities: [], skipped: [], totalSales: 0, minSales: 30, windowDays: 365 });
 
 const briefs = fs.existsSync(path.join(root, "content/briefs"))
@@ -165,7 +172,7 @@ emit(P.playbookIndex({ site, playbooks }), libraryReviewed);
 // at it. See src/related.mjs for why the obvious sort does not do that.
 const { chosen: relatedBySlug } = pickRelated(playbooks);
 playbooks.forEach((pb) => {
-  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug), briefs, liveBand: CRYPTO_PAGES.has(pb.slug) ? cryptoLiveCompact : "" }), isoDate(pb.reviewed));
+  emit(P.playbookPage({ site, pb, calcName: calcName[pb.calculator], related: relatedBySlug.get(pb.slug), briefs, liveBand: CRYPTO_PAGES.has(pb.slug) ? cryptoLiveCompact : "", photos: photoIndex.bySlug.get(pb.slug) || [] }), isoDate(pb.reviewed));
 });
 emit(calcIndex({ site }));
 const counts = { frameworks: playbooks.length, calculators: CALCULATORS.length };
@@ -237,6 +244,19 @@ fs.copyFileSync(path.join(root, "content", "icon-512.png"), path.join(dist, "ico
    party who learns anything is the one who sent the email. They are copied,
    not generated, and selftest fails if a file named here is missing -- a
    broken image in an email cannot be fixed after it is sent. */
+/* Photographs named by the manifest are copied here, and a manifest entry
+   whose file is absent fails the build. A validated record pointing at
+   nothing would render a broken image with a perfect credit line under it,
+   which is worse than no photograph at all. */
+if (photoIndex.count) {
+  fs.mkdirSync(path.join(dist, "photos"), { recursive: true });
+  for (const ph of photoIndex.photos) {
+    const src = path.join(root, "content", "photos", ph.file);
+    if (!fs.existsSync(src)) throw new Error(`photos: ${ph.file} is in the manifest but not in content/photos/`);
+    fs.copyFileSync(src, path.join(dist, "photos", ph.file));
+  }
+}
+
 const EMAIL_IMAGES = ["email-net-yield.png", "email-off-plan-plans.png", "email-off-plan-timeline.png", "email-off-plan-gap.png"];
 fs.mkdirSync(path.join(dist, "email"), { recursive: true });
 for (const f of EMAIL_IMAGES) {

@@ -1203,4 +1203,80 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 }
 
 
+/* ---- a photograph carries its provenance or it does not publish ----
+   Every figure on this site is checkable. An image is the easiest place to
+   break that, because it asserts things a number does not -- that a place
+   looks like this, that this is the building named beside it -- and none of
+   it is visible as false the way a wrong number is.
+
+   So the same structural rule applies as to the service charge table, with
+   two additions that matter more here than anywhere else on the site:
+   naming a place is a claim that needs confirming, and a generated image may
+   never be passed off as a record of a real one. */
+{
+  const ph = await import("../src/photos.mjs");
+  const good = {
+    file: "marina-tower.jpg", slug: "net-rental-yield",
+    alt: "A residential tower seen across the water at dusk",
+    credit: "Soliman Hossam Eldin", licence: "owned",
+    sourceUrl: "https://investmentsplaybook.com", retrievedAt: "2026-10-05",
+  };
+
+  check("a fully credited photo is accepted", ph.recordProblems(good).length === 0,
+    JSON.stringify(ph.recordProblems(good)));
+
+  for (const k of ph.REQUIRED) {
+    const bad = { ...good }; delete bad[k];
+    check(`a photo with no ${k} is refused`, ph.recordProblems(bad).length > 0, null);
+  }
+
+  check("a licence that does not permit this use is refused",
+    ph.recordProblems({ ...good, licence: "getty" }).length > 0, null);
+  check("a source that is not a URL is refused",
+    ph.recordProblems({ ...good, licence: "unsplash", sourceUrl: "unsplash" }).length > 0, null);
+  check("an undated retrieval is refused",
+    ph.recordProblems({ ...good, retrievedAt: "October 2026" }).length > 0, null);
+  check("a filename that is not a plain image name is refused",
+    ph.recordProblems({ ...good, file: "../../etc/passwd" }).length > 0, null);
+
+  /* Alt text is the image for anyone who cannot see it. */
+  check("one-word alt text is refused",
+    ph.recordProblems({ ...good, alt: "Dubai" }).length > 0, null);
+
+  /* The two rules this site needs more than most. */
+  check("naming a place without verifying it is refused",
+    ph.recordProblems({ ...good, place: "Dubai Marina" }).length > 0, null);
+  check("naming a place and verifying it is accepted",
+    ph.recordProblems({ ...good, place: "Dubai Marina", verified: true }).length === 0, null);
+  check("a generated image may not name a real place",
+    ph.recordProblems({ ...good, place: "Dubai Marina", verified: true, synthetic: true }).length > 0, null);
+  check("scaffolding left in a caption is refused",
+    ph.recordProblems({ ...good, credit: "TBD" }).length > 0, null);
+
+  /* validate() is what the build calls, so it must throw rather than report. */
+  let threw = false;
+  try { ph.validate([{ ...good, credit: "" }]); } catch (e) { threw = /refused/.test(e.message); }
+  check("validate throws, so an uncredited photo fails the build", threw, null);
+
+  /* And no photographs at all is a state of the world, not an error. */
+  check("an empty manifest validates rather than throwing", ph.validate([]).count === 0, null);
+
+  /* The build must refuse a record that points at a file which is not there:
+     a perfect credit line under a broken image is worse than no image. */
+  const buildSrc = fs.readFileSync(path.join(root, "scripts", "build.mjs"), "utf8");
+  check("the build refuses a manifest entry whose file is missing",
+    /in the manifest but not in content\/photos\//.test(buildSrc), null);
+  check("the build validates the manifest before using it",
+    /validatePhotos\(/.test(buildSrc), null);
+
+  /* The renderer must print the credit, and must say so when an image is
+     generated rather than photographed. */
+  const pagesSrc = fs.readFileSync(path.join(root, "src", "templates", "pages.mjs"), "utf8");
+  check("the renderer prints a credit line under every photo",
+    /figcaption[^]*credit/.test(pagesSrc) || /credit[^]*figcaption/.test(pagesSrc), null);
+  check("the renderer labels a generated image in words",
+    /Generated image, not a photograph/.test(pagesSrc), null);
+}
+
+
 process.exit(fails ? 1 : 0);
