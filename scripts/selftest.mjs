@@ -1304,12 +1304,16 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
       if (svg === -1) continue;
       charted++;
 
+      /* These pages have no </article> tag -- the body is a <div class="article">
+         -- so an indexOf for one silently returned -1 and the measurement fell
+         back to the whole document, footer and nav included. The denominator is
+         now the prose itself: from the article's opening to the footer. */
       const start = html.indexOf('class="article"');
-      const end = html.indexOf("</article>") > start ? html.indexOf("</article>") : html.length;
+      const end = html.indexOf("<footer");
       const through = ((svg - start) / (end - start)) * 100;
 
       check(`${slug}: its chart is near the top, not below the wall of text`,
-        through < 25, `chart sits ${through.toFixed(0)}% through the article`);
+        end > start && through < 25, `chart sits ${through.toFixed(0)}% through the prose`);
     }
 
     /* And the check must be measuring something. If no page has a chart,
