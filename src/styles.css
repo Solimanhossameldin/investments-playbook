@@ -1125,9 +1125,10 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.018em; line-height: 1.1; }
   font-size: 11px;
   fill: var(--muted);
 }
-/* Bar charts. The negative bar is deliberately the same gold rather than a
-   warning red: on these pages a shortfall against a threshold is the finding,
-   not an error, and colouring it like an alarm would editorialise the data. */
+/* Bar charts. --gold is the brand red on this site, so bars match the line
+   charts. A bar below its threshold is the same colour at lower opacity
+   rather than a separate alarm colour: falling short is the finding here,
+   not an error. */
 .ch__bar { fill: var(--gold); }
 .ch__bar--neg { fill: var(--gold); fill-opacity: 0.45; }
 .ch__ref { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 4 3; stroke-opacity: 0.55; }

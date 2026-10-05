@@ -1279,4 +1279,44 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 }
 
 
+/* ---- a chart nobody scrolls to is not a chart ----
+   The charts were added because the pages were walls of text, and the first
+   version rendered them AFTER the body: on net-rental-yield that put the
+   picture 8.3 screens down, 61% through the page. Every structural check
+   passed. The bars were right, the alt text was right, the values matched
+   the module to the dirham, and no reader would ever have seen one.
+
+   Soliman found it by opening the site, which is the only test that had been
+   missing. So position is now asserted too: a chart must sit in the first
+   quarter of the article, near the summary it illustrates, not below the
+   wall it exists to break up. */
+{
+  const distDir = path.join(root, "dist");
+  if (fs.existsSync(distDir)) {
+    const pages = fs
+      .readdirSync(path.join(distDir, "playbooks"))
+      .filter((d) => fs.existsSync(path.join(distDir, "playbooks", d, "index.html")));
+
+    let charted = 0;
+    for (const slug of pages) {
+      const html = fs.readFileSync(path.join(distDir, "playbooks", slug, "index.html"), "utf8");
+      const svg = html.indexOf("<svg");
+      if (svg === -1) continue;
+      charted++;
+
+      const start = html.indexOf('class="article"');
+      const end = html.indexOf("</article>") > start ? html.indexOf("</article>") : html.length;
+      const through = ((svg - start) / (end - start)) * 100;
+
+      check(`${slug}: its chart is near the top, not below the wall of text`,
+        through < 25, `chart sits ${through.toFixed(0)}% through the article`);
+    }
+
+    /* And the check must be measuring something. If no page has a chart,
+       every assertion above passed vacuously. */
+    check("the chart-position check covers at least one page", charted > 0, `${charted} charted pages`);
+  }
+}
+
+
 process.exit(fails ? 1 : 0);

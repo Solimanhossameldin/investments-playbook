@@ -179,7 +179,12 @@ ${xl}
    they are being measured against -- and it was trapped in a table.
 
    Every bar's value is passed in by the caller from the module that computes
-   it, never typed, so a bar cannot disagree with the prose beside it. The
+   it, never typed, so a bar cannot disagree with the prose beside it.
+   Bars use --gold, which on this site resolves to the brand red (#dc0000),
+   so a chart matches the line charts and everything else rather than
+   introducing a colour of its own. A bar below its threshold is the same
+   colour at lower opacity, not a separate alarm colour: on these pages
+   falling short IS the finding, and a warning colour would editorialise it. The
    reference line is labelled, because a bar chart without the threshold
    drawn is a picture of three numbers rather than of a finding. */
 export function barChart(s, { id = s.key } = {}) {

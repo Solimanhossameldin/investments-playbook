@@ -524,10 +524,10 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
   <div class="doc" style="margin-top:34px">
   <div class="article">
     <div class="definition">${esc(copy(pb.summary))}</div>
-    <h2 id="the-rule">The rule</h2>
     ${photoFigures(photos)}
-    ${md(pb.body)}
     ${playbookCharts(pb.slug)}
+    <h2 id="the-rule">The rule</h2>
+    ${md(pb.body)}
     ${pb.formula ? `<h2 id="the-arithmetic">The arithmetic</h2><div class="formula" tabindex="0" role="region" aria-label="The arithmetic, scrolls sideways">${esc(copy(pb.formula))}</div>` : ""}
     ${
       (pb.failureModes || []).length
