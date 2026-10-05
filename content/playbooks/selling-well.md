@@ -6,8 +6,8 @@
   "category": "property",
   "tier": 2,
   "calculator": "net-rental-yield",
-  "reviewed": "9 September 2026",
-  "summary": "Selling a mortgaged one bedroom at AED 1,500,000 in Dubai costs the seller AED 42,285, or 2.82% of the price, of which the agency commission is AED 31,500 and everything the Land Department and the bank charge together is AED 10,785, with one further AED 30,000 that the law assigns to the seller and the contract almost always does not.",
+  "reviewed": "5 October 2026",
+  "summary": "Coming out level on a mortgaged one bedroom bought at AED 1,500,000 in Dubai takes a resale at AED 1,648,915, a rise of 9.93%, which is more than the 9.72% the round trip costs because the agency commission and its VAT are charged on the price the property sells for rather than the price it was bought at.",
   "formula": "The seller's stack, by who sets the number\n\n  capped by the Central Bank\n    early settlement   1% of the outstanding balance, or\n                       AED 10,000, whichever is less\n    liability letter   AED 85\n    clearance letter   AED 95\n    bank's own NOC     AED 150\n    these are maximums, not prices\n\n  set by the Land Department\n    mortgage release procedure   AED 1,290\n    registrar, to release        AED 315, waived if the buyer\n                                 registers a mortgage the same day\n    registration fee             4%, and Article 3 splits it\n\n  set by nobody\n    the developer's NOC fee\n    no instrument, no cap, no register\n    ask for it in writing before you set an asking price\n\nNet proceeds\n  agreed price\n  - the stack above\n  - service charge to the transfer date\n  = what actually reaches you",
   "failureModes": [
     "The arithmetic here is a fee stack, not a valuation. It tells you what the sale costs, not what the property is worth, and the second number moves far more than the first.",

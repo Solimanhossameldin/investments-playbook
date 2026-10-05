@@ -653,6 +653,18 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
     /* A page that compares a fee stack to a market index can mislead in three
        specific ways, so it is required to say all three out loud. */
+    /* The summary is what an answer engine lifts, so it now leads with the one
+       figure no competing page prints: the price the seller has to achieve.
+       That makes it a published claim like any other, and it is pinned to the
+       module rather than left as typed text that can drift from the page it
+       summarises. All three figures come from the solve, not from a literal. */
+    ok("selling: the summary carries the break-even price and the rise it requires",
+      p.summary.includes(`a resale at AED ${dp.money(B.price)}, a rise of ${B.rise.toFixed(2)}%`),
+      p.summary);
+    ok("selling: the summary carries the round trip's share it exceeds",
+      p.summary.includes(`more than the ${R.rate.toFixed(2)}% the round trip costs`),
+      p.summary);
+
     ok("selling: the index comparison says the series is nominal", p.body.includes("is **nominal**"));
     ok("selling: the index comparison says it is a market index, not this property",
       p.body.includes("**all-residential market index**, not this flat"));
