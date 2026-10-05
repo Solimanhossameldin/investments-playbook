@@ -2195,15 +2195,36 @@ ok("every calculator points at a playbook that exists",
     "mortgage-capacity": mg.incomeTable().map((r) => ({
       label: `Stressed at ${pctf(r.ratePct)}`, shown: aedf(r.byFlow),
     })),
+    "selling-well": dp.sellerStack().lines.map(([label, v]) => ({ label, shown: aedf(v) })),
+  };
+
+  /* Line charts plot hundreds of points, so pinning every one is neither
+     possible nor useful. What must hold is that the series ends where the
+     module says it ends, and that the accessible sentence agrees. */
+  const LINES = {
+    "off-plan-irr": (() => {
+      const P = op.EXAMPLE_PLAN;
+      return { points: P.months + 1, endsAt: aedf(op.paidByMonth(P.price, P.a, P.months, P.months)) };
+    })(),
   };
 
   const registered = Object.keys(CHART_REGISTRY);
 
   ok("charts: every registered chart is covered by an expectation here",
-    registered.every((slug) => EXPECT[slug]),
-    `uncovered: ${registered.filter((s2) => !EXPECT[s2]).join(", ")}`);
+    registered.every((slug) => EXPECT[slug] || LINES[slug]),
+    `uncovered: ${registered.filter((s2) => !EXPECT[s2] && !LINES[s2]).join(", ")}`);
 
-  for (const slug of registered) {
+  /* The line charts, pinned at their endpoint. */
+  for (const [slug, want] of Object.entries(LINES)) {
+    const svg = playbookCharts(slug);
+    const alt = (svg.match(/<title[^>]*>([^<]*)</) || [])[1] || "";
+    ok(`charts: ${slug} draws a line rather than bars`,
+      /<path/.test(svg) && !/<rect/.test(svg), "expected a line chart");
+    ok(`charts: ${slug} ends where the module says it ends`,
+      alt.includes(want.endsAt), `expected ${want.endsAt} in the accessible sentence`);
+  }
+
+  for (const slug of registered.filter((x) => EXPECT[x])) {
     const svg = playbookCharts(slug);
     const want = EXPECT[slug] || [];
     const alt = (svg.match(/<title[^>]*>([^<]*)</) || [])[1] || "";
@@ -2225,10 +2246,12 @@ ok("every calculator points at a playbook that exists",
     ok(`charts: ${slug} has an accessible sentence at all`, alt.length > 20, alt.slice(0, 40));
   }
 
-  /* The threshold has to be drawn wherever one is claimed, or the bars are
-     just numbers. Pages that deliberately have no common baseline are
-     exempt, and must say so rather than silently omit it. */
-  for (const slug of registered) {
+  /* The threshold has to be drawn wherever one is claimed, or a handful of
+     bars are just a handful of numbers. This applies to the bar charts only:
+     a time series is a different shape and has no benchmark to miss. Pages
+     whose bars deliberately share no common baseline are exempt and must say
+     so in the caption rather than silently omit the line. */
+  for (const slug of registered.filter((x) => EXPECT[x])) {
     const svg = playbookCharts(slug);
     const hasRef = /ch__ref/.test(svg);
     const saysWhyNot = /No reference line is drawn/i.test(svg);

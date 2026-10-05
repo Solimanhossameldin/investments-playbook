@@ -10,13 +10,16 @@
    knows how to build one for it.
 
    A page with no entry here renders exactly as it does today. */
-import { barChart } from "./charts.mjs";
+import { barChart, lineChart } from "./charts.mjs";
 import { OBSERVED, observedRun } from "./holidayhome.mjs";
 import { yields } from "./acquisition.mjs";
 import { dubai as sgDubai, singapore } from "./singapore.mjs";
 import { dubai as ldDubai, london } from "./london.mjs";
 import { incomeTable, STRESSED_RATES } from "./mortgage.mjs";
+import { sellerStack, roundTrip } from "./disposal.mjs";
+import { EXAMPLE_PLAN, paidByMonth } from "./offplan.mjs";
 
+const pct0 = (v) => `${Number(v).toFixed(0)}%`;
 const pct = (v) => `${Number(v).toFixed(2)}%`;
 const aed0 = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
 
@@ -133,12 +136,67 @@ function mortgageCapacity() {
   ];
 }
 
+/* Selling well: where the exit money goes. One bar dominates, and that is
+   the finding -- the agency commission and its VAT are three quarters of the
+   whole stack, and they are charged on the price the property sells for
+   rather than the price it was bought at. */
+function sellingWell() {
+  const st = sellerStack();
+  return [
+    {
+      key: "seller-stack",
+      label: "What it costs to sell, line by line",
+      format: aed0,
+      bars: st.lines.map(([label, value]) => ({ label, value })),
+      caption:
+        `AED ${Math.round(st.total).toLocaleString("en-AE")} in total on the illustrative one bedroom, of which the agency commission and its VAT are ${st.commissionShare.toFixed(1)}%. No reference line is drawn here: these are components of one total, not competing figures measured against a common threshold.`,
+    },
+  ];
+}
+
+/* Off-plan: what each plan has actually taken from you, month by month. The
+   shape is the argument -- the money leaves on the developer's schedule, not
+   on the building's progress, and a line makes that visible in a way the
+   payment table never did. */
+function offPlanIrr() {
+  const P = EXAMPLE_PLAN;
+  const series = (plan) => {
+    const pts = [];
+    for (let k = 0; k <= P.months; k++) {
+      const d = new Date(Date.UTC(2026, 0, 1));
+      d.setUTCMonth(d.getUTCMonth() + k);
+      pts.push([d.toISOString().slice(0, 10), paidByMonth(P.price, plan, k, P.months)]);
+    }
+    return pts;
+  };
+  const a = series(P.a);
+  const last = a.at(-1);
+  return [
+    {
+      key: "off-plan-paid",
+      kind: "line",
+      label: "What the front-loaded plan has taken from you, month by month",
+      unit: "", dp: 0,
+      points: a,
+      latest: { date: last[0], value: last[1] },
+      min: { date: a[0][0], value: a[0][1] },
+      max: { date: last[0], value: last[1] },
+      sentence:
+        `What the front-loaded plan has taken from you, month by month, over ${P.months} months to handover. It starts at ${pct0(P.a.down)} of the price on day one and reaches AED ${Math.round(last[1]).toLocaleString("en-AE")} by handover.`,
+      caption:
+        `The ${P.a.down}% deposit leaves on day one and the construction instalments follow the developer's schedule across ${P.months} months. Every point is computed by the page's own model from the published plan.`,
+    },
+  ];
+}
+
 const REGISTRY = {
   "break-even-occupancy": breakEvenOccupancy,
   "net-rental-yield": netRentalYield,
   "dubai-vs-singapore": dubaiVsSingapore,
   "dubai-vs-london": dubaiVsLondon,
   "mortgage-capacity": mortgageCapacity,
+  "selling-well": sellingWell,
+  "off-plan-irr": offPlanIrr,
 };
 
 /* Returns rendered figures for a playbook, or "" when the page has none. */
@@ -148,7 +206,7 @@ export function playbookCharts(slug) {
   return build()
     .map(
       (s) =>
-        `${barChart(s, { id: s.key })}${
+        `${(s.kind === "line" ? lineChart : barChart)(s, { id: s.key })}${
           s.caption ? `<p class="cb__src">${s.caption}</p>` : ""
         }`
     )
