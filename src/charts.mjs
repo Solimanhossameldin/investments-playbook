@@ -169,3 +169,76 @@ ${xl}
 </svg>
 </figure>`;
 }
+
+/* A horizontal bar chart with a reference line.
+
+   The line charts above answer "what happened over time". This answers a
+   different and, on the playbook pages, more common question: "how do these
+   few things compare against one threshold". The observed-occupancy finding
+   is exactly that shape -- three vendors' net, against the annual tenancy
+   they are being measured against -- and it was trapped in a table.
+
+   Every bar's value is passed in by the caller from the module that computes
+   it, never typed, so a bar cannot disagree with the prose beside it. The
+   reference line is labelled, because a bar chart without the threshold
+   drawn is a picture of three numbers rather than of a finding. */
+export function barChart(s, { id = s.key } = {}) {
+  const bars = s.bars || [];
+  if (!bars.length) return "";
+
+  const w = 900;
+  const rowH = 52, padT = 18, padB = 46, padL = 150, padR = 92;
+  const h = padT + bars.length * rowH + padB;
+  const x1 = w - padR;
+
+  const vals = bars.map((b) => b.value).concat(s.reference != null ? [s.reference] : []);
+  const lo = Math.min(0, ...vals);
+  const hi = Math.max(0, ...vals);
+  const span = hi - lo || 1;
+  const sx = (v) => padL + ((v - lo) / span) * (x1 - padL);
+  const zero = sx(0);
+
+  const fmt = s.format || ((v) => String(Math.round(v)));
+
+  const rows = bars
+    .map((b, i) => {
+      const y = padT + i * rowH;
+      const bx = sx(b.value);
+      const left = Math.min(zero, bx), width = Math.abs(bx - zero);
+      const neg = b.value < 0;
+      // The value label sits outside the bar on the side it grows towards, so
+      // a short bar never has its number painted on top of itself.
+      const lx = neg ? left - 8 : left + width + 8;
+      return `<rect x="${left.toFixed(1)}" y="${y + 9}" width="${Math.max(width, 1).toFixed(1)}" height="22" class="ch__bar${neg ? " ch__bar--neg" : ""}"/>
+<text x="${padL - 12}" y="${y + 24}" class="ch__blab">${esc(b.label)}</text>
+<text x="${lx.toFixed(1)}" y="${y + 24}" class="ch__v" text-anchor="${neg ? "end" : "start"}">${esc(fmt(b.value))}</text>`;
+    })
+    .join("");
+
+  const refX = s.reference != null ? sx(s.reference) : null;
+  const ref =
+    refX == null
+      ? ""
+      : `<line x1="${refX.toFixed(1)}" y1="${padT - 4}" x2="${refX.toFixed(1)}" y2="${h - padB + 6}" class="ch__ref"/>
+<text x="${refX.toFixed(1)}" y="${h - padB + 24}" class="ch__xl">${esc(s.referenceLabel || fmt(s.reference))}</text>`;
+
+  const zeroLine =
+    lo < 0 ? `<line x1="${zero.toFixed(1)}" y1="${padT - 4}" x2="${zero.toFixed(1)}" y2="${h - padB + 6}" class="ch__g ch__g--zero"/>` : "";
+
+  return `<figure class="ch">
+<svg viewBox="0 0 ${w} ${h}" role="img" aria-labelledby="${esc(id)}-t" preserveAspectRatio="xMidYMid meet">
+<title id="${esc(id)}-t">${esc(s.sentence || barSentence(s, fmt))}</title>
+${zeroLine}${ref}${rows}
+</svg>
+</figure>`;
+}
+
+/* The accessible sentence for a bar chart. Built from the same values the
+   bars are drawn from, so a screen reader and a sighted reader get the same
+   finding rather than two that drifted. */
+export function barSentence(s, fmt = (v) => String(Math.round(v))) {
+  const parts = [s.label + "."];
+  for (const b of s.bars || []) parts.push(`${b.label}, ${fmt(b.value)}.`);
+  if (s.reference != null) parts.push(`Measured against ${s.referenceLabel || fmt(s.reference)}.`);
+  return parts.join(" ");
+}

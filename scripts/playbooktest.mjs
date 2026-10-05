@@ -2155,6 +2155,55 @@ ok("every calculator points at a playbook that exists",
 }
 
 
+/* ---- the charts on a playbook page cannot disagree with the page ----
+   A wrong sentence is readable; a wrong bar is not. Nobody proof-reads an
+   SVG, so the only defence is that the bar is never authored: it is derived
+   at build time from the same module the prose is checked against.
+
+   These checks pin the rendered chart to that module, so a vendor revising a
+   rate moves the bar, the alt text and the prose together or fails the build. */
+{
+  const { playbookCharts, CHART_REGISTRY } = await import("../src/playbookcharts.mjs");
+  const svg = playbookCharts("break-even-occupancy");
+
+  ok("charts: the break-even page renders a chart at all",
+    /<svg/.test(svg) && (svg.match(/<rect/g) || []).length === hh.OBSERVED.length,
+    `rects=${(svg.match(/<rect/g) || []).length} vendors=${hh.OBSERVED.length}`);
+
+  /* The behavioural check. Every bar's printed value must equal what the
+     module computes for that vendor, to the dirham. */
+  for (const o of hh.OBSERVED) {
+    const want = hh.observedRun(o).versusTenancy;
+    const shown = `AED ${Math.abs(Math.round(want)).toLocaleString("en-AE")}`;
+    ok(`charts: the ${o.publisher} bar carries the figure the module computes`,
+      svg.includes(shown), `expected ${shown}`);
+  }
+
+  /* The alt text is the chart for a screen reader. If it can drift from the
+     bars, half the readers get a different finding from the other half. */
+  const alt = (svg.match(/<title[^>]*>([^<]*)</) || [])[1] || "";
+  ok("charts: the accessible sentence names every publisher the chart plots",
+    hh.OBSERVED.every((o) => alt.includes(o.publisher)), alt.slice(0, 60));
+  for (const o of hh.OBSERVED) {
+    const shown = `AED ${Math.abs(Math.round(hh.observedRun(o).versusTenancy)).toLocaleString("en-AE")}`;
+    ok(`charts: the accessible sentence carries the ${o.publisher} figure`,
+      alt.includes(shown), `expected ${shown} in alt text`);
+  }
+
+  /* The threshold has to be drawn, or three bars are just three numbers. */
+  ok("charts: the chart draws the tenancy threshold the bars are measured against",
+    /ch__ref/.test(svg) && /annual tenancy/i.test(svg), "no reference line");
+
+  /* And the feature may not leak onto pages that have not opted in. */
+  const optedIn = Object.keys(CHART_REGISTRY);
+  ok("charts: only pages in the registry render one",
+    playbooks.filter((p) => !optedIn.includes(p.slug))
+      .every((p) => playbookCharts(p.slug) === ""),
+    "a page with no registry entry rendered a chart");
+}
+
+
+
 
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);

@@ -1,6 +1,7 @@
 import { esc, copy, md, inlineLinks, plainLinks, fmt, pct, dir, glyph, gst, briefLabel, longDate, monthKey, pageTitle, briefStatus, isoDate, cadence } from "../lib.mjs";
 import { leadBand, authorBand, briefForm, captureBlock } from "./layout.mjs";
 import BRIEF_FRAMEWORKS from "../../content/brief-frameworks.mjs";
+import { playbookCharts } from "../playbookcharts.mjs";
 
 // Google's Article guidance asks for a publisher logo as an ImageObject with a
 // real raster behind it. The SVG favicon is the same mark but scrapers vary on
@@ -499,6 +500,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
     <div class="definition">${esc(copy(pb.summary))}</div>
     <h2 id="the-rule">The rule</h2>
     ${md(pb.body)}
+    ${playbookCharts(pb.slug)}
     ${pb.formula ? `<h2 id="the-arithmetic">The arithmetic</h2><div class="formula" tabindex="0" role="region" aria-label="The arithmetic, scrolls sideways">${esc(copy(pb.formula))}</div>` : ""}
     ${
       (pb.failureModes || []).length
