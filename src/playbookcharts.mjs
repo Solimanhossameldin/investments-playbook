@@ -12,6 +12,13 @@
    A page with no entry here renders exactly as it does today. */
 import { barChart } from "./charts.mjs";
 import { OBSERVED, observedRun } from "./holidayhome.mjs";
+import { yields } from "./acquisition.mjs";
+import { dubai as sgDubai, singapore } from "./singapore.mjs";
+import { dubai as ldDubai, london } from "./london.mjs";
+import { incomeTable, STRESSED_RATES } from "./mortgage.mjs";
+
+const pct = (v) => `${Number(v).toFixed(2)}%`;
+const aed0 = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
 
 const aed = (v) =>
   `${v < 0 ? "−" : "+"}AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
@@ -40,7 +47,99 @@ function breakEvenOccupancy() {
   ];
 }
 
-const REGISTRY = { "break-even-occupancy": breakEvenOccupancy };
+/* Net rental yield: the three numbers a buyer is quoted, in the order they
+   shrink. The brochure prints the first. The page exists to print the third,
+   and a reader who sees the fall is told the whole argument before reading a
+   word of it. */
+function netRentalYield() {
+  const y = yields();
+  return [
+    {
+      key: "yield-ladder",
+      label: "The same apartment, measured three ways",
+      reference: y.gross,
+      referenceLabel: `the ${pct(y.gross)} in the advertisement`,
+      format: pct,
+      bars: [
+        { label: "Gross, on the price", value: y.gross },
+        { label: "Net of running costs", value: y.onPrice },
+        { label: "Net, on what you actually paid", value: y.net },
+      ],
+      caption:
+        "Every figure computed by the page's own model. The first is the number in the listing; the last is the number that reaches your account, after the service charge, management, vacancy, maintenance and insurance, and after the transfer and agency costs are added to what the property cost you.",
+    },
+  ];
+}
+
+/* Dubai against Singapore. Both start from the same gross, which is the point
+   of the pairing: the gap is made entirely by what each government takes. */
+function dubaiVsSingapore() {
+  const d = sgDubai(), s = singapore();
+  return [
+    {
+      key: "dxb-sg-net",
+      label: "The same money, the same gross yield, through two governments' rules",
+      reference: d.gross,
+      referenceLabel: `the ${pct(d.gross)} gross both start from`,
+      format: pct,
+      bars: [
+        { label: "Dubai, net", value: d.net },
+        { label: "Singapore, net", value: s.net },
+      ],
+      caption:
+        `Both properties are bought at the same gross yield. Dubai's entry stamp duty is ${pct(d.stampRate)} of the price; Singapore's is ${pct(s.stampRate)} once Additional Buyer's Stamp Duty applies to a foreign buyer. Nothing else in the comparison does as much work.`,
+    },
+  ];
+}
+
+/* Dubai against London. Here the gross differs too, so both are drawn: the
+   London buyer starts lower and is then taxed further down. */
+function dubaiVsLondon() {
+  const d = ldDubai(), l = london();
+  return [
+    {
+      key: "dxb-ldn-net",
+      label: "Dubai against London, gross and net",
+      format: pct,
+      bars: [
+        { label: "Dubai, gross", value: d.gross },
+        { label: "Dubai, net", value: d.net },
+        { label: "London, gross", value: l.gross },
+        { label: "London, net", value: l.net },
+      ],
+      caption:
+        "The London buyer starts from a lower gross and is then taxed down again. No reference line is drawn here because, unlike the Singapore comparison, the two do not begin from the same number.",
+    },
+  ];
+}
+
+/* Mortgage capacity: the income each stressed rate demands, against the
+   income the loan-to-value cap demands. Where the bars cross the line is
+   where the binding constraint changes, and that crossover is the page. */
+function mortgageCapacity() {
+  const rows = incomeTable();
+  const stock = rows[0].byStock;
+  return [
+    {
+      key: "income-needed",
+      label: "The monthly income the bank needs from you, at each stressed rate",
+      reference: stock,
+      referenceLabel: "what the income multiple alone demands",
+      format: aed0,
+      bars: rows.map((r) => ({ label: `Stressed at ${pct(r.ratePct)}`, value: r.byFlow })),
+      caption:
+        "Banks test the loan at a rate above the one you are offered. Below the dashed line the income multiple is what stops you; above it, the debt burden ratio is. Every bar is computed from the page's own model at the rates it publishes.",
+    },
+  ];
+}
+
+const REGISTRY = {
+  "break-even-occupancy": breakEvenOccupancy,
+  "net-rental-yield": netRentalYield,
+  "dubai-vs-singapore": dubaiVsSingapore,
+  "dubai-vs-london": dubaiVsLondon,
+  "mortgage-capacity": mortgageCapacity,
+};
 
 /* Returns rendered figures for a playbook, or "" when the page has none. */
 export function playbookCharts(slug) {

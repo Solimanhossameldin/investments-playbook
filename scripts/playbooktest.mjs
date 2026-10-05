@@ -2157,51 +2157,91 @@ ok("every calculator points at a playbook that exists",
 
 /* ---- the charts on a playbook page cannot disagree with the page ----
    A wrong sentence is readable; a wrong bar is not. Nobody proof-reads an
-   SVG, so the only defence is that the bar is never authored: it is derived
-   at build time from the same module the prose is checked against.
+   SVG, so the only defence is that a bar is never authored: it is derived at
+   build time from the same module the prose is checked against.
 
-   These checks pin the rendered chart to that module, so a vendor revising a
-   rate moves the bar, the alt text and the prose together or fails the build. */
+   These checks read the registry rather than naming a page, so a chart added
+   next week is covered the moment it is registered and needs no edit here.
+   That generalisation is deliberate: the first version of this block named
+   break-even-occupancy, and would have passed while a second chart shipped
+   with its bars pointing at nothing. */
 {
   const { playbookCharts, CHART_REGISTRY } = await import("../src/playbookcharts.mjs");
-  const svg = playbookCharts("break-even-occupancy");
+  const pctf = (v) => `${Number(v).toFixed(2)}%`;
+  const aedf = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
+  const shortfall = (v) => `AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
 
-  ok("charts: the break-even page renders a chart at all",
-    /<svg/.test(svg) && (svg.match(/<rect/g) || []).length === hh.OBSERVED.length,
-    `rects=${(svg.match(/<rect/g) || []).length} vendors=${hh.OBSERVED.length}`);
+  /* What each registered chart must be plotting, taken from the modules and
+     not from the chart. If these two ever disagree, the chart is wrong. */
+  const EXPECT = {
+    "break-even-occupancy": hh.OBSERVED.map((o) => ({
+      label: o.publisher, shown: shortfall(hh.observedRun(o).versusTenancy),
+    })),
+    "net-rental-yield": (() => { const y = aq.yields(); return [
+      { label: "Gross, on the price", shown: pctf(y.gross) },
+      { label: "Net of running costs", shown: pctf(y.onPrice) },
+      { label: "Net, on what you actually paid", shown: pctf(y.net) },
+    ]; })(),
+    "dubai-vs-singapore": [
+      { label: "Dubai, net", shown: pctf(sg.dubai().net) },
+      { label: "Singapore, net", shown: pctf(sg.singapore().net) },
+    ],
+    "dubai-vs-london": [
+      { label: "Dubai, gross", shown: pctf(ld.dubai().gross) },
+      { label: "Dubai, net", shown: pctf(ld.dubai().net) },
+      { label: "London, gross", shown: pctf(ld.london().gross) },
+      { label: "London, net", shown: pctf(ld.london().net) },
+    ],
+    "mortgage-capacity": mg.incomeTable().map((r) => ({
+      label: `Stressed at ${pctf(r.ratePct)}`, shown: aedf(r.byFlow),
+    })),
+  };
 
-  /* The behavioural check. Every bar's printed value must equal what the
-     module computes for that vendor, to the dirham. */
-  for (const o of hh.OBSERVED) {
-    const want = hh.observedRun(o).versusTenancy;
-    const shown = `AED ${Math.abs(Math.round(want)).toLocaleString("en-AE")}`;
-    ok(`charts: the ${o.publisher} bar carries the figure the module computes`,
-      svg.includes(shown), `expected ${shown}`);
+  const registered = Object.keys(CHART_REGISTRY);
+
+  ok("charts: every registered chart is covered by an expectation here",
+    registered.every((slug) => EXPECT[slug]),
+    `uncovered: ${registered.filter((s2) => !EXPECT[s2]).join(", ")}`);
+
+  for (const slug of registered) {
+    const svg = playbookCharts(slug);
+    const want = EXPECT[slug] || [];
+    const alt = (svg.match(/<title[^>]*>([^<]*)</) || [])[1] || "";
+
+    ok(`charts: ${slug} renders one bar per value it claims to plot`,
+      /<svg/.test(svg) && (svg.match(/<rect/g) || []).length === want.length,
+      `rects=${(svg.match(/<rect/g) || []).length} expected=${want.length}`);
+
+    /* The behavioural pin. Every bar's printed value must equal what the
+       module computes, and so must the accessible sentence -- otherwise a
+       sighted reader and a screen-reader user get different findings. */
+    for (const w of want) {
+      ok(`charts: ${slug} plots ${w.label} as the module computes it`,
+        svg.includes(w.shown), `expected ${w.shown}`);
+      ok(`charts: ${slug} says ${w.label} in its accessible sentence`,
+        alt.includes(w.shown) && alt.includes(w.label), `expected ${w.shown} in alt text`);
+    }
+
+    ok(`charts: ${slug} has an accessible sentence at all`, alt.length > 20, alt.slice(0, 40));
   }
 
-  /* The alt text is the chart for a screen reader. If it can drift from the
-     bars, half the readers get a different finding from the other half. */
-  const alt = (svg.match(/<title[^>]*>([^<]*)</) || [])[1] || "";
-  ok("charts: the accessible sentence names every publisher the chart plots",
-    hh.OBSERVED.every((o) => alt.includes(o.publisher)), alt.slice(0, 60));
-  for (const o of hh.OBSERVED) {
-    const shown = `AED ${Math.abs(Math.round(hh.observedRun(o).versusTenancy)).toLocaleString("en-AE")}`;
-    ok(`charts: the accessible sentence carries the ${o.publisher} figure`,
-      alt.includes(shown), `expected ${shown} in alt text`);
+  /* The threshold has to be drawn wherever one is claimed, or the bars are
+     just numbers. Pages that deliberately have no common baseline are
+     exempt, and must say so rather than silently omit it. */
+  for (const slug of registered) {
+    const svg = playbookCharts(slug);
+    const hasRef = /ch__ref/.test(svg);
+    const saysWhyNot = /No reference line is drawn/i.test(svg);
+    ok(`charts: ${slug} either draws its threshold or says why it does not`,
+      hasRef || saysWhyNot, "neither a reference line nor an explanation");
   }
-
-  /* The threshold has to be drawn, or three bars are just three numbers. */
-  ok("charts: the chart draws the tenancy threshold the bars are measured against",
-    /ch__ref/.test(svg) && /annual tenancy/i.test(svg), "no reference line");
 
   /* And the feature may not leak onto pages that have not opted in. */
-  const optedIn = Object.keys(CHART_REGISTRY);
   ok("charts: only pages in the registry render one",
-    playbooks.filter((p) => !optedIn.includes(p.slug))
+    playbooks.filter((p) => !registered.includes(p.slug))
       .every((p) => playbookCharts(p.slug) === ""),
     "a page with no registry entry rendered a chart");
 }
-
 
 
 
