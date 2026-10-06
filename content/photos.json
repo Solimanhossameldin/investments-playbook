@@ -1,1 +1,20 @@
-{ "photos": [] }
+{
+ "photos": [
+  {
+   "file": "singapore-cbd-dusk.jpg",
+   "slug": "dubai-vs-singapore",
+   "alt": "The towers of Singapore's Central Business District at dusk, photographed from the observation deck of Marina Bay Sands",
+   "credit": "Basile Morin",
+   "licence": "CC-BY-SA-4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Skylines_of_the_Central_Business_District,_Singapore_at_dusk.jpg",
+   "retrievedAt": "2026-10-06",
+   "width": 960,
+   "height": 640,
+   "commons": "File:Skylines of the Central Business District, Singapore at dusk.jpg",
+   "commonsSha1": "8c254324fbc8478d893f1481dc5878fc96f85428",
+   "checkedAt": "2026-10-06",
+   "place": "Singapore's Central Business District, from Marina Bay Sands",
+   "verified": true
+  }
+ ]
+}

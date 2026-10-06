@@ -1,6 +1,42 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-10-06T08:16:57.561Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-10-06, so there is nothing to send.",
+   "ranAt": "2026-10-06T08:16:57.503Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-10-06T08:16:57.452Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-10-06T08:16:57.412Z"
+  },
+  {
+   "job": "fetch-photos",
+   "status": "ok",
+   "detail": "1 of 1 photographs published",
+   "ranAt": "2026-10-06T08:16:57.350Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-10-06T08:16:57.016Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "ok",
    "detail": "79 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
@@ -203,42 +239,6 @@
    "status": "skipped",
    "detail": "no api key",
    "ranAt": "2026-10-05T18:53:01.823Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-10-05, so there is nothing to send.",
-   "ranAt": "2026-10-05T18:53:01.773Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-10-05T18:53:01.721Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-10-05T18:53:01.678Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-10-05T18:53:01.552Z"
-  },
-  {
-   "job": "pipeline",
-   "status": "ok",
-   "detail": "update=success, deploy=success, submit=success",
-   "ranAt": "2026-10-05T18:49:02.251Z"
-  },
-  {
-   "job": "indexnow",
-   "status": "ok",
-   "detail": "submitted 147 urls, HTTP 200",
-   "ranAt": "2026-10-05T18:48:54.457Z"
   }
  ]
 }
