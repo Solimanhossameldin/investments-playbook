@@ -16,68 +16,42 @@
   },
   {
    "commons": "File:Dubai Marina in March 2022 04.jpg",
-   "file": "pv-dubai-marina-2022-04.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Dubai Marina in March 2022 03.jpg",
-   "file": "pv-dubai-marina-2022-03.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Dubai Marina Area.jpg",
-   "file": "pv-dubai-marina-area.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Dubai Marina neighborhood.jpg",
-   "file": "pv-dubai-marina-neighborhood.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Sunset view of Dubai Creek Harbour.jpg",
-   "file": "pv-creek-harbour-sunset.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:DUBAI CREEK HARBOUR 5.jpg",
-   "file": "pv-creek-harbour-5.jpg",
-   "preview": true
+   "file": "dubai-marina-canal.jpg",
+   "slug": "net-rental-yield",
+   "alt": "Residential towers along the Dubai Marina canal, with a motorboat on the water and palm-lined promenades on both banks",
+   "place": "Dubai Marina",
+   "bbox": [
+    25.07,
+    55.125,
+    25.095,
+    55.15
+   ]
   },
   {
    "commons": "File:BURJ KHALIFA VIEW FROM CREEK AREA.jpg",
-   "file": "pv-burj-from-creek.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Dubai in January 2025 02.jpg",
-   "file": "pv-dubai-creek-2025.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Emirates Hills Montgomerie Lakeside.jpg",
-   "file": "pv-emirates-hills.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Deira Twin Towers.jpg",
-   "file": "pv-deira-twin-towers.jpg",
-   "preview": true
+   "file": "downtown-dubai-night.jpg",
+   "slug": "price-per-square-foot",
+   "alt": "The Burj Khalifa and the towers of Downtown Dubai lit up at night, seen across the water from the Dubai Creek side",
+   "place": "Downtown Dubai, from across Dubai Creek",
+   "bbox": [
+    25.19,
+    55.32,
+    25.215,
+    55.35
+   ]
   },
   {
    "commons": "File:Abu Dhabi Skyline UAE Flag.jpg",
-   "file": "pv-abu-dhabi-skyline-flag.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Maqta Abu DHabi UAE.jpg",
-   "file": "pv-abu-dhabi-maqta.jpg",
-   "preview": true
-  },
-  {
-   "commons": "File:Louvre Abu Dhabi 01.jpg",
-   "file": "pv-louvre-abu-dhabi.jpg",
-   "preview": true
+   "file": "abu-dhabi-skyline-flag.jpg",
+   "slug": "uae-wills-and-succession",
+   "alt": "Abu Dhabi's skyline and a marina full of boats in black and white, with the UAE flag left in colour on its flagpole",
+   "place": "Abu Dhabi",
+   "bbox": [
+    24.4,
+    54.3,
+    24.55,
+    54.45
+   ]
   }
  ]
 }

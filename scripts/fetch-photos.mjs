@@ -77,10 +77,13 @@ export function extraConditions(...fields) {
   return hit ? hit.slice(0, 120) : null;
 }
 
-/* box is [south, west, north, east]. The camera position from the file's own
-   EXIF has to fall inside it. That is what "verified" means on this site: not
-   that someone believed the caption, but that the photograph was taken where
-   the caption says it was. */
+/* box is [south, west, north, east]. The camera position Commons records for
+   the file has to fall inside it. That position comes from the photo's EXIF
+   or was set by whoever uploaded it -- Commons does not say which, and a
+   suspiciously round coordinate usually means the second -- so it is the
+   uploader's claim checked against the caption's, not proof. That is what
+   "verified" means here: the caption and the file's own record of where it
+   was taken agree. Look at the picture as well. */
 export function inBox(lat, lon, box) {
   if (!Array.isArray(box) || box.length !== 4) return false;
   const [s, w, n, e] = box.map(Number);
