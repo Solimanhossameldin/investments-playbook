@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "fetch-wire",
+   "status": "ok",
+   "detail": "78 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-10-06T01:09:24.983Z"
+  },
+  {
    "job": "pipeline",
    "status": "failed",
    "detail": "update=success, deploy=abandoned, submit=skipped. The failing job is deploy; its log says why.",
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "no api key",
    "ranAt": "2026-10-05T18:29:09.459Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-10-05, so there is nothing to send.",
-   "ranAt": "2026-10-05T18:29:09.397Z"
   }
  ]
 }
