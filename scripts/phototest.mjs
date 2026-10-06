@@ -204,14 +204,43 @@ const statusOf = (dir) => JSON.parse(fs.readFileSync(path.join(dir, "content/sta
   await run({ root: dir, fetchImpl: stub({ apiFails: true }), today, log: quiet });
   // What this proves is that the curated list is the whole truth: a photo
   // taken out of it comes off the site, even when Commons cannot be reached to
-  // confirm anything. (The separate on-disk filter in run() is a second line
-  // that no current path can reach; it is kept, and not claimed as tested.)
+  // confirm anything. (The on-disk filter in run() is a second line here, and
+  // for previews it is one of two; removing both is what the preview tests catch.)
   check("a photo removed from the curated list comes off the site, even with Commons down", !manifestOf(dir).some((p) => p.file === "ghost.jpg"));
 }
 {
   const dir = scratch([]);
   const r = await run({ root: dir, fetchImpl: stub(), today, log: quiet });
   check("no sources is a skip, not a failure", r.status === "skipped");
+}
+
+/* ---- previews: looked at before they are published, never published by accident ---- */
+const PREV = { commons: "File:Dubai Marina in March 2022 04.jpg", file: "dubai-marina-2022.jpg", preview: true };
+{
+  const dir = scratch([PREV]);
+  const r = await run({ root: dir, fetchImpl: stub({ pageFor: () => page({ title: PREV.commons }) }), today, log: quiet });
+  check("a preview is downloaded into content/photos/preview/", fs.existsSync(path.join(dir, "content/photos/preview", PREV.file)));
+  check("and is never put in the manifest, so the build cannot copy it to the site", manifestOf(dir).length === 0);
+  check("and is not left in the published folder either", !fs.existsSync(path.join(dir, "content/photos", PREV.file)));
+  check("a run with only previews is ok, not a failure", r.status === "ok" && /1 staged for preview/.test(statusOf(dir).detail), statusOf(dir).detail);
+}
+{
+  const dir = scratch([PREV]);
+  await run({ root: dir, fetchImpl: stub({ pageFor: () => page({ title: PREV.commons }, { Artist: { value: "A. Person. Please contact me before commercial use." } }) }), today, log: quiet });
+  check("a preview whose author added conditions is not even downloaded", !fs.existsSync(path.join(dir, "content/photos/preview", PREV.file)));
+}
+{
+  const dir = scratch([PREV]);
+  await run({ root: dir, fetchImpl: stub({ pageFor: () => page({ title: PREV.commons }) }), today, log: quiet });
+  fs.writeFileSync(path.join(dir, "content/photo-sources.json"), JSON.stringify({ sources: [] }));
+  await run({ root: dir, fetchImpl: stub(), today, log: quiet });
+  check("a preview taken out of the list is cleared from the folder", !fs.existsSync(path.join(dir, "content/photos/preview", PREV.file)));
+}
+{
+  const dir = scratch([SRC, PREV]);
+  await run({ root: dir, fetchImpl: stub({ pageFor: () => page() }), today, log: quiet });
+  const m = manifestOf(dir);
+  check("previews and published photos coexist: only the published one is in the manifest", m.length === 1 && m[0].file === SRC.file);
 }
 
 /* ---- the real curated list ---- */
@@ -221,11 +250,12 @@ const statusOf = (dir) => JSON.parse(fs.readFileSync(path.join(dir, "content/sta
   for (const s of real) {
     check(`${s.file}: names a Commons file`, /^File:.+\.jpe?g$/i.test(s.commons || ""));
     check(`${s.file}: is a plain JPEG filename`, /^[a-z0-9][a-z0-9-]*\.jpe?g$/.test(s.file || ""));
+    if (s.preview) { check(`${s.file}: a preview carries no slug, so it cannot be mistaken for a published photo`, !s.slug); continue; }
     check(`${s.file}: belongs to a page that exists`, fs.existsSync(path.join(root, "content/playbooks", `${s.slug}.md`)), s.slug);
     check(`${s.file}: its alt text describes something`, String(s.alt || "").trim().split(/\s+/).length >= 6);
     if (s.place) check(`${s.file}: a named place comes with a box to check it against`, Array.isArray(s.bbox) && s.bbox.length === 4 && s.bbox[0] < s.bbox[2] && s.bbox[1] < s.bbox[3]);
   }
-  for (const s of real) {
+  for (const s of real.filter((x) => !x.preview)) {
     // The real entry, through the real gate, against a page shaped like the
     // live API's. Catches alt text or a place name the build would refuse.
     const lat = (s.bbox ? (s.bbox[0] + s.bbox[2]) / 2 : 1.285).toFixed(6);

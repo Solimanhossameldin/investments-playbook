@@ -1,5 +1,5 @@
 {
- "note": "Which Wikimedia Commons file goes on which page. Only what a person has to decide is written here: the file, the page, the alt text, and, when the caption names a place, the box [south, west, north, east] the camera must have stood in. Author, licence, source and dates are read from Commons on every run by scripts/fetch-photos.mjs and are never typed here. A file whose licence or terms stop qualifying drops off the next build.",
+ "note": "Which Wikimedia Commons file goes on which page. Only what a person has to decide is written here: the file, the page, the alt text, and, when the caption names a place, the box [south, west, north, east] the camera must have stood in. Author, licence, source and dates are read from Commons on every run by scripts/fetch-photos.mjs and are never typed here. A file whose licence or terms stop qualifying drops off the next build. Entries marked preview are downloaded to content/photos/preview/ for someone to look at and are never published; give one a slug and alt text (and drop preview) to put it on a page.",
  "sources": [
   {
    "commons": "File:Skylines of the Central Business District, Singapore at dusk.jpg",
@@ -7,7 +7,77 @@
    "slug": "dubai-vs-singapore",
    "alt": "The towers of Singapore's Central Business District at dusk, photographed from the observation deck of Marina Bay Sands",
    "place": "Singapore's Central Business District, from Marina Bay Sands",
-   "bbox": [1.278, 103.855, 1.290, 103.866]
+   "bbox": [
+    1.278,
+    103.855,
+    1.29,
+    103.866
+   ]
+  },
+  {
+   "commons": "File:Dubai Marina in March 2022 04.jpg",
+   "file": "pv-dubai-marina-2022-04.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Dubai Marina in March 2022 03.jpg",
+   "file": "pv-dubai-marina-2022-03.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Dubai Marina Area.jpg",
+   "file": "pv-dubai-marina-area.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Dubai Marina neighborhood.jpg",
+   "file": "pv-dubai-marina-neighborhood.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Sunset view of Dubai Creek Harbour.jpg",
+   "file": "pv-creek-harbour-sunset.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:DUBAI CREEK HARBOUR 5.jpg",
+   "file": "pv-creek-harbour-5.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:BURJ KHALIFA VIEW FROM CREEK AREA.jpg",
+   "file": "pv-burj-from-creek.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Dubai in January 2025 02.jpg",
+   "file": "pv-dubai-creek-2025.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Emirates Hills Montgomerie Lakeside.jpg",
+   "file": "pv-emirates-hills.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Deira Twin Towers.jpg",
+   "file": "pv-deira-twin-towers.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Abu Dhabi Skyline UAE Flag.jpg",
+   "file": "pv-abu-dhabi-skyline-flag.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Maqta Abu DHabi UAE.jpg",
+   "file": "pv-abu-dhabi-maqta.jpg",
+   "preview": true
+  },
+  {
+   "commons": "File:Louvre Abu Dhabi 01.jpg",
+   "file": "pv-louvre-abu-dhabi.jpg",
+   "preview": true
   }
  ]
 }

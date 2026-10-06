@@ -147,7 +147,9 @@ export function toRecord(src, page, today, prev = null) {
     else { record.place = src.place; record.verified = true; }
   }
 
-  problems.push(...recordProblems(record).map((p) => p.replace(/^photo \d+ /, "")));
+  // A preview has no page and no alt text yet -- deciding those is what the
+  // preview is for -- so only the provenance gates above apply to it.
+  if (!src.preview) problems.push(...recordProblems(record).map((p) => p.replace(/^photo \d+ /, "")));
   return { record, problems, thumbUrl: ii.thumburl, gone: problems.length > 0 };
 }
 
@@ -177,12 +179,17 @@ export async function run({ root, fetchImpl = globalThis.fetch, today = new Date
   const MANIFEST = path.join(root, "content/photos.json");
   const DIR = path.join(root, "content/photos");
   const STATUS = path.join(root, "content/status.json");
+  // Candidates someone wants to look at before they go on a page. Downloaded
+  // here, committed with the day's content, never put in the manifest -- and
+  // the build copies only what the manifest lists, so a preview cannot reach
+  // the site. Look at it on GitHub, then give it a slug and alt text, or drop it.
+  const PREVIEW_DIR = path.join(DIR, "preview");
 
   const sources = (readJson(SOURCES, { sources: [] }).sources) || [];
   const prevList = (readJson(MANIFEST, { photos: [] }).photos) || [];
   const prevBy = new Map(prevList.map((p) => [p.file, p]));
 
-  const kept = [], published = [], dropped = [], notes = [];
+  const kept = [], published = [], dropped = [], notes = [], previews = [];
 
   for (const src of sources) {
     const width = Number(src.width) || DEFAULT_WIDTH;
@@ -209,8 +216,10 @@ export async function run({ root, fetchImpl = globalThis.fetch, today = new Date
     const out = toRecord(src, page, today, prev);
     if (out.problems.length) { dropped.push(src.file); notes.push(`${src.file} refused: ${out.problems.join("; ")}`); continue; }
 
-    const dest = path.join(DIR, src.file);
-    const fresh = prev && prev.commonsSha1 === out.record.commonsSha1 && prev.width === out.record.width && fs.existsSync(dest);
+    const dest = src.preview ? path.join(PREVIEW_DIR, src.file) : path.join(DIR, src.file);
+    const fresh = src.preview
+      ? fs.existsSync(dest)
+      : prev && prev.commonsSha1 === out.record.commonsSha1 && prev.width === out.record.width && fs.existsSync(dest);
     if (!fresh) {
       try {
         const r = await fetchImpl(out.thumbUrl, { headers: UA, signal: AbortSignal.timeout(TIMEOUT) });
@@ -218,7 +227,7 @@ export async function run({ root, fetchImpl = globalThis.fetch, today = new Date
         const buf = Buffer.from(await r.arrayBuffer());
         if (!isJpeg(buf)) throw new Error("download is not a JPEG");
         if (buf.length > MAX_BYTES) throw new Error(`download is ${Math.round(buf.length / 1024)}KB, over ${MAX_BYTES / 1024}KB`);
-        fs.mkdirSync(DIR, { recursive: true });
+        fs.mkdirSync(path.dirname(dest), { recursive: true });
         fs.writeFileSync(dest, buf);
       } catch (e) {
         if (prev && fs.existsSync(dest)) { kept.push(prev); notes.push(`${src.file} kept (download failed: ${e.message})`); }
@@ -226,32 +235,45 @@ export async function run({ root, fetchImpl = globalThis.fetch, today = new Date
         continue;
       }
     }
+    if (src.preview) { previews.push(src.file); continue; }
     published.push(out.record);
   }
 
+  // A preview taken out of the list is cleared, so the folder only ever holds
+  // what is currently under consideration.
+  const wanted = new Set(sources.filter((s) => s.preview).map((s) => s.file));
+  if (fs.existsSync(PREVIEW_DIR)) {
+    for (const f of fs.readdirSync(PREVIEW_DIR)) {
+      if (!wanted.has(f)) { try { fs.rmSync(path.join(PREVIEW_DIR, f)); notes.push(`preview ${f} cleared`); } catch {} }
+    }
+  }
+
   // The build refuses a manifest entry whose file is missing, and a refused
-  // build is a site that does not deploy. Nothing goes in that is not on disk.
+  // build is a site that does not deploy. Nothing goes in that is not on disk
+  // in the published folder -- which also makes this the second line keeping
+  // previews off the site, since theirs live one folder down.
   const photos = [...published, ...kept].filter((p) => fs.existsSync(path.join(DIR, p.file)));
   const order = new Map(sources.map((s, i) => [s.file, i]));
   photos.sort((a, b) => (order.get(a.file) ?? 0) - (order.get(b.file) ?? 0));
 
   fs.writeFileSync(MANIFEST, JSON.stringify({ photos }, null, 1) + "\n");
 
-  const status = !sources.length ? "skipped" : photos.length === sources.length ? "ok" : photos.length ? "partial" : "failed";
+  const pub = sources.filter((s) => !s.preview).length;
+  const status = !pub ? (previews.length ? "ok" : "skipped") : photos.length === pub ? "ok" : photos.length ? "partial" : "failed";
   const s = readJson(STATUS, { runs: [] });
   s.runs = s.runs || [];
   s.runs.unshift({
     job: "fetch-photos",
     status,
-    detail: `${photos.length} of ${sources.length} photographs published${notes.length ? `. ${notes.join("; ").slice(0, 300)}` : ""}`,
+    detail: `${photos.length} of ${pub} photographs published${previews.length ? `, ${previews.length} staged for preview` : ""}${notes.length ? `. ${notes.join("; ").slice(0, 300)}` : ""}`,
     ranAt: new Date().toISOString(),
   });
   s.runs = s.runs.slice(0, 40);
   fs.writeFileSync(STATUS, JSON.stringify(s, null, 1));
 
-  log(`fetch-photos: ${status}. ${photos.length}/${sources.length} published, ${dropped.length} refused.`);
+  log(`fetch-photos: ${status}. ${photos.length}/${pub} published, ${previews.length} previews, ${dropped.length} refused.`);
   for (const n of notes) log("  " + n);
-  return { status, photos, dropped, notes };
+  return { status, photos, dropped, notes, previews };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
