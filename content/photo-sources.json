@@ -1,0 +1,13 @@
+{
+ "note": "Which Wikimedia Commons file goes on which page. Only what a person has to decide is written here: the file, the page, the alt text, and, when the caption names a place, the box [south, west, north, east] the camera must have stood in. Author, licence, source and dates are read from Commons on every run by scripts/fetch-photos.mjs and are never typed here. A file whose licence or terms stop qualifying drops off the next build.",
+ "sources": [
+  {
+   "commons": "File:Skylines of the Central Business District, Singapore at dusk.jpg",
+   "file": "singapore-cbd-dusk.jpg",
+   "slug": "dubai-vs-singapore",
+   "alt": "The towers of Singapore's Central Business District at dusk, photographed from the observation deck of Marina Bay Sands",
+   "place": "Singapore's Central Business District, from Marina Bay Sands",
+   "bbox": [1.278, 103.855, 1.290, 103.866]
+  }
+ ]
+}

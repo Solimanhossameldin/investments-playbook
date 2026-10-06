@@ -46,6 +46,16 @@ jobs:
         run: node scripts/fetch-chartbook.mjs
         continue-on-error: true
 
+      # Photographs are fetched like every figure: content/photo-sources.json
+      # says which Commons file belongs on which page, and the author, licence
+      # and source are read from Wikimedia Commons on every run rather than
+      # typed. A file that is deleted, relicensed or given conditions by its
+      # author comes off the next build. Non-blocking: a missing photograph is
+      # not a reason for the figures to go stale.
+      - name: Refresh photographs
+        run: node scripts/fetch-photos.mjs
+        continue-on-error: true
+
       # Twice a key was set and the next run still reported it missing, with no
       # way from outside the repository to tell whether it had not been made,
       # had been made in the wrong place, or was simply not picked up yet. The
