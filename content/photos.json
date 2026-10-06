@@ -15,6 +15,54 @@
    "checkedAt": "2026-10-06",
    "place": "Singapore's Central Business District, from Marina Bay Sands",
    "verified": true
+  },
+  {
+   "file": "dubai-marina-canal.jpg",
+   "slug": "net-rental-yield",
+   "alt": "Residential towers along the Dubai Marina canal, with a motorboat on the water and palm-lined promenades on both banks",
+   "credit": "Renek78",
+   "licence": "CC-BY-SA-4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dubai_Marina_in_March_2022_04.jpg",
+   "retrievedAt": "2026-10-06",
+   "width": 960,
+   "height": 540,
+   "commons": "File:Dubai Marina in March 2022 04.jpg",
+   "commonsSha1": "2a94678650f48825d056c4b6c95f74ccd2c7a56a",
+   "checkedAt": "2026-10-06",
+   "place": "Dubai Marina",
+   "verified": true
+  },
+  {
+   "file": "downtown-dubai-night.jpg",
+   "slug": "price-per-square-foot",
+   "alt": "The Burj Khalifa and the towers of Downtown Dubai lit up at night, seen across the water from the Dubai Creek side",
+   "credit": "Ahmad3027",
+   "licence": "CC-BY-SA-4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:BURJ_KHALIFA_VIEW_FROM_CREEK_AREA.jpg",
+   "retrievedAt": "2026-10-06",
+   "width": 960,
+   "height": 540,
+   "commons": "File:BURJ KHALIFA VIEW FROM CREEK AREA.jpg",
+   "commonsSha1": "b953d9f22b06b80eb14e8452c2de443bff55f801",
+   "checkedAt": "2026-10-06",
+   "place": "Downtown Dubai, from across Dubai Creek",
+   "verified": true
+  },
+  {
+   "file": "abu-dhabi-skyline-flag.jpg",
+   "slug": "uae-wills-and-succession",
+   "alt": "Abu Dhabi's skyline and a marina full of boats in black and white, with the UAE flag left in colour on its flagpole",
+   "credit": "Clint Ian Pinto",
+   "licence": "CC-BY-SA-4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Abu_Dhabi_Skyline_UAE_Flag.jpg",
+   "retrievedAt": "2026-10-06",
+   "width": 960,
+   "height": 720,
+   "commons": "File:Abu Dhabi Skyline UAE Flag.jpg",
+   "commonsSha1": "3bce42b100d53993442d60071f76fcabfa3ebff3",
+   "checkedAt": "2026-10-06",
+   "place": "Abu Dhabi",
+   "verified": true
   }
  ]
 }
