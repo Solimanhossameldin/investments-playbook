@@ -21,6 +21,7 @@ import * as ua from "../src/unitarea.mjs";
 import * as orr from "../src/offplanready.mjs";
 import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
+import * as gv from "../src/goldenvisa.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -139,6 +140,12 @@ const FOREIGN_STATUTORY_PAGES = [
   ["residency-and-tax", ht],
   ["dubai-vs-london", ld],
   ["dubai-vs-singapore", sg],
+  /* The residency pages are deliberately here and not in the Dubai list.
+     The law register is a register of Dubai property law; a golden residence
+     permit is not property law, and a Portuguese subsistence portaria filed
+     under that heading would be wrong for the reader who went there looking
+     for the decree behind a fee. */
+  ["golden-visa-vs-portugal-d7", gv],
 ];
 
 const ALL_STATUTORY_PAGES = [...STATUTORY_PAGES, ...FOREIGN_STATUTORY_PAGES];
@@ -2168,6 +2175,7 @@ ok("every calculator points at a playbook that exists",
 {
   const { playbookCharts, CHART_REGISTRY } = await import("../src/playbookcharts.mjs");
   const pctf = (v) => `${Number(v).toFixed(2)}%`;
+  const pct1f = (v) => `${Number(v).toFixed(1)}%`;
   const aedf = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
   const shortfall = (v) => `AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
 
@@ -2210,6 +2218,9 @@ ok("every calculator points at a playbook that exists",
     })),
     "price-per-square-foot": ua.shortfallTable(aq.EXAMPLE).map((r) => ({
       label: `${r.shortfallPct}% short`, shown: pctf(r.upliftPct),
+    })),
+    "golden-visa-vs-portugal-d7": gv.coverage().map((r) => ({
+      label: r.label, shown: pct1f(r.covers),
     })),
   };
 
@@ -2282,6 +2293,138 @@ ok("every calculator points at a playbook that exists",
 }
 
 
+
+
+/* ---- the golden visa against the Portugal D7 ----
+
+   This page's argument is a comparison of capital, and both sides of it are
+   computed: the Dubai side from the fee schedule in acquisition.mjs plus the
+   Land Department's published visa fees, the Portuguese side from a
+   subsistence portaria applied to a minimum wage that changes every January.
+
+   Two things rot here in a way a browser cannot show. The minimum wage moves
+   and every euro and dirham figure on the page moves with it, silently. And
+   the income threshold is reached by a solve against the module, so a change
+   anywhere in the running cost model shifts the answer. Pinning the tables
+   cell by cell is what makes either one fail by name.
+
+   The last check is the one that matters most: it is a behaviour check, not a
+   value check. The page is only allowed to claim the income test needs less
+   capital while the module still computes that it does. Reverse the threshold
+   and the claim becomes false, and the suite says so rather than letting a
+   page argue the opposite of its own arithmetic. */
+{
+  const p = playbooks.find((x) => x.slug === "golden-visa-vs-portugal-d7");
+  ok("golden visa: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+    const find = (pred) => tables.find(pred);
+    const asset = gv.assetRoute();
+    const fees = gv.visaFees();
+    const d7 = gv.d7Table();
+    const income = gv.incomeRoute();
+    const gap = gv.capitalGap();
+    const cov = gv.coverage();
+
+    const feeTable = find((t) => t.rows.length && /Medical examination/.test(t.rows[0][0]));
+    ok("golden visa: the Land Department fee table is present", !!feeTable);
+    if (feeTable) {
+      ok("golden visa: the fee table matches the published lines and total",
+        same(col(feeTable, 1), [...fees.lines.map(([, v]) => v), fees.total]),
+        JSON.stringify(col(feeTable, 1)));
+    }
+
+    const cashTable = find((t) => t.rows.length && /^Price$/.test(t.rows[0][0]));
+    ok("golden visa: the cash required table is present", !!cashTable);
+    if (cashTable) {
+      ok("golden visa: the cash table matches the computed route",
+        same(col(cashTable, 1), [
+          gv.UAE.threshold, asset.acquisition, asset.fees,
+          asset.cash, asset.costs, asset.perYear,
+        ]),
+        JSON.stringify(col(cashTable, 1)));
+    }
+
+    const thresholdTable = find((t) => /in dirhams/i.test(t.head[3] || ""));
+    ok("golden visa: the D7 threshold table is present", !!thresholdTable);
+    if (thresholdTable) {
+      ok("golden visa: the monthly thresholds match the portaria applied to the minimum wage",
+        same(col(thresholdTable, 1), d7.map((r) => r.month)), JSON.stringify(col(thresholdTable, 1)));
+      ok("golden visa: the annual thresholds match",
+        same(col(thresholdTable, 2), d7.map((r) => r.year)), JSON.stringify(col(thresholdTable, 2)));
+      ok("golden visa: the dirham thresholds match the published euro reference rate",
+        same(col(thresholdTable, 3), d7.map((r) => r.aed)), JSON.stringify(col(thresholdTable, 3)));
+    }
+
+    const capitalTable = find((t) => /Capital required/i.test(t.head[1] || ""));
+    ok("golden visa: the capital comparison table is present", !!capitalTable);
+    if (capitalTable) {
+      ok("golden visa: the capital table matches the solve",
+        same(col(capitalTable, 1), [gap.asset, gap.income, gap.gap]),
+        JSON.stringify(col(capitalTable, 1)));
+    }
+
+    const covTable = find((t) => /covers/i.test(t.head[2] || ""));
+    ok("golden visa: the coverage table is present", !!covTable);
+    if (covTable) {
+      ok("golden visa: the coverage table thresholds match",
+        same(col(covTable, 1), cov.map((r) => r.aed)), JSON.stringify(col(covTable, 1)));
+      ok("golden visa: the coverage percentages match the illustrative unit's net income",
+        same(col(covTable, 2), cov.map((r) => r.covers)), JSON.stringify(col(covTable, 2)));
+    }
+
+    /* Figures that carry the argument but sit in sentences rather than tables.
+       A solve is only a solve if the page prints the residual, so the surplus
+       is pinned too. */
+    const prose = `${p.summary} ${p.body} ${p.formula} ${p.whenToUse} ${p.failureModes.join(" ")}`;
+    const money = (n) => Number(n).toLocaleString("en-US");
+    const must = [
+      [`the solved area`, `${income.sqft} sq ft`],
+      [`the solved price`, `AED ${money(income.price)}`],
+      [`the solved net income`, `AED ${money(income.noi)}`],
+      [`the residual on the solve`, `AED ${money(income.surplus)}`],
+      [`the euro threshold solved against`, `EUR ${money(d7[1].year)}`],
+      [`the capital ratio`, `${(gap.ratio * 100).toFixed(1)}%`],
+      [`the dirham to euro rate`, `AED ${gv.aedPerEur().toFixed(4)} to the euro`],
+      [`the net yield at the threshold`, `${asset.net.toFixed(2)}%`],
+      [`the illustrative unit's net income`, `AED ${money(cov[0].noi)}`],
+      [`the illustrative unit's net income in euros`, `EUR ${money(cov[0].noiEur)} a year`],
+      [`the same, a month`, `EUR ${money(cov[0].noiEurMonth)} a month`],
+      [`the unrecoverable cost`, `AED ${money(asset.costs)}`],
+    ];
+    for (const [what, text] of must) {
+      ok(`golden visa: the page carries ${what}`, prose.includes(text), text);
+    }
+
+    /* The shortfall a child creates, and the apartment that closes it. Both
+       are differences between figures the module computes, so neither may be
+       typed independently of it. */
+    const child = gv.incomeRoute(gv.HOUSEHOLDS[2][1]);
+    ok("golden visa: carries the shortfall a child creates",
+      prose.includes(`AED ${money(cov[2].aed - cov[2].noi)} a year`),
+      String(cov[2].aed - cov[2].noi));
+    ok("golden visa: carries the larger apartment that closes it",
+      prose.includes(`${child.sqft - aq.EXAMPLE.sqft} sq ft larger`),
+      String(child.sqft - aq.EXAMPLE.sqft));
+    ok("golden visa: carries that apartment's price",
+      prose.includes(`AED ${money(child.price)}`), String(child.price));
+    ok("golden visa: carries how far below the threshold that price still is",
+      prose.includes(`AED ${money(gv.UAE.threshold - child.price)} below`),
+      String(gv.UAE.threshold - child.price));
+
+    /* Behaviour, not value. The page's conclusion is that the income test
+       needs less capital than the asset test and leaves it sellable. It is
+       only entitled to say so while the module agrees. */
+    ok("golden visa: the page only claims the income test is cheaper while the module computes that it is",
+      gap.income < gap.asset && gap.gap > 0 && /clears on .*% of the capital/.test(p.body));
+
+    /* And the solve has to be a solve: tight against the threshold from
+       above, never under it, never loose. */
+    ok("golden visa: the solved unit clears the threshold", income.noi >= income.target);
+    ok("golden visa: the solved unit is the smallest that does",
+      aq.operating(gv.unitOfArea(income.sqft - 1)).net < income.target);
+  }
+}
 
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);

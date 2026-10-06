@@ -23,10 +23,12 @@ import { grid as taxGrid } from "./hometax.mjs";
 import { shortLetNet, longLetNet } from "./holidayhome.mjs";
 import { TIERS } from "./rentcap.mjs";
 import { shortfallTable } from "./unitarea.mjs";
+import { coverage as d7Coverage } from "./goldenvisa.mjs";
 import { EXAMPLE as AQ_EXAMPLE, yields as aqYields } from "./acquisition.mjs";
 
 const pct0 = (v) => `${Number(v).toFixed(0)}%`;
 const pct = (v) => `${Number(v).toFixed(2)}%`;
+const pct1 = (v) => `${Number(v).toFixed(1)}%`;
 const aed0 = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
 
 const aed = (v) =>
@@ -295,6 +297,33 @@ function pricePerSquareFoot() {
   ];
 }
 
+
+/* The golden visa page: what one ordinary Dubai one bedroom covers of the
+   Portugal D7 income threshold, household by household.
+
+   The whole page turns on a near-miss, and a near-miss is the one finding a
+   table hides and a bar shows: the couple's bar sits a hair above the line
+   and the bar with a child in it sits clearly below. The reference is 100%
+   of the published minimum, which is a floor rather than a target, and the
+   caption says so, because a bar just above a floor is not a comfortable
+   application. */
+function goldenVisaVsPortugalD7() {
+  const rows = d7Coverage();
+  return [
+    {
+      key: "d7-coverage",
+      label:
+        "What the net income of one illustrative Dubai one bedroom covers of the Portugal D7 means-of-subsistence threshold, by household",
+      reference: 100,
+      referenceLabel: "the published minimum",
+      format: pct1,
+      bars: rows.map((r) => ({ label: r.label, value: r.covers })),
+      caption:
+        "Each bar is this one apartment's net operating income against that household's threshold, the Portuguese minimum wage run through the subsistence portaria and converted at the published euro reference rate. The line is the floor the assessment starts from, not a target: clearing it by 1.3% is not the same position as clearing it by half.",
+    },
+  ];
+}
+
 const REGISTRY = {
   "break-even-occupancy": breakEvenOccupancy,
   "net-rental-yield": netRentalYield,
@@ -308,6 +337,7 @@ const REGISTRY = {
   "short-let-vs-long-let": shortLetVsLongLet,
   "rent-increase-caps": rentIncreaseCaps,
   "price-per-square-foot": pricePerSquareFoot,
+  "golden-visa-vs-portugal-d7": goldenVisaVsPortugalD7,
 };
 
 /* Returns rendered figures for a playbook, or "" when the page has none. */
