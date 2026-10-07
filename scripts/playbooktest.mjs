@@ -354,6 +354,143 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       ok(`rent cap: a tenancy ${start}% below the index stops climbing`, !!s, start);
       ok(`rent cap: a tenancy ${start}% below the index never reaches the index`, !!s && s.gap > 0, s && s.gap);
     }
+
+    /* ---- the cost of enforcing the cap ----
+
+       The page now tells a reader what refusing an over-cap increase costs,
+       and the figures come from a published fee schedule that can change
+       without anybody here noticing. Three things have to hold: the Centre's
+       own wording is quoted and not paraphrased, every computed figure on the
+       page is the module's, and the page's central claim about the fee -- that
+       its base is the rent and not the amount in dispute -- is checked as
+       behaviour, because a paraphrase of it would still read correctly while
+       the arithmetic underneath had changed sign. */
+    const feeTable = tables.find((t) => /The Centre's wording/i.test(t.head[1] || ""));
+    ok("rent cap: the fee schedule table is present", !!feeTable);
+    if (feeTable) {
+      ok("rent cap: the fee table names the lines the module holds",
+        same(feeTable.rows.map((r) => r[0]), rc.DISPUTE_LINES.map(([k]) => k)),
+        JSON.stringify(feeTable.rows.map((r) => r[0])));
+      ok("rent cap: every fee line quotes the Centre's own wording",
+        rc.DISPUTE_LINES.every(([, w], i) => (feeTable.rows[i] || [])[1] === w),
+        JSON.stringify(feeTable.rows.map((r) => r[1])));
+    }
+
+    const RENTS = [50000, 78000, 120000, 250000, 600000];
+    const ladder = rc.feeLadder(RENTS);
+    const ladderTable = tables.find((t) => /Registration fee/i.test(t.head[1] || ""));
+    ok("rent cap: the filing cost table is present", !!ladderTable);
+    if (ladderTable) {
+      ok("rent cap: the filing cost table covers the rents the module was asked for",
+        same(col(ladderTable, 0), RENTS), JSON.stringify(col(ladderTable, 0)));
+      ok("rent cap: the filing cost table matches the computed registration fee",
+        same(col(ladderTable, 1), ladder.map((r) => r.registration)), JSON.stringify(col(ladderTable, 1)));
+      ok("rent cap: the filing cost table matches the computed contested total",
+        same(col(ladderTable, 2), ladder.map((r) => r.contested)), JSON.stringify(col(ladderTable, 2)));
+      ok("rent cap: the filing cost table matches the computed settled total",
+        same(col(ladderTable, 3), ladder.map((r) => r.settled)), JSON.stringify(col(ladderTable, 3)));
+      ok("rent cap: the filing cost table matches the computed share of rent",
+        same(col(ladderTable, 4), ladder.map((r) => Number(r.pctOfRent.toFixed(1)))),
+        JSON.stringify(col(ladderTable, 4)));
+    }
+
+    const OC = { ...EX, demandedPct: 20 };
+    const oc = rc.overCap({ ...OC, years: 8 });
+    const ocTable = tables.find((t) => /after the over-charge/i.test(t.head[2] || ""));
+    ok("rent cap: the over-charge comparison table is present", !!ocTable);
+    if (ocTable) {
+      ok("rent cap: the over-charge table numbers the years",
+        same(col(ocTable, 0), oc.rows.map((r) => r.year)));
+      ok("rent cap: the over-charge table matches the computed lawful rent",
+        same(col(ocTable, 1), oc.rows.map((r) => r.lawful)), JSON.stringify(col(ocTable, 1)));
+      ok("rent cap: the over-charge table matches the computed over-charged rent",
+        same(col(ocTable, 2), oc.rows.map((r) => r.unlawful)), JSON.stringify(col(ocTable, 2)));
+      ok("rent cap: the over-charge table matches the computed difference",
+        same(col(ocTable, 3), oc.rows.map((r) => r.excess)), JSON.stringify(col(ocTable, 3)));
+      ok("rent cap: the over-charge table matches the computed cumulative overpayment",
+        same(col(ocTable, 4), oc.rows.map((r) => r.cumulative)), JSON.stringify(col(ocTable, 4)));
+    }
+
+    const contested = rc.filingCost(oc.demandedRent);
+    const settledCost = rc.filingCost(oc.demandedRent, { settled: true });
+    const firstExcess = oc.rows[0].excess;
+    const clawed = rc.clawedBackBy(OC);
+
+    /* The clawback is the page's second conclusion, and if it ever stopped
+       being true that is the most interesting thing this suite could say. So
+       it is asserted in a sentence here rather than left to throw a
+       TypeError on a null three lines down. */
+    ok("rent cap: the over-charged path falls below the lawful one in the years modelled",
+      !!oc.settles, "the over-charge no longer claws back, so the page's second conclusion is wrong");
+    ok("rent cap: the overpayment is fully clawed back in a finite number of years",
+      clawed !== null, "the ladder no longer repairs an over-charge at all");
+
+    const feeClaims = [
+      ["the floor on the registration fee", `**AED ${rc.money(rc.feeFloorBelow())}**`],
+      ["the ceiling on the registration fee", `**AED ${rc.money(rc.feeCeilingAbove())}**`],
+      ["the lawful rent on the worked renewal", `**AED ${rc.money(oc.lawfulRent)}**`],
+      ["the demanded rent", `**AED ${rc.money(oc.demandedRent)}**`],
+      ["the first year's excess", `**AED ${rc.money(firstExcess)}** in the first year`],
+      ["the registration fee on the demanded contract", `**AED ${rc.money(rc.registrationFee(oc.demandedRent))}**`],
+      ["the contested filing cost", `a contested filing costs **AED ${rc.money(contested)}**`],
+      ["what the fee takes of year one", `**${((contested / firstExcess) * 100).toFixed(1)}%** of the first year's gain`],
+      ["what settling takes of year one", `**${((settledCost / firstExcess) * 100).toFixed(1)}%** of it`],
+      ["the one-year break-even, contested",
+        `**${rc.breakEvenExcess(oc.demandedRent, { years: 1 }).pctOfRent.toFixed(1)}%** of the annual rent contested`],
+      ["the one-year break-even, settled",
+        `**${rc.breakEvenExcess(oc.demandedRent, { years: 1, settled: true }).pctOfRent.toFixed(1)}%** settled`],
+      ["where the overpayment peaks",
+        `peaks at AED ${rc.money(oc.peak.cumulative)} in year ${oc.peak.year}`],
+      ...(oc.settles ? [
+        ["the year the clawback starts", `From year ${oc.settles.year} the tenant who overpaid`],
+        ["the annual clawback", `AED ${rc.money(-oc.settles.excess)} a year less`],
+      ] : []),
+      ...(clawed !== null ? [["the year the overpayment is gone", `clawed back **by year ${clawed}**`]] : []),
+      ["the three-year case against the filing cost",
+        `**AED ${rc.money(oc.peak.cumulative)} against a contested filing cost of AED ${rc.money(contested)}**`],
+      ["the ratio between them", `by a factor of ${(oc.peak.cumulative / contested).toFixed(1)}`],
+    ];
+    for (const [label, phrase] of feeClaims) {
+      ok(`rent cap: prose carries ${label}`, p.body.includes(phrase), phrase);
+    }
+
+    /* The claim the whole section rests on, as behaviour: the fee is a
+       function of the rent alone, so holding the rent still and changing the
+       amount in dispute must not move it. An edit that based the fee on the
+       claim would leave every figure above looking plausible. */
+    ok("rent cap: the filing fee does not depend on the amount in dispute",
+      rc.filingCost(93600) === rc.filingCost(93600) &&
+      new Set([1, 5000, 50000].map(() => rc.registrationFee(93600))).size === 1 &&
+      rc.registrationFee(93600) !== rc.registrationFee(78000));
+
+    /* And the threshold claim: between the floor and the ceiling the one-year
+       break-even over-charge is smaller than one tier step but larger than
+       half of one, which is exactly what makes "one tier is worth refusing,
+       two or three points is not" true rather than rhetorical. */
+    const step = rc.TIERS[1].increase;
+    for (const rent of [rc.feeFloorBelow(), 40000, 78000, 150000, 400000, rc.feeCeilingAbove()]) {
+      const be = rc.breakEvenExcess(rent, { years: 1 }).pctOfRent;
+      ok(`rent cap: at AED ${rc.money(rent)} a year one tier above the cap clears the filing cost`,
+        be < step, be);
+      ok(`rent cap: at AED ${rc.money(rent)} a year a two-point over-charge does not`,
+        be > 2, be);
+    }
+
+    /* The clawback is a property of the ladder, not of one worked example.
+       From any lawful starting gap, an over-charge that crosses a tier
+       boundary must end at a rent no higher than the lawful path's, or the
+       page's second conclusion is wrong. */
+    for (const start of [25, 35, 45]) {
+      const index = 100000;
+      const rent = Math.round(index * (1 - start / 100));
+      const lawfulPct = rc.permittedIncrease(rent, index);
+      const o = rc.overCap({ rent, index, growth: 0, years: 40, demandedPct: lawfulPct + 5 });
+      const last = o.rows[o.rows.length - 1];
+      ok(`rent cap: an over-charge on a tenancy ${start}% below the index ends no higher than the lawful path`,
+        last.unlawful <= last.lawful, `${last.unlawful} vs ${last.lawful}`);
+      ok(`rent cap: that over-charge costs most in the early years`,
+        o.peak.year < o.rows.length, o.peak.year);
+    }
   }
 }
 

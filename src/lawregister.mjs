@@ -103,6 +103,16 @@ const ENTRIES = [
     applied: "rent-increase-caps",
   },
   {
+    mod: rc, key: "decree26", year: 2013, area: "Renting",
+    what: "Establishes the centre with exclusive jurisdiction over rent disputes, points the fee for registering a claim at a resolution of the Executive Council rather than setting it, refunds half of it when conciliation settles the dispute, and makes a judgment on a small rent claim final.",
+    applied: "rent-increase-caps",
+  },
+  {
+    mod: rc, key: "rdcFees", year: null, area: "Renting",
+    what: "The centre's own published schedule, which is where the registration fee appears as a percentage of the annual rent with a floor and a ceiling, alongside the process service, knowledge and innovation lines.",
+    applied: "rent-increase-caps",
+  },
+  {
     mod: hh, key: "feesAndFines", year: 2014, area: "Holiday homes",
     what: "Sets the holiday home permit fee, the inspection fee and the fines for operating without a licence, for charging guests for utilities and for letting less than a whole unit.",
     applied: "short-let-vs-long-let",

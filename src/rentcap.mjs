@@ -23,6 +23,14 @@ export const INSTRUMENTS = {
     name: "Dubai Media Office, Dubai Land Department launches the Smart Rental Index 2025",
     url: "https://mediaoffice.ae/en/news/2025/january/02-01/smart-rental",
   },
+  decree26: {
+    name: "Decree No. (26) of 2013 concerning the Rent Disputes Settlement Centre, Articles 10, 17 and 23",
+    url: "https://dlp.dubai.gov.ae/Legislation%20Reference/2013/Decree%2026%20of%202013.html",
+  },
+  rdcFees: {
+    name: "Rental Disputes Centre, published fees for registering a claim",
+    url: "https://rdc.gov.ae/en/frequently-asked-questions/",
+  },
 };
 
 export const STATUTORY = [
@@ -32,6 +40,12 @@ export const STATUTORY = [
   { key: "evictionNotice", claim: "at least twelve months before the date of eviction", instrument: "tenancyLaw" },
   { key: "service", claim: "served through a Notary Public or by registered mail", instrument: "tenancyLaw" },
   { key: "smartIndex", claim: "launched on 2 January 2025", instrument: "smartIndex" },
+  { key: "feeAuthority", claim: "as determined pursuant to a resolution of the Chairman of the Executive Council", instrument: "decree26" },
+  { key: "settlementRefund", claim: "One-half of the fee will be refunded if amicable settlement is reached", instrument: "decree26" },
+  { key: "mediationWindow", claim: "within a period not exceeding fifteen (15) days from the date of appearance of the parties", instrument: "decree26" },
+  { key: "appealFloor", claim: "which will be final and not subject to any form of appeal", instrument: "decree26" },
+  { key: "feeRate", claim: "3.5% of Annual Rent or Lease Value if it is more or less than a year", instrument: "rdcFees" },
+  { key: "feeBounds", claim: "Fee not less than (AED 500) and not more than (AED 20,000)", instrument: "rdcFees" },
 ];
 
 /* Article 1, in the order the decree writes it. `upTo` is the gap, expressed
@@ -94,3 +108,110 @@ export function shortfall(rows) {
 
 export const money = (n) => Number(Math.round(n)).toLocaleString("en-US");
 export const pc1 = (n) => `${n.toFixed(1)}%`;
+
+/* ---- what it costs to refuse an increase that is over the cap ----
+
+   The page above tells a reader that the permitted figure is not a
+   negotiating position. That is true and it is not enough, because the
+   remedy has a price and no page on this query names it.
+
+   Decree No. (26) of 2013 does not set the price. Article 23 says the Centre
+   charges fees "as determined pursuant to a resolution of the Chairman of the
+   Executive Council", and the operative schedule is the one the Centre
+   publishes. These are its figures. The thing that matters about them is the
+   base: the registration fee is a percentage of the annual rent, not of the
+   amount in dispute, so a small over-charge can cost more to refuse than to
+   pay. */
+export const DISPUTE = {
+  ratePct: 3.5,
+  min: 500,
+  max: 20000,
+  processService: 100,
+  knowledge: 10,
+  innovation: 10,
+  settlementRefund: 0.5,
+  mediationDays: 15,
+  appealDays: 15,
+  appealFloor: 100000,
+};
+
+/* Each line as the Centre states it, so the page cannot round one of them
+   into a different fee. */
+export const DISPUTE_LINES = [
+  ["Registering the claim", "3.5% of Annual Rent or Lease Value if it is more or less than a year"],
+  ["The floor and the ceiling on that fee", "Fee not less than (AED 500) and not more than (AED 20,000)"],
+  ["Process service", "Process Service: AED 100"],
+  ["Knowledge fee", "AED 10 Knowledge fee"],
+  ["Innovation fee", "AED 10 Innovation fee"],
+  ["If conciliation settles it", "half of the court fee paid for basic claims is refunded"],
+];
+
+export function registrationFee(annualRent) {
+  const raw = (DISPUTE.ratePct / 100) * annualRent;
+  return Math.round(Math.min(Math.max(raw, DISPUTE.min), DISPUTE.max));
+}
+
+export const disputeFixed = () => DISPUTE.processService + DISPUTE.knowledge + DISPUTE.innovation;
+
+export function filingCost(annualRent, { settled = false } = {}) {
+  const reg = registrationFee(annualRent);
+  return Math.round((settled ? reg * DISPUTE.settlementRefund : reg) + disputeFixed());
+}
+
+/* The smallest over-charge worth refusing, counted over `years` of it. As a
+   rate it is the registration percentage plus the fixed lines spread over the
+   rent, which is why it barely moves with the size of the tenancy. */
+export function breakEvenExcess(annualRent, { years = 1, settled = false } = {}) {
+  const cost = filingCost(annualRent, { settled });
+  return { cost, perYear: cost / years, pctOfRent: (cost / years / annualRent) * 100 };
+}
+
+/* Paying an increase that was never permitted does not cost the excess every
+   year afterwards. The tier is recalculated against the gap, so the higher
+   rent reaches the band where no increase is permitted sooner, and from that
+   year on the tenant who overpaid pays less than the one who did not. Both
+   paths are run from the same renewal under the same index. */
+export function overCap({ rent, index, growth = 0, years = 12, demandedPct }) {
+  const lawfulPct = permittedIncrease(rent, index);
+  const lawfulRent = Math.round(rent * (1 + lawfulPct / 100));
+  const demandedRent = Math.round(rent * (1 + demandedPct / 100));
+  const idx1 = index * (1 + growth / 100);
+  const lawful = schedule({ rent: lawfulRent, index: idx1, growth, years });
+  const unlawful = schedule({ rent: demandedRent, index: idx1, growth, years });
+  let running = 0;
+  const rows = lawful.map((l, i) => {
+    const excess = unlawful[i].rent - l.rent;
+    running += excess;
+    return { year: i + 1, lawful: l.rent, unlawful: unlawful[i].rent, excess, cumulative: running };
+  });
+  const peak = rows.reduce((a, b) => (b.cumulative > a.cumulative ? b : a), rows[0]);
+  const settles = rows.find((r) => r.excess < 0) || null;
+  return { lawfulPct, demandedPct, lawfulRent, demandedRent, rows, peak, settles };
+}
+
+/* The year the clawback has taken the whole of the overpayment back, found by
+   running the ladder far enough out rather than by solving it, because the
+   rounding each year is part of the answer. */
+export function clawedBackBy(args) {
+  const long = overCap({ ...args, years: 60 });
+  const row = long.rows.find((r) => r.cumulative <= 0);
+  return row ? row.year : null;
+}
+
+/* The percentage is only a percentage between these two rents. Below the
+   first the floor is charged, above the second the ceiling, so for a very
+   small or a very large tenancy the fee is flat and the break-even moves. */
+export const feeFloorBelow = () => Math.ceil(DISPUTE.min / (DISPUTE.ratePct / 100));
+export const feeCeilingAbove = () => Math.ceil(DISPUTE.max / (DISPUTE.ratePct / 100));
+
+/* The fee against a spread of tenancy sizes, which is the table that shows
+   the base is the rent and not the dispute. */
+export function feeLadder(rents) {
+  return rents.map((rent) => ({
+    rent,
+    registration: registrationFee(rent),
+    contested: filingCost(rent),
+    settled: filingCost(rent, { settled: true }),
+    pctOfRent: (filingCost(rent) / rent) * 100,
+  }));
+}

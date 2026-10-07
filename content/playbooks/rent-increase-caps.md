@@ -7,8 +7,8 @@
   "tier": 1,
   "calculator": "dubai-rent-increase",
   "reviewed": "7 September 2026",
-  "summary": "A Dubai tenancy sitting 35% below the rental index reaches only 9.3% below it, four renewals later, and then stops there for good, because every permitted increase narrows the gap that sets the following year's cap, so the ladder runs out before it reaches the top.",
-  "formula": "Permitted increase on renewal, Decree 43 of 2013\n  measured against the RERA rental index average\n\n    up to 10% below the index       no increase\n    11% to 20% below                up to  5%\n    21% to 30% below                up to 10%\n    31% to 40% below                up to 15%\n    more than 40% below             up to 20%\n\nThe part that is not a table, because the tier is\nrecalculated every year against a gap your own increase\njust narrowed:\n\n  each renewal\n    gap       = (index - rent) / index\n    increase  = tier(gap)\n    rent      = rent x (1 + increase)\n  repeat\n\n  The sequence terminates inside the 0 to 10% band,\n  every time, from every starting gap. It does not\n  terminate at the index.\n\nNotice, Law 26 of 2007 as amended by Law 33 of 2008\n  changing any term, rent included   90 days (Art 14)\n  eviction for sale or own use       12 months (Art 25/2)\n  service                            notary or registered mail\n\nThe buyer's arithmetic\n  Year one yield uses the passing rent.\n  Every later year uses a rent the law rations.\n  Vacant possession removes the constraint, and is\n  priced accordingly, and this is how you work out\n  what that price should be.",
+  "summary": "How much a Dubai landlord may raise the rent, in five bands against the official index, and what it costs at the centre to refuse an increase over the cap.",
+  "formula": "Permitted increase on renewal, Decree 43 of 2013\n  measured against the RERA rental index average\n\n    up to 10% below the index       no increase\n    11% to 20% below                up to  5%\n    21% to 30% below                up to 10%\n    31% to 40% below                up to 15%\n    more than 40% below             up to 20%\n\nThe part that is not a table, because the tier is\nrecalculated every year against a gap your own increase\njust narrowed:\n\n  each renewal\n    gap       = (index - rent) / index\n    increase  = tier(gap)\n    rent      = rent x (1 + increase)\n  repeat\n\n  The sequence terminates inside the 0 to 10% band,\n  every time, from every starting gap. It does not\n  terminate at the index.\n\nNotice, Law 26 of 2007 as amended by Law 33 of 2008\n  changing any term, rent included   90 days (Art 14)\n  eviction for sale or own use       12 months (Art 25/2)\n  service                            notary or registered mail\n\nThe cost of refusing an increase over the cap\n  registration = 3.5% of the annual rent, floor AED 500, ceiling AED 20,000\n  fixed lines  = AED 100 process service + AED 10 + AED 10\n  settle at conciliation and half the registration comes back\n\n  one-year break-even over-charge\n    = 3.5% of the annual rent + AED 120\n  which is why a demand one tier above the cap is worth\n  refusing and a demand two or three points above it is not\n\nThe buyer's arithmetic\n  Year one yield uses the passing rent.\n  Every later year uses a rent the law rations.\n  Vacant possession removes the constraint, and is\n  priced accordingly, and this is how you work out\n  what that price should be.",
   "failureModes": [
     "The schedules on this page hold the index still, and the index does not hold still. They are a model of the rationing mechanism, not a forecast of your rent, and the second one shows what a moving index does to the answer.",
     "The tiers apply to the permitted maximum, not to an automatic entitlement. A landlord may still agree less, and in a soft market frequently should.",
@@ -17,6 +17,8 @@
     "It applies to renewal of an existing tenancy. A new tenancy with a new tenant is a different transaction, which is why vacant possession is worth paying for.",
     "The index now rates the building, so the comparable set is narrower than it was and two towers on the same street can return different averages. The old habit of arguing from the rent next door is weaker than it used to be.",
     "Rules and tiers are set by decree and can be amended, so a framework page is a starting point rather than a current legal position.",
+    "The clawback schedule holds the index still. A rising index does not repair an over-charge the same way, because both paths keep climbing, so that comparison has to be run again at the growth rate you actually expect.",
+    "The centre bases its fee on the annual rent or lease value without saying which contract is meant when a renewal is the thing in dispute. This page takes the higher of the two, which overstates the fee and understates the case for filing rather than the reverse.",
     "This is general information and not legal advice. A live dispute belongs with the Rental Dispute Centre or a lawyer, not with a calculator."
   ],
   "whenToUse": "Before buying any tenanted property, because the achievable rent is a legal question before it is a market one, and because the difference between the passing rent and the index is the number that tells you what vacant possession is worth. Also every year before serving or receiving a renewal notice.",
@@ -36,6 +38,14 @@
     {
       "name": "Dubai Land Department, rental index and rent calculator",
       "url": "https://dubailand.gov.ae/en/eservices/rental-index/"
+    },
+    {
+      "name": "Decree No. (26) of 2013 concerning the Rent Disputes Settlement Centre, Articles 6, 10, 17, 18 and 23",
+      "url": "https://dlp.dubai.gov.ae/Legislation%20Reference/2013/Decree%2026%20of%202013.html"
+    },
+    {
+      "name": "Rental Disputes Centre, published fees for registering a claim",
+      "url": "https://rdc.gov.ae/en/frequently-asked-questions/"
     }
   ]
 }
@@ -121,9 +131,81 @@ The obvious hope is that a rising market rescues you, because the cap is generou
 
 This is the honest version of a sentence you will hear from an agent: that a below-market tenancy is fine because rents are rising. Rising rents are precisely what freeze the gap.
 
+## Where the index figure comes from
+
+Both sides of this argument need the same number, and it is the one input nobody can guess. The Land Department publishes it through the [rental index and rent calculator](https://dubailand.gov.ae/en/eservices/rental-index/) and through the Dubai REST app: you give the area, the property type, the number of bedrooms and the current rent, and it returns the average rental value for that building and the permitted increase that follows from it. Article 3 of the decree makes that output the reference, so a printout of it is the document to put in front of a landlord, and under the Smart Rental Index it is specific to the building rather than to the street.
+
+## What it costs to refuse an increase over the cap
+
+Everything above says what a landlord may ask for. None of it says what it costs to say no, which is the question a tenant holding an over-cap notice actually has. It has a published answer, and no page on this query prints it.
+
+The Rental Disputes Centre was established by [Decree No. (26) of 2013](https://dlp.dubai.gov.ae/Legislation%20Reference/2013/Decree%2026%20of%202013.html). Article 6 gives it "the exclusive jurisdiction to: determine all Rent Disputes that arise between Landlords and Tenants of Real Property situated in the Emirate, including in free zones", so there is one forum and no choice of venue. Article 23 does not set the fee: the Centre charges fees "as determined pursuant to a resolution of the Chairman of the Executive Council", which is why the figure is published by the Centre rather than found in the decree. These are the [Centre's own lines](https://rdc.gov.ae/en/frequently-asked-questions/).
+
+| What you pay | The Centre's wording |
+|---|---|
+| Registering the claim | 3.5% of Annual Rent or Lease Value if it is more or less than a year |
+| The floor and the ceiling on that fee | Fee not less than (AED 500) and not more than (AED 20,000) |
+| Process service | Process Service: AED 100 |
+| Knowledge fee | AED 10 Knowledge fee |
+| Innovation fee | AED 10 Innovation fee |
+| If conciliation settles it | half of the court fee paid for basic claims is refunded |
+
+**The base is the rent, not the dispute.** That is the line that decides whether a complaint is worth making. A tenant arguing about an increase of a few thousand dirhams pays a percentage of the entire annual rent to argue about it, and pays the same whether the amount in dispute is AED 500 or AED 50,000.
+
+The percentage is also only a percentage in the middle. Below an annual rent of **AED 14,286** the AED 500 floor is charged instead, and above **AED 571,429** the AED 20,000 ceiling is, so the all-in cost sits in a narrow band across every tenancy in between.
+
+| Annual rent | Registration fee | Contested, all in | Settled at conciliation | All in, as % of rent |
+|---|---|---|---|---|
+| 50,000 | 1,750 | 1,870 | 995 | 3.7 |
+| 78,000 | 2,730 | 2,850 | 1,485 | 3.7 |
+| 120,000 | 4,200 | 4,320 | 2,220 | 3.6 |
+| 250,000 | 8,750 | 8,870 | 4,495 | 3.5 |
+| 600,000 | 20,000 | 20,120 | 10,120 | 3.4 |
+
+Conciliation is the cheap route, and the decree says so in money rather than in encouragement. A dispute goes first to the Mediation and Conciliation Directorate, which under Article 10(f) will seek to settle it "within a period not exceeding fifteen (15) days from the date of appearance of the parties before it", and under Article 10(i) "One-half of the fee will be refunded if amicable settlement is reached" between the parties. A tenant who is plainly right about the cap has the cheaper path available precisely because being plainly right is what makes a settlement happen.
+
+## The smallest over-charge worth refusing
+
+Put the fee against the thing it buys. On the worked tenancy above, the index average is AED 120,000 and the sitting rent is AED 78,000, so the first renewal permits 15% and a lawful rent of **AED 89,700**. Suppose the landlord serves 20% instead, the top of the decree's ladder, and asks for **AED 93,600**. The excess is **AED 3,900** in the first year.
+
+The Centre's base is the annual rent or lease value and its wording does not say which contract is meant when a renewal is the thing in dispute. The demanded contract at AED 93,600 gives a registration fee of **AED 3,276**; the existing one at AED 78,000 gives AED 2,730. Take the higher, add the AED 120 of fixed lines, and a contested filing costs **AED 3,396**.
+
+So the fee takes **87.1%** of the first year's gain. Settle at conciliation and the refund brings the cost to AED 1,758, which is **45.1%** of it.
+
+That generalises into a threshold. The one-year break-even over-charge is the registration percentage plus the fixed lines spread over the rent, which on this tenancy is **3.6%** of the annual rent contested and **1.9%** settled. The decree's bands step in five-point intervals. So a landlord who demands one whole tier more than permitted is just worth refusing on the first year alone, and a landlord who demands two or three points more than permitted is not, because the fee is larger than the over-charge, and the honest advice is to pay it and serve the correct notice next year.
+
+## What the ladder does to a wrongful increase
+
+The first year is not the whole of it, and the argument you will hear, that an unlawful increase is permanent so any fee is worth paying to stop it, is wrong on this page's own mechanism.
+
+Raising the rent is what moves it into a band where less is permitted. A tenant who pays 20% where 15% was lawful arrives at the top of the ladder sooner, and then stops there at a **lower** rent than the tenant who paid correctly. Both paths from the same renewal, same index, held still:
+
+| Year | Lawful rent | Rent after the over-charge | Difference | Cumulative |
+|---|---|---|---|---|
+| 1 | 89,700 | 93,600 | 3,900 | 3,900 |
+| 2 | 98,670 | 102,960 | 4,290 | 8,190 |
+| 3 | 103,604 | 108,108 | 4,504 | 12,694 |
+| 4 | 108,784 | 108,108 | -676 | 12,018 |
+| 5 | 108,784 | 108,108 | -676 | 11,342 |
+| 6 | 108,784 | 108,108 | -676 | 10,666 |
+| 7 | 108,784 | 108,108 | -676 | 9,990 |
+| 8 | 108,784 | 108,108 | -676 | 9,314 |
+
+**The overpayment peaks at AED 12,694 in year 3 and then starts coming back.** The lawful path stalls at AED 108,784, the 9.3% below the index this page began with. The over-charged path stalls at AED 108,108, because 20% carried the rent across a tier boundary a year earlier. From year 4 the tenant who overpaid pays AED 676 a year less than the one who did not, and on a flat index the entire overpayment is clawed back **by year 22**.
+
+Two conclusions, pointing opposite ways, which is presumably why neither gets written down. The case for refusing is about the first three years and not about a permanent rent: **AED 12,694 against a contested filing cost of AED 3,396** is worth having, by a factor of 3.7. And the case against is that a long tenancy repairs the damage on its own, so an argument in year eighteen is about timing rather than about money.
+
+## In most of these disputes the first judgment is the last
+
+Every guide to this process describes three stages, and for a rent cap dispute that is usually wrong. Article 17(a) of the decree carves out judgments issued in rent claims worth less than one hundred thousand dirhams, "which will be final and not subject to any form of appeal". The Centre states the same rule from the other side: an appeal brought on a financial claim alone needs the claimed amount to be AED 100,000 or more, while an eviction may be appealed whatever it is worth.
+
+An over-cap increase of a few thousand dirhams is nowhere near that floor. So there is no appeal to budget for, no fifteen-day window under Article 18 to meet, and no security of half the award to find. Equally, one hearing is all there is, which is the argument for having the tenancy contract, its Ejari registration, the index printout and the ninety-day notice in order before the dispute rather than during it.
+
 ## The tenant's side of the same rule
 
-The rule is symmetrical in usefulness. A tenant facing an increase can run the Land Department's own calculator, and anything above the permitted figure can be declined without argument, because the figure is not a negotiating position. The Rental Dispute Centre exists for the disagreement that follows.
+The rule is symmetrical in usefulness. A tenant facing an increase can run the Land Department's own calculator, and anything above the permitted figure can be declined without argument, because the figure is not a negotiating position. What the sections above add is the price of insisting, and the threshold below which insisting costs more than conceding.
+
+The same Centre is where unpaid [service charges](/playbooks/service-charge-and-reserves/) end up as well, through the execution judge named in Article 32(b) of the jointly owned property law, so the forum is worth knowing as an owner and not only as a tenant.
 
 Run your own numbers on the [Dubai rent increase calculator](/calculators/dubai-rent-increase/), and if you are weighing a tenanted purchase, read [due diligence before an offer](/playbooks/due-diligence-before-an-offer/) next, because the tenancy contract and its Ejari registration are documents to read before the price is agreed rather than after.
 
