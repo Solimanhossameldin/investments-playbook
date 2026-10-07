@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "indexnow",
+   "status": "ok",
+   "detail": "submitted 147 urls, HTTP 200",
+   "ranAt": "2026-10-07T00:39:12.365Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "status": "incomplete",
    "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
    "ranAt": "2026-10-06T08:16:57.412Z"
-  },
-  {
-   "job": "fetch-photos",
-   "status": "ok",
-   "detail": "1 of 1 photographs published",
-   "ranAt": "2026-10-06T08:16:57.350Z"
   }
  ]
 }
