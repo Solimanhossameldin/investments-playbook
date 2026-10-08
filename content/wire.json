@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-08T15:37:26.092Z",
+ "fetchedAt": "2026-10-08T20:50:05.654Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Federal Reserve Board announces enforcement action against American Express Company to address, among other things, the firm’s failure to sufficiently detect and report certain suspicious activity related to money laundering",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20261008a.htm",
+   "published": "2026-10-08T20:30:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
   {
    "title": "Meeting of 9-10 September 2026",
    "url": "https://www.ecb.europa.eu//press/accounts/2026/html/ecb.mg261008~a10153d090.en.html",
@@ -66,9 +75,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
