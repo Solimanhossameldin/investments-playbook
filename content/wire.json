@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-07T21:47:38.805Z",
+ "fetchedAt": "2026-10-08T01:35:28.086Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Bank of England announces the four animals that will feature on our next series of banknotes",
+   "url": "https://www.bankofengland.co.uk/news/2026/october/boe-announces-the-four-animals-that-will-feature-on-next-series-of-banknotes",
+   "published": "2026-10-07T23:01:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
   {
    "title": "Minutes of the Federal Open Market Committee, September 15-16, 2026",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
