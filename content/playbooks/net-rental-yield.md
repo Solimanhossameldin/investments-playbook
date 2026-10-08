@@ -90,7 +90,7 @@ Vacancy comes off first, because management is a share of rent actually collecte
 | Insurance and fixed costs | 1,500 |
 | **Net operating income** | **69,127** |
 
-The service charge here is 900 square feet at AED 18 a foot. That rate is an illustration, not a published figure. Dubai has no per building service charge series this site is willing to quote, which is precisely why [the service charge is the cost buyers under-model](/playbooks/service-charge-and-reserves/): it never appears in the listing, and it is the input the answer is most sensitive to.
+The service charge here is 900 square feet at AED 18 a foot. That rate is an illustration, not a published figure. Dubai has no per building service charge series this site is willing to quote, which is precisely why [the service charge is the cost buyers under-model](/playbooks/service-charge-and-reserves/): it never appears in the listing, and it is the input the answer is most sensitive to. It is also not the only fixed cost a listing omits: in a tower served by a district cooling plant the capacity charge is billed on contracted capacity rather than on use, so it runs whether the flat is cooled or let, and [the chiller bill](/playbooks/district-cooling-and-chiller-charges/) prices it per square foot so it can be set beside this one.
 
 ## Three yields, and the one nobody names
 

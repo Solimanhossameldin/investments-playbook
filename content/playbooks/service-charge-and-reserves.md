@@ -105,6 +105,8 @@ On the illustrative one bedroom used throughout this site, 900 sq ft at AED 1,50
 
 At the illustrative rate of AED 18 a foot, the charge is AED 16,200, or **15.4% of the gross rent**, before management, maintenance, insurance or vacancy. It is the single largest deduction between the gross yield and the net one, and the [net rental yield](/playbooks/net-rental-yield/) page carries the full sensitivity table and the rate at which this property drops below 4% net. The [calculator](/calculators/net-rental-yield/) takes the rate as an input, which is the point: it is the number most worth getting right.
 
+It is not, however, the whole of the fixed cost. In a building served by a district cooling plant the capacity charge is levied on contracted capacity rather than on consumption, which makes it a second standing cost on the same unit, measured in the same dirhams per square foot and sitting outside this budget entirely. [District cooling and chiller charges](/playbooks/district-cooling-and-chiller-charges/) traces it to the resolution that sets it, and the common-area cooling that may not be billed to a unit lands back here, in the budget RERA has to approve.
+
 ## What to check before you make an offer
 
 Four of these are free public lookups, and together they take about an hour.

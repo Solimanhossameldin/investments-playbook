@@ -21,6 +21,7 @@ import * as op from "./offplan.mjs";
 import * as mg from "./mortgage.mjs";
 import * as dd from "./diligence.mjs";
 import * as ua from "./unitarea.mjs";
+import * as dc from "./districtcooling.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -157,6 +158,21 @@ const ENTRIES = [
     what: "The foundation of Dubai property ownership: it says who may own real property and where, makes the Property Register conclusive against everyone, and makes an unrecorded transaction invalid rather than merely unregistered.",
     applied: "due-diligence-before-an-offer",
   },
+  {
+    mod: dc, key: "coolingResolution", year: 2021, area: "Owning in a building",
+    what: "Regulates who may supply district cooling in Dubai, sets the tariff on the basis of cooling capacity rather than consumption, forbids a provider from collecting any charge the Supreme Council of Energy has not approved, and caps the fine for breaching the resolution.",
+    applied: "district-cooling-and-chiller-charges",
+  },
+  {
+    mod: dc, key: "rd10", year: 2026, area: "Owning in a building",
+    what: "The closed list of district cooling charges a provider may levy, with the cap on each: it defines the capacity charge as a rate times contracted capacity applied monthly, caps the consumption tariff and the fuel surcharge to the fils, refuses to approve any tariff that escalates the capacity charge, and forbids allocating a unit's capacity by the equipment installed in it.",
+    applied: "district-cooling-and-chiller-charges",
+  },
+  {
+    mod: dc, key: "rd06", year: null, area: "Owning in a building",
+    what: "Governs the district cooling bill itself: monthly issue in both languages, the deposit shown and returned within five working days, common-area cooling billed to the building rather than to a unit, who pays for a meter test, and the prohibition on charging for consumption at all while a faulty sub-meter goes unrepaired.",
+    applied: "district-cooling-and-chiller-charges",
+  },
 ];
 
 export function register() {
@@ -170,6 +186,6 @@ export function register() {
 
 /* The playbooks that cite instruments. Kept here so the page and the suite
    agree on what "every instrument the site cites" means. */
-export const APPLIED = ["due-diligence-before-an-offer", "price-per-square-foot", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let"];
+export const APPLIED = ["due-diligence-before-an-offer", "price-per-square-foot", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let", "district-cooling-and-chiller-charges"];
 
 export const AREAS = ["Buying and selling", "Buying off-plan", "Borrowing", "Owning in a building", "Renting", "Holiday homes"];

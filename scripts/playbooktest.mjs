@@ -18,6 +18,7 @@ import * as mg from "../src/mortgage.mjs";
 import * as ht from "../src/hometax.mjs";
 import * as dd from "../src/diligence.mjs";
 import * as ua from "../src/unitarea.mjs";
+import * as dc from "../src/districtcooling.mjs";
 import * as orr from "../src/offplanready.mjs";
 import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
@@ -127,6 +128,7 @@ const STATUTORY_PAGES = [
   ["mortgage-capacity", mg],
   ["due-diligence-before-an-offer", dd],
   ["price-per-square-foot", ua],
+  ["district-cooling-and-chiller-charges", dc],
 ];
 
 /* Pages whose instruments are statute somewhere other than Dubai. They get
@@ -1065,6 +1067,136 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
     ok("off-plan: the worked example is the net yield page's unit",
       op.EXAMPLE_PLAN.price === aq.EXAMPLE.price, String(op.EXAMPLE_PLAN.price));
+  }
+}
+
+/* ---- the Dubai chiller bill ----
+
+   The page's whole argument is that the capacity charge does not depend on
+   use, so the standing cost is a floor and a chiller-free rent premium has
+   to clear it before it buys any cooling. Three things could rot without a
+   browser noticing: a table cell edited away from the module, a prose
+   figure edited away from the table, and the argument itself surviving a
+   change to the tariffs that no longer supports it. The checks below cover
+   all three, and the last of them is a behaviour check: the page may only
+   make the claim while the arithmetic still produces it. */
+{
+  const p = playbooks.find((x) => x.slug === "district-cooling-and-chiller-charges");
+  if (p) {
+    const tables = tablesIn(p.body);
+    const prose = `${p.summary} ${p.body} ${p.formula} ${p.whenToUse} ${p.failureModes.join(" ")}`;
+    const C = dc.cost();
+
+    /* The provider's published rates are not statute, so they get the same
+       word-for-word treatment separately, with the source and its retrieval
+       date in the page's own sources rather than in the law register. */
+    for (const claim of dc.PUBLISHED_CLAIMS) {
+      ok(`district cooling: carries the published rate "${claim.slice(0, 48)}..."`, prose.includes(claim));
+    }
+    ok("district cooling: cites the provider's published charges page",
+      (p.sources || []).some((x) => x.url === dc.PUBLISHED.source.url));
+    ok("district cooling: the published source states its retrieval date",
+      (p.sources || []).some((x) => x.url === dc.PUBLISHED.source.url && /retrieved \d/.test(x.name)));
+
+    /* A published consumption rate above RD10's cap would mean one of the two
+       figures had been mistyped, and the page's cap arithmetic would then be
+       printing a negative headroom as though it were a finding. */
+    ok("district cooling: the published consumption rate is at or below the RD10 cap",
+      dc.PUBLISHED.consumptionPerRth <= dc.CAPS.consumptionWithCapacity,
+      `${dc.PUBLISHED.consumptionPerRth} vs ${dc.CAPS.consumptionWithCapacity}`);
+
+    const standTable = tables.find((t) => /Contracted capacity/i.test(t.head[0] || ""));
+    ok("district cooling: the standing cost table is present", !!standTable);
+    if (standTable) {
+      const S = dc.standingTable();
+      ok("district cooling: the standing table's capacities are the module's band",
+        same(standTable.rows.map((r) => r[0]), dc.CAPACITY_BAND.map((rt) => `${rt} RT`)),
+        JSON.stringify(standTable.rows.map((r) => r[0])));
+      ok("district cooling: the standing table's capacity charges match the module",
+        same(col(standTable, 1), S.map((r) => r.capacity)), JSON.stringify(col(standTable, 1)));
+      ok("district cooling: the standing table's meter fee matches the module",
+        same(col(standTable, 2), S.map((r) => r.meter)), JSON.stringify(col(standTable, 2)));
+      ok("district cooling: the standing table's VAT matches the module",
+        same(col(standTable, 3), S.map((r) => r.vat)), JSON.stringify(col(standTable, 3)));
+      ok("district cooling: the standing table's totals match the module",
+        same(col(standTable, 4), S.map((r) => r.total)), JSON.stringify(col(standTable, 4)));
+    }
+
+    const premTable = tables.find((t) => /Rent premium/i.test(t.head[0] || ""));
+    ok("district cooling: the chiller-free premium table is present", !!premTable);
+    if (premTable) {
+      const B = dc.premiumTable();
+      ok("district cooling: the premium table's premiums are the module's list",
+        same(col(premTable, 0), dc.PREMIUMS), JSON.stringify(col(premTable, 0)));
+      ok("district cooling: the premium table's headroom matches the module",
+        same(col(premTable, 1), B.map((r) => r.headroom)), JSON.stringify(col(premTable, 1)));
+      ok("district cooling: the premium table's break-even consumption matches the module",
+        same(col(premTable, 2), B.map((r) => r.rth)), JSON.stringify(col(premTable, 2)));
+      ok("district cooling: the premium table's hours a day match the module",
+        same(col(premTable, 3), B.map((r) => r.hoursPerDay)), JSON.stringify(col(premTable, 3)));
+      ok("district cooling: the premium table's load factors match the module",
+        same(col(premTable, 4), B.map((r) => r.loadFactor)), JSON.stringify(col(premTable, 4)));
+
+      /* Behaviour, not presence. The page says the first row buys the tenant
+         nothing. That is only true while the smallest premium in the module's
+         list fails to cover the standing cost, so the claim and the condition
+         are checked together: raise the premium or cut the tariff and this
+         fails by name instead of going quietly wrong in print. */
+      const first = B[0];
+      const claimsNothing = /buys the tenant nothing/.test(p.body);
+      ok("district cooling: claims a premium buys nothing only while one does",
+        claimsNothing === (first.rth === null),
+        `claim=${claimsNothing} rth=${first.rth}`);
+      if (first.rth === null) {
+        ok("district cooling: prints the shortfall the smallest premium leaves",
+          p.body.includes(`AED ${dc.money2(Math.abs(first.headroom))} and called it a premium`),
+          dc.money2(Math.abs(first.headroom)));
+      }
+    }
+
+    /* The floor, in every unit the page quotes it in. */
+    ok("district cooling: prints the standing cost the module computes",
+      p.body.includes(`AED ${dc.money2(dc.minimumPremium())}`), dc.money2(dc.minimumPremium()));
+    ok("district cooling: prints the standing cost as a share of rent",
+      p.body.includes(`${C.ofRent}% of the gross rent`), String(C.ofRent));
+    ok("district cooling: prints the standing cost in points of net yield",
+      p.body.includes(`${C.netPoints} points of net yield`), String(C.netPoints));
+    ok("district cooling: prints the standing cost per square foot",
+      p.body.includes(`AED ${C.perSqft} per square foot`), String(C.perSqft));
+    ok("district cooling: sets it beside the service charge the other pages use",
+      p.body.includes(`against a service charge of **AED ${C.serviceChargePerSqft}**`),
+      String(C.serviceChargePerSqft));
+
+    /* The void, prorated from the same annual figure rather than typed. */
+    ok("district cooling: prints the monthly accrual on an empty flat",
+      p.body.includes(`AED ${dc.money2(dc.voidCost(1))} a month`), dc.money2(dc.voidCost(1)));
+    ok("district cooling: prints the three-month void",
+      p.body.includes(`AED ${dc.money2(dc.voidCost(3))} over a three-month void`),
+      dc.money2(dc.voidCost(3)));
+    ok("district cooling: prints the disconnection fee the provider publishes",
+      p.body.includes(`AED ${dc.PUBLISHED.voluntaryDisconnection} per instance`));
+    ok("district cooling: prints the deposit cap the regulation allows",
+      p.body.includes(`AED ${dc.money(dc.depositCap())}`), dc.money(dc.depositCap()));
+
+    /* The cap identity. The page claims the consumption cap holds nothing
+       above the published base rate except a full fuel surcharge. That is an
+       identity between three figures in the module, so the page may only say
+       it while the identity holds. */
+    const claimsIdentity = /is RD10's separate cap on the fuel surcharge, exactly/.test(p.body);
+    ok("district cooling: claims the cap identity only while it holds",
+      claimsIdentity === dc.capIsBasePlusSurcharge(),
+      `claim=${claimsIdentity} headroom=${dc.capHeadroom()} surcharge=${dc.CAPS.fuelSurcharge}`);
+    ok("district cooling: prints the headroom the subtraction leaves",
+      p.body.includes(`**${dc.capHeadroom()}**`), String(dc.capHeadroom()));
+
+    /* The hours a day are the two figures the argument turns on, so they are
+       read out of the module rather than left to the table alone. */
+    const atSix = dc.breakEven({ premium: 6000 });
+    const atTen = dc.breakEven({ premium: 10000 });
+    ok("district cooling: prints the hours a mid premium buys",
+      p.body.includes(`**${atSix.hoursPerDay} hours a day**`), String(atSix.hoursPerDay));
+    ok("district cooling: prints the hours the largest common premium buys",
+      p.body.includes(`**${atTen.hoursPerDay} hours**`), String(atTen.hoursPerDay));
   }
 }
 
