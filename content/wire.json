@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-08T08:00:33.916Z",
+ "fetchedAt": "2026-10-08T15:37:26.092Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -26,6 +26,24 @@
  ],
  "items": [
   {
+   "title": "Meeting of 9-10 September 2026",
+   "url": "https://www.ecb.europa.eu//press/accounts/2026/html/ecb.mg261008~a10153d090.en.html",
+   "published": "2026-10-08T11:30:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Waller, The Signaling Value of the Summary of Economic Projections",
+   "url": "https://www.federalreserve.gov/newsevents/speech/waller20261008a.htm",
+   "published": "2026-10-08T08:30:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
+  },
+  {
    "title": "Piero Cipollone: Interview with Corriere della Sera",
    "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261008~3184e7d0d0.en.html",
    "published": "2026-10-08T06:00:00.000Z",
@@ -48,9 +66,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
@@ -692,8 +710,8 @@
    "feed": "fed-all"
   },
   {
-   "title": "Bowman, The Final Chapter on Modernizing Bank Regulatory Stress Testing",
-   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260918a.htm",
+   "title": "Bowman, Initial Findings from Independent Review of Silicon Valley Bank",
+   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260918b.htm",
    "published": "2026-09-18T13:30:00.000Z",
    "source": "Federal Reserve",
    "sourceLabel": "Speeches",
@@ -701,8 +719,8 @@
    "feed": "fed-speeches"
   },
   {
-   "title": "Bowman, Initial Findings from Independent Review of Silicon Valley Bank",
-   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260918b.htm",
+   "title": "Bowman, The Final Chapter on Modernizing Bank Regulatory Stress Testing",
+   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260918a.htm",
    "published": "2026-09-18T13:30:00.000Z",
    "source": "Federal Reserve",
    "sourceLabel": "Speeches",
@@ -735,69 +753,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Transcript of the Governor's pooled broadcast interview given on 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/news/2026/september/the-governor-interview-transcript-17-september-2026",
-   "published": "2026-09-17T13:30:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Monetary Policy Committee dates for 2027",
-   "url": "https://www.bankofengland.co.uk/news/2026/september/mpc-dates-for-2027",
-   "published": "2026-09-17T13:30:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "SEC Issues “Innovation Exemption” to Facilitate the Trading of Tokenized NMS Stock and Request for Comment",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-90-sec-issues-innovation-exemption-facilitate-trading-tokenized-nms-stock-request-comment",
-   "published": "2026-09-17T12:55:00.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "Bank rate maintained at 3.75% - September 2026 Monetary Policy Summary and Minutes",
-   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/september-2026",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Asset Purchase Facility: Gilt Sales – Market Notice 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/asset-purchase-facility-gilt-sales-market-notice-17-september-2026",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Exchange of letters between the Governor and the Chancellor regarding CPI Inflation - September 2026",
-   "url": "https://www.bankofengland.co.uk/letter/2026/cpi-inflation-september-2026",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Exchange of letters between the Governor and the Chancellor regarding QT and the APF - September 2026",
-   "url": "https://www.bankofengland.co.uk/letter/2026/exchange-of-letters-between-the-governor-and-the-chancellor-regarding-qt-and-the-apf",
-   "published": "2026-09-17T11:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
