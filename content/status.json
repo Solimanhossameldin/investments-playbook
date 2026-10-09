@@ -1,6 +1,42 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-10-09T01:10:58.178Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-10-09, so there is nothing to send.",
+   "ranAt": "2026-10-09T01:10:58.134Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-10-09T01:10:58.094Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-10-09T01:10:58.058Z"
+  },
+  {
+   "job": "fetch-photos",
+   "status": "ok",
+   "detail": "4 of 4 photographs published",
+   "ranAt": "2026-10-09T01:10:58.016Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-10-09T01:10:50.970Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "ok",
    "detail": "82 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
@@ -203,42 +239,6 @@
    "status": "ok",
    "detail": "update=success, deploy=success, submit=success",
    "ranAt": "2026-10-07T00:39:25.550Z"
-  },
-  {
-   "job": "indexnow",
-   "status": "ok",
-   "detail": "submitted 147 urls, HTTP 200",
-   "ranAt": "2026-10-07T00:39:12.365Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-10-07T00:38:45.089Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-10-07, so there is nothing to send.",
-   "ranAt": "2026-10-07T00:38:45.037Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-10-07T00:38:44.986Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-10-07T00:38:44.940Z"
-  },
-  {
-   "job": "fetch-photos",
-   "status": "ok",
-   "detail": "4 of 4 photographs published",
-   "ranAt": "2026-10-07T00:38:44.889Z"
   }
  ]
 }
