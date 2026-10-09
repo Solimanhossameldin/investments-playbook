@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-09T19:47:48.024Z",
+ "fetchedAt": "2026-10-09T23:50:32.766Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -111,9 +111,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
