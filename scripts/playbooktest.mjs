@@ -19,6 +19,7 @@ import * as ht from "../src/hometax.mjs";
 import * as dd from "../src/diligence.mjs";
 import * as ua from "../src/unitarea.mjs";
 import * as dc from "../src/districtcooling.mjs";
+import * as rb from "../src/rentbuy.mjs";
 import * as orr from "../src/offplanready.mjs";
 import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
@@ -129,6 +130,7 @@ const STATUTORY_PAGES = [
   ["due-diligence-before-an-offer", dd],
   ["price-per-square-foot", ua],
   ["district-cooling-and-chiller-charges", dc],
+  ["rent-vs-buy", rb],
 ];
 
 /* Pages whose instruments are statute somewhere other than Dubai. They get
@@ -1197,6 +1199,222 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       p.body.includes(`**${atSix.hoursPerDay} hours a day**`), String(atSix.hoursPerDay));
     ok("district cooling: prints the hours the largest common premium buys",
       p.body.includes(`**${atTen.hoursPerDay} hours**`), String(atTen.hoursPerDay));
+  }
+}
+
+/* ---- rent or buy, and the hold period it turns on ----
+
+   This page's whole claim is that the three-to-five-year consensus is a
+   growth forecast rather than an arithmetic result, and it makes that claim
+   by printing a break-even year computed at zero growth. Two things could rot
+   silently and both would look fine in a browser: a figure edited in a table
+   so it no longer matches the model, and a figure edited in the prose so the
+   page asserts a hold period the model does not produce. So every table here
+   is parsed back out and compared to src/rentbuy.mjs cell by cell, and every
+   sentence carrying a computed number has to carry the computed number.
+
+   The published-total checks are the ones worth having. The Land Department
+   and the utility both print a total alongside the lines that make it up, so
+   the fee arithmetic can be checked against its own source rather than
+   against this file, and it is checked that way below. */
+{
+  const p = playbooks.find((x) => x.slug === "rent-vs-buy");
+  if (p) {
+    const tables = tablesIn(p.body);
+    const find = (pred) => tables.find(pred);
+    const be = rb.breakEven();
+    const R1 = rb.rentingYear(1);
+    const O1 = rb.owningYear(1);
+    const entry = rb.entryStack();
+    const exitAtBe = rb.exitStack(be.year);
+
+    /* The fee lines add to the total the authority publishes. This is the
+       check that would have caught a mistyped service partner fee, and it
+       cannot be satisfied by editing this file, because the figure it
+       compares against is the one printed on the service page. */
+    ok("rent or buy: the Ejari lines add to the total the Department publishes",
+      rb.ejariFee() === rb.EJARI.publishedApp, `${rb.ejariFee()} vs ${rb.EJARI.publishedApp}`);
+    ok("rent or buy: the trustee centre lines add to within a dirham of the published total",
+      Math.abs(rb.ejariFee({ centre: true }) - rb.EJARI.publishedCentre) < 1,
+      `${rb.ejariFee({ centre: true })} vs ${rb.EJARI.publishedCentre}`);
+    ok("rent or buy: the page owns up to the quarter dirham the Department rounds",
+      p.body.includes(`add to ${rb.ejariFee({ centre: true })}, where the Department prints ${rb.EJARI.publishedCentre}`));
+    ok("rent or buy: the connection lines add to the total the utility publishes",
+      rb.dewaActivation() === rb.DEWA.publishedActivation,
+      `${rb.dewaActivation()} vs ${rb.DEWA.publishedActivation}`);
+
+    /* A break-even is a year after which owning stays cheaper. An earlier
+       version of this model returned the first crossing, which is not the
+       same thing: with the opportunity rate above the mortgage rate the
+       curves can touch and separate again, and a page that printed that
+       year would be naming a crossing it had not checked held. */
+    ok("rent or buy: the break-even holds for every later year in the term",
+      be.rows.slice(be.year - 1).every((r) => r.advantage >= 0));
+    ok("rent or buy: the year before the break-even still favours renting",
+      be.year > 1 && be.rows[be.year - 2].advantage < 0);
+
+    /* And the requirement is not theoretical. At a 2.0% mortgage rate, a
+       5.5% opportunity rate and prices falling 1.5% a year, the two curves
+       cross in year 11 and separate again: cheap debt keeps the early years
+       light, and then the capital being repaid into the walls earns less
+       there than elsewhere while the walls lose value, and the gap reopens.
+       A model that returned the first crossing would print that year as a
+       break-even. These four checks are what stop it. */
+    const rev = rb.breakEven({ ...rb.CASE, mortgageRate: 0.02, opportunityRate: 0.055, capitalGrowth: -0.015 });
+    ok("rent or buy: the reversing case really does cross", rev.rows.some((r) => r.advantage >= 0));
+    ok("rent or buy: the reversing case really does come back",
+      rev.rows.slice(rev.crossed).some((r) => r.advantage < 0));
+    ok("rent or buy: a crossing that reverses is not reported as a break-even", rev.year === null, rev.year);
+    ok("rent or buy: a crossing that reverses is still named", rev.crossed === 11, rev.crossed);
+
+    const rentTable = find((t) => t.rows.length && /^Rent, as the decree permits it$/.test(t.rows[0][0]));
+    ok("rent or buy: the renting table is present", !!rentTable);
+    if (rentTable) {
+      ok("rent or buy: the renting table matches the computed lines",
+        same(col(rentTable, 1), [...R1.lines.map(([, v]) => v), R1.total]),
+        JSON.stringify(col(rentTable, 1)));
+      ok("rent or buy: the renting table is labelled with the lines it computed",
+        same(rentTable.rows.slice(0, R1.lines.length).map((r) => r[0]), R1.lines.map(([k]) => k)));
+    }
+
+    const ownTable = find((t) => t.rows.length && /^Interest on the loan$/.test(t.rows[0][0]));
+    ok("rent or buy: the owning table is present", !!ownTable);
+    if (ownTable) {
+      ok("rent or buy: the owning table matches the computed lines",
+        same(col(ownTable, 1), [...O1.lines.map(([, v]) => v), O1.total]),
+        JSON.stringify(col(ownTable, 1)));
+      ok("rent or buy: the owning table is labelled with the lines it computed",
+        same(ownTable.rows.slice(0, O1.lines.length).map((r) => r[0]), O1.lines.map(([k]) => k)));
+      ok("rent or buy: the owning table carries no principal line",
+        !ownTable.rows.some((r) => /principal/i.test(r[0])));
+    }
+
+    const stackTable = find((t) => t.rows.length && /acquisition stack/.test(t.rows[0][0]));
+    ok("rent or buy: the round trip table is present", !!stackTable);
+    if (stackTable) {
+      ok("rent or buy: the round trip table matches the computed stacks",
+        same(col(stackTable, 1),
+          [entry.acquisition, entry.mortgage, exitAtBe.total, entry.total + exitAtBe.total]),
+        JSON.stringify(col(stackTable, 1)));
+    }
+
+    const growth = find((t) => /Capital growth/i.test(t.head[0]));
+    ok("rent or buy: the capital growth table is present", !!growth);
+    if (growth) {
+      ok("rent or buy: the growth table is labelled with the rates it computed",
+        same(col(growth, 0), rb.GROWTHS.map((g) => Number((g * 100).toFixed(2)))),
+        JSON.stringify(col(growth, 0)));
+      ok("rent or buy: the growth table matches the computed break-even years",
+        same(col(growth, 1), rb.GROWTHS.map((g) => rb.atGrowth(g).year)),
+        JSON.stringify(col(growth, 1)));
+      ok("rent or buy: a growth rate with no break-even in the term says so in words",
+        growth.rows.every((r, i) => (rb.atGrowth(rb.GROWTHS[i]).year === null) === /Never/.test(r[1])));
+    }
+
+    const rates = find((t) => /Mortgage rate/i.test(t.head[0]));
+    ok("rent or buy: the mortgage rate table is present", !!rates);
+    if (rates) {
+      ok("rent or buy: the rate table is labelled with the rates it computed",
+        same(col(rates, 0), rb.RATES.map((r) => Number((r * 100).toFixed(2)))),
+        JSON.stringify(col(rates, 0)));
+      ok("rent or buy: the rate table matches the computed break-even years",
+        same(col(rates, 1), rb.RATES.map((r) => rb.atRate(r).year)),
+        JSON.stringify(col(rates, 1)));
+    }
+
+    const opp = find((t) => /Return available elsewhere/i.test(t.head[0]));
+    ok("rent or buy: the opportunity rate table is present", !!opp);
+    if (opp) {
+      ok("rent or buy: the opportunity table is labelled with the rates it computed",
+        same(col(opp, 0), rb.OPPORTUNITY.map((o) => Number((o * 100).toFixed(2)))),
+        JSON.stringify(col(opp, 0)));
+      ok("rent or buy: the opportunity table matches the computed break-even years",
+        same(col(opp, 1), rb.OPPORTUNITY.map((o) => rb.atOpportunity(o).year)),
+        JSON.stringify(col(opp, 1)));
+    }
+
+    /* The cap column is the page's own finding, so it is compared as a
+       column rather than asked about as a figure. */
+    const cap = find((t) => /Years the cap adds/i.test((t.head[3] || "")));
+    ok("rent or buy: the rent cap table is present", !!cap);
+    if (cap) {
+      const eff = rb.INDEX_GROWTHS.map((g) => rb.capEffect(g));
+      ok("rent or buy: the cap table is labelled with the index growth it computed",
+        same(col(cap, 0), rb.INDEX_GROWTHS.map((g) => Number((g * 100).toFixed(2)))),
+        JSON.stringify(col(cap, 0)));
+      ok("rent or buy: the cap table matches the capped break-even years",
+        same(col(cap, 1), eff.map((e) => e.cappedYear)), JSON.stringify(col(cap, 1)));
+      ok("rent or buy: the cap table matches the uncapped break-even years",
+        same(col(cap, 2), eff.map((e) => e.indexYear)), JSON.stringify(col(cap, 2)));
+      ok("rent or buy: the cap table matches the years the cap adds",
+        same(col(cap, 3), eff.map((e) => e.yearsAdded)), JSON.stringify(col(cap, 3)));
+      ok("rent or buy: the cap table matches the settled gap to the index",
+        same(col(cap, 4), eff.map((e) => e.finalGap)), JSON.stringify(col(cap, 4)));
+      /* The claim in the prose is that the number is the same at every rate
+         tested. If one of them ever stops agreeing, the sentence is wrong
+         and this is what says so. */
+      const added = eff.filter((e) => e.indexGrowth > 0).map((e) => e.yearsAdded);
+      ok("rent or buy: the cap adds the same number of years at every growth rate the page claims it for",
+        new Set(added).size === 1 && added[0] === 2, JSON.stringify(added));
+    }
+
+    const five = find((t) => t.rows.length && /^Property tax$/.test(t.rows[0][0]));
+    ok("rent or buy: the five percent rule table is present", !!five);
+    if (five) {
+      const running = O1.lines.filter(([k]) => /Service charge|Maintenance|Insurance/.test(k))
+        .reduce((a, [, v]) => a + v, 0);
+      const forgone = O1.lines.filter(([k]) => /Return forgone/.test(k))
+        .reduce((a, [, v]) => a + v, 0);
+      const interest = O1.lines.find(([k]) => /^Interest/.test(k))[1];
+      ok("rent or buy: the five percent table matches the owning lines regrouped",
+        same(col(five, 1), [0, running, interest, forgone, O1.total]),
+        JSON.stringify(col(five, 1)));
+      const share = (n) => Number(((n / rb.CASE.price) * 100).toFixed(2));
+      ok("rent or buy: the five percent table's shares of value are the computed shares",
+        same(col(five, 2), [0, share(running), share(interest), share(forgone), share(O1.total)]),
+        JSON.stringify(col(five, 2)));
+      ok("rent or buy: the five percent table adds up",
+        running + interest + forgone === O1.total);
+    }
+
+    /* The sentences that carry a computed figure. Each phrase is unique in
+       the page, so a wrong figure in prose cannot be rescued by the right
+       figure sitting in a table further down. */
+    const slide = rb.legAnnualised(PRICE_INDEX.legs.slide);
+    const claims = [
+      ["the break-even year", `Owning costs less than renting from year ${be.year}.`],
+      ["the annual saving over the first year of renting",
+        `AED ${rb.money(Math.round(R1.total - O1.total))}** cheaper than the first year of renting`],
+      ["the entry stack as a share of price", `entry stack is **${entry.rate.toFixed(2)}%** of the price`],
+      ["the round trip", `AED ${rb.money(entry.total + exitAtBe.total)} round trip`],
+      ["the round trip as a share of price",
+        `which is ${(((entry.total + exitAtBe.total) / rb.CASE.price) * 100).toFixed(2)}% of the price`],
+      ["the exit falling as the loan amortises",
+        `AED ${rb.money(rb.exitStack(3).total)} in year three and AED ${rb.money(exitAtBe.total)} in year eleven`],
+      ["the growth needed to break even by year five",
+        `by year five needs ${(rb.requiredGrowth(5) * 100).toFixed(2)}% a year`],
+      ["the growth needed to break even by year three",
+        `by year three needs ${(rb.requiredGrowth(3) * 100).toFixed(2)}% a year`],
+      ["the slide in the published index", `${Math.abs(PRICE_INDEX.legs.slide.all)}% between`],
+      ["the slide as a compound annual rate", `which is **${slide}% a year**`],
+      ["the months the index took to recover", `**${PRICE_INDEX.recovered.months} months** to recover`],
+      ["the surge as a compound annual rate",
+        `at ${rb.legAnnualised(PRICE_INDEX.legs.surge)}% a year`],
+      ["the unrecoverable rate against the rent",
+        `${(((O1.total) / rb.CASE.price) * 100).toFixed(2)}%`],
+      ["the rent as a share of the price",
+        `${((rb.CASE.rent / rb.CASE.price) * 100).toFixed(2)}% of the price`],
+    ];
+    for (const [what, phrase] of claims) {
+      ok(`rent or buy: the page states ${what}`, p.body.includes(phrase), phrase);
+    }
+
+    /* The two conventions have no instrument, and the page saying so is the
+       difference between this page and the ones it is arguing with. */
+    ok("rent or buy: the page says the commission and the deposit are conventions, not law",
+      p.body.includes("The lease commission and the security deposit are the two lines no instrument sets."));
+    ok("rent or buy: the page names the sensitivity it is most exposed to",
+      p.failureModes.some((f) => /mortgage rate and the opportunity rate are the reader's own/.test(f)));
   }
 }
 
