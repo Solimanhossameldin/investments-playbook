@@ -23,6 +23,7 @@ import * as dd from "./diligence.mjs";
 import * as ua from "./unitarea.mjs";
 import * as dc from "./districtcooling.mjs";
 import * as rb from "./rentbuy.mjs";
+import * as fo from "./foreignownership.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -184,6 +185,11 @@ const ENTRIES = [
     what: "Governs the district cooling bill itself: monthly issue in both languages, the deposit shown and returned within five working days, common-area cooling billed to the building rather than to a unit, who pays for a meter test, and the prohibition on charging for consumption at all while a faulty sub-meter goes unrepaired.",
     applied: "district-cooling-and-chiller-charges",
   },
+  {
+    mod: fo, key: "reg3", year: 2006, area: "Buying and selling",
+    what: "Determines where a non-UAE national may own real property in Dubai, plot by numbered plot across twenty-three named areas and by the maps attached to it, and grants freehold without time restriction, usufruct and leasehold of up to ninety-nine years as three distinct interests rather than as grades of one.",
+    applied: "freehold-areas-and-foreign-ownership",
+  },
 ];
 
 export function register() {
@@ -197,6 +203,6 @@ export function register() {
 
 /* The playbooks that cite instruments. Kept here so the page and the suite
    agree on what "every instrument the site cites" means. */
-export const APPLIED = ["due-diligence-before-an-offer", "price-per-square-foot", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let", "district-cooling-and-chiller-charges", "rent-vs-buy"];
+export const APPLIED = ["freehold-areas-and-foreign-ownership", "due-diligence-before-an-offer", "price-per-square-foot", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let", "district-cooling-and-chiller-charges", "rent-vs-buy"];
 
 export const AREAS = ["Buying and selling", "Buying off-plan", "Borrowing", "Owning in a building", "Renting", "Holiday homes"];

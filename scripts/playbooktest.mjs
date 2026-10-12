@@ -20,6 +20,7 @@ import * as dd from "../src/diligence.mjs";
 import * as ua from "../src/unitarea.mjs";
 import * as dc from "../src/districtcooling.mjs";
 import * as rb from "../src/rentbuy.mjs";
+import * as fo from "../src/foreignownership.mjs";
 import * as orr from "../src/offplanready.mjs";
 import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
@@ -131,6 +132,7 @@ const STATUTORY_PAGES = [
   ["price-per-square-foot", ua],
   ["district-cooling-and-chiller-charges", dc],
   ["rent-vs-buy", rb],
+  ["freehold-areas-and-foreign-ownership", fo],
 ];
 
 /* Pages whose instruments are statute somewhere other than Dubai. They get
@@ -1415,6 +1417,81 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       p.body.includes("The lease commission and the security deposit are the two lines no instrument sets."));
     ok("rent or buy: the page names the sensitivity it is most exposed to",
       p.failureModes.some((f) => /mortgage rate and the opportunity rate are the reader's own/.test(f)));
+  }
+}
+
+/* ---- foreign ownership: the plot list and the value of a term ----
+
+   Two things on this page can rot without looking wrong. The plot table is a
+   transcription of Article 3 and a single mistyped plot number would make the
+   site wrong about the one fact it is claiming everyone else gets wrong. And
+   the leasehold ladder is arithmetic, so an edited cell would read perfectly
+   while saying something false about duration. Both are therefore computed in
+   src/foreignownership.mjs and compared here cell by cell, rather than being
+   trusted because they are present. */
+{
+  const p = playbooks.find((x) => x.slug === "freehold-areas-and-foreign-ownership");
+  ok("freehold: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+
+    /* The transcription of Article 3. Compared as text, not as numbers: a
+       plot list like "007, 014, 015, 033" survives the numeric reader as the
+       integer 7014015033, so a check that went through cellNum would compare
+       nonsense to nonsense and pass on a reordered list. */
+    const areaTable = tables.find((t) => t.head[0] === "Area" && /Plots/.test(t.head[1] || ""));
+    ok("freehold: the designated-areas table is present", !!areaTable);
+    if (areaTable) {
+      ok("freehold: the table lists every area in the regulation, and only those",
+        same(areaTable.rows.map((r) => r[0]), fo.DESIGNATED.map(([a]) => a)),
+        areaTable.rows.map((r) => r[0]).join(" | "));
+      ok("freehold: every area carries the regulation's own plot numbers in order",
+        same(areaTable.rows.map((r) => r[1]), fo.DESIGNATED.map(([, pl]) => pl.join(", "))),
+        areaTable.rows.map((r) => r[1]).join(" | "));
+    }
+
+    ok("freehold: the summary counts the plots and areas the module holds",
+      p.summary.includes(`${fo.plotCount()} numbered land plots across ${fo.areaCount()} areas`),
+      `${fo.plotCount()} / ${fo.areaCount()}`);
+
+    /* The ladder. Every column is computed, including the percentage, so that
+       a hand-edited share cannot sit beside a correct dirham value. */
+    const L = fo.ladder();
+    const ladderTable = tables.find((t) => /Years left/.test(t.head[0] || ""));
+    ok("freehold: the leasehold ladder is present", !!ladderTable);
+    if (ladderTable) {
+      ok("freehold: the ladder covers the module's terms",
+        same(col(ladderTable, 0), fo.TERMS), JSON.stringify(col(ladderTable, 0)));
+      ok("freehold: the ladder's shares of freehold value are the computed ones",
+        same(col(ladderTable, 1), L.map((r) => Number(r.pct.toFixed(2)))),
+        JSON.stringify(col(ladderTable, 1)));
+      ok("freehold: the ladder's values are the computed ones",
+        same(col(ladderTable, 2), L.map((r) => r.value)), JSON.stringify(col(ladderTable, 2)));
+      ok("freehold: the ladder's discounts are the computed ones",
+        same(col(ladderTable, 3), L.map((r) => r.discount)), JSON.stringify(col(ladderTable, 3)));
+    }
+
+    /* The finding itself: the term left on a lease granted at commencement,
+       and the discount that term implies. Read against the page's own review
+       year rather than against today, which is the difference between a
+       tripwire and a time bomb: tying it to the clock would fail this suite on
+       1 January with nothing changed and no edit that could have caused it,
+       while tying it to `reviewed` fails exactly when someone re-dates the
+       page without re-running the arithmetic underneath it. */
+    const reviewedYear = Number(isoDate(p.reviewed).slice(0, 4));
+    const years = fo.remainingTerm(reviewedYear);
+    const now = fo.termValue(years);
+    ok("freehold: the finding uses the term actually left on a 2006 grant",
+      p.body.includes(`has **${years} years** left`), String(years));
+    ok("freehold: the finding's discount is the computed one",
+      p.body.includes(`a discount of **AED ${fo.money(now.discount)}**`), fo.money(now.discount));
+    ok("freehold: the capitalisation rate on the page is the site's own",
+      p.body.includes(`**${aq.pctText(fo.capRate())}**`), aq.pctText(fo.capRate()));
+
+    /* The page's whole argument is that the market may not agree with it. If
+       that qualification ever goes, the page is overclaiming. */
+    ok("freehold: the page still says the discount is not an observed one",
+      p.body.includes("it says what the arithmetic implies, not what Dubai buyers currently pay"));
   }
 }
 
