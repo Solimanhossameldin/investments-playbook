@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-12T09:35:42.423Z",
+ "fetchedAt": "2026-10-12T19:20:32.656Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -686,42 +686,6 @@
    "title": "Philip R. Lane: Interview with Le Temps",
    "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in260922~5f89d300ee.en.html",
    "published": "2026-09-22T05:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Bank of England announces new office space in Leeds",
-   "url": "https://www.bankofengland.co.uk/news/2026/september/bank-of-england-announces-new-office-space-in-leeds",
-   "published": "2026-09-21T12:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Foreign Currency Reserves 2026 – Market Notice 21 September 2026",
-   "url": "https://www.bankofengland.co.uk/markets/market-notices/2026/september/foreign-currency-reserves-2026-market-notice-21-september-2026",
-   "published": "2026-09-21T11:30:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "ECB to invest part of own funds in tokenised securities, with settlement via Pontes",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260921_1~5a011ecbea.en.html",
-   "published": "2026-09-21T10:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Eurosystem brings central bank money to tokenised finance",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
-   "published": "2026-09-21T10:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
