@@ -119,7 +119,7 @@ Beyond the obvious condition of the unit: the age and state of the building's pl
 
 ## Then run the arithmetic, in this order
 
-[Price per square foot](/playbooks/price-per-square-foot/) against genuine recent transactions in the same building, using the title deed area rather than the marketing one. Then [net yield](/playbooks/net-rental-yield/) with the verified service charge and the achievable rent rather than the advertised ones. Then [break-even occupancy](/playbooks/break-even-occupancy/), which tells you how much vacancy the purchase survives. Then the [minimum hold period](/glossary/minimum-hold-period/), which tells you whether your intended horizon is long enough to absorb the round trip.
+[Price per square foot](/playbooks/price-per-square-foot/) against genuine recent transactions in the same building, using the title deed area rather than the marketing one. Then [net yield](/playbooks/net-rental-yield/) with the verified service charge and the achievable rent rather than the advertised ones. Then [break-even occupancy](/playbooks/break-even-occupancy/), which tells you how much vacancy the purchase survives. Then the [minimum hold period](/glossary/minimum-hold-period/), which tells you whether your intended horizon is long enough to absorb the round trip, and which [transaction costs and the minimum hold period](/playbooks/transaction-cost-drag/) computes in years of net rent rather than leaving as an adjective.
 
 If all four still look right, make the offer. If any of them changed materially once real numbers replaced the marketing ones, that is the process working.
 

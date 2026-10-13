@@ -22,6 +22,7 @@ import * as dc from "../src/districtcooling.mjs";
 import * as rb from "../src/rentbuy.mjs";
 import * as fo from "../src/foreignownership.mjs";
 import * as orr from "../src/offplanready.mjs";
+import * as hp from "../src/holdperiod.mjs";
 import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
 import * as gv from "../src/goldenvisa.mjs";
@@ -2987,6 +2988,124 @@ ok("every calculator points at a playbook that exists",
     ok("golden visa: the solved unit clears the threshold", income.noi >= income.target);
     ok("golden visa: the solved unit is the smallest that does",
       aq.operating(gv.unitOfArea(income.sqft - 1)).net < income.target);
+  }
+}
+
+/* Transaction cost drag. This page used to print a range for the round trip
+   and source it to a brokerage blog, and the whole argument it now makes
+   rests on two things that can rot independently of each other.
+
+   The first is that the round trip is the sum of three schedules computed
+   elsewhere. If acquisition or disposal changes, this page's headline has to
+   move with it, and a literal left behind in the prose is exactly the kind of
+   drift the reader has no way to detect.
+
+   The second is the finding, which is that the share of holds clearing the
+   break-even rise did not improve between three years and eight. That is a
+   claim about the published index, not a view. If the Land Department revises
+   or extends the series and the plateau disappears, the page is wrong and must
+   be rewritten rather than rebuilt, so the check below tests the behaviour and
+   not just the printed numbers. */
+{
+  const p = playbooks.find((x) => x.slug === "transaction-cost-drag");
+  if (p) {
+    /* The prose writes small numbers as words, so the derivation has to as
+       well or the check passes only by coincidence of formatting. */
+    const WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+    const word = (n) => WORDS[n] ?? String(n);
+    const T = hp.trip();
+    const C = hp.cashTrip();
+    const B = hp.breakEven();
+    const O = hp.outcomes(PRICE_INDEX, "all");
+    const PL = hp.plateau(O);
+    const SL = hp.slide(PRICE_INDEX);
+    const tables = tablesIn(p.body);
+
+    /* No unattributable sources. The page's previous two were commercial
+       blogs, which is the one defect on this page that the reader is least
+       able to see and most entitled to object to. */
+    const OFFICIAL = /(dubailand\.gov\.ae|dlp\.dubai\.gov\.ae|dubaipulse\.gov\.ae|rulebook\.centralbank\.ae|uaelegislation\.gov\.ae|tax\.gov\.ae)/;
+    ok("drag: every source is an official instrument or dataset",
+      (p.sources || []).every((x) => OFFICIAL.test(x.url)),
+      JSON.stringify((p.sources || []).map((x) => x.url)));
+
+    const dragTable = tables.find((t) => /annualised/i.test(t.head[1] || ""));
+    ok("drag: the annualised drag table is present", !!dragTable);
+    if (dragTable) {
+      ok("drag: the drag table is labelled with the holds it computed",
+        same(col(dragTable, 0), hp.HOLDS), JSON.stringify(col(dragTable, 0)));
+      ok("drag: the drag table matches the computed annualised figures",
+        same(col(dragTable, 1), hp.HOLDS.map((y) => hp.drag(y))), JSON.stringify(col(dragTable, 1)));
+    }
+
+    const holdTable = tables.find((t) => /Start months scored/i.test(t.head[1] || ""));
+    ok("drag: the hold outcome table is present", !!holdTable);
+    if (holdTable) {
+      ok("drag: the hold table is labelled with the holds it computed",
+        same(col(holdTable, 0), hp.HOLDS), JSON.stringify(col(holdTable, 0)));
+      ok("drag: the hold table matches the computed sample sizes",
+        same(col(holdTable, 1), O.rows.map((r) => r.n)), JSON.stringify(col(holdTable, 1)));
+      ok("drag: the hold table matches the computed counts cleared",
+        same(col(holdTable, 2), O.rows.map((r) => r.covered)), JSON.stringify(col(holdTable, 2)));
+      ok("drag: the hold table matches the computed shares",
+        same(col(holdTable, 3), O.rows.map((r) => r.share)), JSON.stringify(col(holdTable, 3)));
+      ok("drag: the hold table matches the computed worst outcomes",
+        same(col(holdTable, 4), O.rows.map((r) => r.worst)), JSON.stringify(col(holdTable, 4)));
+      ok("drag: the hold table matches the computed independent window counts",
+        same(col(holdTable, 6), O.rows.map((r) => r.independent)), JSON.stringify(col(holdTable, 6)));
+      ok("drag: every hold row names the month its worst outcome was entered",
+        O.rows.every((r, i) => (holdTable.rows[i][5] || "").includes(monthYear(r.worstAt))),
+        JSON.stringify(holdTable.rows.map((r) => r[5])));
+    }
+
+    const claims = [
+      ["the round trip in dirhams", `| **Round trip** | **${hp.money(T.total)}** |`],
+      ["the round trip as a share of price", `That is **${T.rate.toFixed(2)}% of the price**`],
+      ["the round trip in years of net rent", `and **${T.years.toFixed(2)} years** of net rent`],
+      ["the buying leg", `fees | ${hp.money(T.buy)} |`],
+      ["the borrowing leg", `fees | ${hp.money(T.debt)} |`],
+      ["the selling leg", `letters | ${hp.money(T.sell)} |`],
+      ["the cash round trip in dirhams", `which leaves **AED ${hp.money(C.total)}**`],
+      ["the cash round trip as a rate", `or **${C.rate.toFixed(2)}%** of the price`],
+      ["the cash round trip in years of net rent", `and **${C.years.toFixed(2)} years** of net rent`],
+      ["the break-even price", `is **AED ${hp.money(B.price)}**`],
+      ["the break-even rise", `a rise of **${B.rise.toFixed(2)}%**`],
+      ["the length of the index series", `${PRICE_INDEX.months} months`],
+      ["the plateau, as the span it covers",
+        `**Between ${word(PL.from)} years and ${word(PL.to)} years the annualised drag falls from ${hp.drag(PL.from).toFixed(2)}% to ${hp.drag(PL.to).toFixed(2)}%, and the share of holds that cleared the round trip moves from ${O.rows.find((r) => r.years === PL.from).share}% to ${O.rows.find((r) => r.years === PL.to).share}%.**`],
+      ["the spread across the plateau", `A spread of ${word(PL.spread)} points`],
+      ["the deepest shortfall's hold length", `the **${word(PL.deepest.years)} year** hold`],
+      ["the deepest shortfall's entry month", `entered in **${monthYear(PL.deepest.worstAt)}**`],
+      ["the deepest shortfall itself", `down **${Math.abs(PL.deepest.worst).toFixed(1)}%** at sale`],
+      ["the long rows' shares", `Nine and ten years clear ${O.rows.find((r) => r.years === 9).share}% and ${PL.ten}%`],
+      ["the months a ten year hold needs", `needs ${10 * 12} of them`],
+      ["the months the slide took", `spent **${SL.toTrough} months** falling from its ${monthYear(SL.peak.date)} peak`],
+      ["the months to regain the peak", `**${SL.toRecover} months** before it regained it`],
+      ["the independence caveat", `about a third of one independent decade`],
+      ["the nominal caveat", "The series is nominal"],
+      ["that the index is not this flat", "not the building you are buying in"],
+    ];
+    for (const [label, phrase] of claims) {
+      ok(`drag: prose carries ${label}`, p.body.includes(phrase), phrase);
+    }
+
+    /* Internal consistency, so the legs and the total cannot disagree. */
+    ok("drag: the round trip is buying plus borrowing plus selling",
+      T.total === T.buy + T.debt + T.sell);
+    ok("drag: the cash round trip is smaller than the mortgaged one", C.total < T.total);
+    ok("drag: the break-even rise exceeds the round trip rate, because the exit commission is charged on the gain",
+      B.rise > T.rate);
+
+    /* Behaviour, not value. The page is only entitled to say the odds did not
+       improve for as long as the index says they did not. */
+    ok("drag: the page only claims a plateau while the index still shows one",
+      PL.spread <= 5 && /the odds did not move at all/.test(p.body),
+      `spread ${PL.spread}`);
+    ok("drag: the page only claims the deepest shortfall is a longer hold than one year while it is",
+      PL.deepest.years > 1 && PL.deepest.worst < O.rows[0].worst,
+      `${PL.deepest.years}y ${PL.deepest.worst} vs 1y ${O.rows[0].worst}`);
+    ok("drag: the long rows really are thinner than one independent window",
+      O.rows.filter((r) => r.years >= 9).every((r) => r.independent < 1));
   }
 }
 
