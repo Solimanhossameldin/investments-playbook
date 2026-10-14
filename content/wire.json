@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-14T05:17:24.220Z",
+ "fetchedAt": "2026-10-14T10:27:23.360Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -26,6 +26,15 @@
  ],
  "items": [
   {
+   "title": "Frank Elderson: Ensuring resilience in the face of uncertainty",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261014~e4ca33588e.en.html",
+   "published": "2026-10-14T00:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
    "title": "Philip R. Lane: The AI opportunity for Europe",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261013~9db9bf4fd6.en.html",
    "published": "2026-10-13T18:30:00.000Z",
@@ -39,9 +48,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
    "published": "2026-10-13T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Minutes of the Money Market Committee meeting – September 2026",
@@ -138,9 +147,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
@@ -663,15 +672,6 @@
    "sourceLabel": "Speeches",
    "category": "rates",
    "feed": "fed-speeches"
-  },
-  {
-   "title": "Almost ten million people took part in ECB survey on new euro banknotes",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260923~6ebddaf01e.en.html",
-   "published": "2026-09-23T09:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
