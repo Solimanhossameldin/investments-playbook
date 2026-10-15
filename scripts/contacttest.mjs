@@ -19,6 +19,7 @@ import { fileURLToPath } from "node:url";
 import { contactPage, routes, primaryCta, bookingUrl, emailUrl, whatsappUrl } from "../src/templates/contact.mjs";
 import { page, footer, authorBand } from "../src/templates/layout.mjs";
 import * as STATIC from "../content/static.mjs";
+import { TITLE_MAX, DESC_MAX } from "../src/lib.mjs";
 
 let n = 0;
 const t = (name, fn) => { fn(); n++; };
@@ -143,8 +144,8 @@ t("the page renders cleanly and stays inside the search limits", () => {
     const p = contactPage({ site });
     assert.ok(!/NaN|undefined|null|Invalid Date/.test(p.body), "the page rendered a broken value");
     assert.equal(p.path, "/contact/");
-    assert.ok(p.title.length <= 60, `title is ${p.title.length} characters`);
-    assert.ok(p.description.length <= 155 && p.description.length > 40, `description is ${p.description.length} characters`);
+    assert.ok(p.title.length <= TITLE_MAX, `title is ${p.title.length} characters, TITLE_MAX is ${TITLE_MAX}`);
+    assert.ok(p.description.length <= DESC_MAX && p.description.length > 40, `description is ${p.description.length} characters, DESC_MAX is ${DESC_MAX}`);
     assert.ok(!/—|·/.test(p.body), "house style: em dash or middot on the page");
   }
 });

@@ -12,6 +12,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { TITLE_MAX, DESC_MAX } from "../src/lib.mjs";
+
+/* How far past TITLE_MAX a title may go before it is an error rather than a
+   note. pageTitle drops the brand rather than truncating, deliberately -- a
+   long specific title beats a cut one -- so a base title a little over the
+   target is a trade, not a bug, and this is how much of that trade is
+   allowed. Thresholds are derived from the constants rather than typed,
+   because the previous literals (65 and 160) were free to drift away from the
+   60 and 155 that actually shape every page. */
+const TITLE_SLACK = 5;
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
@@ -178,9 +188,14 @@ for (const p of indexable) {
   else if (n === 1) note("warn", "thin inbound", `${p.url} is linked from only ${[...inbound.get(p.url)][0]}`);
 
   if (!p.title) note("error", "no title", p.url);
-  else if (p.title.length > 65) note("warn", "long title", `${p.title.length} chars: ${p.url}`);
+  else if (p.title.length > TITLE_MAX + TITLE_SLACK)
+    note("error", "title past the slack allowed over TITLE_MAX",
+      `${p.title.length} chars, limit ${TITLE_MAX} + ${TITLE_SLACK}: ${p.url}`);
+  else if (p.title.length > TITLE_MAX)
+    note("warn", "long title", `${p.title.length} chars, TITLE_MAX is ${TITLE_MAX}: ${p.url}`);
   if (!p.description) note("error", "no description", p.url);
-  else if (p.description.length > 160) note("warn", "long description", `${p.description.length} chars: ${p.url}`);
+  else if (p.description.length > DESC_MAX)
+    note("error", "description past DESC_MAX", `${p.description.length} chars, limit ${DESC_MAX}: ${p.url}`);
   else if (p.description.length < 70) note("warn", "short description", `${p.description.length} chars: ${p.url}`);
   if (!p.canonical) note("error", "no canonical", p.url);
   if (p.h1s.length === 0) note("error", "no h1", p.url);

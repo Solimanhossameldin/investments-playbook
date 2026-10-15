@@ -728,6 +728,108 @@ check("both emitters make the scrolling block focusable and labelled",
 
 console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 
+/* ---- the metadata limits are the constants, not copies of them ----
+
+   Found by perturbing every numeric constant in src and asking which ones
+   changed the built site without failing anything. TITLE_MAX and DESC_MAX
+   were the only two: they shape the <title> and the meta description of all
+   151 pages, and every check that looked at those lengths compared against a
+   typed literal -- 60 and 155 in two test files, 65 and 160 in the audit.
+   Moving TITLE_MAX to 40 would have cut the brand off every title on the site
+   with nothing to say so, because no check was reading the constant.
+
+   The length checks now derive from these two. What is left is to tie the
+   behaviour to them as well, so the constants are observable rather than
+   merely referenced. */
+{
+  const { pageTitle, clampDescription, TITLE_MAX, DESC_MAX, CLAUSE_MIN } =
+    await import(new URL("../src/lib.mjs", import.meta.url));
+  const brand = "Investments Playbook";
+
+  /* The constants themselves, bounded.
+
+     Every other check here is relative to TITLE_MAX and DESC_MAX, which
+     means none of them can tell you the constant is wrong. Raising TITLE_MAX
+     from 60 to 90 failed nothing: the audit's error sits at TITLE_MAX plus a
+     slack, so it moved up with it, and the brand then gets appended to
+     titles long enough that a search engine cuts them. A relative threshold
+     cannot police its own baseline.
+
+     So these two are pinned against the outside world rather than against
+     themselves. The numbers are what search results actually display -- a
+     title is cut around the high fifties and a description around a hundred
+     and fifty-five -- and they are not a matter of taste. Widening either one
+     means changing this check and saying why, which is the point. */
+  check("TITLE_MAX stays within what a search result actually shows",
+    TITLE_MAX >= 50 && TITLE_MAX <= 60,
+    `TITLE_MAX is ${TITLE_MAX}; a title past the high fifties is cut in the result, so raising this silently shortens every title on the site`);
+  check("DESC_MAX stays within what a search result actually shows",
+    DESC_MAX >= 140 && DESC_MAX <= 160,
+    `DESC_MAX is ${DESC_MAX}; descriptions are cut around 155, so raising this publishes sentences that stop mid-thought`);
+
+  /* pageTitle appends the brand only when the whole thing fits, which is the
+     one decision TITLE_MAX makes. Both sides of it are checked, at the
+     boundary, so a changed constant changes an observed outcome. */
+  const fits = "x".repeat(TITLE_MAX - brand.length - 2);
+  check("pageTitle keeps the brand when the result fits TITLE_MAX exactly",
+    pageTitle(fits, brand) === `${fits}. ${brand}` &&
+      pageTitle(fits, brand).length === TITLE_MAX,
+    `${pageTitle(fits, brand).length} chars against TITLE_MAX ${TITLE_MAX}`);
+
+  const over = "x".repeat(TITLE_MAX - brand.length - 1);
+  check("pageTitle drops the brand rather than truncating when it does not fit",
+    pageTitle(over, brand) === over,
+    `got "${pageTitle(over, brand)}"`);
+
+  /* A base title longer than TITLE_MAX ships whole. That is deliberate -- a
+     cut title is worse than a long one -- and it is why the audit allows a
+     named slack rather than erroring at the limit. Checked so the intent is
+     recorded rather than assumed. */
+  const long = "y".repeat(TITLE_MAX + 20);
+  check("pageTitle does not truncate a base title that is already too long",
+    pageTitle(long, brand) === long,
+    `${pageTitle(long, brand).length} chars`);
+
+  /* clampDescription is the other half: it may never exceed DESC_MAX, and it
+     may not stop mid-word, which is the fault that shipped on the
+     calculators index. */
+  const sentences =
+    "The first sentence runs to a reasonable length and then stops. " +
+    "The second one adds a clause, and then another clause, and keeps going well past the limit. " +
+    "A third sentence nobody will ever read.";
+  const clamped = clampDescription(sentences);
+  check("clampDescription never exceeds DESC_MAX",
+    clamped.length <= DESC_MAX, `${clamped.length} chars against DESC_MAX ${DESC_MAX}`);
+  /* The real test of a clean cut: the result is a prefix of the source, and
+     whatever the source had next is whitespace or nothing. That is what
+     "did not stop mid-word" means, and it is checkable. The first version of
+     this check tested `!source.slice(n).startsWith("")`, which is true of
+     every string -- a tautology dressed as a check, and it passed on code
+     that was already right, which is the worst way for one to be wrong. */
+  const normalised = sentences.replace(/\s+/g, " ").trim();
+  check("clampDescription returns a prefix of the source, not a rewrite",
+    normalised.startsWith(clamped), `"${clamped.slice(-30)}"`);
+  check("clampDescription cuts where the source has a space, never inside a word",
+    (() => {
+      const next = normalised.slice(clamped.length, clamped.length + 1);
+      return next === "" || /\s/.test(next);
+    })(),
+    `cut at ${clamped.length}, source continues "${normalised.slice(clamped.length, clamped.length + 12)}"`);
+  check("clampDescription ends on a sentence or clause boundary",
+    /[.!?,;:]$/.test(clamped), `ends "${clamped.slice(-24)}"`);
+  check("clampDescription leaves a description already within DESC_MAX alone",
+    clampDescription("Short and already fine.") === "Short and already fine.");
+  check("a clause cut is only preferred once it keeps at least CLAUSE_MIN",
+    CLAUSE_MIN > 0 && CLAUSE_MIN < DESC_MAX, `CLAUSE_MIN ${CLAUSE_MIN}, DESC_MAX ${DESC_MAX}`);
+
+  /* And a decimal is not a sentence end. "4.33%" was being cut at the point. */
+  const withDecimal =
+    "Net rental yield in Dubai is rent after all running costs, over the price plus the statutory 4.00% Land Department fee and agency costs: 4.33%, not 7.00%, which matters.";
+  const cd = clampDescription(withDecimal);
+  check("clampDescription does not treat a decimal point as a sentence end",
+    !/\d\.$/.test(cd) && cd.length <= DESC_MAX, `ends "${cd.slice(-18)}"`);
+}
+
 /* ---- counts and clamps in metadata ----
    The calculators index description was typed by hand. It said six while eight
    were shipping, and it ran past DESC_MAX, so the clamp published it ending on

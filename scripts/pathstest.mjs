@@ -9,7 +9,7 @@
 
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { INTENTS } from "../src/lib.mjs";
+import { INTENTS, TITLE_MAX, DESC_MAX } from "../src/lib.mjs";
 import { pathIndex, pathPage, pathBand, playbookHref } from "../src/templates/paths.mjs";
 import { CALCULATORS } from "../src/templates/calculators.mjs";
 import { leadForm } from "../src/templates/layout.mjs";
@@ -210,8 +210,8 @@ t("the index links every path and the band links every path", () => {
 
 t("titles and descriptions stay inside the search limits", () => {
   for (const r of [...rendered, index]) {
-    assert.ok(r.title.length <= 60, `${r.path} has a title of ${r.title.length} characters`);
-    assert.ok(r.description.length <= 155, `${r.path} has a description of ${r.description.length} characters`);
+    assert.ok(r.title.length <= TITLE_MAX, `${r.path} has a title of ${r.title.length} characters, TITLE_MAX is ${TITLE_MAX}`);
+    assert.ok(r.description.length <= DESC_MAX, `${r.path} has a description of ${r.description.length} characters, DESC_MAX is ${DESC_MAX}`);
     assert.ok(r.description.length > 40, `${r.path} has a description too short to be useful`);
   }
 });
