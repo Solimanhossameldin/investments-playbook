@@ -580,6 +580,23 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
      rather than an empty one. */
   const modes = (pb.failureModes || []).map((f) => plainLinks(copy(f)));
   const faqs = [
+    /* The headline finding, which is the thing an assistant is actually
+       looking for and the one number worth quoting off this page. It is the
+       definition block at the top, verbatim, so the answer is visible copy
+       rather than a second version of it that can drift.
+
+       The question is title-prefixed rather than phrased "What is <title>?"
+       because seventeen of the seventy titles are clauses or gerunds -- "The
+       behaviour gap", "Refinancing a Dubai mortgage", "Proving the source of
+       crypto funds" -- and "What is refinancing a Dubai mortgage?" is the
+       kind of sentence that gets written once and read seventy times. One
+       form that is grammatical everywhere beats a better form that is wrong
+       on a quarter of the library. */
+    pb.summary && {
+      "@type": "Question",
+      name: `${copy(pb.title)}: what is the short answer?`,
+      acceptedAnswer: { "@type": "Answer", text: copy(pb.summary) },
+    },
     pb.whenToUse && {
       "@type": "Question",
       name: `${copy(pb.title)}: when should you use it?`,

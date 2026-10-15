@@ -133,6 +133,13 @@ for (const file of walk(dist)) {
     // How many limitations the page actually shows. The ItemList is checked
     // against this rather than against its own numberOfItems, which stays
     // self-consistent when the list is truncated and so proves nothing.
+    // The definition block: the page's own one-sentence finding. The FAQ's
+    // short answer is checked against this rather than against the summary
+    // field, so markup and page cannot drift apart without one of them
+    // failing.
+    definition: ((prose.match(/<div class="definition">([\s\S]*?)<\/div>/i) || ["", ""])[1]
+      .replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"').replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim()),
     breaksShown: ((prose.match(/<ul class="breaks">([\s\S]*?)<\/ul>/i) || ["", ""])[1]
       .match(/<li\b/g) || []).length,
     plain: prose
@@ -263,6 +270,19 @@ for (const p of indexable) {
 for (const p of indexable) {
   const faq = p.jsonldRaw.find((n) => n && n["@type"] === "FAQPage");
   if (!faq) continue;
+  // A page that states a one-sentence finding has to offer it as the short
+  // answer. This is the figure an assistant quotes, and leaving it out of the
+  // markup while three other entries are there is the easiest thing to let
+  // slip.
+  if (p.definition) {
+    const short = (faq.mainEntity || []).find((q) => /short answer\?$/i.test(String(q.name || "")));
+    if (!short) {
+      note("error", "page states a finding but offers no short answer in its FAQ", p.url);
+    } else if (String(short.acceptedAnswer?.text || "").replace(/\s+/g, " ").trim() !== p.definition) {
+      note("error", "the FAQ short answer is not the finding the page prints",
+        `markup: "${String(short.acceptedAnswer?.text || "").slice(0, 60)}..." page: "${p.definition.slice(0, 60)}..." on ${p.url}`);
+    }
+  }
   const entries = faq.mainEntity || [];
   if (!entries.length) { note("error", "empty FAQPage", p.url); continue; }
   for (const q of entries) {
