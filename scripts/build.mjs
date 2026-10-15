@@ -36,6 +36,7 @@ import * as STATIC from "../content/static.mjs";
 import { pickRelated } from "../src/related.mjs";
 import { isoDate, PHONE_DIGITS, PHONE_STARTS } from "../src/lib.mjs";
 import { cryptoBand } from "../src/templates/crypto.mjs";
+import { llmsTxt } from "../src/llms.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = path.join(root, "dist");
@@ -287,6 +288,12 @@ fs.writeFileSync(
   path.join(dist, "robots.txt"),
   `User-agent: *\nAllow: /\n\nSitemap: ${site.origin}/sitemap.xml\n`
 );
+
+// llms.txt: the library's shape in one request, for an assistant that would
+// otherwise guess at it from 150 bare URLs in the sitemap. Derived from the
+// same `written` list the sitemap is, so it cannot list a page that did not
+// ship or omit one that did.
+fs.writeFileSync(path.join(dist, "llms.txt"), llmsTxt({ site, playbooks, written }));
 
 // IndexNow's proof of control: a file at the root whose contents are the key.
 // Nothing can be submitted until this is deployed, which is the point - it
