@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-15T05:36:53.383Z",
+ "fetchedAt": "2026-10-15T10:19:57.641Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -632,15 +632,6 @@
    "title": "ECB Executive Board member Isabel Schnabel to resign to take senior role at IMF",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260924~bea1dd9824.en.html",
    "published": "2026-09-24T12:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Philip R. Lane: The outlook for the euro area economy",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260924~e0eceef02c.en.pdf",
-   "published": "2026-09-24T09:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
