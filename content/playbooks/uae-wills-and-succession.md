@@ -8,6 +8,7 @@
   "calculator": "estate-tax-exposure",
   "reviewed": "26 August 2026",
   "summary": "Assets held in the UAE by a non-Muslim expatriate do not automatically pass under their home country will, and without a will registered in a recognised UAE registry the default distribution rules apply to those assets regardless of the owner's nationality or intentions.",
+  "question": "What happens to UAE assets without a will registered in the UAE?",
   "formula": "The two questions, which are separate\n\n  1. Where do my assets go?          succession\n     answered by a will registered in a\n     recognised UAE registry\n\n  2. What is taxed on death?         estate tax\n     answered by the situs of each asset\n     US shares and US domiciled funds\n       -> US estate tax above USD 60,000\n          for a non-resident non-citizen\n\nSitus, briefly\n  UAE property           UAE\n  UAE bank account       UAE\n  Fund                   country of domicile\n  Company shares         country of incorporation\n\n  Not where your broker is. Not where you live.\n\nSizing the will\n  full estate      all UAE assets + guardianship\n  real property    Dubai real estate only\n  financial        accounts and portfolios\n  business         UAE company shares\n  guardianship     minor children",
   "failureModes": [
     "It is general information and not legal advice, and succession is precisely the area where that distinction matters most. Take UAE qualified advice.",

@@ -8,6 +8,7 @@
   "calculator": "estate-tax-exposure",
   "reviewed": "26 August 2026",
   "summary": "In the UAE, rental income earned by an individual from property held personally without a licence falls outside corporate tax entirely, while the same property held through a company is taxable at nine percent above the threshold, which makes the ownership structure a larger decision than most buyers realise.",
+  "question": "Should Dubai property be held personally or through a company?",
   "formula": "UAE corporate tax, real estate, in outline\n\n  Natural person, no licence required\n    leasing, sub-leasing, holding for appreciation\n    -> outside corporate tax scope\n\n  Natural person, licensed activity\n    holiday homes, brokerage, development,\n    systematic trading\n    -> in scope once turnover from licensed\n       activity passes the threshold\n\n  Company, any real estate income\n    rent, development profit, capital gains\n    -> taxable at 9% above the threshold\n       no natural person exemption\n\nReasons to use a company\n  multiple owners\n  succession planning\n  liability separation for genuine trading\n  portfolio scale and governance\n\nCosts to net off\n  formation, licensing, audit, filing\n  transfer costs to move property in\n  different mortgage terms\n  the tax that was not payable before",
   "failureModes": [
     "This is general information, not tax advice, and the corporate tax regime is recent enough that guidance and interpretation continue to develop.",

@@ -8,6 +8,7 @@
   "calculator": "safe-withdrawal-rate",
   "reviewed": "26 August 2026",
   "summary": "The dirham has been pegged to the US dollar at 3.6725 for decades, which means a Gulf resident holding dirham property, dirham salary and dollar denominated funds is not diversified across three currencies but concentrated in one, and the exposure only becomes visible when the money is eventually spent somewhere else.",
+  "question": "Does the dirham peg make Dubai property and US dollar assets the same bet?",
   "formula": "What you think you hold\n  AED salary        currency 1\n  AED property      currency 2\n  USD funds         currency 3\n\nWhat you actually hold\n  AED and USD are the same exposure while the peg holds\n  -> one currency, at 3.6725\n\nThe matching question\n  Spending currency weighting, by decade\n    next 10 years   AED   x%\n    retirement      GBP / INR / other   y%\n    education       USD   z%\n\n  Asset denomination weighting\n    compare the two lists\n\n  The gap is the position you are carrying by default.\n\nPeg reference\n  AED per USD, fixed at 3.6725",
   "failureModes": [
     "It treats currency as a return question. Over long horizons currency is closer to a zero sum wash between developed economies, and the reason to hold a currency is that you will spend it, not that you expect it to rise.",
