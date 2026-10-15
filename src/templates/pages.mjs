@@ -563,11 +563,55 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
   </div>
 </div></section>`;
 
-  const faqs = (pb.failureModes || []).slice(0, 3).map((f, i) => ({
-    "@type": "Question",
-    name: `${copy(pb.title)}: known limitation ${i + 1}`,
-    acceptedAnswer: { "@type": "Answer", text: plainLinks(copy(f)) },
-  }));
+  /* Structured Q&A, mirroring this page's own headings.
+
+     What was here before named every question "<title>: known limitation 1",
+     "2", "3". That matches no query a person types and no question an
+     assistant asks, while the answers underneath were the most uniquely
+     sourced writing on the page -- a strong asset with placeholder labels on
+     it. It was also the wrong type: "Where it breaks" renders as a visible
+     <ul> of limitations, and marking a list up as a FAQ with invented
+     question text is not what FAQPage is for.
+
+     So the questions now mirror the two H2s the page actually shows, and each
+     answer is the content visible under that heading -- which is the rule
+     this markup is supposed to follow. A page missing a section contributes
+     no question for it, and a page with neither ships no FAQPage at all
+     rather than an empty one. */
+  const modes = (pb.failureModes || []).map((f) => plainLinks(copy(f)));
+  const faqs = [
+    pb.whenToUse && {
+      "@type": "Question",
+      name: `${copy(pb.title)}: when should you use it?`,
+      acceptedAnswer: { "@type": "Answer", text: copy(pb.whenToUse) },
+    },
+    modes.length && {
+      "@type": "Question",
+      name: `${copy(pb.title)}: where does it break?`,
+      acceptedAnswer: { "@type": "Answer", text: modes.join(" ") },
+    },
+  ].filter(Boolean);
+
+  /* The limitations again, individually, under a type that is true of them.
+     The FAQ answer above carries them as one block because that is how the
+     section reads; this carries them as what they are, so each one can be
+     lifted on its own without the others. */
+  const breaksList = modes.length
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: `${copy(pb.title)}: where it breaks`,
+          itemListOrder: "https://schema.org/ItemListOrderAscending",
+          numberOfItems: modes.length,
+          itemListElement: modes.map((text, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: text,
+          })),
+        },
+      ]
+    : [];
 
   return {
     title: pageTitle(copy(pb.title), site.name),
@@ -592,6 +636,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
         mainEntityOfPage: `${site.origin}/playbooks/${pb.slug}/`,
       },
       ...(faqs.length ? [{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs }] : []),
+      ...breaksList,
     ],
   };
 }

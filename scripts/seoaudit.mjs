@@ -127,6 +127,21 @@ for (const file of walk(dist)) {
     // in this audit notices, because a broken link that was never an <a> is
     // not in the link graph at all. Found on a live page, so it is checked.
     rawMarkdown: [...prose.matchAll(/\[[^\]\n]{1,80}\]\(\/[^)\s]*\)/g)].map((m) => m[0]),
+    // The visible prose as text. FAQ markup is only allowed to assert what
+    // the page actually shows, so the check below needs something to compare
+    // the answers against.
+    // How many limitations the page actually shows. The ItemList is checked
+    // against this rather than against its own numberOfItems, which stays
+    // self-consistent when the list is truncated and so proves nothing.
+    breaksShown: ((prose.match(/<ul class="breaks">([\s\S]*?)<\/ul>/i) || ["", ""])[1]
+      .match(/<li\b/g) || []).length,
+    plain: prose
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+      .replace(/&nbsp;/g, " ").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+      .replace(/\s+/g, " ")
+      .trim(),
   });
 }
 
@@ -229,6 +244,73 @@ for (const p of indexable) {
   const last = bc.itemListElement[bc.itemListElement.length - 1];
   if (last.item !== site.origin + p.url) {
     note("error", "breadcrumb does not end at the page", `${last.item} on ${p.url}`);
+  }
+}
+
+// Structured Q&A. Two failures, both of which shipped on 70 pages and
+// neither of which breaks anything visible.
+//
+// The first is a question nobody asks. These were named "<title>: known
+// limitation 1", "2", "3" -- a label, not a question, matching no query and
+// no assistant's phrasing, over answers that are the most uniquely sourced
+// writing on the site.
+//
+// The second is the rule this markup exists under: it may only assert what
+// the page shows. "Where it breaks" is a visible list, and a list marked up
+// as a FAQ with invented question text is not a FAQ. So every answer is
+// required to appear in the visible prose, which is the check that would have
+// caught both at once.
+for (const p of indexable) {
+  const faq = p.jsonldRaw.find((n) => n && n["@type"] === "FAQPage");
+  if (!faq) continue;
+  const entries = faq.mainEntity || [];
+  if (!entries.length) { note("error", "empty FAQPage", p.url); continue; }
+  for (const q of entries) {
+    const name = String(q.name || "");
+    const text = String(q.acceptedAnswer?.text || "");
+    if (!name) { note("error", "FAQ entry with no question", p.url); continue; }
+    if (/known limitation|limitation \d|^untitled|placeholder/i.test(name)) {
+      note("error", "FAQ question is a placeholder, not a question", `"${name}" on ${p.url}`);
+    }
+    if (!name.includes("?")) {
+      note("error", "FAQ question is not phrased as a question", `"${name}" on ${p.url}`);
+    }
+    if (!text) { note("error", "FAQ question with no answer", `"${name}" on ${p.url}`); continue; }
+    // The answer has to be on the page. Compared on the opening clause rather
+    // than the whole string, because the visible copy carries inline links the
+    // markup flattens, and a prefix match is enough to prove the sentence is
+    // the page's own.
+    const head = text.replace(/\s+/g, " ").trim().slice(0, 60);
+    if (head.length > 20 && !p.plain.includes(head)) {
+      note("error", "FAQ answer is not visible on the page", `"${head}..." on ${p.url}`);
+    }
+  }
+}
+
+// A list of limitations marked up as a list. The count has to be all of them:
+// taking the first three and calling it the set is how the FAQ version went
+// wrong, and a truncated list reads as a complete one.
+for (const p of indexable) {
+  const il = p.jsonldRaw.filter((n) => n && n["@type"] === "ItemList" && /where it breaks$/i.test(String(n.name || "")));
+  for (const l of il) {
+    const items = l.itemListElement || [];
+    if (l.numberOfItems !== items.length) {
+      note("error", "ItemList numberOfItems disagrees with its items", `${l.numberOfItems} vs ${items.length} on ${p.url}`);
+    }
+    // Against the page, not against itself. A list truncated to its first
+    // three items has a numberOfItems of three and is perfectly consistent;
+    // the only thing that catches it is the count the reader can see.
+    if (p.breaksShown && items.length !== p.breaksShown) {
+      note("error", "ItemList does not carry every limitation the page shows",
+        `${items.length} in markup, ${p.breaksShown} on the page, ${p.url}`);
+    }
+    items.forEach((it, i) => {
+      if (it.position !== i + 1) note("error", "ItemList position out of order", `${it.position} at index ${i} on ${p.url}`);
+      const head = String(it.name || "").replace(/\s+/g, " ").trim().slice(0, 60);
+      if (head.length > 20 && !p.plain.includes(head)) {
+        note("error", "ItemList item is not visible on the page", `"${head}..." on ${p.url}`);
+      }
+    });
   }
 }
 
