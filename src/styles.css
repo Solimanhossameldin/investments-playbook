@@ -1379,3 +1379,18 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.018em; line-height: 1.1; }
   border-radius: 2px;
 }
 .pfig figcaption { margin-top: 8px; }
+
+/* The query a page answers, set above its one-sentence finding. Smaller and
+   lighter than a section heading: it is a question being asked, not a section
+   being announced, and the answer directly under it is what should carry the
+   weight. */
+.qlead{
+  font-size:1.05rem;
+  font-weight:600;
+  line-height:1.4;
+  letter-spacing:0;
+  color:var(--muted);
+  margin:0 0 14px;
+  max-width:var(--prose);
+}
+.qlead::after{content:none}

@@ -143,6 +143,17 @@ for (const file of walk(dist)) {
     // How many limitations the page actually shows. The ItemList is checked
     // against this rather than against its own numberOfItems, which stays
     // self-consistent when the list is truncated and so proves nothing.
+    // The visible question a page leads with, and where it sits. The FAQ
+    // entry naming it has to match this exactly, and it has to come before
+    // the answer -- ask, then answer, in that order.
+    questionLead: ((prose.match(/<h2 id="short-answer"[^>]*>([\s\S]*?)<\/h2>/i) || ["", ""])[1]
+      .replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"').replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim()),
+    questionBeforeAnswer: (() => {
+      const q = prose.search(/<h2 id="short-answer"/i);
+      const d = prose.search(/<div class="definition">/i);
+      return q === -1 || d === -1 ? null : q < d;
+    })(),
     // The definition block: the page's own one-sentence finding. The FAQ's
     // short answer is checked against this rather than against the summary
     // field, so markup and page cannot drift apart without one of them
@@ -304,6 +315,28 @@ for (const p of indexable) {
     } else if (!String(short.name || "").includes("?")) {
       note("error", "the finding is answered by something that is not a question",
         `"${short.name}" on ${p.url}`);
+    } else if (!/: what is the short answer\?$/i.test(String(short.name)) && !p.questionLead) {
+      /* A declared question -- anything other than the generic title-prefixed
+         fallback -- has to be printed on the page as well as in the markup.
+         Derived from the markup alone, deliberately: the first version of
+         these checks was guarded on the visible heading existing, so deleting
+         that heading made all of them skip and the audit went quiet. A check
+         that disappears with the thing it guards is not a check. */
+      note("error", "the page declares a question in markup it does not print",
+        `"${short.name}" on ${p.url}`);
+    } else if (p.questionLead && String(short.name).trim() !== p.questionLead) {
+      /* The markup may only assert what the page shows, and here the page
+         shows the question itself. If the two drift, a reader and a parser
+         are being told the page answers different things. */
+      note("error", "the FAQ question is not the question printed on the page",
+        `markup: "${short.name}" page: "${p.questionLead}" on ${p.url}`);
+    }
+    if (p.questionLead && p.questionBeforeAnswer === false) {
+      note("error", "the page prints its question after its answer", p.url);
+    }
+    if (p.questionLead && !p.questionLead.includes("?")) {
+      note("error", "the heading above the finding is not a question",
+        `"${p.questionLead}" on ${p.url}`);
     }
   }
   const entries = faq.mainEntity || [];

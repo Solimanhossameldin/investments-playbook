@@ -495,6 +495,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
   const cad = cadence(briefs, undefined, site.brief);
   const nextLine = cad.next;
   const jump = [
+    pb.question ? ["short-answer", "The short answer"] : null,
     ["the-rule", "The rule"],
     pb.formula ? ["the-arithmetic", "The arithmetic"] : null,
     (pb.failureModes || []).length ? ["where-it-breaks", "Where it breaks"] : null,
@@ -523,6 +524,22 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
   <h1 style="font-size:clamp(2.2rem,5vw,3.4rem);max-width:18ch">${esc(copy(pb.title))}</h1>
   <div class="doc" style="margin-top:34px">
   <div class="article">
+    ${
+      /* The question, visible, immediately above the answer.
+
+         It was only in the JSON-LD, which is half the job: a heading a reader
+         can see is also what a search engine weights, and the rule this
+         markup lives under is that it may only assert what the page shows.
+         Now the page literally asks the question and answers it in the next
+         line, which is the arrangement both the reader and the parser want.
+
+         It sits above the definition rather than replacing the h1, because
+         the h1 is the framework's name and this is a query -- two different
+         jobs, and collapsing them would cost the title its brevity. */
+      pb.question
+        ? `<h2 id="short-answer" class="qlead">${esc(copy(pb.question))}</h2>`
+        : ""
+    }
     <div class="definition">${esc(copy(pb.summary))}</div>
     ${photoFigures(photos)}
     ${playbookCharts(pb.slug)}
