@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-15T15:13:51.256Z",
+ "fetchedAt": "2026-10-15T19:12:55.310Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -93,9 +93,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
    "published": "2026-10-13T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the Money Market Committee meeting – September 2026",
@@ -183,9 +183,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
@@ -627,15 +627,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "Federal Reserve Board requests public comment on two proposals related to establishing a regulatory framework for Board-supervised payment stablecoin issuers under the GENIUS Act",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260924a.htm",
-   "published": "2026-09-24T18:30:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
   }
  ]
 }
