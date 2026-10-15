@@ -35,6 +35,23 @@ import {
   commission,
 } from "./diligence.mjs";
 import { premiumTable, minimumPremium, ASSUMED_RT } from "./districtcooling.mjs";
+import { ladder as usufructLadder } from "./foreignownership.mjs";
+import { outcomes, plateau } from "./holdperiod.mjs";
+import { analyse as analysePriceIndex } from "./priceindex.mjs";
+import { readFileSync } from "node:fs";
+
+/* The published index, analysed once. The hold-period outcomes are scored
+   against the same points the build and the test suite score, so a revised
+   series moves the bars and the prose together rather than leaving one of
+   them in print. Lazy, because most pages never ask for it. */
+let PI = null;
+const priceIndex = () => {
+  if (!PI)
+    PI = analysePriceIndex(
+      JSON.parse(readFileSync(new URL("../content/dld-price-index.json", import.meta.url), "utf8"))
+    );
+  return PI;
+};
 
 const pct0 = (v) => `${Number(v).toFixed(0)}%`;
 const pct = (v) => `${Number(v).toFixed(2)}%`;
@@ -42,6 +59,7 @@ const pct1 = (v) => `${Number(v).toFixed(1)}%`;
 const aed0 = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
 const months = (v) => `${Number(v).toFixed(1)} months`;
 const yearNo = (v) => `year ${Math.round(v)}`;
+const share = (v) => `${Math.round(v)}%`;
 
 const aed = (v) =>
   `${v < 0 ? "−" : "+"}AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
@@ -450,6 +468,61 @@ function districtCoolingAndChillerCharges() {
   ];
 }
 
+/* Transaction cost drag: the conventional argument is that holding longer
+   spreads the round trip thinner, which is arithmetically true and is the
+   one thing this page does not dispute. What it disputes is that spreading
+   the cost thinner improved the odds of covering it. So the bars are not the
+   annualised drag -- charting that would make the boring true half the
+   visual headline -- they are the share of historical holds that actually
+   cleared the round trip, which is flat from three years to eight.
+
+   The reference is an even chance, because that is what the middle of this
+   distribution sits on and a reader can judge a coin toss without being
+   told what to think about it. */
+function transactionCostDrag() {
+  const o = outcomes(priceIndex(), "all");
+  const p = plateau(o);
+  return [
+    {
+      key: "hold-outcomes",
+      label:
+        `Share of historical holds on the Land Department's ${o.label.toLowerCase()} index that cleared the ${o.need}% a round trip needs, by how long the property was held`,
+      reference: 50,
+      referenceLabel: "an even chance",
+      format: share,
+      bars: o.rows.map((r) => ({ label: `${r.years} year${r.years === 1 ? "" : "s"}`, value: r.share })),
+      caption:
+        `Between ${p.from} and ${p.to} years the annualised drag more than halves and the share that cleared it moves between ${p.low}% and ${p.high}%. The windows overlap, so the long bars rest on very little: the ${o.rows[o.rows.length - 1].years} year bar scores ${o.rows[o.rows.length - 1].n} start months but only ${o.rows[o.rows.length - 1].independent} independent windows, which is one sample wearing a percentage. Read the right-hand end as thin evidence, not as a reward for patience.`,
+    },
+  ];
+}
+
+/* Freehold against leasehold: Regulation 3 of 2006 grants a ninety-nine year
+   term as readily as freehold, and a term is worth less than forever by an
+   amount the page can compute rather than assert. The bars are the share of
+   freehold value a remaining term is worth, capitalised at the property's own
+   rate, against freehold itself as the line.
+
+   The shape is the argument: at ninety-nine years the gap is almost nothing,
+   which is why nobody minds, and it widens quietly every year the term runs
+   down. */
+function freeholdAreasAndForeignOwnership() {
+  const rows = usufructLadder();
+  return [
+    {
+      key: "usufruct-ladder",
+      label:
+        "What a remaining leasehold term is worth as a share of freehold on the illustrative apartment, capitalised at the property's own rate",
+      reference: 100,
+      referenceLabel: "freehold, without time restriction",
+      format: pct,
+      bars: rows.map((r) => ({ label: `${r.years} years left`, value: r.pct })),
+      caption:
+        "The top bar is why this is not felt at grant: a ninety-nine year term is worth 98.85% of freehold, a gap of AED 17,312 on this unit. The gap is not static. A term granted when the regulation came into force has seventy-nine years left today, and every year the discount the arithmetic implies has been growing.",
+    },
+  ];
+}
+
 const REGISTRY = {
   "break-even-occupancy": breakEvenOccupancy,
   "net-rental-yield": netRentalYield,
@@ -468,6 +541,8 @@ const REGISTRY = {
   "rent-vs-buy": rentVsBuy,
   "due-diligence-before-an-offer": dueDiligenceBeforeAnOffer,
   "district-cooling-and-chiller-charges": districtCoolingAndChillerCharges,
+  "transaction-cost-drag": transactionCostDrag,
+  "freehold-areas-and-foreign-ownership": freeholdAreasAndForeignOwnership,
 };
 
 /* Returns rendered figures for a playbook, or "" when the page has none. */

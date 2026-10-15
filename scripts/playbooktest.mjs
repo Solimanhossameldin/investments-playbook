@@ -2879,7 +2879,6 @@ ok("every calculator points at a playbook that exists",
   const pctf = (v) => `${Number(v).toFixed(2)}%`;
   const pct1f = (v) => `${Number(v).toFixed(1)}%`;
   const aedf = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
-  const shortfall = (v) => `AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
   const monthsf = (v) => `${Number(v).toFixed(1)} months`;
   const yearf = (v) => `year ${Math.round(v)}`;
   const signedAed = (v) =>
@@ -2888,8 +2887,12 @@ ok("every calculator points at a playbook that exists",
   /* What each registered chart must be plotting, taken from the modules and
      not from the chart. If these two ever disagree, the chart is wrong. */
   const EXPECT = {
+    /* Signed, deliberately. These three are all shortfalls against the
+       tenancy, and pinning the unsigned figure let a chart that printed them
+       as surpluses pass -- "AED 17,400" is a substring of "\u2212AED 17,400".
+       The sign is the entire finding of this page. */
     "break-even-occupancy": hh.OBSERVED.map((o) => ({
-      label: o.publisher, shown: shortfall(hh.observedRun(o).versusTenancy),
+      label: o.publisher, shown: signedAed(hh.observedRun(o).versusTenancy),
     })),
     "net-rental-yield": (() => { const y = aq.yields(); return [
       { label: "Gross, on the price", shown: pctf(y.gross) },
@@ -2955,6 +2958,17 @@ ok("every calculator points at a playbook that exists",
       label: `AED ${r.premium.toLocaleString("en-AE")} a year`,
       shown: signedAed(r.headroom),
     })),
+    /* The drag page is charted on the outcomes, not on the annualised drag,
+       because the annualised drag is the half of the argument the page
+       concedes. Scored against the same analysed index this file already
+       holds, so a revised series fails here rather than going stale. */
+    "transaction-cost-drag": hp.outcomes(PRICE_INDEX, "all").rows.map((r) => ({
+      label: `${r.years} year${r.years === 1 ? "" : "s"}`,
+      shown: `${Math.round(r.share)}%`,
+    })),
+    "freehold-areas-and-foreign-ownership": fo.ladder().map((r) => ({
+      label: `${r.years} years left`, shown: pctf(r.pct),
+    })),
   };
 
   /* Line charts plot hundreds of points, so pinning every one is neither
@@ -2998,8 +3012,15 @@ ok("every calculator points at a playbook that exists",
     for (const w of want) {
       ok(`charts: ${slug} plots ${w.label} as the module computes it`,
         svg.includes(w.shown), `expected ${w.shown}`);
-      ok(`charts: ${slug} says ${w.label} in its accessible sentence`,
-        alt.includes(w.shown) && alt.includes(w.label), `expected ${w.shown} in alt text`);
+      /* Paired, not merely present. Checking that the value appears
+         somewhere in the sentence passes a chart whose labels and bars have
+         slipped out of alignment, because the same set of numbers is still
+         on the page -- a break-test shifting every bar by one row failed
+         only the one value the shift dropped. The accessible sentence is
+         built as "label, value." pairs, so the pair is what to assert. */
+      ok(`charts: ${slug} pairs ${w.label} with ${w.shown} in its accessible sentence`,
+        alt.includes(`${w.label}, ${w.shown}`),
+        `expected "${w.label}, ${w.shown}" in alt text`);
     }
 
     ok(`charts: ${slug} has an accessible sentence at all`, alt.length > 20, alt.slice(0, 40));
