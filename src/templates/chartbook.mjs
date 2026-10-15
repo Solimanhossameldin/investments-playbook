@@ -135,8 +135,61 @@ function section(s, note) {
 </section>`;
 }
 
+/* Who published each series, and whether that makes it a work of the United
+   States government.
+
+   This page used to tell the reader that "everything here is drawn from
+   series produced by agencies of the United States government, which are
+   public domain under 17 U.S.C. §105", and the Dataset node carried a
+   matching usa.gov/government-works licence. That is not true of all seven.
+   The thirty-year mortgage rate is Freddie Mac's Primary Mortgage Market
+   Survey, and Freddie Mac is a shareholder-owned enterprise in conservatorship
+   rather than a federal agency; the ten-year breakeven is published by a
+   Federal Reserve Bank, which is a federally chartered corporation rather
+   than an agency. §105 covers neither, and inviting a reader to republish on
+   the strength of it was a legal claim this site is in no position to make.
+
+   Keyed on the exact source string each series carries, so a series whose
+   publisher is not listed here is unclassified -- and unclassified is
+   treated as "not a government work", because the safe default for a claim
+   like this is to not make it. scripts/datasettest.mjs fails on an
+   unclassified publisher, so adding a series forces the decision rather than
+   inheriting a convenient answer. */
+const US_GOV_WORK = {
+  "U.S. Treasury via FRED": true,
+  "U.S. Bureau of Labor Statistics via FRED": true,
+  "U.S. Energy Information Administration via FRED": true,
+  "Federal Reserve Board via FRED": true,
+  // Not agencies of the United States government:
+  "Freddie Mac via FRED": false,
+  "Federal Reserve Bank of St. Louis": false,
+};
+
+export { US_GOV_WORK };
+
 export function chartbookPage({ site, data, pdf = {} }) {
   const series = Object.values(data.series || {});
+
+  /* The reuse sentence, built from who actually published each series rather
+     than from a blanket assumption about all of them. Anything unclassified
+     counts as not-a-government-work, so the cautious sentence is the one that
+     ships when a new series arrives unlabelled. */
+  const restricted = series.filter((x) => US_GOV_WORK[x.source] !== true);
+  const reuse = restricted.length
+    ? `The charts and the compilation are ${esc(site.name)}'s. The series are not: ${restricted
+        // The label verbatim: lowercasing it turned "US 30-year fixed mortgage
+        // rate" into "us 30-year...".
+        .map((x) => `${esc(x.label)} is published by ${esc(x.source.replace(/ via FRED$/, ""))}`)
+        .join(", ")}${
+        restricted.length < series.length
+          ? ", and the rest are United States federal statistical products in the public domain under 17 U.S.C. §105"
+          : ""
+      }. ${
+        restricted.length === 1 ? "That one is not a work" : "Those are not works"
+      } of the United States government, so §105 does not cover ${
+        restricted.length === 1 ? "it" : "them"
+      } and the publisher's own terms apply — each chart links its source, so check there before republishing a series. `
+    : `Everything here is drawn from series produced by agencies of the United States government, which are public domain under 17 U.S.C. §105. `;
 
   const empty = `<div class="callout" style="max-width:var(--prose)">
     <b>Not built yet</b>
@@ -187,7 +240,7 @@ export function chartbookPage({ site, data, pdf = {} }) {
     series.length
       ? `<div class="callout" style="margin-top:56px;max-width:var(--prose)">
     <b>Use it</b>
-    Everything here is drawn from series produced by agencies of the United States government, which are public domain under 17 U.S.C. §105. Reproduce the charts, quote the figures, put them in a deck. A link back to <a href="${esc(
+    ${reuse}Reproduce the charts, quote the figures, put them in a deck. A link back to <a href="${esc(
       site.origin
     )}/chartbook/">this page</a> is appreciated and not required.
     <p style="margin:12px 0 0">For today's levels rather than the long run, see <a href="/data/">the market data page</a>, where every figure names its own source and timestamp. For what any of it meant on the day, <a href="/brief/">the Brief</a>.
@@ -214,12 +267,18 @@ export function chartbookPage({ site, data, pdf = {} }) {
             } years.`,
             url: `${site.origin}/chartbook/`,
             isAccessibleForFree: true,
-            license: "https://www.usa.gov/government-works",
-            creator: {
-              "@type": "Organization",
-              name: "Federal Reserve Bank of St. Louis",
-              url: "https://fred.stlouisfed.org",
-            },
+            /* No license. Not every series here is a government work, so a
+               blanket machine-readable licence would assert terms over
+               Freddie Mac's survey and the St. Louis Fed's own series that
+               are not mine to set. The page says in words what applies to
+               what, where it can be qualified. */
+            /* creator is the compilation's author, which is this site. FRED
+               distributes the series and the publishers produced them; both
+               are credited per chart on the page and carried in isBasedOn.
+               Naming FRED as creator here read as though they had assembled
+               this page. */
+            creator: { "@type": "Organization", name: site.name, url: site.origin },
+            isBasedOn: [...new Set(series.map((x) => x.sourceUrl))].sort(),
             variableMeasured: series.map((s) => s.label),
             temporalCoverage: `${series[0].first}/${series[0].last}`,
           },

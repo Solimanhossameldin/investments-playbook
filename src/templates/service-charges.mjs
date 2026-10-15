@@ -80,7 +80,7 @@ export function serviceChargePage({ site, index }) {
 
   <div class="callout" style="max-width:var(--prose);margin-top:36px">
     <b>Use it</b>
-    This table is free to quote, screenshot and republish with attribution to ${esc(site.name)}. No permission needed and no link required, though one is appreciated. If you want it as a file rather than a page, <a href="/contact/">ask</a>.
+    This table is free to quote, screenshot and republish with attribution to ${esc(site.name)}. No permission needed and no link required, though one is appreciated. What is being offered is the compilation: each figure belongs to the body that approved and published it, named in its own row, and reusing a row means honouring whatever terms that source sets. If you want it as a file rather than a page, <a href="/contact/">ask</a>.
   </div>
 
   <p style="margin-top:28px"><a class="btn btn--ghost btn--sm" href="/playbooks/service-charge-and-reserves/">What a service charge actually pays for</a> <a class="btn btn--ghost btn--sm" href="/calculators/net-rental-yield/">Put it through the net yield calculator</a></p>
@@ -98,11 +98,20 @@ export function serviceChargePage({ site, index }) {
         name: "Dubai service charges by building",
         description: `Service charge per square foot per year for ${count} named Dubai buildings across ${areas.length} areas, each figure attributed to a named source and the date it was retrieved.`,
         url: `${site.origin}/service-charges/`,
-        license: "https://creativecommons.org/licenses/by/4.0/",
+        /* No license field, for the reason the price index gives in the same
+           position: the compilation is mine to give away and the figures are
+           not. Every row here is an approved budget read from a named third
+           party -- the DLD's open dataset among them -- and a machine-readable
+           CC-BY on this node would read as a licence over their data rather
+           than over my table of it. What may be done with the table is said
+           in words on the page, where it can be qualified. */
         isAccessibleForFree: true,
         creator: { "@type": "Organization", name: site.name, url: site.origin },
         temporalCoverage: [...new Set(rows.map((r) => r.period))].sort().join(", "),
         spatialCoverage: { "@type": "Place", name: "Dubai, United Arab Emirates" },
+        /* Where the figures actually come from, which is the claim this node
+           can support in place of a licence it cannot. */
+        isBasedOn: [...new Set(rows.map((r) => r.sourceUrl))].sort(),
         variableMeasured: {
           "@type": "PropertyValue",
           name: "Service charge",

@@ -314,6 +314,22 @@ for (const p of indexable) {
   }
 }
 
+// A Dataset may not licence figures it does not own. The compilation is this
+// site's to give away; the readings in it belong to the bodies that published
+// them. scripts/datasettest.mjs enforces this on the templates, including the
+// ones that do not currently build; this is the same rule over what shipped.
+for (const p of indexable) {
+  for (const d of p.jsonldRaw.filter((n) => n && n["@type"] === "Dataset")) {
+    if (d.license !== undefined || d.licence !== undefined) {
+      note("error", "Dataset asserts a licence over third-party figures",
+        `${d.license ?? d.licence} on ${p.url}`);
+    }
+    if (!d.isBasedOn) {
+      note("error", "Dataset does not say where its figures came from", `${d.name} on ${p.url}`);
+    }
+  }
+}
+
 // Sitemap lastmod. Google drops lastmod across a whole site once it stops
 // believing it, so the failure to guard against is a date the build cannot
 // justify -- which is what stamping the build date on all 124 URLs was.
