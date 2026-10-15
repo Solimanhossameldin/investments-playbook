@@ -1,16 +1,20 @@
 
-_archive/
-.dev.vars
-.DS_Store
-*.log
 # admin secrets never belong here
+*.log
+.DS_Store
+.dev.vars
+_archive/
 admin-log.txt
 admin.command
 admin/.dev.vars
+com.investmentsplaybook.publish.plist
 content/dld/*.csv
 dist/
 go-live.command
 mail-preview.html
 node_modules/
 preview.command
+publish-auto.command
+publish-auto.launchd.log
+publish-auto.log
 push.command
