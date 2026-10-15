@@ -290,12 +290,20 @@ for (const p of indexable) {
   // markup while three other entries are there is the easiest thing to let
   // slip.
   if (p.definition) {
-    const short = (faq.mainEntity || []).find((q) => /short answer\?$/i.test(String(q.name || "")));
+    /* Matched on the answer, not on the question's wording. The first version
+       of this looked for a question ending "short answer?", which meant it
+       broke the moment a page declared a better question -- it was policing
+       phrasing while claiming to police substance. What has to be true is
+       that the finding the page prints is offered as an answer to something. */
+    const short = (faq.mainEntity || []).find(
+      (q) => String(q.acceptedAnswer?.text || "").replace(/\s+/g, " ").trim() === p.definition
+    );
     if (!short) {
-      note("error", "page states a finding but offers no short answer in its FAQ", p.url);
-    } else if (String(short.acceptedAnswer?.text || "").replace(/\s+/g, " ").trim() !== p.definition) {
-      note("error", "the FAQ short answer is not the finding the page prints",
-        `markup: "${String(short.acceptedAnswer?.text || "").slice(0, 60)}..." page: "${p.definition.slice(0, 60)}..." on ${p.url}`);
+      note("error", "the finding the page prints is not offered as an answer in its FAQ",
+        `page: "${p.definition.slice(0, 70)}..." on ${p.url}`);
+    } else if (!String(short.name || "").includes("?")) {
+      note("error", "the finding is answered by something that is not a question",
+        `"${short.name}" on ${p.url}`);
     }
   }
   const entries = faq.mainEntity || [];

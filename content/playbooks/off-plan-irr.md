@@ -8,6 +8,7 @@
   "calculator": "off-plan-irr",
   "reviewed": "14 September 2026",
   "summary": "Two off-plan payment plans quoted at the same headline price are not the same price, because money paid later costs less in present value, and the gap between a front loaded plan and a post handover plan is commonly five to fifteen percent of the headline figure, while the same plan also fixes, by statute, what a default costs you.",
+  "question": "Are two Dubai off-plan payment plans at the same headline price really the same price?",
   "formula": "Monthly discount rate\n  m = (1 + annual discount rate) ^ (1/12) - 1\n\nPresent value of a plan\n  = down payment\n  + sum over k of (construction instalment / (1 + m)^k)\n  + handover payment / (1 + m)^months\n  + sum over j of (post-handover instalment / (1 + m)^(months + j))\n\nEffective discount to headline\n  = 1 - (present value / headline price)\n\nWhat a default costs, Article 11\n  ceiling  = retention band x contract price of the unit\n  retained = the lesser of amounts paid and the ceiling\n  refund   = amounts paid - ceiling, or nothing if that is negative\n\nThe ceiling is a fraction of the price. It is not\na fraction of what you have paid, and it does not\ngrow as you pay.",
   "failureModes": [
     "It assumes both plans are available on the same unit at the same headline price. They usually are not. Price the plans as actually offered or the comparison is fictional.",

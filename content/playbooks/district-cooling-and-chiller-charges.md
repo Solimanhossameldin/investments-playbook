@@ -8,6 +8,7 @@
   "calculator": "net-rental-yield",
   "reviewed": "8 October 2026",
   "summary": "Dubai chiller charges under ECR 6 of 2021 and RD10: the capacity charge does not stop when the flat empties, and what a chiller-free premium buys.",
+  "question": "What rent premium covers the chiller bill on a chiller-free Dubai letting?",
   "formula": "The bill has two parts and only one of them depends on the tenant.\n\n  Capacity charge    = capacity tariff x contracted capacity\n                       applied monthly, with consumption nowhere in it\n  Consumption charge = consumption tariff x metered refrigeration-ton-hours\n\nThe standing cost, being a whole year in which the flat is never cooled\n\n  = (contracted capacity x capacity tariff + 12 x the meter fee) x (1 + VAT)\n\nWhat a chiller-free rent premium actually buys\n\n  headroom                 = premium - standing cost\n  break-even consumption   = headroom / (consumption tariff x (1 + VAT))\n  hours a day at full load = break-even consumption / (capacity x 365)\n\nAt the published rates and 5 refrigeration tons the standing cost is\nAED 4,315.50 a year, so a chiller-free premium below that figure buys the\ntenant no cooling at all. It is a rent discount the landlord has not\nnoticed giving.",
   "failureModes": [
     "Reading a headline rate as the bill. The capacity charge is set by contracted capacity, not by use, so two identical flats in the same tower, with the same thermostat setting, pay different standing costs if their allocated capacity differs.",

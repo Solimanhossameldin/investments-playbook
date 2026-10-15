@@ -8,6 +8,7 @@
   "calculator": "net-rental-yield",
   "reviewed": "8 September 2026",
   "summary": "Net rental yield in Dubai is rent after all running costs, over the price plus the statutory 4.00% Land Department fee and agency costs: 4.33%, not 7.00%.",
+  "question": "What is the real net rental yield on a Dubai apartment?",
   "formula": "Net operating income\n  = Annual rent\n  - Vacancy allowance\n  - Service charge (size in sq ft x rate per sq ft)\n  - Management fee (share of rent actually collected)\n  - Maintenance reserve\n  - Insurance and fixed costs\n\nTotal outlay\n  = Purchase price\n  + Land Department registration fee (4% of the value of the sale contract)\n  + Agency commission x (1 + VAT)\n  + Registration trustee fee x (1 + VAT)\n  + Title deed, map, knowledge and innovation fees\n  + Mortgage registration (0.25% of the mortgage (debt) value), if borrowing\n\nNet yield = Net operating income / Total outlay\n\nYears of net rent consumed by the costs\n  = Acquisition costs / Net operating income",
   "failureModes": [
     "It says nothing about capital growth. A four percent net yield in a market rising six percent a year and a four percent net yield in a market falling six percent a year are not the same investment.",

@@ -8,6 +8,7 @@
   "calculator": "net-rental-yield",
   "reviewed": "10 September 2026",
   "summary": "Dubai service charges under Law No. (6) of 2019: your share is the deed area, no charge without RERA approval, and the reserve sits in a separate account.",
+  "question": "How are Dubai service charges calculated and approved?",
   "formula": "Your annual charge\n  = the area recorded in the Real Property Register\n    x the rate RERA approved for that project, that year\n\nWhat a dirham a foot costs, on the illustrative one bedroom\n  900 sq ft x AED 1 = AED 900 a year\n  = 0.86% of the gross rent\n  = 0.056 points of net yield\n\nThe break-even levy\n  A building charging `gap` dirhams a foot less than a comparable\n  one, held for `n` years, with the saving earning `r`:\n\n    break-even levy per sq ft = gap x ((1 + r)^n - 1) / r\n\n  At r = 0 that is simply gap x n. The unit area appears on both\n  sides of the comparison and divides out, so the answer is a rate,\n  not an amount, and it is the same rate for every apartment.",
   "failureModes": [
     "Comparing charges across building types. A serviced tower and a walk-up are not comparable per square foot and never were, and the break-even arithmetic below is only meaningful inside a comparable set.",

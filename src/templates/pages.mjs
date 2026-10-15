@@ -594,7 +594,20 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
        on a quarter of the library. */
     pb.summary && {
       "@type": "Question",
-      name: `${copy(pb.title)}: what is the short answer?`,
+      /* The question a person actually types, where the page declares one.
+         "Net rental yield in Dubai: what is the short answer?" matches a
+         reader who already knows the term; "What is the real net rental yield
+         on a Dubai apartment?" matches the one who does not, and it is the
+         shape an assistant forms before it answers. The head terms on these
+         subjects belong to portals with a decade of authority -- the
+         question-shaped queries are open, because the competing pages explain
+         what a term means and never compute it.
+
+         Declared per page rather than generated, because a question is
+         editorial: it has to be one this page's own finding answers, and the
+         suite checks exactly that. Pages without one fall back to the
+         title-prefixed form, which is grammatical everywhere. */
+      name: pb.question ? copy(pb.question) : `${copy(pb.title)}: what is the short answer?`,
       acceptedAnswer: { "@type": "Answer", text: copy(pb.summary) },
     },
     pb.whenToUse && {

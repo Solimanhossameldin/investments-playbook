@@ -2981,7 +2981,59 @@ ok("every calculator points at a playbook that exists",
     })(),
   };
 
-  /* ---- the captions ----
+  /* ---- the declared questions ----
+
+   A page may declare the question a reader actually types, and that question
+   becomes the name of the FAQ entry whose answer is the page's finding. The
+   head terms on these subjects belong to portals with a decade of authority;
+   the question-shaped queries are open because the competing pages explain
+   what a term means and never compute it. Which is only worth anything if the
+   declared question is a real question this page's own finding answers, so
+   that is what is checked. */
+{
+  const declared = playbooks.filter((p) => p.question);
+  ok("some playbooks declare the question they answer", declared.length > 0, `${declared.length}`);
+
+  for (const p of declared) {
+    ok(`${p.slug}: its declared question is phrased as a question`,
+      p.question.trim().endsWith("?"), `"${p.question}"`);
+    ok(`${p.slug}: its declared question is not the generic fallback`,
+      !/short answer\?$/i.test(p.question), `"${p.question}"`);
+    ok(`${p.slug}: its declared question does not just restate the title`,
+      p.question.toLowerCase().replace(/[^a-z]/g, "") !== p.title.toLowerCase().replace(/[^a-z]/g, ""),
+      `"${p.question}"`);
+    /* A question with no answer on the page is worse than no question: it is
+       the thing that gets quoted. The summary is the answer, so it has to
+       carry something the question asks about -- checked on the content words
+       rather than on all of them, because "the", "a" and "of" prove nothing. */
+    const stop = new Set(["what","is","the","a","an","of","on","in","to","for","do","does","how","many","much","and","or","at","it","you","your","really","actually","before","which","are","two","that","than","from","with","need","needs","take","takes"]);
+    const words = p.question.toLowerCase().match(/[a-z][a-z-]{2,}/g) || [];
+    const content = words.filter((w) => !stop.has(w));
+    /* The whole page, not just its finding. The first version of this check
+       looked only at the summary and title, and failed three questions that
+       the body answers plainly -- it was testing whether the one-sentence
+       finding happened to contain the query's words, which is not the claim.
+       Two of those three were still wrong, though, for a different reason:
+       they used vocabulary the page never uses, "apartment" where it says one
+       bedroom and "foreigners" where it says foreign ownership. A question
+       phrased in words the page does not contain is a weaker match, so both
+       were rewritten rather than excused by widening this. */
+    const hay = `${p.summary} ${p.title} ${p.body}`.toLowerCase();
+    const hits = content.filter((w) => hay.includes(w.replace(/s$/, "")));
+    ok(`${p.slug}: its declared question is about what the page answers`,
+      content.length === 0 || hits.length / content.length >= 0.5,
+      `only ${hits.length}/${content.length} of "${p.question}" appears in the finding or title`);
+  }
+
+  /* Every page gets a question one way or the other, and the fallback has to
+     stay grammatical for the titles that resist "What is X?" -- seventeen of
+     them are clauses or gerunds. */
+  ok("every playbook ends up with a question for its finding",
+    playbooks.every((p) => p.question || p.title),
+    "a playbook with neither a declared question nor a title");
+}
+
+/* ---- the captions ----
 
      The bars were pinned to their modules from the first version of this
      block; the caption underneath them was not, and a caption is where the

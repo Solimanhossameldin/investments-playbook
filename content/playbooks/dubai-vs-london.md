@@ -8,6 +8,7 @@
   "calculator": "net-rental-yield",
   "reviewed": "21 September 2026",
   "summary": "A Dubai resident pays £58,280 stamp duty on an average London flat and keeps 2.35% after UK tax, 2.29% from 2027, where a Dubai flat keeps 4.33% untaxed.",
+  "question": "Dubai or London property: which keeps more after tax?",
   "formula": "The same two flats, for an owner who lives in Dubai\n\n                                  Dubai      London\n  Gross yield                     7.00%      4.92%\n  Net operating income / price    4.61%      3.24%\n  Statutory purchase tax          4.00%     10.24%\n  Net yield, after entry and tax  4.33%      2.35%\n  Years of kept rent to recover   1.39       3.95\n\nLondon SDLT, non-resident buying an additional property\n  every band + 5 pp additional + 2 pp non-resident\n\n    125,000 x 7%   =  8,750\n    125,000 x 9%   = 11,250\n    319,000 x 12%  = 38,280\n    Total          = 58,280   (10.24% of 569,000)\n\nUK tax on the London rent\n  2026 to 2027   basic rate 20%, withheld at source\n  2027 to 2028   property basic rate 22%\n\nWhere the owner lives, crossed with where the flat is\n                      Dubai flat   London flat   Dubai's lead\n  Lives in Dubai        4.33%        2.35%         1.98\n  UK, higher rate       2.60%        1.79%         0.81",
   "failureModes": [
     "Comparing gross yields. London's 4.92% and Dubai's 7.00% are both before running costs, entry costs and tax, and the tax is the line that differs most between the two cities.",

@@ -8,6 +8,7 @@
   "calculator": "net-rental-yield",
   "reviewed": "28 September 2026",
   "summary": "Break-even occupancy on a Dubai holiday home is 67.9% against the annual tenancy it replaced, not the 28.2% every page prints against zero.",
+  "question": "What occupancy does a Dubai holiday home need to beat an annual tenancy?",
   "formula": "Break-even occupancy\n  =        Fixed annual costs\n    ------------------------------------\n     Income at full occupancy\n     - costs that scale with occupancy\n\n  Fixed, owed with the unit empty\n    service charge\n    maintenance reserve\n    insurance and standing charges\n    the mortgage instalment, entire\n    the holiday home permit\n\n  Scaling, charged on what comes in\n    management or operator fee\n    cleaning, per stay\n    tourism dirham, per occupied night\n\nTwo benchmarks, not one\n  against zero          when the unit stops losing money\n  against the tenancy   when the work was worth doing\n\n  The second is the decision. The alternative to an empty\n  short let is not an empty flat, it is the annual tenancy\n  that was given up in order to run one.\n\nOn the illustrative one bedroom\n  annual tenancy, no mortgage        23.01%\n  annual tenancy, 75% at 5.0%        no occupancy clears it\n  holiday home, against zero         28.2%\n  holiday home, against the tenancy  67.9%",
   "failureModes": [
     "The arithmetic assumes the rent and the nightly rate hold. A re-letting at a lower rent raises break-even occupancy even if the unit is never empty for a day, which is the same risk arriving quietly.",

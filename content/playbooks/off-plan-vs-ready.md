@@ -8,6 +8,7 @@
   "calculator": "off-plan-irr",
   "reviewed": "21 September 2026",
   "summary": "On the same Dubai apartment priced as cash flows, a payment plan's time value roughly pays for the rent an off-plan buyer gives up, so what decides off-plan against ready is not the discount but whether the unit is worth as much as a ready one on handover day, where five percent less moves the answer further than a two year delay.",
+  "question": "Off-plan or ready property in Dubai: which is the better buy?",
   "formula": "Same unit, bought two ways. At handover both buyers\nown an identical apartment, so from then on the market\ndoes the same thing to both and drops out.\n\nReady, in today's money\n  price + acquisition stack\n  - net rent, monthly, until the off-plan handover\n\nOff-plan, in today's money\n  present value of the plan's instalments\n  + registration fee at contract\n\nSet them equal. Off-plan cost is linear in its price,\nso the break-even price is exact:\n\n  p* = (ready cost - flat fees) / (plan factor + 4%)\n  break-even discount = 1 - p* / ready price\n\nWhat moves it, on the illustrative unit\n  a 24 month delay, plan A      +2.84 points\n  a 5% handover value haircut   +4.46 points\n\nThe haircut is the larger number. Price the building\nyou will be handed, not the plan you are sold.",
   "failureModes": [
     "The whole method rests on one assumption, that the off-plan unit is worth what a comparable ready unit is worth on the day it is delivered. The third table exists because that assumption is the one most likely to be wrong.",
