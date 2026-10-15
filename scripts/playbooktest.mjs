@@ -2880,6 +2880,10 @@ ok("every calculator points at a playbook that exists",
   const pct1f = (v) => `${Number(v).toFixed(1)}%`;
   const aedf = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
   const shortfall = (v) => `AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
+  const monthsf = (v) => `${Number(v).toFixed(1)} months`;
+  const yearf = (v) => `year ${Math.round(v)}`;
+  const signedAed = (v) =>
+    `${v < 0 ? "\u2212" : "+"}AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
 
   /* What each registered chart must be plotting, taken from the modules and
      not from the chart. If these two ever disagree, the chart is wrong. */
@@ -2923,6 +2927,33 @@ ok("every calculator points at a playbook that exists",
     })),
     "golden-visa-vs-portugal-d7": gv.coverage().map((r) => ({
       label: r.label, shown: pct1f(r.covers),
+    })),
+    "refinancing-a-dubai-mortgage": rf.breakEvenTable().map((r) => ({
+      label: `${r.fromRatePct.toFixed(2)}% to ${r.toRatePct.toFixed(2)}%`,
+      shown: monthsf(r.months),
+    })),
+    /* Only the growth rates that actually produce a crossing. The negative
+       ones return null from the module and the chart must leave them out
+       rather than invent a bar for "never", so this expectation filters on
+       the same condition the builder does. */
+    "rent-vs-buy": rb.GROWTHS
+      .map((g) => ({ g, year: rb.atGrowth(g).year }))
+      .filter((r) => r.year !== null)
+      .map((r) => ({ label: `${(r.g * 100).toFixed(0)}% a year`, shown: yearf(r.year) })),
+    "due-diligence-before-an-offer": [
+      {
+        label: "Reading the approved service charge budget",
+        shown: aedf(dd.capitalised(dd.serviceChargeCheck().perYear)),
+      },
+      {
+        label: "Checking the asking rent against Ejari",
+        shown: aedf(dd.capitalised(dd.rentCheck().perYear)),
+      },
+      { label: "Winning the registration fee split", shown: aedf(dd.feeSplitCheck().once) },
+    ],
+    "district-cooling-and-chiller-charges": dc.premiumTable().map((r) => ({
+      label: `AED ${r.premium.toLocaleString("en-AE")} a year`,
+      shown: signedAed(r.headroom),
     })),
   };
 

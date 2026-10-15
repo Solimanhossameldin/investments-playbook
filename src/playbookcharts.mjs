@@ -25,11 +25,23 @@ import { TIERS } from "./rentcap.mjs";
 import { shortfallTable } from "./unitarea.mjs";
 import { coverage as d7Coverage } from "./goldenvisa.mjs";
 import { EXAMPLE as AQ_EXAMPLE, yields as aqYields } from "./acquisition.mjs";
+import { breakEvenTable } from "./refinance.mjs";
+import { GROWTHS, atGrowth } from "./rentbuy.mjs";
+import {
+  serviceChargeCheck,
+  rentCheck,
+  feeSplitCheck,
+  capitalised,
+  commission,
+} from "./diligence.mjs";
+import { premiumTable, minimumPremium, ASSUMED_RT } from "./districtcooling.mjs";
 
 const pct0 = (v) => `${Number(v).toFixed(0)}%`;
 const pct = (v) => `${Number(v).toFixed(2)}%`;
 const pct1 = (v) => `${Number(v).toFixed(1)}%`;
 const aed0 = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
+const months = (v) => `${Number(v).toFixed(1)} months`;
+const yearNo = (v) => `year ${Math.round(v)}`;
 
 const aed = (v) =>
   `${v < 0 ? "−" : "+"}AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
@@ -324,6 +336,120 @@ function goldenVisaVsPortugalD7() {
   ];
 }
 
+/* Refinancing: how long the switching cost takes to come back, by rate move.
+
+   The page's central claim is that the half point every broker recommends
+   switching for takes five years to repay, and five years is longer than a
+   great many owners hold the flat. A table of months makes the reader do the
+   comparison; a bar against a five-year line makes it the picture. The bars
+   are the module's own break-even months, so they cannot disagree with the
+   table above them. */
+function refinancingADubaiMortgage() {
+  const rows = breakEvenTable();
+  return [
+    {
+      key: "refi-break-even",
+      label:
+        "How many months of the monthly saving it takes to recover the AED 19,715 switching cost, by the rate move",
+      reference: 60,
+      referenceLabel: "five more years in the same property",
+      format: months,
+      bars: rows.map((r) => ({
+        label: `${r.fromRatePct.toFixed(2)}% to ${r.toRatePct.toFixed(2)}%`,
+        value: r.months,
+      })),
+      caption:
+        "The term is held at twenty-five years on both sides, so every bar is the rate and nothing else. Only the move of a point and a half comes back inside two years. The quarter point takes over ten, which is to say it never happens: the fixed period expires first and the question becomes a different one.",
+    },
+  ];
+}
+
+/* Rent or buy: the year owning overtakes renting, by the capital growth rate
+   assumed. The consensus answer of three to five years is a growth bet that
+   nobody labels as one, so the reference line is the consensus and the bars
+   are what each growth rate actually produces.
+
+   The three negative growth rates return no break-even inside the term at
+   all. A bar cannot show "never", so those rows are left out and the caption
+   says so -- the alternative is plotting the term length as though the
+   crossing happened in the final year, which would be a fabricated bar. */
+function rentVsBuy() {
+  const rows = GROWTHS.map((g) => ({ g, year: atGrowth(g).year })).filter(
+    (r) => r.year !== null
+  );
+  return [
+    {
+      key: "rent-buy-break-even",
+      label:
+        "The year from which owning the illustrative apartment has cost less than renting it, by the capital growth assumed",
+      reference: 5,
+      referenceLabel: "the three-to-five years the consensus asserts",
+      format: yearNo,
+      bars: rows.map((r) => ({
+        label: `${(r.g * 100).toFixed(0)}% a year`,
+        value: r.year,
+      })),
+      caption:
+        "At flat prices the crossing is year eleven, and the consensus answer needs capital growth to be true rather than arithmetic. The three rates below zero are missing because at minus one per cent and below owning never costs less inside the twenty-five year term, and a bar cannot say never.",
+    },
+  ];
+}
+
+/* Due diligence: two documents against the one negotiation, on a single
+   scale. The recurring findings are capitalised at the property's own net
+   yield -- the amount of price that buys the same income -- which is what
+   puts an annual saving and a one-off on one axis honestly. The reference is
+   the agency commission, because that is the number every buyer knows and
+   argues about, and the finding is that reading the budget is worth several
+   of it. */
+function dueDiligenceBeforeAnOffer() {
+  const sc = capitalised(serviceChargeCheck().perYear);
+  const rt = capitalised(rentCheck().perYear);
+  const split = feeSplitCheck().once;
+  return [
+    {
+      key: "diligence-worth",
+      label:
+        "What each check is worth on the illustrative one bedroom, recurring findings capitalised at the property's own net yield",
+      reference: commission(),
+      referenceLabel: "the agency commission, with VAT",
+      format: aed0,
+      bars: [
+        { label: "Reading the approved service charge budget", value: sc },
+        { label: "Checking the asking rent against Ejari", value: rt },
+        { label: "Winning the registration fee split", value: split },
+      ],
+      caption:
+        "The first two bars are ordinary findings, not disasters: six dirhams a square foot on the charge and a five per cent haircut on the rent. Each is worth more than the whole commission, and more than the one negotiation every buyer has. Capitalising at the net yield is what puts a yearly saving and a one-off on the same axis.",
+    },
+  ];
+}
+
+/* District cooling: what a chiller-free rent premium has left once the
+   standing cost is paid. The page's finding is the first row -- a premium
+   below the standing cost buys the tenant nothing and is a discount wearing
+   a better word -- and a bar crossing zero is the one chart shape that shows
+   it without a word of prose. */
+function districtCoolingAndChillerCharges() {
+  const rows = premiumTable();
+  return [
+    {
+      key: "chiller-premium-headroom",
+      label:
+        `What a chiller-free rent premium has left for cooling once the standing cost is paid, at ${ASSUMED_RT} contracted tons`,
+      reference: 0,
+      referenceLabel: `the standing cost alone, AED ${minimumPremium().toLocaleString("en-AE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      format: aed,
+      bars: rows.map((r) => ({
+        label: `AED ${r.premium.toLocaleString("en-AE")} a year`,
+        value: r.headroom,
+      })),
+      caption:
+        "Left of the line the premium does not reach the fixed charge, so it buys no cooling at all. Right of it the headroom buys less than it looks: AED 6,000 a year covers about 1.55 hours a day at full contracted capacity and AED 10,000 about 5.22, both against a consumption the tenant now chooses and no longer pays for.",
+    },
+  ];
+}
+
 const REGISTRY = {
   "break-even-occupancy": breakEvenOccupancy,
   "net-rental-yield": netRentalYield,
@@ -338,6 +464,10 @@ const REGISTRY = {
   "rent-increase-caps": rentIncreaseCaps,
   "price-per-square-foot": pricePerSquareFoot,
   "golden-visa-vs-portugal-d7": goldenVisaVsPortugalD7,
+  "refinancing-a-dubai-mortgage": refinancingADubaiMortgage,
+  "rent-vs-buy": rentVsBuy,
+  "due-diligence-before-an-offer": dueDiligenceBeforeAnOffer,
+  "district-cooling-and-chiller-charges": districtCoolingAndChillerCharges,
 };
 
 /* Returns rendered figures for a playbook, or "" when the page has none. */
