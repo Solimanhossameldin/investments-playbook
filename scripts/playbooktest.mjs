@@ -21,6 +21,7 @@ import * as ua from "../src/unitarea.mjs";
 import * as dc from "../src/districtcooling.mjs";
 import * as rb from "../src/rentbuy.mjs";
 import * as fo from "../src/foreignownership.mjs";
+import * as rf from "../src/refinance.mjs";
 import * as orr from "../src/offplanready.mjs";
 import * as hp from "../src/holdperiod.mjs";
 import * as ld from "../src/london.mjs";
@@ -134,6 +135,7 @@ const STATUTORY_PAGES = [
   ["district-cooling-and-chiller-charges", dc],
   ["rent-vs-buy", rb],
   ["freehold-areas-and-foreign-ownership", fo],
+  ["refinancing-a-dubai-mortgage", rf],
 ];
 
 /* Pages whose instruments are statute somewhere other than Dubai. They get
@@ -1692,6 +1694,141 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     for (const target of ["net-rental-yield", "off-plan-irr", "selling-well", "due-diligence-before-an-offer", "transaction-cost-drag"]) {
       ok(`mortgage: links to /playbooks/${target}/`, p.body.includes(`](/playbooks/${target}/)`));
     }
+  }
+}
+
+/* ---- refinancing, and the half of the bill that is not the famous fee ----
+
+   The page's whole argument is that the capped early settlement fee is a
+   little over half the cost of moving a Dubai mortgage, and that the rest is
+   two Land Department registrations nobody prints. Three things could rot
+   that silently: a line could be edited in a table so the total no longer
+   adds up, the derived threshold at which the dirham ceiling overtakes the
+   percentage could be replaced with a typed literal that happens to look
+   right, and the prose conclusions about the half point and the quarter
+   point could survive a change in the arithmetic that falsified them. Each
+   has its own check below, and each was proved by reverting the thing it
+   guards. */
+{
+  const p = playbooks.find((x) => x.slug === "refinancing-a-dubai-mortgage");
+  ok("refinance: the page exists", !!p);
+  if (p) {
+    const S = rf.switchingCost();
+    const tables = tablesIn(p.body);
+    const byHead = (re) => tables.find((t) => re.test(t.head.join(" | ")));
+
+    /* The stack is the claim, not any one figure in it. The table is compared
+       to the module line by line and in order, so a figure edited in the page
+       fails even when the right figure is still printed somewhere else on it. */
+    const stack = byHead(/^Line \| Amount \| Who sets it$/);
+    ok("refinance: the switching stack table is present", !!stack);
+    if (stack) {
+      const want = [
+        ...S.bank.lines.map(([, v]) => v),
+        S.bank.vat,
+        ...S.discharge.lines.map(([, v]) => v),
+        ...S.registration.lines.map(([, v]) => v),
+        S.total,
+      ];
+      ok("refinance: the switching stack table matches the computed lines",
+        same(col(stack, 1), want), JSON.stringify(col(stack, 1)));
+      ok("refinance: the stack's own total is the sum of its three parts",
+        S.total === S.bank.total + S.discharge.total + S.registration.total);
+      ok("refinance: the bank and Land Department shares are the computed ones and account for the whole bill",
+        p.body.includes(`**${S.bankSharePct.toFixed(1)}%**`)
+        && p.body.includes(`**${S.landSharePct.toFixed(1)}%**`)
+        && Math.abs(S.bankSharePct + S.landSharePct - 100) < 0.11,
+        `${S.bankSharePct} + ${S.landSharePct}`);
+      ok("refinance: the page prints the stack as a rate of the balance",
+        p.body.includes(`${rf.pctText(S.ratePct)} of the outstanding balance`), rf.pctText(S.ratePct));
+    }
+
+    /* The ceiling binds at a balance the module searches for rather than
+       divides out. A literal that agreed with the division would pass a check
+       that only compared the two, so this one asks the page for the searched
+       value and separately asks that the search still straddles the ceiling. */
+    const binds = rf.capBindsAt();
+    ok("refinance: the page prints the derived balance at which the ceiling binds",
+      p.body.includes(`**AED ${rf.money(binds)}**`), `AED ${rf.money(binds)}`);
+    ok("refinance: the balance below the binding one is not capped and the binding one is",
+      !dp.capped(binds - 1) && dp.capped(binds), String(binds));
+
+    const share = byHead(/Share of the balance/);
+    ok("refinance: the fee share table is present", !!share);
+    if (share) {
+      const F = rf.feeShareTable();
+      ok("refinance: the fee share table's balances match the module",
+        same(col(share, 0), F.map((r) => r.balance)), JSON.stringify(col(share, 0)));
+      ok("refinance: the fee share table's fees match the module",
+        same(col(share, 1), F.map((r) => r.fee)), JSON.stringify(col(share, 1)));
+      ok("refinance: the fee share table's shares match the module",
+        same(col(share, 2), F.map((r) => r.sharePct)), JSON.stringify(col(share, 2)));
+      /* The table earns the word regressive only while it shows the share
+         falling. Asserted against the rows rather than against the prose. */
+      ok("refinance: the share really does fall once the ceiling binds",
+        F.filter((r) => r.capped).every((r, i, a) => i === 0 || r.sharePct < a[i - 1].sharePct)
+        && /regressive/.test(p.body));
+    }
+
+    const be = byHead(/Break-even, months/);
+    ok("refinance: the break-even table is present", !!be);
+    if (be) {
+      const B = rf.breakEvenTable();
+      ok("refinance: the break-even table's savings match the module",
+        same(col(be, 2), B.map((r) => r.saving)), JSON.stringify(col(be, 2)));
+      ok("refinance: the break-even table's months match the module",
+        same(col(be, 3), B.map((r) => r.months)), JSON.stringify(col(be, 3)));
+
+      /* Behaviour, not value. The page is only entitled to tell the reader
+         that the half point takes five years and the quarter point never
+         repays for as long as the arithmetic says both. */
+      const half = B.find((r) => r.fromRatePct === 5 && r.toRatePct === 4.5);
+      const quarter = B.find((r) => r.fromRatePct === 4.25 && r.toRatePct === 4);
+      ok("refinance: the page only calls the half point a sixty-one month payback while it is one",
+        half && Math.round(half.months) === 61 && /takes sixty-one months to repay/.test(p.body),
+        half ? String(half.months) : "missing");
+      ok("refinance: the page only says the quarter point takes over ten years while it does",
+        quarter && quarter.months > 120 && /A quarter point takes over ten years/.test(p.body),
+        quarter ? String(quarter.months) : "missing");
+    }
+
+    const gaps = byHead(/Inside 12 months/);
+    ok("refinance: the gap table is present", !!gaps);
+    if (gaps) {
+      const G = rf.gapTable();
+      ok("refinance: the gap table's twelve month column matches the module",
+        same(col(gaps, 1), G.map((r) => r.gaps[0])), JSON.stringify(col(gaps, 1)));
+      ok("refinance: the gap table's twenty-four month column matches the module",
+        same(col(gaps, 2), G.map((r) => r.gaps[1])), JSON.stringify(col(gaps, 2)));
+      ok("refinance: the gap table's sixty month column matches the module",
+        same(col(gaps, 3), G.map((r) => r.gaps[2])), JSON.stringify(col(gaps, 3)));
+
+      /* The gap is solved, so it has to satisfy the thing it was solved for:
+         at the solved gap the switch repays in the stated horizon, and a
+         tenth of a point less leaves it unrepaid. A closed form that rounded
+         would pass the first of those and fail the second. */
+      for (const r of G) {
+        for (const [i, months] of rf.GAP_HORIZONS.entries()) {
+          const at = rf.breakEvenMonths({ fromRatePct: r.fromRatePct, toRatePct: r.fromRatePct - r.gaps[i] });
+          const under = rf.breakEvenMonths({ fromRatePct: r.fromRatePct, toRatePct: r.fromRatePct - r.gaps[i] + 0.1 });
+          ok(`refinance: the ${months} month gap from ${r.fromRatePct}% really repays in ${months} months, and a tenth of a point less does not`,
+            at <= months + 0.5 && under > months, `${at.toFixed(1)} vs ${under.toFixed(1)}`);
+        }
+      }
+
+      /* The page says the gap that pays inside a year is nearer three points
+         than one. It may only say so while that is true of every rate in the
+         table. */
+      ok("refinance: the page only claims a year needs nearer three points than one while every row does",
+        G.every((r) => r.gaps[0] > 2) && /nearer three points than one/.test(p.body),
+        JSON.stringify(G.map((r) => r.gaps[0])));
+    }
+
+    /* The two uncapped fees are the page's main honesty claim. It must name
+       both as excluded and must not have quietly acquired a figure for them. */
+    ok("refinance: the page names the arrangement and valuation fees as uncapped and excluded",
+      /no cap on a mortgage arrangement or processing fee, and none on the bank's valuation fee/.test(p.body)
+      && /floor on the cost of switching rather than a prediction/.test(p.body));
   }
 }
 

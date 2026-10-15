@@ -24,6 +24,7 @@ import * as ua from "./unitarea.mjs";
 import * as dc from "./districtcooling.mjs";
 import * as rb from "./rentbuy.mjs";
 import * as fo from "./foreignownership.mjs";
+import * as rf from "./refinance.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -74,6 +75,11 @@ const ENTRIES = [
     mod: mg, key: "cbuaeDisclosure", year: 2013, area: "Borrowing",
     what: "Requires the lender to give the borrower the lifetime cost of the loan and a separate schedule of fees and charges, and points the cap on early repayment charges back at the consumer lending regulation.",
     applied: "mortgage-capacity",
+  },
+  {
+    mod: rf, key: "cbuaeTransfer", year: 2012, area: "Borrowing",
+    what: "Gives the borrower the right to move a loan to any other bank or finance company in the country, and caps what the bank may charge for letting it go at the lower of one per cent of the outstanding balance and AED 10,000.",
+    applied: "refinancing-a-dubai-mortgage",
   },
   {
     mod: jp, key: "law6", year: 2019, area: "Owning in a building",
@@ -203,6 +209,6 @@ export function register() {
 
 /* The playbooks that cite instruments. Kept here so the page and the suite
    agree on what "every instrument the site cites" means. */
-export const APPLIED = ["freehold-areas-and-foreign-ownership", "due-diligence-before-an-offer", "price-per-square-foot", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let", "district-cooling-and-chiller-charges", "rent-vs-buy"];
+export const APPLIED = ["refinancing-a-dubai-mortgage", "freehold-areas-and-foreign-ownership", "due-diligence-before-an-offer", "price-per-square-foot", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let", "district-cooling-and-chiller-charges", "rent-vs-buy"];
 
 export const AREAS = ["Buying and selling", "Buying off-plan", "Borrowing", "Owning in a building", "Renting", "Holiday homes"];
