@@ -10,6 +10,54 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+/* ---- dist has to be a build of THIS tree ----
+
+   Eight checks in this file read built HTML out of dist. That is the right
+   way to check a template -- it is what the reader gets -- but it has a
+   failure mode that has cost this project days on three separate occasions:
+   a dist left over from an earlier build. Then those eight checks validate
+   yesterday's HTML and pass, while today's templates go unexamined.
+
+   Found by cloning the repo clean and running the suite: three of them
+   failed with "got: null" because dist did not exist at all, which is the
+   loud version of the same problem. `npm test` now builds first, so the
+   quiet version cannot happen through the normal gate. This is the guard for
+   everything else -- somebody running selftest directly, a half-finished
+   build, a build interrupted partway. If dist is older than the newest
+   source file, say so and stop rather than report a pass that means nothing.
+
+   Compared against src, content and scripts, because a change to any of the
+   three can change the output. */
+{
+  const newestIn = (dir) => {
+    const d = path.join(root, dir);
+    if (!fs.existsSync(d)) return 0;
+    let newest = 0;
+    const walk = (p) => {
+      for (const e of fs.readdirSync(p)) {
+        const f = path.join(p, e);
+        const st = fs.statSync(f);
+        if (st.isDirectory()) walk(f);
+        else newest = Math.max(newest, st.mtimeMs);
+      }
+    };
+    walk(d);
+    return newest;
+  };
+
+  const dist = path.join(root, "dist");
+  if (!fs.existsSync(dist)) {
+    check("dist exists, so the checks that read built HTML mean something",
+      false, "no dist: run `node scripts/build.mjs` first, or use `npm test`, which now builds");
+  } else {
+    const source = Math.max(newestIn("src"), newestIn("content"), newestIn("scripts"));
+    const built = newestIn("dist");
+    check("dist is a build of the current tree, not an older one",
+      built >= source,
+      `dist is ${Math.round((source - built) / 1000)}s older than the newest source file -- the eight checks that read built HTML would be validating a stale build`);
+  }
+}
+
 // Daily series. Note the blank row: FRED writes "." on non-trading days,
 // and CPI is monthly so it only prints on the first of the month.
 // FRED is asked for one series at a time, so each stub is a single column.
