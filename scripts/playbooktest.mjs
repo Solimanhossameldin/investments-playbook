@@ -2981,7 +2981,75 @@ ok("every calculator points at a playbook that exists",
     })(),
   };
 
+  /* ---- the captions ----
+
+     The bars were pinned to their modules from the first version of this
+     block; the caption underneath them was not, and a caption is where the
+     chart states its finding in words. Four of them carried figures typed by
+     hand, so a module change would have moved the bars and left the sentence
+     beneath asserting the old number. Every figure in a caption is now
+     interpolated, and these are the pins that keep it that way.
+
+     Each entry lists the derived strings its caption must contain. An empty
+     array is a deliberate declaration that the caption carries no figure --
+     the coverage check below requires every registered chart to appear here,
+     so a new chart cannot ship with an unwatched caption by omission. */
+  const CAPTIONS = {
+    "break-even-occupancy": [],
+    "net-rental-yield": [],
+    "dubai-vs-singapore": [pctf(sg.dubai().stampRate), pctf(sg.singapore().stampRate)],
+    "dubai-vs-london": [],
+    "mortgage-capacity": [],
+    "selling-well": (() => {
+      const st = dp.sellerStack();
+      return [aedf(st.total), `${st.commissionShare.toFixed(1)}%`];
+    })(),
+    "off-plan-irr": [`${op.EXAMPLE_PLAN.a.down}%`, `${op.EXAMPLE_PLAN.months} months`],
+    "off-plan-vs-ready": [],
+    "residency-and-tax": [],
+    "short-let-vs-long-let": [aedf(Math.abs(hh.shortLetNet().net - hh.longLetNet().net))],
+    "rent-increase-caps": [],
+    "price-per-square-foot": [],
+    "golden-visa-vs-portugal-d7": [
+      pct1f(gv.coverage().find((r) => r.covers >= 100 && r.covers < 110).covers - 100),
+    ],
+    "refinancing-a-dubai-mortgage": [
+      monthsf(rf.breakEvenTable().reduce((a, b) => (b.months > a.months ? b : a)).months),
+    ],
+    "rent-vs-buy": [yearf(rb.atGrowth(0).year)],
+    "due-diligence-before-an-offer": [`${Math.round(dd.FINDINGS.rentHaircut * 100)}%`],
+    "district-cooling-and-chiller-charges": (() => {
+      const cleared = dc.premiumTable().filter((r) => r.hoursPerDay != null);
+      const lo = cleared[0], hi = cleared[cleared.length - 1];
+      return [aedf(lo.premium), String(lo.hoursPerDay), aedf(hi.premium), String(hi.hoursPerDay)];
+    })(),
+    "transaction-cost-drag": (() => {
+      const o = hp.outcomes(PRICE_INDEX, "all");
+      const pl = hp.plateau(o);
+      const last = o.rows[o.rows.length - 1];
+      return [`${pl.low}%`, `${pl.high}%`, String(last.n), String(last.independent)];
+    })(),
+    "freehold-areas-and-foreign-ownership": (() => {
+      const r = fo.ladder()[0];
+      return [pctf(r.pct), aedf(r.discount)];
+    })(),
+  };
+
   const registered = Object.keys(CHART_REGISTRY);
+
+  ok("charts: every registered chart declares what its caption must carry",
+    registered.every((slug) => CAPTIONS[slug] !== undefined),
+    `undeclared: ${registered.filter((x) => CAPTIONS[x] === undefined).join(", ")}`);
+
+  for (const slug of registered.filter((x) => CAPTIONS[x] !== undefined)) {
+    const svg = playbookCharts(slug);
+    const caps = [...svg.matchAll(/class="cb__src">([^<]*)</g)].map((m) => m[1]).join(" ");
+    ok(`charts: ${slug} has a caption at all`, caps.length > 40, caps.slice(0, 40));
+    for (const want of CAPTIONS[slug]) {
+      ok(`charts: ${slug} caption carries ${want} as the module computes it`,
+        caps.includes(want), `expected ${want} in: ${caps.slice(0, 120)}`);
+    }
+  }
 
   ok("charts: every registered chart is covered by an expectation here",
     registered.every((slug) => EXPECT[slug] || LINES[slug]),

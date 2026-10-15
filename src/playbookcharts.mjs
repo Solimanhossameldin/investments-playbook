@@ -25,17 +25,18 @@ import { TIERS } from "./rentcap.mjs";
 import { shortfallTable } from "./unitarea.mjs";
 import { coverage as d7Coverage } from "./goldenvisa.mjs";
 import { EXAMPLE as AQ_EXAMPLE, yields as aqYields } from "./acquisition.mjs";
-import { breakEvenTable } from "./refinance.mjs";
-import { GROWTHS, atGrowth } from "./rentbuy.mjs";
+import { breakEvenTable, BORROWER } from "./refinance.mjs";
+import { GROWTHS, atGrowth, CASE } from "./rentbuy.mjs";
 import {
   serviceChargeCheck,
   rentCheck,
   feeSplitCheck,
   capitalised,
   commission,
+  FINDINGS,
 } from "./diligence.mjs";
 import { premiumTable, minimumPremium, ASSUMED_RT } from "./districtcooling.mjs";
-import { ladder as usufructLadder } from "./foreignownership.mjs";
+import { ladder as usufructLadder, MAX_TERM, remainingTerm } from "./foreignownership.mjs";
 import { outcomes, plateau } from "./holdperiod.mjs";
 import { analyse as analysePriceIndex } from "./priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -60,6 +61,21 @@ const aed0 = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
 const months = (v) => `${Number(v).toFixed(1)} months`;
 const yearNo = (v) => `year ${Math.round(v)}`;
 const share = (v) => `${Math.round(v)}%`;
+
+/* Spelled-out small whole numbers. Deriving a year count from a module should
+   not cost the prose its voice: the pages say "ninety-nine year term", not
+   "99 year term". Anything outside 0-100, or not a whole number, comes back
+   as digits rather than guessed at. */
+const UNITS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten",
+  "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+const TENS = ["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+function words(n) {
+  if (!Number.isInteger(n) || n < 0 || n > 100) return String(n);
+  if (n === 100) return "a hundred";
+  if (n < 20) return UNITS[n];
+  const t = TENS[Math.floor(n / 10)], u = n % 10;
+  return u ? `${t}-${UNITS[u]}` : t;
+}
 
 const aed = (v) =>
   `${v < 0 ? "−" : "+"}AED ${Math.abs(Math.round(v)).toLocaleString("en-AE")}`;
@@ -349,7 +365,9 @@ function goldenVisaVsPortugalD7() {
       format: pct1,
       bars: rows.map((r) => ({ label: r.label, value: r.covers })),
       caption:
-        "Each bar is this one apartment's net operating income against that household's threshold, the Portuguese minimum wage run through the subsistence portaria and converted at the published euro reference rate. The line is the floor the assessment starts from, not a target: clearing it by 1.3% is not the same position as clearing it by half.",
+        `Each bar is this one apartment's net operating income against that household's threshold, the Portuguese minimum wage run through the subsistence portaria and converted at the published euro reference rate. The line is the floor the assessment starts from, not a target: clearing it by ${pct1(
+          rows.find((r) => r.covers >= 100 && r.covers < 110)?.covers - 100
+        )} is not the same position as clearing it by half.`,
     },
   ];
 }
@@ -377,7 +395,20 @@ function refinancingADubaiMortgage() {
         value: r.months,
       })),
       caption:
-        "The term is held at twenty-five years on both sides, so every bar is the rate and nothing else. Only the move of a point and a half comes back inside two years. The quarter point takes over ten, which is to say it never happens: the fixed period expires first and the question becomes a different one.",
+        (() => {
+          const inTwo = rows.filter((r) => r.months <= 24);
+          const worst = rows.reduce((a, b) => (b.months > a.months ? b : a));
+          const gap = (r) => Number((r.fromRatePct - r.toRatePct).toFixed(2));
+          return `The term is held at ${words(BORROWER.years)} years on both sides, so every bar is the rate and nothing else. ${
+            inTwo.length === 1
+              ? `Only the move of ${gap(inTwo[0])} points comes back inside two years.`
+              : `${inTwo.length} of these come back inside two years, the smallest being a move of ${gap(
+                  inTwo.reduce((a, b) => (gap(b) < gap(a) ? b : a))
+                )} points.`
+          } The ${gap(worst)} point move takes ${months(
+            worst.months
+          )}, which is to say it never happens: the fixed period expires first and the question becomes a different one.`;
+        })(),
     },
   ];
 }
@@ -408,7 +439,18 @@ function rentVsBuy() {
         value: r.year,
       })),
       caption:
-        "At flat prices the crossing is year eleven, and the consensus answer needs capital growth to be true rather than arithmetic. The three rates below zero are missing because at minus one per cent and below owning never costs less inside the twenty-five year term, and a bar cannot say never.",
+        (() => {
+          const flat = rows.find((r) => r.g === 0);
+          const missing = GROWTHS.filter((g) => atGrowth(g).year === null);
+          const highest = Math.max(...missing);
+          return `At flat prices the crossing is ${yearNo(
+            flat.year
+          )}, and the consensus answer needs capital growth to be true rather than arithmetic. ${
+            words(missing.length).replace(/^./, (c) => c.toUpperCase())
+          } rates are missing because at ${(highest * 100).toFixed(
+            0
+          )}% a year and below owning never costs less inside the ${words(CASE.years)} year term, and a bar cannot say never.`;
+        })(),
     },
   ];
 }
@@ -438,7 +480,11 @@ function dueDiligenceBeforeAnOffer() {
         { label: "Winning the registration fee split", value: split },
       ],
       caption:
-        "The first two bars are ordinary findings, not disasters: six dirhams a square foot on the charge and a five per cent haircut on the rent. Each is worth more than the whole commission, and more than the one negotiation every buyer has. Capitalising at the net yield is what puts a yearly saving and a one-off on the same axis.",
+        `The first two bars are ordinary findings, not disasters: ${words(
+          FINDINGS.serviceChargeFound - AQ_EXAMPLE.serviceChargePerSqft
+        )} dirhams a square foot on the charge and a ${pct0(
+          FINDINGS.rentHaircut * 100
+        )} haircut on the rent. Each is worth more than the whole commission, and more than the one negotiation every buyer has. Capitalising at the net yield is what puts a yearly saving and a one-off on the same axis.`,
     },
   ];
 }
@@ -463,7 +509,15 @@ function districtCoolingAndChillerCharges() {
         value: r.headroom,
       })),
       caption:
-        "Left of the line the premium does not reach the fixed charge, so it buys no cooling at all. Right of it the headroom buys less than it looks: AED 6,000 a year covers about 1.55 hours a day at full contracted capacity and AED 10,000 about 5.22, both against a consumption the tenant now chooses and no longer pays for.",
+        (() => {
+          const cleared = rows.filter((r) => r.hoursPerDay != null);
+          const lo = cleared[0], hi = cleared[cleared.length - 1];
+          return `Left of the line the premium does not reach the fixed charge, so it buys no cooling at all. Right of it the headroom buys less than it looks: ${aed0(
+            lo.premium
+          )} a year covers about ${lo.hoursPerDay} hours a day at full contracted capacity and ${aed0(
+            hi.premium
+          )} about ${hi.hoursPerDay}, both against a consumption the tenant now chooses and no longer pays for.`;
+        })(),
     },
   ];
 }
@@ -518,7 +572,11 @@ function freeholdAreasAndForeignOwnership() {
       format: pct,
       bars: rows.map((r) => ({ label: `${r.years} years left`, value: r.pct })),
       caption:
-        "The top bar is why this is not felt at grant: a ninety-nine year term is worth 98.85% of freehold, a gap of AED 17,312 on this unit. The gap is not static. A term granted when the regulation came into force has seventy-nine years left today, and every year the discount the arithmetic implies has been growing.",
+        `The top bar is why this is not felt at grant: a ${words(MAX_TERM)} year term is worth ${pct(
+          rows[0].pct
+        )} of freehold, a gap of ${aed0(rows[0].discount)} on this unit. The gap is not static. A term granted when the regulation came into force has ${words(
+          remainingTerm(new Date().getUTCFullYear())
+        )} years left today, and every year the discount the arithmetic implies has been growing.`,
     },
   ];
 }
