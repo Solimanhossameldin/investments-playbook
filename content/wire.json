@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-15T00:54:15.462Z",
+ "fetchedAt": "2026-10-15T05:36:53.383Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Bowman, Supervisory Modernization After Silicon Valley Bank",
+   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20261014a.htm",
+   "published": "2026-10-15T02:55:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
+  },
   {
    "title": "SEC Small Business Advisory Committee to Discuss IPO Modernization and Regulation Crowdfunding",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-105-sec-small-business-advisory-committee-discuss-ipo-modernization-regulation-crowdfunding",
