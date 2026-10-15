@@ -15,6 +15,7 @@ mail-preview.html
 node_modules/
 preview.command
 publish-auto.command
+install-publisher.command
 publish-auto.launchd.log
 publish-auto.log
 push.command
