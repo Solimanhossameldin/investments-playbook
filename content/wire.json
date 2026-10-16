@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-16T14:35:00.789Z",
+ "fetchedAt": "2026-10-16T18:23:27.634Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Federal Reserve Board announces termination of enforcement actions with Gardner Bancshares, Inc. and Small Business Bank",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20261016a.htm",
+   "published": "2026-10-16T15:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
   {
    "title": "Major Economic Indicators Latest Numbers",
    "url": "https://www.bls.gov/bls/",
