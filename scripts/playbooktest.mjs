@@ -38,6 +38,15 @@ import { readFileSync } from "node:fs";
 const PRICE_INDEX = analysePriceIndex(
   JSON.parse(readFileSync(new URL("../content/dld-price-index.json", import.meta.url), "utf8"))
 );
+/* The official DLD lookup's own shape lives in the dataset file, next to the
+   rows it would hold if the site had any it could stand behind. The service
+   charge page states those figures in prose, so the prose is pinned to the
+   file below: a project count that has drifted fails here rather than
+   claiming, in print, something the menu no longer shows. */
+const SERVICE_CHARGE_INDEX = JSON.parse(
+  readFileSync(new URL("../content/service-charges.json", import.meta.url), "utf8")
+).officialIndex;
+
 const monthYear = (iso) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
 
@@ -944,6 +953,38 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     ];
     for (const [what, phrase] of claims) {
       ok(`service charge: the prose carries ${what}`, p.body.includes(phrase), phrase);
+    }
+
+    /* The one figure on this page that describes a government service rather
+       than a building, and the only kind of figure here that goes stale
+       without anybody touching the repository: projects are added to the DLD
+       menu continuously. The prose therefore states what the dataset file
+       records, and these pins are what make the file the source of truth
+       instead of a note beside one. Break the file and the page fails. */
+    const ix = SERVICE_CHARGE_INDEX;
+    ok("service charge: the dataset file records what the official index offered", !!ix);
+    if (ix) {
+      ok("service charge: the prose counts the menu entries the dataset records",
+        p.body.includes(`offered ${jp.money(ix.projectEntries)} entries`), String(ix.projectEntries));
+      ok("service charge: the prose counts the distinct projects the dataset records",
+        p.body.includes(`covering ${jp.money(ix.projects)} distinct projects`), String(ix.projects));
+      ok("service charge: the prose carries the budget years the dataset records",
+        p.body.includes(`budget years ran from ${ix.yearFrom} to ${ix.yearTo}`),
+        `${ix.yearFrom} to ${ix.yearTo}`);
+      ok("service charge: the prose carries the date the index was checked",
+        p.body.includes(`Checked on ${longDate(ix.retrievedAt)}`),
+        ix.retrievedAt);
+      /* The finding is what an assistant lifts, so the count and the date
+         belong in it, not only in the body. */
+      ok("service charge: the finding carries the project count and the date it was checked",
+        p.summary.includes(`listed ${jp.money(ix.projects)} projects`)
+          && p.summary.includes(longDate(ix.retrievedAt)),
+        p.summary);
+      /* A figure about a lookup is worth nothing without the lookup. */
+      ok("service charge: the page links the lookup the figures came from",
+        p.body.includes(ix.sourceUrl), ix.sourceUrl);
+      ok("service charge: the lookup is cited as a source",
+        (p.sources || []).some((x) => x.url === ix.sourceUrl), ix.sourceUrl);
     }
 
     /* The page's own rule, and the reason it can publish arithmetic on a

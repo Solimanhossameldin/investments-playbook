@@ -42,6 +42,48 @@ export function recordProblems(r, i = 0) {
   return out;
 }
 
+/* The official lookup's own shape, which is a different claim from a row.
+
+   The page now tells a reader what the DLD Service Charge Index contains:
+   how many projects its menu offers and which budget years it covers. That
+   is a figure about a government service rather than about a building, and
+   it drifts on its own as projects are added, so it gets the same treatment
+   as a row: it is not publishable without the service it describes, the URL
+   that returns it and the date somebody actually looked. A count with no
+   retrieval date is the exact defect this file exists to refuse. */
+export const INDEX_REQUIRED = ["projectEntries", "projects", "yearFrom", "yearTo", "source", "sourceUrl", "retrievedAt"];
+
+export function indexProblems(ix) {
+  const out = [];
+  if (!ix || typeof ix !== "object") return ["officialIndex: not an object"];
+
+  for (const k of INDEX_REQUIRED) {
+    if (ix[k] === undefined || ix[k] === null || ix[k] === "") out.push(`officialIndex: missing ${k}`);
+  }
+  for (const k of ["projectEntries", "projects", "yearFrom", "yearTo"]) {
+    if (ix[k] !== undefined && !Number.isInteger(ix[k])) out.push(`officialIndex: ${k} must be an integer, got ${typeof ix[k]}`);
+  }
+  /* Menu entries are what the dropdown shows and projects are the distinct
+     ones behind them, so entries can equal projects but can never be fewer. */
+  if (Number.isInteger(ix.projectEntries) && Number.isInteger(ix.projects) && ix.projectEntries < ix.projects) {
+    out.push(`officialIndex: projectEntries ${ix.projectEntries} is fewer than projects ${ix.projects}`);
+  }
+  if (Number.isInteger(ix.yearFrom) && Number.isInteger(ix.yearTo) && ix.yearFrom > ix.yearTo) {
+    out.push(`officialIndex: yearFrom ${ix.yearFrom} is after yearTo ${ix.yearTo}`);
+  }
+  if (ix.sourceUrl && !/^https?:\/\/\S+$/i.test(String(ix.sourceUrl))) out.push("officialIndex: sourceUrl is not a URL");
+  if (ix.retrievedAt && !ISO_DATE.test(String(ix.retrievedAt))) out.push("officialIndex: retrievedAt must be YYYY-MM-DD");
+  if (ix.source && PLACEHOLDER.test(String(ix.source))) out.push("officialIndex: source still contains placeholder text");
+  return out;
+}
+
+/* Throws, like validate(), because the build is where this has to stop. */
+export function validateIndex(ix) {
+  const problems = indexProblems(ix);
+  if (problems.length) throw new Error("service charge index refused:\n  " + problems.join("\n  "));
+  return ix;
+}
+
 /* Throws on anything unpublishable. Returns the rows, sorted dearest first,
    plus the summary the page and its schema block both read from. */
 export function validate(records) {

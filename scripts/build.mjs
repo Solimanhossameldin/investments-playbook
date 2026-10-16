@@ -14,7 +14,7 @@ import { glossaryIndex, glossaryTerm } from "../src/templates/glossary.mjs";
 import { communityIndex, communityPage } from "../src/templates/communities.mjs";
 import { chartbookPage } from "../src/templates/chartbook.mjs";
 import { serviceChargePage } from "../src/templates/service-charges.mjs";
-import { validate as validateServiceCharges } from "../src/servicecharges.mjs";
+import { validate as validateServiceCharges, validateIndex as validateServiceChargeIndex } from "../src/servicecharges.mjs";
 import { validate as validatePhotos } from "../src/photos.mjs";
 import { priceIndexPage } from "../src/templates/price-index.mjs";
 import { propertyLawPage } from "../src/templates/property-law.mjs";
@@ -191,6 +191,11 @@ if ((serviceCharges.records || []).length) {
   const scIndex = validateServiceCharges(serviceCharges.records);
   emit(serviceChargePage({ site, index: scIndex }), scIndex.retrievedTo);
 }
+
+/* The official lookup's own figures are stated in the service charge
+   playbook's prose, so they are checked whether or not the dataset above has
+   a single row in it. An undated count is refused here rather than printed. */
+if (serviceCharges.officialIndex) validateServiceChargeIndex(serviceCharges.officialIndex);
 
 /* The DLD price index, on the same terms as the service charges above: the
    page exists only if the data does, and analyse() throws rather than let a

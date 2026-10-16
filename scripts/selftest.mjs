@@ -1105,6 +1105,34 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
   check("an undated retrieval is refused",
     sc.recordProblems({ ...good, retrievedAt: "September 2026" }).length > 0, null);
 
+  /* The same bar for the figure that describes the lookup itself. A project
+     count is the one number on the service charge page that drifts without
+     anyone editing the repository, so it is inadmissible on the same terms:
+     no source, no URL, no retrieval date, no publication. */
+  const goodIndex = {
+    projectEntries: 5874, projects: 5591, yearFrom: 2015, yearTo: 2026,
+    source: "Dubai Land Department, Service Charge Index",
+    sourceUrl: "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+    retrievedAt: "2026-10-16",
+  };
+  check("a fully sourced index record is accepted", sc.indexProblems(goodIndex).length === 0,
+    JSON.stringify(sc.indexProblems(goodIndex)));
+  for (const k of sc.INDEX_REQUIRED) {
+    const bad = { ...goodIndex }; delete bad[k];
+    check(`an index record with no ${k} is refused`, sc.indexProblems(bad).length > 0, null);
+  }
+  check("an index count written as a range is refused",
+    sc.indexProblems({ ...goodIndex, projects: "5500-5600" }).length > 0, null);
+  check("an undated index retrieval is refused",
+    sc.indexProblems({ ...goodIndex, retrievedAt: "October 2026" }).length > 0, null);
+  check("fewer menu entries than distinct projects is refused",
+    sc.indexProblems({ ...goodIndex, projectEntries: 10 }).length > 0, null);
+  check("a year span that runs backwards is refused",
+    sc.indexProblems({ ...goodIndex, yearFrom: 2030 }).length > 0, null);
+  let indexThrew = false;
+  try { sc.validateIndex({ ...goodIndex, retrievedAt: "" }); } catch (e) { indexThrew = /refused/.test(e.message); }
+  check("validateIndex throws on an unpublishable index record", indexThrew, null);
+
   /* validate() is what the build calls, so it has to throw, not just report. */
   let threw = false;
   try { sc.validate([{ ...good, source: "" }]); } catch (e) { threw = /refused/.test(e.message); }

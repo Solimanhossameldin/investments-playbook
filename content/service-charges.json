@@ -1,4 +1,14 @@
 {
-  "_comment": "Dubai service charge index. Every record needs project, area, psf (a number), period, source, sourceUrl and retrievedAt (YYYY-MM-DD). src/servicecharges.mjs refuses anything else and the build fails rather than publishing a figure nobody can check. While records is empty the page is not built at all. Official source: the DLD open dataset dld_oa_service_charges-open on Dubai Pulse.",
+  "_comment": "Dubai service charge index. Every record needs project, area, psf (a number), period, source, sourceUrl and retrievedAt (YYYY-MM-DD). src/servicecharges.mjs refuses anything else and the build fails rather than publishing a figure nobody can check. While records is empty the page is not built at all. The approved figures are published per project, per usage and per year by the DLD Service Charge Index e-service (see officialIndex below); the old open dataset dld_oa_service_charges-open was hosted on Dubai Pulse, which was retired and replaced by Data Dubai in 2026, so that path is dead.",
+  "officialIndex": {
+    "_comment": "What the official lookup itself offered when it was last checked. The service-charge playbook states these figures in prose, and scripts/playbooktest.mjs pins the prose to this block, so a stale count fails the build rather than going quietly wrong in print. Re-check by opening sourceUrl and reading the project and budget-year menus.",
+    "projectEntries": 5874,
+    "projects": 5591,
+    "yearFrom": 2015,
+    "yearTo": 2026,
+    "source": "Dubai Land Department, Service Charge Index",
+    "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+    "retrievedAt": "2026-10-16"
+  },
   "records": []
 }

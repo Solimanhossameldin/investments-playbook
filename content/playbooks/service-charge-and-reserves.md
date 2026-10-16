@@ -6,9 +6,9 @@
   "category": "property",
   "tier": 2,
   "calculator": "net-rental-yield",
-  "reviewed": "10 September 2026",
-  "summary": "Dubai service charges under Law No. (6) of 2019: your share is the deed area, no charge without RERA approval, and the reserve sits in a separate account.",
-  "question": "How are Dubai service charges calculated and approved?",
+  "reviewed": "16 October 2026",
+  "summary": "Dubai's approved service charge is a public lookup rather than a market average: the Land Department's Service Charge Index listed 5,591 projects, with budget years from 2015 to 2026, when checked on 16 October 2026, and Law No. (6) of 2019 forbids collecting any charge RERA has not approved.",
+  "question": "How much is the service charge on a Dubai apartment, and who approves it?",
   "formula": "Your annual charge\n  = the area recorded in the Real Property Register\n    x the rate RERA approved for that project, that year\n\nWhat a dirham a foot costs, on the illustrative one bedroom\n  900 sq ft x AED 1 = AED 900 a year\n  = 0.86% of the gross rent\n  = 0.056 points of net yield\n\nThe break-even levy\n  A building charging `gap` dirhams a foot less than a comparable\n  one, held for `n` years, with the saving earning `r`:\n\n    break-even levy per sq ft = gap x ((1 + r)^n - 1) / r\n\n  At r = 0 that is simply gap x n. The unit area appears on both\n  sides of the comparison and divides out, so the answer is a rate,\n  not an amount, and it is the same rate for every apartment.",
   "failureModes": [
     "Comparing charges across building types. A serviced tower and a walk-up are not comparable per square foot and never were, and the break-even arithmetic below is only meaningful inside a comparable set.",
@@ -30,6 +30,10 @@
       "url": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/"
     },
     {
+      "name": "Dubai Land Department, Service Charge Index lookup, project menu and budget years as offered on 16 October 2026",
+      "url": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/"
+    },
+    {
       "name": "Dubai Land Department, Mollak, the service charge system for jointly owned property",
       "url": "https://mollak.dubailand.gov.ae/publicpages/about-us.html"
     }
@@ -40,6 +44,24 @@
 The service charge is the largest running cost on a Dubai apartment, the one input a listing never carries, and the only one a buyer can verify for free before making an offer. Almost nobody does.
 
 Every guide to this subject prints a table of dirhams per square foot by community and stops there. None of them names the law. That is a shame, because the law is unusually specific about the things a buyer actually needs to know, and six of them are checkable in an afternoon.
+
+## The approved figure is a free lookup, and it is per project
+
+There is no such thing as the service charge for Dubai, or even for Dubai Marina. There is an approved rate for a named project, a stated usage and a budget year, and under Article 27(a) anything else is not collectable. The Land Department publishes those approved rates in its [Service Charge Index](https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/), a service that exists, in its own description, so that anyone can "inquire about the approved service fees for Joint ownership properties from the Real Estate Regulatory Agency".
+
+It is free, it opens without an account, and the project route never asks for a title deed. Checked on 16 October 2026, its project menu offered 5,874 entries covering 5,591 distinct projects, every one labelled with its community, and the budget years ran from 2015 to 2026. The lookup takes three fields and no more: the project, the usage and the year.
+
+Three things about that menu are worth knowing before you use it, because they are where this lookup goes quietly wrong rather than where it fails.
+
+**One tower can be several entries.** Burj Khalifa appears five times: the building itself, The Residences, Armani Residences, At the Top, and the broadcasting floors. Each is a separate budget. Choosing the wrong one returns a real approved figure for something that is not your unit.
+
+**One project can appear under two community names.** 29 Boulevard is listed under both Burj Khalifa District and Downtown Dubai, and both entries carry the same project identifier, so both return the same budget. A name that looks duplicated is not evidence of two schemes.
+
+**The usages and the years are per project, not global.** Cayan Tower in Dubai Marina offered residential, retail and stores as its usages, and 2020 to 2026 as its years, on the same day the menu as a whole reached back to 2015. The charge is approved per usage, so the retail rate in your own building is not your rate, and a project with no entry for the year you are buying in has not had one approved yet.
+
+What the index will not give you is an average for a community, and that is the right behaviour rather than a gap. A per-project approval has no average a buyer can act on: two towers a street apart can sit at opposite ends of their area's range, and that range is what the published area tables are averaging. Your own building's figure is three dropdowns away.
+
+If you already own the unit, the same service has a second route that starts from the title deed, taking the certificate number, the certificate year, the property type and the budget year, and it answers for your unit rather than for the project. A third route starts from a map.
 
 ## What the law sets
 
@@ -112,7 +134,7 @@ It is not, however, the whole of the fixed cost. In a building served by a distr
 
 Four of these are free public lookups, and together they take about an hour.
 
-**The approved rate for the project and year.** The Land Department's [Service Charge Index](https://dubailand.gov.ae/en/eservices/service-charge-index-overview/) exists so that anyone can "inquire about the approved service fees for Joint ownership properties from the Real Estate Regulatory Agency". You select the project, the usage and the year. If the figure you are quoted is not the approved figure, Article 27(a) is the article to cite.
+**The approved rate for the project and year**, through the Service Charge Index lookup described above, taking care over which of a tower's entries is yours. If the figure you are quoted is not the approved figure, Article 27(a) is the article to cite.
 
 **Whether the management company is on RERA's list.** Mollak publishes the register. A manager who is not on it cannot lawfully be collecting.
 
