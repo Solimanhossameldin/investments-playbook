@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-16T18:23:27.634Z",
+ "fetchedAt": "2026-10-16T21:32:05.736Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -627,15 +627,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Federal Reserve Board announces approval of application by Peoples Bancorp Inc.",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20260925a.htm",
-   "published": "2026-09-25T20:30:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
   }
  ]
 }
