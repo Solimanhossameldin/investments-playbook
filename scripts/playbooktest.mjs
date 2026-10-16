@@ -991,19 +991,32 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       ok("service charge: the prose counts the buildings with no 2026 budget",
         p.body.includes(`${stale.length} offered\nno 2026 budget`) || p.body.includes(`${stale.length} offered no 2026 budget`),
         String(stale.length));
-      if (recs.length) {
-        const dear = recs.reduce((a, b) => (b.psf > a.psf ? b : a));
-        const cheap = recs.reduce((a, b) => (b.psf < a.psf ? b : a));
-        ok("service charge: the prose quotes the dearest row the dataset holds",
-          p.body.includes(`${dear.project}, in the same marina, at AED ${dear.psf.toFixed(2)}`),
-          `${dear.project} ${dear.psf}`);
-        ok("service charge: the prose quotes the cheapest row the dataset holds",
+      /* The sentence this pins is about the spread INSIDE one area, which is
+         the page's actual argument against area averages, so it is pinned to
+         the extremes of that area rather than of the whole table. Pinning it
+         to the global max broke the moment a dearer building outside Dubai
+         Marina was added, which is the right failure: the claim was never
+         about the table's maximum. */
+      const marina = recs.filter((r) => r.area === "Dubai Marina");
+      ok("service charge: the dataset still holds the area the prose argues from",
+        marina.length >= 2, `${marina.length} rows in Dubai Marina`);
+      if (marina.length >= 2) {
+        const dear = marina.reduce((a, b) => (b.psf > a.psf ? b : a));
+        const cheap = marina.reduce((a, b) => (b.psf < a.psf ? b : a));
+        ok("service charge: the prose quotes that area's cheapest row",
           p.body.includes(`${cheap.project} in ${cheap.area} was approved at AED ${cheap.psf.toFixed(2)} a foot`),
           `${cheap.project} ${cheap.psf}`);
-        /* Both quoted rows are in one area, which is the whole point of the
-           sentence they appear in. */
-        ok("service charge: the dearest and cheapest rows really are in the same area",
-          dear.area === cheap.area, `${dear.area} vs ${cheap.area}`);
+        ok("service charge: the prose quotes that area's dearest row",
+          p.body.includes(`${dear.project}, in the same marina, at AED ${dear.psf.toFixed(2)}`),
+          `${dear.project} ${dear.psf}`);
+      }
+
+      /* The parts have to add up in the published file too, not only when the
+         build happens to run the validator. */
+      for (const r of recs) {
+        const parts = r.generalFund + (typeof r.reserveFund === "number" ? r.reserveFund : 0);
+        ok(`service charge: ${r.project}'s fund split adds up to its headline rate`,
+          Math.abs(parts - r.psf) <= 0.005, `${parts.toFixed(2)} vs ${r.psf}`);
       }
 
       /* A figure about a lookup is worth nothing without the lookup. */

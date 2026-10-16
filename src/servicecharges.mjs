@@ -35,6 +35,26 @@ export function recordProblems(r, i = 0) {
   if (r.sourceUrl && !/^https?:\/\/\S+$/i.test(String(r.sourceUrl))) out.push(`${at}: sourceUrl is not a URL`);
   if (r.retrievedAt && !ISO_DATE.test(String(r.retrievedAt))) out.push(`${at}: retrievedAt must be YYYY-MM-DD`);
 
+  /* The index reports an approved budget in two parts, and the parts are the
+     check on the whole. A general fund and a reserve that do not add up to
+     the headline rate mean one of the three was mistyped, which is the one
+     error a reader cannot catch and the table cannot survive. A row with no
+     reserve line at all is a real thing -- Barton House 1 has none, and its
+     general fund is the entire charge -- so it is allowed, and then the
+     general fund must equal the total exactly.
+
+     Half a fil of tolerance, because every figure here is published to two
+     decimals and the source rounds each part on its own. */
+  if (typeof r.psf === "number" && typeof r.generalFund === "number") {
+    const parts = r.generalFund + (typeof r.reserveFund === "number" ? r.reserveFund : 0);
+    if (Math.abs(parts - r.psf) > 0.005) {
+      out.push(`${at}: general fund ${r.generalFund}${r.reserveFund === undefined ? " and no reserve" : ` plus reserve ${r.reserveFund}`} is ${parts.toFixed(2)}, not the stated ${r.psf}`);
+    }
+  }
+  if (r.reserveFund !== undefined && typeof r.reserveFund !== "number") out.push(`${at}: reserveFund must be a number when present, got ${typeof r.reserveFund}`);
+  if (typeof r.reserveFund === "number" && r.reserveFund < 0) out.push(`${at}: reserveFund ${r.reserveFund} is negative`);
+  if (r.generalFund !== undefined && typeof r.generalFund !== "number") out.push(`${at}: generalFund must be a number, got ${typeof r.generalFund}`);
+
   /* Scaffolding must never survive into a published table. */
   for (const k of ["project", "area", "period", "source"]) {
     if (r[k] && PLACEHOLDER.test(String(r[k]))) out.push(`${at}: ${k} still contains placeholder text`);

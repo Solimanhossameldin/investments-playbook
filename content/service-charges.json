@@ -12,6 +12,19 @@
   },
   "records": [
     {
+      "project": "Collective",
+      "area": "Dubai Hills Estate",
+      "psf": 24.59,
+      "generalFund": 21.45,
+      "reserveFund": 3.14,
+      "managedBy": "Emaar Community Management",
+      "projectId": "546539707",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
       "project": "Cayan Tower",
       "area": "Dubai Marina",
       "psf": 23.74,
@@ -25,8 +38,34 @@
       "retrievedAt": "2026-10-16"
     },
     {
-      "project": "Boulevard Central",
+      "project": "15 Northside",
+      "area": "Business Bay",
+      "psf": 23.45,
+      "generalFund": 21.51,
+      "reserveFund": 1.94,
+      "managedBy": "S G Community Management Services",
+      "projectId": "626763141",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "B D Standpoint",
       "area": "Downtown Dubai",
+      "psf": 21.84,
+      "generalFund": 19.43,
+      "reserveFund": 2.41,
+      "managedBy": "Emaar Community Management",
+      "projectId": "5724203",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Boulevard Central",
+      "area": "Burj Khalifa District",
       "psf": 21.82,
       "generalFund": 18.23,
       "reserveFund": 3.59,
@@ -45,6 +84,19 @@
       "reserveFund": 2.12,
       "managedBy": "Emaar Community Management",
       "projectId": "556366059",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Al Shahed Tower",
+      "area": "Barsha Heights",
+      "psf": 19.94,
+      "generalFund": 18.73,
+      "reserveFund": 1.21,
+      "managedBy": "Professional Choice Real Estate",
+      "projectId": "1343419043",
       "period": "2026",
       "source": "Dubai Land Department, Service Charge Index",
       "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
@@ -77,6 +129,45 @@
       "retrievedAt": "2026-10-16"
     },
     {
+      "project": "Acacia At Park Heights",
+      "area": "Dubai Hills Estate",
+      "psf": 18.47,
+      "generalFund": 16.56,
+      "reserveFund": 1.91,
+      "managedBy": "Emaar Community Management",
+      "projectId": "106747622",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "8 Boulevard Walk",
+      "area": "Burj Khalifa District",
+      "psf": 18.33,
+      "generalFund": 16.79,
+      "reserveFund": 1.54,
+      "managedBy": "Emaar Community Management",
+      "projectId": "990430",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Bahia 2",
+      "area": "Barsha Heights",
+      "psf": 18.0,
+      "generalFund": 17.56,
+      "reserveFund": 0.44,
+      "managedBy": "Highrise Owners Association Management Services",
+      "projectId": "222073",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
       "project": "Princess Tower",
       "area": "Dubai Marina",
       "psf": 17.77,
@@ -91,7 +182,7 @@
     },
     {
       "project": "29 Boulevard",
-      "area": "Downtown Dubai",
+      "area": "Burj Khalifa District",
       "psf": 16.99,
       "generalFund": 14.34,
       "reserveFund": 2.65,
@@ -117,7 +208,7 @@
     },
     {
       "project": "Goldcrest Views",
-      "area": "Jumeirah Lakes Towers",
+      "area": "DMCC Master Community",
       "psf": 16.79,
       "generalFund": 13.94,
       "reserveFund": 2.85,
@@ -142,13 +233,39 @@
       "retrievedAt": "2026-10-16"
     },
     {
-      "project": "Shoreline Apartments",
+      "project": "23 Marina",
+      "area": "Dubai Marina",
+      "psf": 16.04,
+      "generalFund": 13.87,
+      "reserveFund": 2.17,
+      "managedBy": "Solitaire Owner Association Management Services",
+      "projectId": "867226",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Shoreline Apartments (Residential)",
       "area": "Palm Jumeirah",
       "psf": 15.48,
       "generalFund": 13.88,
       "reserveFund": 1.6,
       "managedBy": "DH Community Management",
       "projectId": "1394881698",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Al Majara",
+      "area": "Dubai Marina",
+      "psf": 14.75,
+      "generalFund": 13.84,
+      "reserveFund": 0.91,
+      "managedBy": "Emaar Community Management",
+      "projectId": "993055",
       "period": "2026",
       "source": "Dubai Land Department, Service Charge Index",
       "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
@@ -168,6 +285,32 @@
       "retrievedAt": "2026-10-16"
     },
     {
+      "project": "Ag Residence",
+      "area": "Jumeirah Village Circle",
+      "psf": 14.02,
+      "generalFund": 11.87,
+      "reserveFund": 2.15,
+      "managedBy": "A R B Owner Association Management Services",
+      "projectId": "796592485",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Bermuda Views",
+      "area": "Dubai Sports City",
+      "psf": 13.93,
+      "generalFund": 13.45,
+      "reserveFund": 0.48,
+      "managedBy": "Highrise Owners Association Management Services",
+      "projectId": "141939278",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
       "project": "Marina Promenade",
       "area": "Dubai Marina",
       "psf": 13.74,
@@ -179,19 +322,145 @@
       "source": "Dubai Land Department, Service Charge Index",
       "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
       "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Abbey Crescent 1",
+      "area": "Motor City",
+      "psf": 13.43,
+      "generalFund": 13.13,
+      "reserveFund": 0.3,
+      "managedBy": "Edacom Owners Association Management",
+      "projectId": "884862",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Aamna Residency",
+      "area": "International City",
+      "psf": 13.29,
+      "generalFund": 11.76,
+      "reserveFund": 1.53,
+      "managedBy": "Reliance Owners Association Management Services",
+      "projectId": "2148126",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Al Waleed Paradise",
+      "area": "DMCC Master Community",
+      "psf": 13.07,
+      "generalFund": 12.03,
+      "reserveFund": 1.04,
+      "managedBy": "Almutawa Owner Association Management",
+      "projectId": "1035622",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Barton House 1",
+      "area": "Motor City",
+      "psf": 11.35,
+      "generalFund": 11.35,
+      "managedBy": "Edacom Owners Association Management",
+      "projectId": "900735",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Altia Residence",
+      "area": "Dubai Silicon Oasis",
+      "psf": 11.14,
+      "generalFund": 10.09,
+      "reserveFund": 1.05,
+      "managedBy": "Deyaar Community Management",
+      "projectId": "454374",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Arena Apartments",
+      "area": "Dubai Sports City",
+      "psf": 11.11,
+      "generalFund": 10.15,
+      "reserveFund": 0.96,
+      "managedBy": "Sports City Owner Association Management Services",
+      "projectId": "1089626",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Bloomingdale",
+      "area": "Dubai Sports City",
+      "psf": 7.27,
+      "generalFund": 7.1,
+      "reserveFund": 0.17,
+      "managedBy": "Sports City Owner Association Management Services",
+      "projectId": "100330965",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
     }
   ],
   "noCurrentBudget": {
-    "_comment": "Projects queried on the same day whose menu offered no 2026 budget year at all. latestYear is the most recent the index offered. Published because a buyer checking one of these finds the newest approved figure is years old, which no area table discloses.",
+    "_comment": "Projects queried on the same day whose year menu offered no 2026 budget at all. latestYear is the most recent the index offered. Every entry here was read twice on separate passes, because a single stale read once reported a building as having no 2026 budget when it had one. Published because a buyer checking one of these finds the newest approved figure is years old, which no area table discloses. The index labels the JBR towers '<name> - Jumeriah Beach Residence - JBR', its own spelling.",
     "source": "Dubai Land Department, Service Charge Index",
     "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
     "retrievedAt": "2026-10-16",
     "projects": [
       {
-        "project": "Rimal 1",
-        "area": "Jumeirah Beach Residence",
+        "project": "Al Saaha",
+        "area": "Downtown Dubai",
+        "latestYear": 2019,
+        "projectId": "5719621"
+      },
+      {
+        "project": "Al Anbara",
+        "area": "Palm Jumeirah",
         "latestYear": 2018,
-        "projectId": "1054016"
+        "projectId": "164320"
+      },
+      {
+        "project": "Al Hallawi",
+        "area": "Palm Jumeirah",
+        "latestYear": 2018,
+        "projectId": "120687"
+      },
+      {
+        "project": "Al Jawzaa",
+        "area": "International City",
+        "latestYear": 2018,
+        "projectId": "60720"
+      },
+      {
+        "project": "Alcove",
+        "area": "Jumeirah Village Circle",
+        "latestYear": 2018,
+        "projectId": "1866380"
+      },
+      {
+        "project": "Alshera Tower",
+        "area": "Jumeirah Lakes Towers",
+        "latestYear": 2018,
+        "projectId": "29985"
+      },
+      {
+        "project": "Axis Residences 1",
+        "area": "Dubai Silicon Oasis",
+        "latestYear": 2018,
+        "projectId": "189308"
       },
       {
         "project": "Bahar 1",
@@ -200,16 +469,28 @@
         "projectId": "1051593"
       },
       {
+        "project": "Murjan 1",
+        "area": "Jumeirah Beach Residence",
+        "latestYear": 2018,
+        "projectId": "1053998"
+      },
+      {
+        "project": "Rimal 1",
+        "area": "Jumeirah Beach Residence",
+        "latestYear": 2018,
+        "projectId": "1054016"
+      },
+      {
         "project": "Sadaf 1",
         "area": "Jumeirah Beach Residence",
         "latestYear": 2018,
         "projectId": "1056603"
       },
       {
-        "project": "Murjan 1",
-        "area": "Jumeirah Beach Residence",
-        "latestYear": 2018,
-        "projectId": "1053998"
+        "project": "Al Sahab",
+        "area": "Dubai Marina",
+        "latestYear": 2017,
+        "projectId": "1011949"
       },
       {
         "project": "Amwaj 4",
