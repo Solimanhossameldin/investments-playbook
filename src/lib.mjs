@@ -87,7 +87,11 @@ function inline(s) {
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>")
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" rel="noopener">$1</a>');
+    // The URL may itself contain balanced parentheses. Dubai legislation cites
+    // them -- "Law No. (7) of 2006.html" -- and a naive [^)]+ stops at the
+    // first one, leaving a dead href and the rest of the URL as visible body
+    // text. One level of nesting is all the real citations need.
+    .replace(/\[([^\]]+)\]\(((?:[^()\s]|\([^()]*\))+)\)/g, '<a href="$2" rel="noopener">$1</a>');
 }
 
 export function md(src = "") {

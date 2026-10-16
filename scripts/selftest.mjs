@@ -10,6 +10,19 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+/* Declared here rather than beside the parser checks because the stale-dist
+   guard below is the first thing in the file to call check(). `function check`
+   hoists, but `let fails` does not: on the guard's FAIL path the counter was in
+   its temporal dead zone, so the one check written to explain a stale dist
+   printed its message and then died on
+   "ReferenceError: Cannot access 'fails' before initialization" -- which reads
+   like a bug in the suite rather than the answer it was trying to give. */
+let fails = 0;
+function check(name, cond, got) {
+  if (cond) console.log(`  pass  ${name}`);
+  else { console.log(`  FAIL  ${name}  got: ${JSON.stringify(got)}`); fails++; }
+}
+
 /* ---- dist has to be a build of THIS tree ----
 
    Eight checks in this file read built HTML out of dist. That is the right
@@ -106,12 +119,6 @@ await import("./fetch-market-data.mjs");
 
 const market = JSON.parse(fs.readFileSync(marketPath, "utf8"));
 const by = Object.fromEntries(market.quotes.map((q) => [q.symbol, q]));
-
-let fails = 0;
-function check(name, cond, got) {
-  if (cond) console.log(`  pass  ${name}`);
-  else { console.log(`  FAIL  ${name}  got: ${JSON.stringify(got)}`); fails++; }
-}
 
 console.log("\nParser checks");
 check("19 quotes parsed", market.quotes.length === 19, market.quotes.length);
@@ -1469,6 +1476,60 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
     /* And the check must be measuring something. If no page has a chart,
        every assertion above passed vacuously. */
     check("the chart-position check covers at least one page", charted > 0, `${charted} charted pages`);
+  }
+}
+
+
+/* ---- a markdown link whose URL contains parentheses ----
+
+   Dubai legislation is cited by number: "Law No. (7) of 2006.html". The
+   inline link pattern matched [^)]+ for the URL, so it stopped at the first
+   ) inside it. The href was left truncated and dead, and the remainder of
+   the URL -- "%20of%202006.html)" -- rendered as visible body text in the
+   middle of a sentence. Sixteen instances were live across six pages before
+   anyone noticed, because every built-in check read the sources list (built
+   from JSON, never parsed as markdown) rather than the prose.
+
+   Asserted two ways: the renderer directly, and the built HTML. */
+{
+  const { md } = await import(new URL("../src/lib.mjs", import.meta.url));
+  const url = "https://dlp.dubai.gov.ae/Legislation%20Reference/2006/Law%20No.%20(7)%20of%202006.html";
+  const out = md(`Article 7 of [Law No. (7) of 2006](${url}) says so.`);
+
+  check("a parenthesised URL survives the markdown link pattern",
+    out.includes(`href="${url}"`), out.slice(0, 200));
+
+  check("and leaves no URL fragment in the prose",
+    !/<\/a>%20/.test(out), out.slice(0, 200));
+
+  const distDir = path.join(root, "dist");
+  if (fs.existsSync(distDir)) {
+    const pages = [];
+    const walk = (d) => {
+      for (const e of fs.readdirSync(d)) {
+        const f = path.join(d, e);
+        if (fs.statSync(f).isDirectory()) walk(f);
+        else if (e === "index.html") pages.push(f);
+      }
+    };
+    walk(distDir);
+
+    const truncated = [];
+    const leaked = [];
+    for (const f of pages) {
+      const html = fs.readFileSync(f, "utf8");
+      const rel = path.relative(distDir, f);
+      if (/href="[^"]*%20\([0-9]+"/.test(html)) truncated.push(rel);
+      if (/<\/a>%20/.test(html)) leaked.push(rel);
+    }
+
+    check("no built page has a link truncated at a parenthesis",
+      truncated.length === 0, truncated.join(", "));
+
+    check("no built page shows a raw URL fragment as body text",
+      leaked.length === 0, leaked.join(", "));
+
+    check("the truncated-link check covers the built pages", pages.length > 0, `${pages.length} pages`);
   }
 }
 
