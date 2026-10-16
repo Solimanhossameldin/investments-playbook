@@ -43,9 +43,10 @@ const PRICE_INDEX = analysePriceIndex(
    charge page states those figures in prose, so the prose is pinned to the
    file below: a project count that has drifted fails here rather than
    claiming, in print, something the menu no longer shows. */
-const SERVICE_CHARGE_INDEX = JSON.parse(
+const SERVICE_CHARGES = JSON.parse(
   readFileSync(new URL("../content/service-charges.json", import.meta.url), "utf8")
-).officialIndex;
+);
+const SERVICE_CHARGE_INDEX = SERVICE_CHARGES.officialIndex;
 
 const monthYear = (iso) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -969,7 +970,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       ok("service charge: the prose counts the distinct projects the dataset records",
         p.body.includes(`covering ${jp.money(ix.projects)} distinct projects`), String(ix.projects));
       ok("service charge: the prose carries the budget years the dataset records",
-        p.body.includes(`budget years ran from ${ix.yearFrom} to ${ix.yearTo}`),
+        p.body.includes(`Budget Year menu ran from ${ix.yearFrom} to ${ix.yearTo}`),
         `${ix.yearFrom} to ${ix.yearTo}`);
       ok("service charge: the prose carries the date the index was checked",
         p.body.includes(`Checked on ${longDate(ix.retrievedAt)}`),
@@ -980,6 +981,31 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
         p.summary.includes(`listed ${jp.money(ix.projects)} projects`)
           && p.summary.includes(longDate(ix.retrievedAt)),
         p.summary);
+      /* The published figures. The playbook quotes the cheapest and dearest
+         rows and counts both sets, so the dataset and the prose cannot drift
+         apart: add a row, or let one lose its 2026 budget, and this fails. */
+      const recs = SERVICE_CHARGES.records || [];
+      const stale = (SERVICE_CHARGES.noCurrentBudget || {}).projects || [];
+      ok("service charge: the prose counts the buildings with a 2026 figure",
+        p.body.includes(`${recs.length} of the buildings queried`), String(recs.length));
+      ok("service charge: the prose counts the buildings with no 2026 budget",
+        p.body.includes(`${stale.length} offered\nno 2026 budget`) || p.body.includes(`${stale.length} offered no 2026 budget`),
+        String(stale.length));
+      if (recs.length) {
+        const dear = recs.reduce((a, b) => (b.psf > a.psf ? b : a));
+        const cheap = recs.reduce((a, b) => (b.psf < a.psf ? b : a));
+        ok("service charge: the prose quotes the dearest row the dataset holds",
+          p.body.includes(`${dear.project}, in the same marina, at AED ${dear.psf.toFixed(2)}`),
+          `${dear.project} ${dear.psf}`);
+        ok("service charge: the prose quotes the cheapest row the dataset holds",
+          p.body.includes(`${cheap.project} in ${cheap.area} was approved at AED ${cheap.psf.toFixed(2)} a foot`),
+          `${cheap.project} ${cheap.psf}`);
+        /* Both quoted rows are in one area, which is the whole point of the
+           sentence they appear in. */
+        ok("service charge: the dearest and cheapest rows really are in the same area",
+          dear.area === cheap.area, `${dear.area} vs ${cheap.area}`);
+      }
+
       /* A figure about a lookup is worth nothing without the lookup. */
       ok("service charge: the page links the lookup the figures came from",
         p.body.includes(ix.sourceUrl), ix.sourceUrl);

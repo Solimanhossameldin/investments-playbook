@@ -1,7 +1,7 @@
 {
   "_comment": "Dubai service charge index. Every record needs project, area, psf (a number), period, source, sourceUrl and retrievedAt (YYYY-MM-DD). src/servicecharges.mjs refuses anything else and the build fails rather than publishing a figure nobody can check. While records is empty the page is not built at all. The approved figures are published per project, per usage and per year by the DLD Service Charge Index e-service (see officialIndex below); the old open dataset dld_oa_service_charges-open was hosted on Dubai Pulse, which was retired and replaced by Data Dubai in 2026, so that path is dead.",
   "officialIndex": {
-    "_comment": "What the official lookup itself offered when it was last checked. The service-charge playbook states these figures in prose, and scripts/playbooktest.mjs pins the prose to this block, so a stale count fails the build rather than going quietly wrong in print. Re-check by opening sourceUrl and reading the project and budget-year menus.",
+    "_comment": "What the official lookup itself offered when it was last checked. yearFrom/yearTo are the Budget Year menu on the Title Deed route; the by-project route's year list is per project and some reach further back (Elite Residence offered 2012) while others stop years ago (see noCurrentBudget). The service-charge playbook states these figures in prose and scripts/playbooktest.mjs pins the prose to this block, so a stale count fails the build rather than going quietly wrong in print. Re-check by opening sourceUrl and reading the project and budget-year menus.",
     "projectEntries": 5874,
     "projects": 5591,
     "yearFrom": 2015,
@@ -10,5 +10,225 @@
     "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
     "retrievedAt": "2026-10-16"
   },
-  "records": []
+  "records": [
+    {
+      "project": "Cayan Tower",
+      "area": "Dubai Marina",
+      "psf": 23.74,
+      "generalFund": 17.75,
+      "reserveFund": 5.99,
+      "managedBy": "Kingfield Owner Association Management Services",
+      "projectId": "110354043",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Boulevard Central",
+      "area": "Downtown Dubai",
+      "psf": 21.82,
+      "generalFund": 18.23,
+      "reserveFund": 3.59,
+      "managedBy": "Emaar Community Management",
+      "projectId": "991627",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Park Heights",
+      "area": "Dubai Hills Estate",
+      "psf": 20.62,
+      "generalFund": 18.5,
+      "reserveFund": 2.12,
+      "managedBy": "Emaar Community Management",
+      "projectId": "556366059",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Al Ghaf 1",
+      "area": "Arjan",
+      "psf": 19.79,
+      "generalFund": 19.03,
+      "reserveFund": 0.76,
+      "managedBy": "Stratum Owner Association Management Services",
+      "projectId": "531228224",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Creek Rise",
+      "area": "Dubai Creek Harbour",
+      "psf": 19.5,
+      "generalFund": 17.99,
+      "reserveFund": 1.51,
+      "managedBy": "Emaar Community Management",
+      "projectId": "531186509",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Princess Tower",
+      "area": "Dubai Marina",
+      "psf": 17.77,
+      "generalFund": 16.21,
+      "reserveFund": 1.56,
+      "managedBy": "Kingfield Owner Association Management Services",
+      "projectId": "419413",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "29 Boulevard",
+      "area": "Downtown Dubai",
+      "psf": 16.99,
+      "generalFund": 14.34,
+      "reserveFund": 2.65,
+      "managedBy": "Emaar Community Management",
+      "projectId": "988361",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Harbour Views",
+      "area": "Dubai Creek Harbour",
+      "psf": 16.82,
+      "generalFund": 15.54,
+      "reserveFund": 1.28,
+      "managedBy": "Emaar Community Management",
+      "projectId": "310544607",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Goldcrest Views",
+      "area": "Jumeirah Lakes Towers",
+      "psf": 16.79,
+      "generalFund": 13.94,
+      "reserveFund": 2.85,
+      "managedBy": "Highrise Owners Association Management Services",
+      "projectId": "215375",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Sulafa Tower",
+      "area": "Dubai Marina",
+      "psf": 16.28,
+      "generalFund": 14.07,
+      "reserveFund": 2.21,
+      "managedBy": "Saga International Owner Association Management Services",
+      "projectId": "201826530",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Shoreline Apartments",
+      "area": "Palm Jumeirah",
+      "psf": 15.48,
+      "generalFund": 13.88,
+      "reserveFund": 1.6,
+      "managedBy": "DH Community Management",
+      "projectId": "1394881698",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Elite Residence",
+      "area": "Dubai Marina",
+      "psf": 14.41,
+      "generalFund": 13.23,
+      "reserveFund": 1.18,
+      "managedBy": "Kingfield Owner Association Management Services",
+      "projectId": "487860920",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    },
+    {
+      "project": "Marina Promenade",
+      "area": "Dubai Marina",
+      "psf": 13.74,
+      "generalFund": 13.32,
+      "reserveFund": 0.42,
+      "managedBy": "Emaar Community Management",
+      "projectId": "1003300",
+      "period": "2026",
+      "source": "Dubai Land Department, Service Charge Index",
+      "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+      "retrievedAt": "2026-10-16"
+    }
+  ],
+  "noCurrentBudget": {
+    "_comment": "Projects queried on the same day whose menu offered no 2026 budget year at all. latestYear is the most recent the index offered. Published because a buyer checking one of these finds the newest approved figure is years old, which no area table discloses.",
+    "source": "Dubai Land Department, Service Charge Index",
+    "sourceUrl": "https://dubailand.gov.ae/en/eservices/service-charge-index-overview/service-charge-index/",
+    "retrievedAt": "2026-10-16",
+    "projects": [
+      {
+        "project": "Rimal 1",
+        "area": "Jumeirah Beach Residence",
+        "latestYear": 2018,
+        "projectId": "1054016"
+      },
+      {
+        "project": "Bahar 1",
+        "area": "Jumeirah Beach Residence",
+        "latestYear": 2018,
+        "projectId": "1051593"
+      },
+      {
+        "project": "Sadaf 1",
+        "area": "Jumeirah Beach Residence",
+        "latestYear": 2018,
+        "projectId": "1056603"
+      },
+      {
+        "project": "Murjan 1",
+        "area": "Jumeirah Beach Residence",
+        "latestYear": 2018,
+        "projectId": "1053998"
+      },
+      {
+        "project": "Amwaj 4",
+        "area": "Jumeirah Beach Residence",
+        "latestYear": 2017,
+        "projectId": "1050913"
+      },
+      {
+        "project": "7 West Villa",
+        "area": "Jumeirah Village Circle",
+        "latestYear": 2016,
+        "projectId": "238783"
+      },
+      {
+        "project": "1 Lake Plaza",
+        "area": "Jumeirah Lakes Towers",
+        "latestYear": 2012,
+        "projectId": "188379"
+      }
+    ]
+  }
 }

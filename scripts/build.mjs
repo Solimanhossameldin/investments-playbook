@@ -189,7 +189,7 @@ emit(chartbookPage({ site, data: chartbook, pdf: pdfMeta }), (chartbook.asOf || 
    absent dataset is a state of the world, a wrong one is a defect. */
 if ((serviceCharges.records || []).length) {
   const scIndex = validateServiceCharges(serviceCharges.records);
-  emit(serviceChargePage({ site, index: scIndex }), scIndex.retrievedTo);
+  emit(serviceChargePage({ site, index: scIndex, noCurrentBudget: serviceCharges.noCurrentBudget }), scIndex.retrievedTo);
 }
 
 /* The official lookup's own figures are stated in the service charge
