@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-16T05:03:03.399Z",
+ "fetchedAt": "2026-10-16T09:49:58.454Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -618,15 +618,6 @@
    "sourceLabel": "Press releases",
    "category": "rates",
    "feed": "fed-all"
-  },
-  {
-   "title": "Minutes of the Market Participants Group meeting – 24 September 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/september/market-participants-group-meeting-25-september-2026",
-   "published": "2026-09-25T06:30:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
