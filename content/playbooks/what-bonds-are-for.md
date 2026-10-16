@@ -29,7 +29,7 @@
     },
     {
       "name": "Bank for International Settlements, debt securities statistics",
-      "url": "https://www.bis.org/statistics/secstats.htm"
+      "url": "https://data.bis.org/topics/DSS"
     }
   ]
 }
