@@ -64,7 +64,7 @@ export function playbookDoc({ site, playbooks, calculators, briefs = [] }) {
     }
     ${
       (p.sources || []).length
-        ? `<h4>Sources</h4><ol class="srcs">${p.sources.map((s) => `<li><a href="${esc(s.url)}">${esc(s.name)}</a></li>`).join("")}</ol>`
+        ? `<h4>Sources</h4><ol class="srcs">${p.sources.map((s) => `<li>${s.url ? `<a href="${esc(s.url)}">${esc(s.name)}</a>` : esc(s.name)}</li>`).join("")}</ol>`
         : ""
     }
   </article>`

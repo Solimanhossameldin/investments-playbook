@@ -37,8 +37,8 @@
       "url": "https://dubailand.gov.ae/en/open-data/real-estate-data/"
     },
     {
-      "name": "Dubai Pulse, DLD transactions open dataset",
-      "url": "https://www.dubaipulse.gov.ae/data/dld-transactions/dld_transactions-open"
+      "name": "Dubai Land Department, real estate open data (property transactions)",
+      "url": "https://dubailand.gov.ae/en/open-data/real-estate-data/"
     },
     {
       "name": "Dubai Land Department, eServices",

@@ -3333,7 +3333,10 @@ ok("every calculator points at a playbook that exists",
     /* No unattributable sources. The page's previous two were commercial
        blogs, which is the one defect on this page that the reader is least
        able to see and most entitled to object to. */
-    const OFFICIAL = /(dubailand\.gov\.ae|dlp\.dubai\.gov\.ae|dubaipulse\.gov\.ae|rulebook\.centralbank\.ae|uaelegislation\.gov\.ae|tax\.gov\.ae)/;
+    /* dubaipulse.gov.ae was retired in favour of Data Dubai (data.dubai) and
+       its dataset paths now 404, so it is no longer an official home for
+       anything -- leaving it here would keep accepting dead citations. */
+    const OFFICIAL = /(dubailand\.gov\.ae|dlp\.dubai\.gov\.ae|data\.dubai|rulebook\.centralbank\.ae|uaelegislation\.gov\.ae|tax\.gov\.ae)/;
     ok("drag: every source is an official instrument or dataset",
       (p.sources || []).every((x) => OFFICIAL.test(x.url)),
       JSON.stringify((p.sources || []).map((x) => x.url)));

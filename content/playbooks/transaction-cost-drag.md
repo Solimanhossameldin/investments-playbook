@@ -23,8 +23,8 @@
   "whenToUse": "Before every purchase, as a test of whether your intended holding period is long enough to absorb the round trip out of rent rather than out of hope. Also before every sale, to see what the exit costs against the reason you are selling.",
   "sources": [
     {
-      "name": "Dubai Land Department, residential sale index (Dubai Pulse open data)",
-      "url": "https://www.dubaipulse.gov.ae/data/dld-records/dld_oa_residential_sale_index-open"
+      "name": "Dubai Land Department, Residential Properties Sale Index (Data Dubai)",
+      "url": "https://data.dubai/en/l/468732"
     },
     {
       "name": "Executive Council Resolution No. (30) of 2013 Approving Fees of the Land Department",

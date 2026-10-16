@@ -1,6 +1,6 @@
 {
- "source": "Dubai Land Department, residential sale index (open data)",
- "sourceUrl": "https://www.dubaipulse.gov.ae/data/dld-records/dld_oa_residential_sale_index-open",
+ "source": "Dubai Land Department, Residential Properties Sale Index (Data Dubai)",
+ "sourceUrl": "https://data.dubai/en/l/468732",
  "retrievedAt": "2026-09-01",
  "loadTimestamp": "2026-09-01 18:28:22.000",
  "coverageFrom": "2011-03-01",

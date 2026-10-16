@@ -36,8 +36,8 @@ import { SELLER, sellerStack, roundTrip, breakEven } from "./disposal.mjs";
 
 export const INSTRUMENTS = {
   dldIndex: {
-    name: "Dubai Land Department, residential sale index (Dubai Pulse open data)",
-    url: "https://www.dubaipulse.gov.ae/data/dld-records/dld_oa_residential_sale_index-open",
+    name: "Dubai Land Department, Residential Properties Sale Index (Data Dubai)",
+    url: "https://data.dubai/en/l/468732",
   },
   feesResolution: {
     name: "Executive Council Resolution No. (30) of 2013 Approving Fees of the Land Department",

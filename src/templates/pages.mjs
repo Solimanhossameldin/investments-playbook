@@ -83,7 +83,7 @@ function itemHtml(it, n, lvl = 3, playbooks = null) {
   ${
     (it.sources || []).length
       ? `<p class="item__src">Sources: ${it.sources
-          .map((s) => `<a href="${esc(s.url)}" rel="noopener nofollow">${esc(s.name)}</a>`)
+          .map((s) => (s.url ? `<a href="${esc(s.url)}" rel="noopener nofollow">${esc(s.name)}</a>` : esc(s.name)))
           .join(", ")}</p>`
       : ""
   }
@@ -560,7 +560,7 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
     ${
       (pb.sources || []).length
         ? `<h2 id="sources">Sources</h2><ol class="srcs">${pb.sources
-            .map((s) => `<li><a href="${esc(s.url)}" rel="noopener nofollow">${esc(s.name)}</a></li>`)
+            .map((s) => `<li>${s.url ? `<a href="${esc(s.url)}" rel="noopener nofollow">${esc(s.name)}</a>` : esc(s.name)}</li>`)
             .join("")}</ol>`
         : ""
     }

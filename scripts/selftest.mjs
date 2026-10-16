@@ -1534,4 +1534,63 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 }
 
 
+/* ---- citations to retired hosts, and sources with no link ----
+
+   Dubai Pulse (dubaipulse.gov.ae) was retired and replaced by Data Dubai
+   (data.dubai). The host still resolves and redirects, so a browser does not
+   obviously break -- but both dataset paths this site cited now 404, on five
+   live pages, including /dubai-price-index/ whose whole provenance line was
+   one of them. Checked on 16 October with the Chrome extension, same-origin;
+   curl from either machine is policy-blocked and its 000 means nothing.
+
+   A retired host cannot be caught by a URL's shape, so it is listed. Add to
+   RETIRED_HOSTS when a source platform is confirmed dead rather than editing
+   the pages and hoping.
+
+   The second check is the companion to the fix: the DLD transactions dataset
+   has no confirmed replacement (Data Dubai's search sits behind a login), so
+   that source is now named with no url. The three source renderers wrapped
+   every entry in <a href="${s.url}"> unconditionally.
+
+   The predicate here was href="undefined" on the first attempt, and the
+   break-test caught that it was wrong: esc() takes a default parameter, so
+   esc(undefined) is "", and the renderer emitted href="" -- an anchor that
+   looks clickable and silently reloads the current page, which is worse than
+   the dead external link it replaced, and invisible to a check looking for
+   the string "undefined". Both spellings are asserted now. */
+{
+  const RETIRED_HOSTS = ["dubaipulse.gov.ae"];
+  const distDir = path.join(root, "dist");
+
+  if (fs.existsSync(distDir)) {
+    const pages = [];
+    const walk = (d) => {
+      for (const e of fs.readdirSync(d)) {
+        const f = path.join(d, e);
+        if (fs.statSync(f).isDirectory()) walk(f);
+        else if (e.endsWith(".html")) pages.push(f);
+      }
+    };
+    walk(distDir);
+
+    const retired = [];
+    const undef = [];
+    for (const f of pages) {
+      const html = fs.readFileSync(f, "utf8");
+      const rel = path.relative(distDir, f);
+      if (RETIRED_HOSTS.some((h) => html.includes(`//${h}`) || html.includes(`//www.${h}`))) retired.push(rel);
+      if (html.includes('href=""') || html.includes('href="undefined"')) undef.push(rel);
+    }
+
+    check("no built page cites a retired source host",
+      retired.length === 0, retired.join(", "));
+
+    check("no built page emits an empty or undefined href",
+      undef.length === 0, undef.join(", "));
+
+    check("the retired-host check covers the built pages", pages.length > 0, `${pages.length} pages`);
+  }
+}
+
+
 process.exit(fails ? 1 : 0);
