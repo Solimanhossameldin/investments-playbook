@@ -4,6 +4,12 @@
    "job": "fetch-wire",
    "status": "ok",
    "detail": "68 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-10-17T12:06:42.080Z"
+  },
+  {
+   "job": "fetch-wire",
+   "status": "ok",
+   "detail": "68 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-10-17T07:58:22.361Z"
   },
   {
@@ -233,12 +239,6 @@
    "status": "partial",
    "detail": "18 figures refreshed. Notes: fred-DGS2 MORTGAGE30US The operation was aborted due to timeout",
    "ranAt": "2026-10-16T07:12:54.827Z"
-  },
-  {
-   "job": "pipeline",
-   "status": "ok",
-   "detail": "update=success, deploy=success, submit=success",
-   "ranAt": "2026-10-16T06:53:30.650Z"
   }
  ]
 }
