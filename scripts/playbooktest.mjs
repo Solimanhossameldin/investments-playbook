@@ -24,6 +24,7 @@ import * as fo from "../src/foreignownership.mjs";
 import * as rf from "../src/refinance.mjs";
 import * as orr from "../src/offplanready.mjs";
 import * as hp from "../src/holdperiod.mjs";
+import * as vl from "../src/valuation.mjs";
 import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
 import * as gv from "../src/goldenvisa.mjs";
@@ -3498,6 +3499,112 @@ ok("every calculator points at a playbook that exists",
       `${PL.deepest.years}y ${PL.deepest.worst} vs 1y ${O.rows[0].worst}`);
     ok("drag: the long rows really are thinner than one independent window",
       O.rows.filter((r) => r.years >= 9).every((r) => r.independent < 1));
+  }
+}
+
+/* The valuation page. Its entire argument is that two instruments use two
+   different denominators for one flat, so the two quotes have to be present
+   and the arithmetic has to come from the modules rather than from the prose.
+
+   The failure this guards against is specific and quiet: somebody "corrects"
+   the page by computing the loan on the price, which is what every calculator
+   does and what the page exists to say is wrong. That turns the shortfall
+   column into zeros and the finding into a tautology, and it would read
+   perfectly well. So the behaviour is tested, not only the printed numbers. */
+{
+  const p = playbooks.find((x) => x.slug === "when-the-valuation-comes-in-low");
+  if (p) {
+    const T = vl.table();
+    const B = vl.byBand(5);
+    const E = vl.extra({ shortfallPct: 5 });
+    const M = vl.matchesRegistrationFee();
+    const I = vl.incomeUnchanged();
+    const full = vl.close({ shortfallPct: 0 });
+    const cut = vl.close({ shortfallPct: 5 });
+    const tables = tablesIn(p.body);
+
+    /* Both denominators, in the instruments' own words. */
+    for (const item of vl.STATUTORY) {
+      ok(`valuation: carries the statutory claim "${item.claim.slice(0, 44)}"`, p.body.includes(item.claim), item.claim);
+    }
+    const OFFICIAL = /(dubailand\.gov\.ae|dlp\.dubai\.gov\.ae|dubaipulse\.gov\.ae|rulebook\.centralbank\.ae|uaelegislation\.gov\.ae|tax\.gov\.ae)/;
+    ok("valuation: every source is an official instrument",
+      (p.sources || []).every((x) => OFFICIAL.test(x.url)),
+      JSON.stringify((p.sources || []).map((x) => x.url)));
+
+    const shortTable = tables.find((t) => /Valuation below price/i.test(t.head[0] || ""));
+    ok("valuation: the shortfall table is present", !!shortTable);
+    if (shortTable) {
+      ok("valuation: the shortfall table is labelled with the shortfalls it computed",
+        same(col(shortTable, 0), vl.SHORTFALLS), JSON.stringify(col(shortTable, 0)));
+      ok("valuation: the shortfall table matches the computed valuations",
+        same(col(shortTable, 1), T.map((r) => r.valuation)), JSON.stringify(col(shortTable, 1)));
+      ok("valuation: the shortfall table matches the computed loans",
+        same(col(shortTable, 2), T.map((r) => r.loan)), JSON.stringify(col(shortTable, 2)));
+      ok("valuation: the shortfall table matches the computed effective LTVs",
+        same(col(shortTable, 3), T.map((r) => r.effectiveLtv)), JSON.stringify(col(shortTable, 3)));
+      ok("valuation: the shortfall table matches the computed cash to close",
+        same(col(shortTable, 4), T.map((r) => r.total)), JSON.stringify(col(shortTable, 4)));
+      ok("valuation: the shortfall table matches the computed extra cash",
+        same(col(shortTable, 5), T.map((r) => r.extra)), JSON.stringify(col(shortTable, 5)));
+    }
+
+    const bandTable = tables.find((t) => /^Band$/i.test((t.head[0] || "").trim()));
+    ok("valuation: the band table is present", !!bandTable);
+    if (bandTable) {
+      ok("valuation: the band table matches the computed extra cash per band",
+        same(col(bandTable, 2), B.map((r) => r.extra)), JSON.stringify(col(bandTable, 2)));
+      ok("valuation: the band table matches the computed share of price per band",
+        same(col(bandTable, 3), B.map((r) => r.ofPrice)), JSON.stringify(col(bandTable, 3)));
+      ok("valuation: every band row is labelled with the band it computed",
+        B.every((r, i) => (bandTable.rows[i][0] || "").includes(r.label)),
+        JSON.stringify(bandTable.rows.map((r) => r[0])));
+    }
+
+    const claims = [
+      ["the extra cash on a 5% shortfall", `asks the buyer for **AED ${vl.money(E.amount)}**`],
+      ["the registration fee it is compared against", `is **AED ${vl.money(E.registrationFee)}**`],
+      ["the shortfall at which the two are equal", `at a shortfall of **${M.pct.toFixed(2)}%**`],
+      ["the extra cash in years of net rent", `is **${E.years.toFixed(2)} years**`],
+      ["the share of the shortfall the cash works out at", `works out at **${E.shareOfShortfall.toFixed(1)}%** of the shortfall`],
+      ["the unchanged acquisition stack", `the full **AED ${vl.money(full.buying)}** acquisition stack`],
+      ["the income the binding test needs at full valuation", `falls from **AED ${vl.money(I.incomeFull.binding)}** a month`],
+      ["the income it needs after the shortfall", `to **AED ${vl.money(I.incomeCut.binding)}**`],
+      ["how much easier that is", `which is **AED ${vl.money(I.savedMonthly)}** a month easier`],
+      ["the loan before the shortfall", `from AED ${vl.money(I.full)}`],
+      ["the loan after it", `to AED ${vl.money(I.cut)}`],
+      ["the cash at the full valuation", `is **AED ${vl.money(full.total)}**`],
+      ["that cash as a share of price", `**${full.cashPct.toFixed(2)}%** against an advertised 20%`],
+      ["the cash once a 5% shortfall is covered", `needs **AED ${vl.money(cut.total)}**`],
+      ["that cash as a share of price", `or **${cut.cashPct.toFixed(2)}%** of the price`],
+      ["the saving the lower band absorbs it with",
+        `**AED ${vl.money(B[0].extra - B[1].extra)}** less`],
+      ["the reduced registration fee if the price is reopened",
+        `the registration fee falls to AED ${vl.money(Math.round(cut.valuation * 0.04))}`],
+    ];
+    for (const [label, phrase] of claims) {
+      ok(`valuation: prose carries ${label}`, p.body.includes(phrase), phrase);
+    }
+
+    /* Behaviour. The loan must be computed on the valuation, not the price:
+       if somebody "fixes" that, every one of these collapses. */
+    ok("valuation: a shortfall actually reduces the loan",
+      cut.loan < full.loan, `${cut.loan} vs ${full.loan}`);
+    ok("valuation: the loan is the band times the valuation, not the price",
+      cut.loan === Math.round(cut.valuation * cut.rate) && cut.loan !== Math.round(cut.price * cut.rate));
+    ok("valuation: the fee stack does not move with the valuation",
+      cut.buying === full.buying, `${cut.buying} vs ${full.buying}`);
+    ok("valuation: a shortfall costs real extra cash", E.amount > 0);
+    ok("valuation: exposure rises with the band, which is the page's finding",
+      B[0].extra > B[1].extra && B[1].extra > B[2].extra,
+      JSON.stringify(B.map((r) => [r.rate, r.extra])));
+    ok("valuation: the page only says the income test gets easier while it does",
+      I.easier && /can only ever fail you on cash/.test(p.body));
+    ok("valuation: the extra cash is less than the shortfall it answers",
+      E.amount < E.shortfall && E.shareOfShortfall < 100);
+    /* And the deposit clause stays unpriced, for the same reason the NOC is. */
+    ok("valuation: the forfeit deposit is named as unpriced rather than estimated",
+      p.body.includes("No instrument sets a deposit, no cap constrains it, and no register publishes it"));
   }
 }
 

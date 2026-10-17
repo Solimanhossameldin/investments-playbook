@@ -112,6 +112,8 @@ Title deed. The approved owners association budget for the current year. The res
 
 If a seller or agent cannot produce these, that is itself information.
 
+On a mortgaged purchase, read the sale contract's deposit clause in this same pass, before a valuation is instructed. If the bank's valuer comes in below the agreed price the loan is computed on the valuation and the fee on the contract, and the difference is cash due in the week of transfer: [when the bank values a property below the price](/playbooks/when-the-valuation-comes-in-low/) sizes it.
+
 A charge that looks low for the building type is frequently a charge that is not collecting for the reserve, which is what [the service charge and the reserve fund](/playbooks/service-charge-and-reserves/) is about. And if the unit is tenanted, the gap between the passing rent and the index caps what you can charge next year: [rent increase caps](/playbooks/rent-increase-caps/) explains why a cheaply let unit is not the opportunity it looks like.
 
 ## What to inspect
