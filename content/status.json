@@ -1,6 +1,42 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-10-18T07:56:31.832Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-10-18, so there is nothing to send.",
+   "ranAt": "2026-10-18T07:56:31.785Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-10-18T07:56:31.740Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-10-18T07:56:31.698Z"
+  },
+  {
+   "job": "fetch-photos",
+   "status": "ok",
+   "detail": "4 of 4 photographs published",
+   "ranAt": "2026-10-18T07:56:31.655Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "ok",
+   "detail": "19 figures refreshed",
+   "ranAt": "2026-10-18T07:56:31.099Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "ok",
    "detail": "68 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
@@ -203,42 +239,6 @@
    "status": "ok",
    "detail": "19 figures refreshed",
    "ranAt": "2026-10-16T23:32:12.181Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "67 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-10-16T21:32:05.736Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "68 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-10-16T18:23:27.634Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "67 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-10-16T14:35:00.789Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "66 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-10-16T09:49:58.454Z"
-  },
-  {
-   "job": "pipeline",
-   "status": "ok",
-   "detail": "update=success, deploy=success, submit=success",
-   "ranAt": "2026-10-16T08:05:00.205Z"
-  },
-  {
-   "job": "indexnow",
-   "status": "ok",
-   "detail": "submitted 150 urls, HTTP 200",
-   "ranAt": "2026-10-16T08:04:49.394Z"
   }
  ]
 }
