@@ -6,7 +6,7 @@
   "category": "property",
   "tier": 1,
   "calculator": "net-rental-yield",
-  "reviewed": "8 September 2026",
+  "reviewed": "19 October 2026",
   "summary": "Net rental yield in Dubai is rent after all running costs, over the price plus the statutory 4.00% Land Department fee and agency costs: 4.33%, not 7.00%.",
   "question": "What is the real net rental yield on a Dubai apartment?",
   "formula": "Net operating income\n  = Annual rent\n  - Vacancy allowance\n  - Service charge (size in sq ft x rate per sq ft)\n  - Management fee (share of rent actually collected)\n  - Maintenance reserve\n  - Insurance and fixed costs\n\nTotal outlay\n  = Purchase price\n  + Land Department registration fee (4% of the value of the sale contract)\n  + Agency commission x (1 + VAT)\n  + Registration trustee fee x (1 + VAT)\n  + Title deed, map, knowledge and innovation fees\n  + Mortgage registration (0.25% of the mortgage (debt) value), if borrowing\n\nNet yield = Net operating income / Total outlay\n\nYears of net rent consumed by the costs\n  = Acquisition costs / Net operating income",
@@ -14,6 +14,7 @@
     "It says nothing about capital growth. A four percent net yield in a market rising six percent a year and a four percent net yield in a market falling six percent a year are not the same investment.",
     "Service charges are not fixed. Owners associations raise them, and a tower with an ageing chiller or a disputed developer handover can see a step change that removes a full percentage point of net yield overnight.",
     "The rent input is the achieved rent, not the asking rent. Using the asking rent quietly rebuilds the same optimism the gross yield had.",
+    "The published service charge figures are a sample of 31 buildings this site read off the Land Department's index by hand, not a survey of the market. They bracket what is approved in the buildings checked, and the index itself lists thousands of projects, so a building outside the sample can sit either side of both extremes.",
     "It is an annual snapshot. It does not handle a rent free period, a fit out cost, or the years of below market rent that the rent increase caps can lock you into once a tenant is in place.",
     "On a leveraged purchase the net yield on total outlay and the cash on cash return diverge sharply. Look at both or you will misjudge how much risk the debt is carrying.",
     "The fee schedule is the current one. Fees in Dubai are set by resolution and can be amended by resolution, so a figure here is only as good as the date at the top of this page."
@@ -91,7 +92,7 @@ Vacancy comes off first, because management is a share of rent actually collecte
 | Insurance and fixed costs | 1,500 |
 | **Net operating income** | **69,127** |
 
-The service charge here is 900 square feet at AED 18 a foot. That rate is an illustration, not a published figure. Dubai has no per building service charge series this site is willing to quote, which is precisely why [the service charge is the cost buyers under-model](/playbooks/service-charge-and-reserves/): it never appears in the listing, and it is the input the answer is most sensitive to. It is also not the only fixed cost a listing omits: in a tower served by a district cooling plant the capacity charge is billed on contracted capacity rather than on use, so it runs whether the flat is cooled or let, and [the chiller bill](/playbooks/district-cooling-and-chiller-charges/) prices it per square foot so it can be set beside this one.
+The service charge here is 900 square feet at AED 18 a foot, a round number chosen to sit near the middle of what is actually approved. It no longer has to be a guess. The Land Department's Service Charge Index publishes the rate approved for each project for each budget year, and this site now reproduces [the figures for 31 named buildings across 15 areas](/service-charges/), each row carrying the day it was read; the section after next prices this flat at the cheapest and the dearest of them. That is also why [the service charge is the cost buyers under-model](/playbooks/service-charge-and-reserves/): it never appears in the listing, and it is the input the answer is most sensitive to. It is also not the only fixed cost a listing omits: in a tower served by a district cooling plant the capacity charge is billed on contracted capacity rather than on use, so it runs whether the flat is cooled or let, and [the chiller bill](/playbooks/district-cooling-and-chiller-charges/) prices it per square foot so it can be set beside this one.
 
 ## Three yields, and the one nobody names
 
@@ -130,6 +131,24 @@ Holding everything else constant and moving only the service charge rate:
 Three dirhams a foot is 0.17 percentage points of net yield on this property, every year, forever. **At AED 24 a foot this one bedroom drops below 4.00% net**, which is roughly where a buyer should start asking what the money is buying that a cheaper tower does not.
 
 This is why a per building service charge figure is worth more than any yield table by community, and why [ranking buildings by cap rate](/playbooks/cap-rate/) without the service charge attached is ranking them by their listings.
+
+## What the published rates do to this flat
+
+The ladder above is round numbers. These are not. Holding this one bedroom's price, size, rent, vacancy, management and maintenance exactly as they are above, and moving only the service charge to the rate the Land Department has actually approved:
+
+| Building | Area | AED per sq ft | Service charge, AED | Net yield |
+|---|---|---|---|---|
+| Bloomingdale | Dubai Sports City | 7.27 | 6,543 | 4.94% |
+| Goldcrest Views | DMCC Master Community | 16.79 | 15,111 | 4.40% |
+| Collective | Dubai Hills Estate | 24.59 | 22,131 | 3.96% |
+
+**On the service charges approved for the 2026 budget year and published by the Dubai Land Department's Service Charge Index, the same 900 square foot Dubai one bedroom at AED 1,500,000 nets 4.94% in the cheapest of 31 buildings checked and 3.96% in the dearest, a spread of 0.98 percentage points of net yield created by the service charge alone.**
+
+Set that against the other figure on this page. The entire transaction stack, the 4% and the agency commission and the trustee and the title deed and all the rest of it, costs 0.28 percentage points of net yield. **The published service charge spread is 3.5 times larger**, it recurs every year instead of once, and it is the only one of the two that is absent from the listing.
+
+The dearest building in the sample does exactly what the ladder predicted. At AED 24.59 a foot this flat nets **3.96%**, below four per cent, on a tower whose approved budget is a matter of public record. The cheapest nets **4.94%** on the same rent, the same price and the same fee stack. Nothing about the purchase changed. [The full table, with the source and the retrieval date on every row](/service-charges/), is what to bring to the offer.
+
+Three limits, because a table of numbers looks authoritative whether or not anyone sourced it. Thirty-one buildings is a sample read by hand, not the market: the index itself offered **5,591 projects** when it was last checked, so the real extremes are almost certainly wider than these three rows. The figure is the budget approved for the year, which is what owners are billed and not necessarily what is spent. And a high charge is not automatically a bad one, because a tower with chilled water, a pool and a concierge costs more to run than one without. It is only a bad one if you did not price it, and until the index published these rates you could not.
 
 ## If you borrow
 

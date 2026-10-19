@@ -266,3 +266,70 @@ export function breakEvenLetOccupancy(debtService = 0, i = EXAMPLE) {
 export function servicableDebt(i = EXAMPLE) {
   return netAtLetOccupancy(1, 0, i);
 }
+
+/* ---- the service charge, priced off the published rates instead of a round
+        number ----
+
+   Until October 2026 the rate above was an illustration and the page said so,
+   because no per-building series was in reach: the old open dataset died with
+   Dubai Pulse, and every competing page prints its own area bands with no
+   building named and no retrieval date. The Land Department's Service Charge
+   Index publishes the approved rate per project per budget year, and this
+   site now reproduces the rows it has checked in content/service-charges.json.
+
+   So the sensitivity table no longer has to be bracketed by round numbers.
+   It can be anchored at the cheapest and the dearest rate actually approved
+   for the budget year, on named buildings, and the spread between them is a
+   published fact rather than a range someone felt was realistic.
+
+   That spread is the page's whole argument, finally evidenced rather than
+   asserted: the gap between the cheapest and dearest published building is
+   worth several times what the entire transaction stack costs, and it is the
+   one input a listing never carries.
+
+   Records are passed in rather than read here, because every other module in
+   this directory is pure and the suite pins this against the same file the
+   build validates. */
+export function publishedAnchors(records, i = EXAMPLE) {
+  const rs = (records || []).filter((r) => Number.isFinite(Number(r.psf)));
+  if (!rs.length) return null;
+  const sorted = [...rs].sort((a, b) => a.psf - b.psf || String(a.project).localeCompare(String(b.project)));
+  const at = (r) => ({
+    project: r.project,
+    area: r.area,
+    psf: Number(r.psf),
+    period: r.period,
+    serviceCharge: Math.round(i.sqft * Number(r.psf)),
+    ...atServiceCharge(Number(r.psf), i),
+  });
+  const low = at(sorted[0]);
+  const high = at(sorted[sorted.length - 1]);
+  /* An even sample has no single published building at the middle, and
+     averaging two of them would invent a rate no index approved. So the
+     median anchor is the lower of the two middle rows, which is a row that
+     exists, and the count is printed beside it either way. */
+  const median = at(sorted[Math.floor((sorted.length - 1) / 2)]);
+  const areas = [...new Set(sorted.map((r) => r.area))];
+  return {
+    count: sorted.length,
+    areas: areas.length,
+    low,
+    median,
+    high,
+    rows: [low, median, high],
+    /* Percentage points of net yield that the published spread accounts for,
+       to be read against drag().transaction, which is what the whole fee
+       stack accounts for. */
+    spreadPoints: Number((low.net - high.net).toFixed(2)),
+  };
+}
+
+/* How many times the published service charge spread outweighs the entire
+   transaction stack. Computed, because it is the sentence the page leads the
+   section with and a hand-typed multiple is exactly what rots. */
+export function spreadVersusStack(records, i = EXAMPLE) {
+  const a = publishedAnchors(records, i);
+  if (!a) return null;
+  const t = drag(i).transaction;
+  return Number((a.spreadPoints / t).toFixed(1));
+}

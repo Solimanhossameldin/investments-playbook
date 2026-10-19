@@ -581,8 +581,76 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
         JSON.stringify(col(mTable, 1)));
     }
 
+    /* ---- the published service charge anchors ----
+
+       The sensitivity ladder above is round numbers, which is honest and
+       uncitable. These three rows are named buildings at rates the Land
+       Department approved, so they are the part of this page an assistant can
+       quote and a competitor cannot match -- and therefore the part most
+       worth pinning. The table is compared to the module cell by cell, the
+       sentence that carries the spread is matched as a whole phrase, and the
+       section's argument is checked as behaviour below rather than as prose.
+
+       The anchors are derived from the same file the build validates, so a
+       row added to or corrected in content/service-charges.json moves the
+       table and fails here if the prose did not move with it. */
+    const AN = aq.publishedAnchors(SERVICE_CHARGES.records);
+    ok("net yield: the published service charge anchors are computable", !!AN);
+    if (AN) {
+      const anTable = tables.find((t) => /^Building$/.test(t.head[0] || ""));
+      ok("net yield: the published anchor table is present", !!anTable);
+      if (anTable) {
+        ok("net yield: the anchor table names the buildings it computed",
+          same(anTable.rows.map((r) => r[0]), AN.rows.map((r) => r.project)),
+          JSON.stringify(anTable.rows.map((r) => r[0])));
+        ok("net yield: the anchor table names the area of each building",
+          same(anTable.rows.map((r) => r[1]), AN.rows.map((r) => r.area)),
+          JSON.stringify(anTable.rows.map((r) => r[1])));
+        ok("net yield: the anchor table matches the published rates",
+          same(col(anTable, 2), AN.rows.map((r) => Number(r.psf.toFixed(2)))),
+          JSON.stringify(col(anTable, 2)));
+        ok("net yield: the anchor table matches the computed service charges",
+          same(col(anTable, 3), AN.rows.map((r) => r.serviceCharge)),
+          JSON.stringify(col(anTable, 3)));
+        ok("net yield: the anchor table matches the computed net yields",
+          same(col(anTable, 4), AN.rows.map((r) => r.net)),
+          JSON.stringify(col(anTable, 4)));
+      }
+
+      ok("net yield: the page sends the reader to the published table",
+        p.body.includes("](/service-charges/)"));
+
+      /* The section exists to say that the service charge spread dwarfs the
+         fee stack. If a future rate correction narrowed the published spread
+         below what the stack costs, that sentence would be false and this is
+         what would say so rather than the sentence quietly going wrong in
+         print. */
+      ok("net yield: the published spread outweighs the whole transaction stack",
+        AN.spreadPoints > D.transaction, `${AN.spreadPoints} vs ${D.transaction}`);
+      ok("net yield: the anchors are ordered cheapest, middle, dearest",
+        AN.low.psf <= AN.median.psf && AN.median.psf <= AN.high.psf);
+      ok("net yield: a cheaper service charge is a higher net yield",
+        AN.low.net > AN.median.net && AN.median.net > AN.high.net,
+        `${AN.low.net} ${AN.median.net} ${AN.high.net}`);
+      /* Every anchor is a row that exists in the file. An averaged median
+         would be a rate no index approved, and this is the check that keeps
+         it that way. */
+      for (const r of AN.rows) {
+        ok(`net yield: the ${r.project} anchor is a published row`,
+          SERVICE_CHARGES.records.some((x) => x.project === r.project && Number(x.psf) === r.psf));
+      }
+    }
+
     const claims = [
       ["the acquisition total", `**${aq.money(A.total)}**`],
+      ["the published spread, as a whole sentence",
+        `nets ${aq.pctText(AN.low.net)} in the cheapest of ${AN.count} buildings checked and ${aq.pctText(AN.high.net)} in the dearest, a spread of ${AN.spreadPoints} percentage points`],
+      ["the multiple the spread beats the fee stack by",
+        `**The published service charge spread is ${aq.spreadVersusStack(SERVICE_CHARGES.records)} times larger**`],
+      ["the dearest published rate and what it nets",
+        `At AED ${AN.high.psf.toFixed(2)} a foot this flat nets **${aq.pctText(AN.high.net)}**`],
+      ["the size of the official index it sampled",
+        `**${aq.money(SERVICE_CHARGE_INDEX.projects)} projects**`],
       ["the acquisition total as a share of price", `**${aq.pctText(Y.costRate)} of the price**`],
       ["the seller's statutory half", `**AED ${aq.money(A.sellerShare)}**`],
       ["the yield if the fee were split", `nets **${aq.pctText(Y.netIfSplit)}** rather than **${aq.pctText(Y.net)}**`],
