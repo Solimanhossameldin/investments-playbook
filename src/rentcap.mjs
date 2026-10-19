@@ -215,3 +215,69 @@ export function feeLadder(rents) {
     pctOfRent: (filingCost(rent) / rent) * 100,
   }));
 }
+
+/* ---- the one input that is not the market ----
+
+   Everything above treats the index average as weather: it rises, it falls,
+   and the ladder grinds to a halt a few points underneath it whatever it
+   does. That is true of the market component and it is not true of the whole
+   number.
+
+   Under the Smart Rental Index the average that applies to a unit is a
+   function of the building's classification, and the classification is a
+   rating from one to five stars assessed on more than sixty criteria. Two
+   facts about it change the arithmetic on this page. Raising it requires
+   renovation -- the Land Department's Majid Al Marri: "they have to do
+   renovation to raise the classification" -- and an owner may ask for a
+   re-evaluation at any time rather than waiting for a cycle.
+
+   So the terminus this page computes is not a ceiling on the rent. It is a
+   ceiling on the rent for the building as it is currently classified, and the
+   denominator is the one term in the whole model that someone can apply to
+   have changed.
+
+   What is NOT published is what a notch of classification does to the
+   average. So these functions do the only honest version of the sum: given a
+   rent stalled in the bottom band, how far must the index move for the decree
+   to permit an increase again. That is a threshold the decree fixes, not a
+   forecast of a renovation's effect. The caller supplies the gap in the
+   decree's own whole percentages, because the decree's second band is written
+   "eleven percent (11%)" and a boundary of exactly ten is still the 0% band. */
+export const CLASSIFICATION = {
+  stars: 5,
+  criteria: 60,
+  reEvaluation: "Owners can ask for a building to be evaluated at any time for an increase in the rating",
+  upgrade: "they have to do renovation to raise the classification",
+  residentialOnly: true,
+};
+
+/* The index average that puts a stalled rent on a given band boundary, and
+   what the decree then permits. `upliftPct` is what the average has to gain
+   from where it is, which is the number a landlord weighs a renovation
+   against. */
+export function upliftToBand(rent, index, gapPct) {
+  const needed = rent / (1 - gapPct / 100);
+  const permitted = permittedIncrease(rent, needed);
+  return {
+    gapPct,
+    needed,
+    upliftPct: (needed / index - 1) * 100,
+    upliftAed: needed - index,
+    permitted,
+    worthAed: Math.round(rent * (permitted / 100)),
+  };
+}
+
+/* Every rung above a stalled rent, which is the table that shows the leverage
+   is front-loaded: the first notch is cheap in index terms and each one after
+   it costs multiples more. */
+export function upliftLadder(rent, index) {
+  return TIERS.slice(1).map((t, i) => upliftToBand(rent, index, TIERS[i].upTo + 1));
+}
+
+/* How much permitted rent one percent of index uplift buys, at the first rung
+   only. Above the first rung the ratio collapses, which is the point. */
+export function firstRungLeverage(rent, index) {
+  const r = upliftToBand(rent, index, TIERS[0].upTo + 1);
+  return { ...r, multiple: r.worthAed / r.upliftAed };
+}

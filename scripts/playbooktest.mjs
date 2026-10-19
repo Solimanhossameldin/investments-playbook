@@ -483,6 +483,81 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       new Set([1, 5000, 50000].map(() => rc.registrationFee(93600))).size === 1 &&
       rc.registrationFee(93600) !== rc.registrationFee(78000));
 
+    /* ---- the classification lever ----
+
+       The page's last section argues that the terminus is a ceiling on the
+       rent for the building as classified, not on the rent, and that the
+       leverage is front-loaded. Both are claims about the ladder of index
+       uplifts, so both are pinned to it rather than to the table's ink. */
+    const flatLadder = rc.schedule({ rent: 78000, index: 120000, growth: 0, years: 8 });
+    const term = rc.stallsAt(flatLadder);
+    const rungs = rc.upliftLadder(term.rent, 120000);
+    const lev = rc.firstRungLeverage(term.rent, 120000);
+
+    for (const u of rungs) {
+      ok(`rent cap: the uplift row for the ${u.gapPct}% band matches the computed index`,
+        p.body.includes(`| ${u.gapPct}% below | ${rc.money(u.needed)} |`),
+        `${u.gapPct}% -> ${rc.money(u.needed)}`);
+      ok(`rent cap: the uplift row for the ${u.gapPct}% band matches the permitted increase`,
+        p.body.includes(`| ${u.permitted}% | AED ${rc.money(u.worthAed)} |`),
+        `${u.permitted}% / ${rc.money(u.worthAed)}`);
+      /* Every rung must actually reopen the ladder. A threshold that left the
+         rent in the 0% band would make the whole section wrong while the
+         table still looked arithmetically tidy. */
+      ok(`rent cap: the ${u.gapPct}% threshold does permit an increase again`,
+        u.permitted > 0, String(u.permitted));
+    }
+
+    /* The front-loading, as behaviour: the first rung must cost less index
+       movement than every rung above it. This is the sentence "the first rung
+       is almost free and every rung after it is not". */
+    ok("rent cap: the first rung is the cheapest in index terms",
+      rungs.slice(1).every((u) => u.upliftPct > rungs[0].upliftPct * 2),
+      rungs.map((u) => u.upliftPct.toFixed(2)).join(" "));
+
+    /* And the leverage only exists at the first rung. If uplift bought rent
+       at a constant rate the section's advice -- one notch, not three -- would
+       be arbitrary. */
+    ok("rent cap: the leverage collapses above the first rung",
+      lev.multiple > 1 && rungs.slice(1).every((u) => u.worthAed / u.upliftAed < 1),
+      `${lev.multiple.toFixed(2)} vs ${rungs.slice(1).map((u) => (u.worthAed / u.upliftAed).toFixed(2)).join(" ")}`);
+
+    const reopened = rc.schedule({ rent: term.rent, index: lev.needed, growth: 0, years: 4 });
+    const newTerm = rc.stallsAt(reopened);
+    ok("rent cap: reopening the ladder leaves a narrower terminal gap than the one it started from",
+      newTerm.gap < term.gap, `${newTerm.gap.toFixed(2)} vs ${term.gap.toFixed(2)}`);
+
+    const classClaims = [
+      ["the first rung's uplift", `| **${lev.upliftPct.toFixed(2)}%** | 5% |`],
+      ["the first rung's uplift in money", `which is AED ${rc.money(lev.upliftAed)} on a AED ${rc.money(120000)} index`],
+      ["what the first rung restores", `restores a 5% increase worth AED ${rc.money(lev.worthAed)}`],
+      ["the leverage multiple", `**${lev.multiple.toFixed(1)} times the uplift itself**`],
+      ["the rent the first rung steps to", `the rent steps to AED ${rc.money(newTerm.rent)}`],
+      ["the terminal gap after reopening", `sits ${newTerm.gap.toFixed(1)}% below the new average`],
+      ["the terminal gap before reopening", `rather than ${term.gap.toFixed(1)}% below the old one`],
+      ["the number of stars in the classification", `a rating from one to five stars`],
+      ["the number of criteria behind it", `more than ${rc.CLASSIFICATION.criteria} criteria`],
+      ["the Land Department on how a rating is raised", `"${rc.CLASSIFICATION.upgrade}"`],
+      ["the Land Department on re-evaluation on request", `"${rc.CLASSIFICATION.reEvaluation.toLowerCase()}"`],
+    ];
+    for (const [label, phrase] of classClaims) {
+      ok(`rent cap: prose carries ${label}`, p.body.includes(phrase), phrase);
+    }
+
+    /* The lede must state the answer, because the page's whole AI-visibility
+       argument is that the first screen carries it. Stated as the three
+       things a quotable sentence needs: both bounds, and the instrument. */
+    const lede = p.body.slice(0, 700);
+    for (const [label, phrase] of [
+      ["the bottom of the range", "by nothing at all"],
+      ["the top of the range", "at most 20%"],
+      ["the instrument that sets it", "Article 1 of Decree No. (43) of 2013"],
+      ["the authority it is measured against", "approved by the Real Estate Regulatory Agency"],
+      ["the notice period", "ninety days' notice"],
+    ]) {
+      ok(`rent cap: the lede carries ${label}`, lede.includes(phrase), phrase);
+    }
+
     /* And the threshold claim: between the floor and the ceiling the one-year
        break-even over-charge is smaller than one tier step but larger than
        half of one, which is exactly what makes "one tier is worth refusing,

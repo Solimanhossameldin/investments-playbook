@@ -6,7 +6,7 @@
   "category": "property",
   "tier": 1,
   "calculator": "dubai-rent-increase",
-  "reviewed": "7 September 2026",
+  "reviewed": "19 October 2026",
   "summary": "How much a Dubai landlord may raise the rent, in five bands against the official index, and what it costs at the centre to refuse an increase over the cap.",
   "question": "How much can a Dubai landlord raise the rent?",
   "formula": "Permitted increase on renewal, Decree 43 of 2013\n  measured against the RERA rental index average\n\n    up to 10% below the index       no increase\n    11% to 20% below                up to  5%\n    21% to 30% below                up to 10%\n    31% to 40% below                up to 15%\n    more than 40% below             up to 20%\n\nThe part that is not a table, because the tier is\nrecalculated every year against a gap your own increase\njust narrowed:\n\n  each renewal\n    gap       = (index - rent) / index\n    increase  = tier(gap)\n    rent      = rent x (1 + increase)\n  repeat\n\n  The sequence terminates inside the 0 to 10% band,\n  every time, from every starting gap. It does not\n  terminate at the index.\n\nNotice, Law 26 of 2007 as amended by Law 33 of 2008\n  changing any term, rent included   90 days (Art 14)\n  eviction for sale or own use       12 months (Art 25/2)\n  service                            notary or registered mail\n\nThe cost of refusing an increase over the cap\n  registration = 3.5% of the annual rent, floor AED 500, ceiling AED 20,000\n  fixed lines  = AED 100 process service + AED 10 + AED 10\n  settle at conciliation and half the registration comes back\n\n  one-year break-even over-charge\n    = 3.5% of the annual rent + AED 120\n  which is why a demand one tier above the cap is worth\n  refusing and a demand two or three points above it is not\n\nThe buyer's arithmetic\n  Year one yield uses the passing rent.\n  Every later year uses a rent the law rations.\n  Vacant possession removes the constraint, and is\n  priced accordingly, and this is how you work out\n  what that price should be.",
@@ -18,6 +18,7 @@
     "It applies to renewal of an existing tenancy. A new tenancy with a new tenant is a different transaction, which is why vacant possession is worth paying for.",
     "The index now rates the building, so the comparable set is narrower than it was and two towers on the same street can return different averages. The old habit of arguing from the rent next door is weaker than it used to be.",
     "Rules and tiers are set by decree and can be amended, so a framework page is a starting point rather than a current legal position.",
+    "The uplift table is a threshold the decree fixes, not a forecast. It says how far the index average must move before an increase is permitted again; it does not say what a classification notch delivers, because the Land Department does not publish that, and whether the renovation costs less than the rent it unlocks is the owner's sum and not this page's.",
     "The clawback schedule holds the index still. A rising index does not repair an over-charge the same way, because both paths keep climbing, so that comparison has to be run again at the growth rate you actually expect.",
     "The centre bases its fee on the annual rent or lease value without saying which contract is meant when a renewal is the thing in dispute. This page takes the higher of the two, which overstates the fee and understates the case for filing rather than the reverse.",
     "This is general information and not legal advice. A live dispute belongs with the Rental Dispute Centre or a lawyer, not with a calculator."
@@ -37,6 +38,10 @@
       "url": "https://mediaoffice.ae/en/news/2025/january/02-01/smart-rental"
     },
     {
+      "name": "The National, Dubai's new rental index is based on star ratings for buildings, 2 January 2025",
+      "url": "https://www.thenationalnews.com/business/property/2025/01/02/dubais-new-rental-index-to-be-based-on-building-rating-system/"
+    },
+    {
       "name": "Dubai Land Department, rental index and rent calculator",
       "url": "https://dubailand.gov.ae/en/eservices/rental-index/"
     },
@@ -52,7 +57,9 @@
 }
 ---
 
-Every page on this question prints the same five rows and then one worked example covering one year. The table is the easy part. The part that decides whether a tenanted property is worth buying is what happens on the second renewal, and the third, because the tier is recalculated each year against a gap your own increase has just narrowed.
+**A Dubai landlord may raise the rent on renewal by nothing at all where the rent is within 10% of the index average, and by at most 20% where it is more than 40% below it, in five bands set by Article 1 of Decree No. (43) of 2013 and measured against the rent index approved by the Real Estate Regulatory Agency.** Changing any term of the tenancy, rent included, requires ninety days' notice before expiry under Article 14 of Law No. (26) of 2007 as amended. That is the whole of the rule.
+
+Every page on this question prints those five rows and then one worked example covering one year. The table is the easy part. The part that decides whether a tenanted property is worth buying is what happens on the second renewal, and the third, because the tier is recalculated each year against a gap your own increase has just narrowed. On a flat index that ladder always stops inside the bottom band, and the only term left in the arithmetic that still moves is the index average itself, which under the Smart Rental Index is a rating of the building and can be applied for.
 
 ## What the decree actually says
 
@@ -135,6 +142,27 @@ This is the honest version of a sentence you will hear from an agent: that a bel
 ## Where the index figure comes from
 
 Both sides of this argument need the same number, and it is the one input nobody can guess. The Land Department publishes it through the [rental index and rent calculator](https://dubailand.gov.ae/en/eservices/rental-index/) and through the Dubai REST app: you give the area, the property type, the number of bedrooms and the current rent, and it returns the average rental value for that building and the permitted increase that follows from it. Article 3 of the decree makes that output the reference, so a printout of it is the document to put in front of a landlord, and under the Smart Rental Index it is specific to the building rather than to the street.
+
+## The denominator is the one input that is not the market
+
+Every schedule above treats the index average as weather. It rises, it falls, and the ladder grinds to a halt a few points underneath it whatever it does. That is true of the market component. It is not true of the whole number.
+
+Under the Smart Rental Index the average that applies to a unit is a function of the building's classification, and the classification is a rating from one to five stars assessed on more than 60 criteria including location, sustainability, security, age and amenities. Two features of it change the arithmetic on this page, and both come from the Land Department rather than from inference. Raising the rating requires work on the building: Majid Al Marri, chief executive of real estate registration at the Land Department, put it as "they have to do renovation to raise the classification". And the rating is not on a cycle: "owners can ask for a building to be evaluated at any time for an increase in the rating". The system currently covers residential buildings only. Worth noticing what the criteria are: maintenance, cleanliness, parking management and the quality of the facilities are the things the [service charge](/playbooks/service-charge-and-reserves/) pays for, so the budget an owner resents is also the budget that holds the classification up, and the denominator in every schedule on this page with it.
+
+So the terminus this page computed is not a ceiling on the rent. **It is a ceiling on the rent for the building as it is currently classified**, and the denominator is the one term in the whole model that an owner can apply to have changed.
+
+What the Land Department does not publish is what a notch of classification does to the average. So the only honest version of this sum is the one the decree fixes rather than one a renovation forecasts: given a rent stalled in the bottom band, how far does the index have to move before an increase is permitted again. On the worked tenancy, stalled at AED 108,784 against an index of AED 120,000:
+
+| Band reached | Index average required | Uplift needed | Permitted increase | Worth, year one |
+|---|---|---|---|---|
+| 11% below | 122,229 | **1.86%** | 5% | AED 5,439 |
+| 21% below | 137,701 | 14.75% | 10% | AED 10,878 |
+| 31% below | 157,658 | 31.38% | 15% | AED 16,318 |
+| 41% below | 184,380 | 53.65% | 20% | AED 21,757 |
+
+**The first rung is almost free and every rung after it is not.** Moving the average by 1.86%, which is AED 2,229 on a AED 120,000 index, restores a 5% increase worth AED 5,439, which is **2.4 times the uplift itself**, and permanently, because the rent steps to AED 114,223 and the new terminus sits 6.6% below the new average rather than 9.3% below the old one. The second rung costs eight times the index movement of the first and returns twice the rent. So the case for renovating to reclassify, where there is one, is a case for one notch, and the arithmetic says nothing in favour of chasing the third.
+
+This is the mechanism that makes the ninety-day notice worth reading carefully from the other side as well. A re-evaluation obtained between renewals does not raise the rent by itself; it raises the figure the Land Department's calculator returns, which is what the permitted increase is then computed against. The tenant's defence is unchanged in kind, which is to run the calculator and decline anything above what it returns, but the number it returns is not fixed for the life of the tenancy.
 
 ## What it costs to refuse an increase over the cap
 
