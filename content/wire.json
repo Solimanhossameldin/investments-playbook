@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-20T07:34:45.457Z",
+ "fetchedAt": "2026-10-20T13:01:06.265Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "SEC, FSA Hold Autumn Financial Regulatory Dialogue",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-107-sec-fsa-hold-autumn-financial-regulatory-dialogue",
+   "published": "2026-10-20T12:51:00.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
   {
    "title": "Frank Elderson: Interview with Die Presse",
    "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261020~97e2e4bc38.en.html",
@@ -627,15 +636,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "ECB amends monetary policy implementation guidelines as part of regular review",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260929~050089e922.en.html",
-   "published": "2026-09-29T08:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
