@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-20T02:07:59.989Z",
+ "fetchedAt": "2026-10-20T07:34:45.457Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Frank Elderson: Interview with Die Presse",
+   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261020~97e2e4bc38.en.html",
+   "published": "2026-10-20T07:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "SEC Announces Roundtable on Machine-Understandable Data in the Age of Super Intelligence",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-106-sec-announces-roundtable-machine-understandable-data-age-super-intelligence",
