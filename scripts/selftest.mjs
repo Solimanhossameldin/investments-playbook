@@ -1621,4 +1621,54 @@ console.log(fails ? `\n${fails} check(s) failed.\n` : "\nAll checks passed.\n");
 }
 
 
+/* ---------------- the registration form, moved and duplicated ----------------
+
+   Two things changed at once and each can break the other. The registration
+   band moved above the brief, and the same form now also renders inside the
+   dialog that opens with the site. Rendering one form twice is the part that
+   bites silently: two elements sharing an id leaves every `label for=` on the
+   page pointing at whichever came first, so half the fields stop being
+   clickable and nothing throws. */
+{
+  const homePath = path.join(root, "dist", "index.html");
+  const home = fs.readFileSync(homePath, "utf8");
+
+  const atPlaybook = home.indexOf('id="playbook"');
+  const atToday = home.indexOf('id="today"');
+  check("the registration band is on the homepage at all", atPlaybook !== -1, atPlaybook);
+  check("the registration band sits above the brief, not below it",
+    atPlaybook !== -1 && atToday !== -1 && atPlaybook < atToday,
+    `playbook at ${atPlaybook}, today at ${atToday}`);
+
+  const ids = [...home.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  const dupes = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
+  check("no element id appears twice on the homepage",
+    dupes.length === 0, dupes.join(", "));
+
+  /* The dialog is revealed by app.js, never by the HTML. A crawler that does
+     not run scripts has to read the page without it. */
+  check("the dialog ships hidden in the markup",
+    /<div class="pop" id="lead-pop" hidden>/.test(home), home.includes("lead-pop"));
+
+  /* Sliced to the script tag rather than matched to a closing div: the panel
+     nests, and a non-greedy match stops at the backdrop's own close. */
+  const popAt = home.indexOf('<div class="pop" id="lead-pop"');
+  const panel = popAt === -1 ? "" : home.slice(popAt, home.indexOf("<script", popAt));
+  check("the dialog carries the registration form, not the email-only one",
+    panel.includes('id="lead-form-pop"') && panel.includes('name="phone"') && panel.includes('name="intent"'),
+    panel.slice(0, 120));
+  check("the dialog can be dismissed by the button and the backdrop",
+    (panel.match(/data-pop-close/g) || []).length >= 2,
+    (panel.match(/data-pop-close/g) || []).length);
+  check("the dialog names itself to a screen reader",
+    /role="dialog"/.test(panel) && /aria-modal="true"/.test(panel) && /aria-labelledby=/.test(panel),
+    panel.slice(0, 120));
+
+  /* lead_source is the only thing that will say whether moving the band
+     helped, so both renderings have to be distinguishable at the source. */
+  check("the band and the dialog each name their own position in lead_source",
+    home.includes('data-source="home-top"') && home.includes('data-source="site-popup"'),
+    home.includes("data-source") ? "one of the two is missing" : "neither is present");
+}
+
 process.exit(fails ? 1 : 0);

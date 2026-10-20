@@ -153,7 +153,7 @@ export function analyticsTag(site) {
   return `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"${esc(token)}"}'></script>`;
 }
 
-export function leadForm(site) {
+export function leadForm(site, { idPrefix = "lf", formId = "lead-form", source = "" } = {}) {
   /* Two rendering bugs and a conversion problem, all visible in one screenshot.
 
      `.check` is display:flex, so every child of the label became a flex item:
@@ -174,21 +174,27 @@ export function leadForm(site) {
      under the button as a sentence, which is where a statement of terms
      belongs -- the consent that legally matters is the email opt-in, and that
      is still an explicit, unticked box. */
-  return `<form class="lead-form" data-ml="lead" id="lead-form">
-  <div class="field"><label for="lf-name">Full name</label><input id="lf-name" name="name" type="text" required autocomplete="name"></div>
-  <div class="field"><label for="lf-email">Email</label><input id="lf-email" name="email" type="email" required autocomplete="email" inputmode="email"></div>
+  /* Every id here is prefixed, because this form now renders twice on the
+     homepage -- once in the band under the hero and once inside the opening
+     dialog -- and two elements sharing an id break the label that points at
+     them. `source` is written into data-source, which app.js folds into
+     lead_source, so a lead that came from the dialog can be told from one
+     that came from the band. */
+  return `<form class="lead-form" data-ml="lead" id="${formId}"${source ? ` data-source="${esc(source)}"` : ""}>
+  <div class="field"><label for="${idPrefix}-name">Full name</label><input id="${idPrefix}-name" name="name" type="text" required autocomplete="name"></div>
+  <div class="field"><label for="${idPrefix}-email">Email</label><input id="${idPrefix}-email" name="email" type="email" required autocomplete="email" inputmode="email"></div>
   <div class="field field--row">
-    <div><label for="lf-dial">Dial code</label><select id="lf-dial" name="dial">${DIAL.map(
+    <div><label for="${idPrefix}-dial">Dial code</label><select id="${idPrefix}-dial" name="dial">${DIAL.map(
       ([d, c], i) => `<option value="${d}"${i === 0 ? " selected" : ""}>${d} ${c}</option>`
     ).join("")}</select></div>
-    <div><label for="lf-phone">Phone</label><input id="lf-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel"></div>
+    <div><label for="${idPrefix}-phone">Phone</label><input id="${idPrefix}-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel"></div>
   </div>
-  <div class="field"><label for="lf-country">Country</label>
-    <input id="lf-country" name="country" type="text" required list="country-list" autocomplete="country-name" placeholder="Start typing">
-    <datalist id="country-list">${COUNTRIES.map((c) => `<option value="${esc(c)}">`).join("")}</datalist>
+  <div class="field"><label for="${idPrefix}-country">Country</label>
+    <input id="${idPrefix}-country" name="country" type="text" required list="${idPrefix}-country-list" autocomplete="country-name" placeholder="Start typing">
+    <datalist id="${idPrefix}-country-list">${COUNTRIES.map((c) => `<option value="${esc(c)}">`).join("")}</datalist>
   </div>
-  <div class="field"><label for="lf-intent">What are you trying to do?</label>
-    <select id="lf-intent" name="intent" required>
+  <div class="field"><label for="${idPrefix}-intent">What are you trying to do?</label>
+    <select id="${idPrefix}-intent" name="intent" required>
       <option value="" selected disabled>Choose one</option>
       ${INTENTS.map((i) => `<option value="${esc(i)}">${esc(i)}</option>`).join("")}
     </select>
@@ -202,7 +208,7 @@ export function leadForm(site) {
 // Counts are passed in and rendered, never typed in by hand. A site whose
 // argument is that the advertised number and the real number differ cannot
 // afford to advertise a number it does not have.
-export function leadBand(site, counts = {}) {
+export function leadBand(site, counts = {}, { source = "lead-band" } = {}) {
   const frameworks = counts.frameworks ?? 0;
   const calculators = counts.calculators ?? 0;
   return `<section class="band band--ink" id="playbook"><div class="wrap">
@@ -219,7 +225,7 @@ export function leadBand(site, counts = {}) {
       </div>
       <p style="font-size:12px;color:#8c8c8c;margin-top:16px">Framework count as of ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })}. Calculator count as of the same date.</p>
     </div>
-    <div>${leadForm(site)}</div>
+    <div>${leadForm(site, { source })}</div>
   </div>
 </div></section>`;
 }
@@ -248,6 +254,39 @@ export function captureBlock(site, { source, intent = "", heading = "", blurb = 
   <p>${esc(blurb || "The whole library in a single file, free, and the daily brief with it. One email address, no card, unsubscribe in one click.")}</p>
   ${briefForm(site, formId, "", "", source, intent)}
 </aside>`;
+}
+
+/* The dialog that opens with the site.
+
+   It carries the full registration form rather than the email-only one,
+   because the thing it is asking for is a lead that can be rung back, not a
+   newsletter subscriber. Three deliberate choices:
+
+   It ships `hidden` in the HTML and is revealed by app.js. A crawler that
+   does not execute scripts -- which includes several of the AI crawlers this
+   site is written for -- reads the page without it, and a reader with
+   scripting off is never trapped behind a thing they cannot close.
+
+   It is a real dialog: labelled, modal, closable on the button, on Escape and
+   on the backdrop, with focus moved into it and handed back to where it was.
+   A capture that cannot be dismissed by keyboard is a capture that fails an
+   accessibility audit and annoys the readers most likely to convert.
+
+   And it is shown once per visitor, remembered in localStorage. Every read of
+   that store is wrapped, because it throws rather than returns null in a
+   private window, and a dialog that breaks the page it opens on is worse than
+   no dialog at all. */
+export function leadPopup(site) {
+  return `<div class="pop" id="lead-pop" hidden>
+  <div class="pop__back" data-pop-close></div>
+  <div class="pop__panel" role="dialog" aria-modal="true" aria-labelledby="pop-h" aria-describedby="pop-d">
+    <button class="pop__x" type="button" data-pop-close aria-label="Close">&times;</button>
+    <p class="eyebrow">The flagship document</p>
+    <h2 id="pop-h">The Investments Playbook, 2026 edition</h2>
+    <p id="pop-d" class="pop__sub">Every framework in the library in one document. Free, no card, unsubscribe in one click.</p>
+    ${leadForm(site, { idPrefix: "pf", formId: "lead-form-pop", source: "site-popup" })}
+  </div>
+</div>`;
 }
 
 export function authorBand(site) {
@@ -329,6 +368,7 @@ ${ticker(market)}
 ${body}
 </main>
 ${footer(site)}
+${leadPopup(site)}
 <script src="/app.js${assets.js ? `?v=${assets.js}` : ""}" defer></script>
 ${analyticsTag(site)}
 </body>

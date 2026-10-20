@@ -207,6 +207,8 @@ export function home({ site, market, brief, briefs = [], playbooks, calculators,
   </div>
 </div></section>
 
+${leadBand(site, { frameworks: playbooks.length, calculators: calculators.length }, { source: "home-top" })}
+
 ${pathsHtml}
 
 ${
@@ -316,7 +318,6 @@ ${
   <div class="btn-row" style="margin-top:30px"><a class="btn btn--ghost" href="/playbooks/">Browse the full library</a></div>
 </div></section>
 
-${leadBand(site, { frameworks: playbooks.length, calculators: calculators.length })}
 ${authorBand(site)}`;
 
   return {

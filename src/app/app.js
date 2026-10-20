@@ -523,6 +523,72 @@ function tellPhone(form, message) {
     });
   });
 
+  /* ---------------- the opening dialog ----------------
+
+     Opens with the page, once per visitor. The flag is written when it is
+     shown rather than when it is closed, so a reader who reloads instead of
+     closing is not shown it twice; "once" has to mean once even when the
+     visit is untidy.
+
+     Every localStorage call is wrapped. In a private window the property
+     access itself throws rather than returning null, and an exception here
+     would stop every handler registered after it. A dialog that breaks the
+     page it opened on is worse than no dialog.
+
+     Focus moves into the panel and returns to whatever held it, Tab is
+     trapped inside while it is open, and Escape closes it. The dialog ships
+     hidden in the HTML and is revealed here, so a crawler that does not run
+     scripts never meets it. */
+  (function () {
+    var pop = document.getElementById("lead-pop");
+    if (!pop) return;
+    var KEY = "ip-pop-seen";
+    var seen = null;
+    try { seen = localStorage.getItem(KEY); } catch (e) { seen = null; }
+    if (seen) { pop.parentNode && pop.parentNode.removeChild(pop); return; }
+
+    var opener = null;
+
+    function focusable() {
+      var all = pop.querySelectorAll("button, [href], input, select, textarea");
+      var list = [];
+      for (var i = 0; i < all.length; i++) {
+        if (!all[i].disabled && all[i].offsetParent !== null) list.push(all[i]);
+      }
+      return list;
+    }
+
+    function onKey(ev) {
+      if (ev.key === "Escape") { close(); return; }
+      if (ev.key !== "Tab") return;
+      var list = focusable();
+      if (!list.length) return;
+      var first = list[0];
+      var last = list[list.length - 1];
+      if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
+      else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+    }
+
+    function close() {
+      pop.hidden = true;
+      document.body.classList.remove("pop-open");
+      document.removeEventListener("keydown", onKey);
+      if (opener && opener.focus) opener.focus();
+    }
+
+    pop.querySelectorAll("[data-pop-close]").forEach(function (el) {
+      el.addEventListener("click", close);
+    });
+
+    opener = document.activeElement;
+    pop.hidden = false;
+    document.body.classList.add("pop-open");
+    document.addEventListener("keydown", onKey);
+    try { localStorage.setItem(KEY, "1"); } catch (e) {}
+    var firstField = pop.querySelector("input, select");
+    if (firstField) firstField.focus({ preventScroll: true });
+  })();
+
   /* ================= CALCULATORS ================= */
   var root = document.querySelector("[data-calc]");
   if (!root) return;
