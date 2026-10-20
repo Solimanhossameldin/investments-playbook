@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-20T13:01:06.265Z",
+ "fetchedAt": "2026-10-20T17:58:57.824Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -26,6 +26,24 @@
  ],
  "items": [
   {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-10-20T14:02:35.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
+  {
+   "title": "SEC and AMF Announce Supervisory MOU To Enhance Cooperation for Investment Advisers and Investment Service Providers",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-108-sec-amf-announce-supervisory-mou-enhance-cooperation-investment-advisers-investment-service",
+   "published": "2026-10-20T13:25:16.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
+  {
    "title": "SEC, FSA Hold Autumn Financial Regulatory Dialogue",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-107-sec-fsa-hold-autumn-financial-regulatory-dialogue",
    "published": "2026-10-20T12:51:00.000Z",
@@ -51,15 +69,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-10-19T14:17:10.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "Frank Elderson: From climate and nature risks to economic resilience and competitiveness",
@@ -609,33 +618,6 @@
    "sourceLabel": "Speeches",
    "category": "rates",
    "feed": "fed-speeches"
-  },
-  {
-   "title": "Barr, Economic Conditions and Monetary Policy",
-   "url": "https://www.federalreserve.gov/newsevents/speech/barr20260929a.htm",
-   "published": "2026-09-29T16:40:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
-  },
-  {
-   "title": "Bowman, Opening Remarks",
-   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20260929a.htm",
-   "published": "2026-09-29T15:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
-  },
-  {
-   "title": "SEC Charges Multiple Entities in Fraud Schemes Totaling at Least $15 Million That Used WhatsApp and Other Platforms to Lure Investors",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-95-sec-charges-multiple-entities-fraud-schemes-totaling-least-15-million-used-whatsapp-other-platforms",
-   "published": "2026-09-29T13:55:53.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
   }
  ]
 }
