@@ -16,9 +16,12 @@
     "It ignores the costs that begin at handover: service charges from day one, the leasing lag before first rent, and any snagging and fit out.",
     "It assumes you can and will invest the money you have not yet paid. If it sits in a current account earning nothing, the real discount rate is close to zero and the whole advantage evaporates.",
     "It says nothing about whether the price itself is right. A brilliantly structured payment plan on an overpriced unit is still an overpriced unit.",
+    "The assignment break-even excludes every fee the developer charges to process the transfer. Article 7 bounds those fees to administrative costs the Land Department has approved, but no register publishes the approved amounts, so the premium figures here are a floor on what an assignment has to clear rather than an estimate of it.",
+    "The assignment arithmetic assumes the exit commission is charged on the value the unit transfers at, at this site's standard 2% plus VAT. A seller who negotiates the rate, sells without an agent, or whose assignee carries the commission moves every figure in that table, and the method rather than the number is what transfers.",
+    "Article 6 gives the right to dispose of a registered off-plan unit, and the sale and purchase agreement commonly conditions the developer's processing of a transfer on a minimum share of the price having been paid. That condition is a contract term rather than a statutory one: no instrument sets the threshold, no cap constrains it, and the thirty-to-fifty per cent ranges printed for it elsewhere carry no source, so it is the clause to read in your own agreement before relying on the table above.",
     "The default arithmetic below is the statutory ceiling, not a prediction. Article 11 says how much a developer may keep, not how much he will ask for, and the rules and procedures stipulated in this Article are considered part of public order, so a contract term that goes further does not rescue him."
   ],
-  "whenToUse": "Whenever a developer offers you a choice of payment plans, and whenever you are comparing two projects with different schedules. Run it before you discuss price, because the structure is often worth more than the discount you were going to ask for, and because the plan you sign also fixes what the deal costs you if your circumstances change.",
+  "whenToUse": "Whenever a developer offers you a choice of payment plans, and whenever you are comparing two projects with different schedules. Run it before you discuss price, because the structure is often worth more than the discount you were going to ask for, and because the plan you sign also fixes what both exits cost you if your circumstances change: what a termination forfeits under Article 11, and what an assignment has to clear before it returns you a dirham.",
   "sources": [
     {
       "name": "Law No. (19) of 2020 amending Law No. (13) of 2008, Article 11",
@@ -109,6 +112,47 @@ If a developer, a broker or a page quotes you the 30% band, that is a reliable s
 ### When the money comes back
 
 Whatever is above the ceiling must be refunded within one year from the termination of the agreement, or **within sixty (60) days from the date of resale** of the unit, whichever is earlier. And the rules and procedures stipulated in this Article are considered part of public order, which in practice means a contract clause that keeps more, or keeps it longer, does not save the developer. It also means the arithmetic above is a floor on your position, not a hopeful reading of it.
+
+## The exit nobody prices: selling the contract
+
+**An off-plan buyer in Dubai does not need the developer's permission to sell before handover, and the premium he needs to come out level is AED 32,176 on a AED 1,500,000 unit, which is 2.15% of the price, but 10.73% of his own money if he has paid the standard 20% deposit.** Both halves of that come from instruments, and the second half comes from a drafting detail nobody points at.
+
+Take the right first, because every brokerage page on this question treats it as a favour. Article 6 of Law No. (13) of 2008 says that Real Property Units sold off-plan and entered in the Interim Property Register **may be disposed of by way of sale, mortgage, or any other legal disposition**. The right attaches to the registration. It is the reason the Article 11 route above is the branch of last resort rather than the only branch, and it is the concrete form of "act early": a buyer whose circumstances are wobbling sells the contract, and only lands in Article 11 if he does not.
+
+Article 3 still applies to the sale he makes: the disposition **will be void unless entered in that Register**. So an assignment is a Land Department transaction, not an arrangement between two people and a broker.
+
+### What the premium has to cover
+
+The seller's exit cost is the agency commission, and it is charged on the value the unit transfers at, not on the cash that changes hands between him and the assignee. At the 2% commission and 5% VAT this site uses throughout, the premium has to cover the commission on itself, so it solves rather than divides:
+
+    premium = rate x price / (1 - rate),  rate = 2% x 1.05 = 2.1%
+
+On the illustrative unit that is **AED 32,176**, a transfer value of AED 1,532,176, and a commission of exactly AED 32,176. The two are equal by construction: that is what breaking even means here.
+
+The figure that matters is the second column, because the seller has not paid the price. He has paid a share of it.
+
+| Share of the price paid | His money in | Break-even premium | As a share of the price | As a share of his money |
+|---|---|---|---|---|
+| 10% | 150,000 | 32,176 | 2.15% | 21.45% |
+| 20% | 300,000 | 32,176 | 2.15% | 10.73% |
+| 40% | 600,000 | 32,176 | 2.15% | 5.36% |
+| 60% | 900,000 | 32,176 | 2.15% | 3.58% |
+
+The premium does not move. The share of his capital it represents halves every time his money in doubles. A buyer two instalments into a plan needs the unit to have appreciated **more than a fifth of everything he has put in** before an assignment returns him a dirham, and a buyer who has paid 60% needs a twentieth of it. Nothing about the market sets that. The share paid does, and it is the one input he controls.
+
+This is also why the two exits are not alternatives at every point. Early in a plan the assignment break-even is at its worst and the Article 11 refund is at its worst: below the retention ceiling there is no refund at all. Both exits are expensive for the same reason, and the plan that gets a buyer past both faster is the front-loaded one, which is the opposite of what the present value arithmetic at the top of this page recommends. That tension is real and this page will not resolve it for you.
+
+### The developer's fee, and the article that bounds it
+
+Every page on off-plan resale prints a developer transfer or NOC fee as a range, five hundred to five thousand dirhams, developer-set, with nothing under it, and calls it unregulated. It is not unregulated. Article 7 of the same law reads: **No Master Developer or Sub-developer may charge any fees on the sale, resale, or on any other legal disposition** of the Real Property Units which are completed or sold off-plan, **except those administrative costs which are approved by the Department**.
+
+Read plainly, that is a prohibition with one exception, and the exception is not "whatever the developer's schedule says". It is a cost the Land Department has approved. Three things follow:
+
+- The fee is bounded by an instrument, so a figure quoted to you is answerable to something. The question to put in writing is not "can you reduce it" but **on what Department approval does this figure rest**.
+- No register publishes the approved amounts, which is why no figure for the fee appears anywhere on this page or in any table on it. The arithmetic above is a floor, not an estimate, and the gap between the floor and the bill is exactly the size of this disclosure gap.
+- A developer fee that is not an approved administrative cost is prohibited rather than merely steep. That is a different conversation from a negotiation, and it is available to any buyer who has read nine lines of the law his unit is registered under.
+
+Articles 6 and 7 are as enacted in 2008. The three amending laws, Law No. (9) of 2009, Law No. (19) of 2017 and Law No. (19) of 2020, replace Articles 2 and 11 and leave both untouched.
 
 ## What escrow does, and what it does not
 

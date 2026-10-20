@@ -1012,8 +1012,29 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       JSON.stringify(tables.flatMap((t) => t.rows.map((r) => r[0])).filter((x) => /NOC|no objection/i.test(x))));
     ok("selling: the module holds no figure for the developer's NOC",
       !Object.keys(dp.DLD_EXIT).concat(Object.keys(dp.CAPS)).some((k) => /^noc$|developerNoc/i.test(k)));
-    ok("selling: the page says in terms that nothing sets the developer's NOC",
-      p.body.includes("No instrument sets it. No cap constrains it. No register publishes it."));
+    /* This check used to require the page to say "No instrument sets it. No
+       cap constrains it. No register publishes it." That sentence was wrong:
+       Article 7 of Law No. (13) of 2008 bars a developer fee on a sale or
+       resale except administrative costs the Department has approved, so an
+       instrument does constrain the fee. The page was corrected on 20
+       October 2026 and this check was corrected with it -- which is the only
+       honest way to retire a pin, since a check that outlives the claim it
+       guards starts enforcing the error.
+
+       What is required now is the part that survived (no register publishes
+       an amount, so the page prints none), the instrument that replaced the
+       part that did not, and the two cautions without which the article is
+       easy to overstate. The last line is the one that earns its keep: it
+       stops the old absolute sentence coming back by a later edit that has
+       not read the law. */
+    ok("selling: the page says no register publishes the developer's NOC",
+      p.body.includes("No register publishes it"));
+    ok("selling: the page cites the article that bounds the NOC fee",
+      p.body.includes("Article 7 of Law No. (13) of 2008"));
+    ok("selling: the page says the article names no amount",
+      p.body.includes("It names no amount"));
+    ok("selling: the page does not claim again that no instrument sets the NOC",
+      !/No instrument (sets|fixes) it\. No cap constrains it\./.test(p.body));
   }
 }
 
@@ -1298,6 +1319,69 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
     ok("off-plan: the worked example is the net yield page's unit",
       op.EXAMPLE_PLAN.price === aq.EXAMPLE.price, String(op.EXAMPLE_PLAN.price));
+
+    /* ---- the assignment exit, and the premium it has to clear ----
+
+       Three things can rot here and none of them breaks a build. The exit
+       rate can drift away from the agency rate and VAT the rest of the site
+       charges, which would make this page quietly disagree with the selling
+       page about the same commission. The printed table can be edited away
+       from the module. And the premium can stop being a break-even: it is
+       defined as the figure that exactly equals the commission charged on
+       the price plus itself, so if that identity fails the column is not a
+       break-even premium any more, whatever the heading says. */
+    ok("off-plan: the assignment exit rate is the site's agency rate grossed up for VAT",
+      op.assignmentExitRate() === aq.EXAMPLE.agencyRate * (1 + aq.FEES.vatRate),
+      String(op.assignmentExitRate()));
+
+    const agrid = op.assignmentGrid();
+    ok("off-plan: the break-even premium equals the commission it has to pay",
+      agrid.every((a) => a.premium === a.commission), JSON.stringify(agrid.map((a) => [a.premium, a.commission])));
+    ok("off-plan: the premium does not move with the share paid",
+      new Set(agrid.map((a) => a.premium)).size === 1, JSON.stringify(agrid.map((a) => a.premium)));
+    ok("off-plan: the premium's share of the seller's own money falls as he pays more",
+      agrid.every((a, i) => i === 0 || a.ofCapital < agrid[i - 1].ofCapital),
+      JSON.stringify(agrid.map((a) => a.ofCapital)));
+
+    /* The page's claim that the burden halves as the money in doubles, taken
+       off the two rows where the money in actually doubles. */
+    const ten = op.assignment(price, 0.10), twenty = op.assignment(price, 0.20);
+    ok("off-plan: the burden at ten percent paid is twice the burden at twenty",
+      Math.abs(ten.ofCapital / twenty.ofCapital - 2) < 0.01,
+      `${ten.ofCapital} vs ${twenty.ofCapital}`);
+
+    const atable = tablesIn(p.body).find((t) => /Break-even premium/i.test(t.head[2] || ""));
+    ok("off-plan: the assignment table is on the page", !!atable);
+    if (atable) {
+      ok("off-plan: the assignment table has a row per share the module grids",
+        atable.rows.length === agrid.length, `${atable.rows.length} vs ${agrid.length}`);
+      ok("off-plan: every money-in cell is the module's", same(col(atable, 1), agrid.map((a) => a.paid)));
+      ok("off-plan: every premium cell is the module's", same(col(atable, 2), agrid.map((a) => a.premium)));
+      ok("off-plan: every share-of-price cell is the module's", same(col(atable, 3), agrid.map((a) => a.ofPrice)));
+      ok("off-plan: every share-of-capital cell is the module's", same(col(atable, 4), agrid.map((a) => a.ofCapital)));
+    }
+
+    /* The lede has to state the answer, because the page's AI-visibility
+       claim on this question rests on one sentence being liftable whole. */
+    ok("off-plan: the exit section leads with the premium and both denominators",
+      p.body.includes(`AED ${op.money(agrid[0].premium)} on a AED ${op.money(price)} unit`) &&
+      p.body.includes(`${twenty.ofPrice}% of the price`) &&
+      p.body.includes(`${twenty.ofCapital}% of his own money`));
+
+    /* The developer's fee is bounded by Article 7 and published by nobody,
+       so the page may cite the bound and must still carry no figure for the
+       fee -- the same rule the selling page is held to, for the same
+       reason. A future edit that helpfully supplies "AED 500 to 5,000" here
+       because the article made the subject discussable is the exact failure
+       this check exists to catch. */
+    ok("off-plan: the page cites the article that bounds the developer's fee",
+      p.body.includes("Article 7 of the same law"));
+    ok("off-plan: no table on the page carries a line for a developer transfer or NOC fee",
+      !tablesIn(p.body).some((t) => t.rows.some((r) => /\bNOC\b|no objection|transfer fee/i.test(r[0] || ""))));
+    ok("off-plan: the module holds no figure for the developer's fee",
+      !Object.keys(op.INITIAL_SALE).some((k) => /noc|developerTransfer/i.test(k)));
+    ok("off-plan: the page says the amendments leave Articles 6 and 7 untouched",
+      p.body.includes("replace Articles 2 and 11 and leave both untouched"));
   }
 }
 

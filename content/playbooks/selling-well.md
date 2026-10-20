@@ -96,7 +96,11 @@ The line worth reading twice is the note on the mortgaged sale page: the "regist
 
 There is no figure for the developer's no objection certificate anywhere on this page, and that is deliberate.
 
-No instrument sets it. No cap constrains it. No register publishes it. Every competing page prints a range for it anyway, sourced to nothing, and that range is then repeated until it looks like a fact. This site does not publish figures it cannot attribute, so the honest statement is the one made here: the NOC fee is whatever your developer's schedule says it is on the day, it is the only line in the seller's stack with no ceiling above it, and it is therefore the first number to establish and the last one to guess at.
+No register publishes it, and every competing page prints a range for it anyway, sourced to nothing, until the range looks like a fact. This site does not publish figures it cannot attribute, so no figure for it appears here.
+
+What this page said until 20 October 2026 was that no instrument sets the fee and no cap constrains it. That was wrong, and the instrument is nine lines long. Article 7 of Law No. (13) of 2008 provides that no master developer or sub-developer may charge any fees on the sale, resale or any other legal disposition of units **which are completed or sold off-plan**, except administrative costs the Land Department has approved. The fee is therefore bounded even though the bound is unpublished, and the question to put in writing is not what the fee is but on what Department approval the figure rests. [Off-plan payment plans](/playbooks/off-plan-irr/) works through Article 7 and the exit arithmetic that sits on top of it.
+
+Two cautions, because the article is useful only if it is read accurately. It names no amount, so it is a constraint and not a ceiling you can quote back. And it sits in a law regulating the interim register, so its reach over a fully titled resale is a question for a lawyer rather than for this page, even though its own words cover units "completed or sold off-plan". What survives either caution is that the fee is the first number to establish and the last one to guess at.
 
 Ask the developer in writing before you set an asking price. Ask what the fee is, what has to be clear before it will be issued, and how long issuance takes. Service charge arrears surface at exactly this stage, which is why [due diligence before an offer](/playbooks/due-diligence-before-an-offer/) asks the buyer for the same paperwork.
 

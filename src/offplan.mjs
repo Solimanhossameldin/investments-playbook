@@ -43,7 +43,7 @@
 
    The unit is the one on the net rental yield page, so the two chain. */
 
-import { EXAMPLE, money } from "./acquisition.mjs";
+import { EXAMPLE, FEES, money } from "./acquisition.mjs";
 
 export const INSTRUMENTS = {
   law19: {
@@ -51,7 +51,7 @@ export const INSTRUMENTS = {
     url: "https://dlp.dubai.gov.ae/Legislation%20Reference/2020/Law%20No.%20(19)%20of%202020%20Amending%20Law%20No.%20(13)%20of%202008%20Regulating%20the%20Interim%20Real%20Property%20Register%20in%20the%20Emirate%20of%20Dubai.html",
   },
   law13: {
-    name: "Law No. (13) of 2008 Regulating the Interim Real Property Register in the Emirate of Dubai, Article 3",
+    name: "Law No. (13) of 2008 Regulating the Interim Real Property Register in the Emirate of Dubai, Articles 3, 6 and 7",
     url: "https://dlp.dubai.gov.ae/Legislation%20Reference/2008/Law%20No.%20(13)%20of%202008.html",
   },
   escrow: {
@@ -74,6 +74,9 @@ export const STATUTORY = [
   { key: "notCommenced", claim: "the Developer must refund all payments made by the purchasers", instrument: "law19" },
   { key: "publicOrder", claim: "are considered part of public order", instrument: "law19" },
   { key: "voidUnlessEntered", claim: "will be void unless entered in that Register", instrument: "law13" },
+  { key: "disposalRight", claim: "may be disposed of by way of sale, mortgage, or any other legal disposition", instrument: "law13" },
+  { key: "noDeveloperFee", claim: "No Master Developer or Sub-developer may charge any fees on the sale, resale, or on any other legal disposition", instrument: "law13" },
+  { key: "adminCostsOnly", claim: "except those administrative costs which are approved by the Department", instrument: "law13" },
   { key: "escrowScope", claim: "the payments made by off-plan purchasers, or by the financers of the project are deposited in an account opened with the Escrow Agent", instrument: "escrow" },
   { key: "escrowRetention", claim: "retain five percent (5%) of the total value of each Escrow Account", instrument: "escrow" },
   { key: "escrowRelease", claim: "released to the Developer one (1) year from the registration of Units", instrument: "escrow" },
@@ -188,6 +191,61 @@ export function paidByMonth(price, plan, k, months) {
   const M = Math.max(1, Math.round(months));
   const capped = Math.min(Math.max(k, 0), M);
   return (price * plan.down) / 100 + ((price * plan.build) / 100) * (capped / M);
+}
+
+/* ---- selling the contract instead of the flat ----
+
+   The buyer who cannot continue has a second exit the payment-plan pages
+   never price, and the termination pages never mention: he can sell the
+   contract. Article 6 says units entered in the Interim Property Register
+   "may be disposed of by way of sale, mortgage, or any other legal
+   disposition". That is a statutory right attaching to the registration,
+   not a concession the developer grants, and it is the reason Article 11 is
+   the branch of last resort rather than the only branch.
+
+   What it costs is the part no page computes. The agency commission on an
+   assignment is charged on the value the unit transfers at, not on the cash
+   that changes hands, and the seller has typically paid a fifth of that
+   value. So the premium he needs just to come out level is a figure set by
+   the whole price while the capital it is measured against is a fraction of
+   it -- which makes the break-even premium small as a share of the price and
+   large as a share of his own money, and twice as large at 10% paid as at
+   20%. Nothing about the market decides that. The share paid does.
+
+   Solved rather than ratioed, for the same reason the selling page solves
+   its break-even: the commission is charged on the price including the
+   premium, so the premium has to cover the commission on itself.
+
+   The developer's administrative cost is deliberately absent from these
+   figures, and Article 7 is the reason it can be named rather than guessed.
+   It bars any developer fee on a resale except costs the Land Department has
+   approved, so the line is bounded by an instrument even though no register
+   publishes the bound. Every premium below is therefore a floor. */
+
+export const ASSIGNMENT_SHARES = [0.10, 0.20, 0.40, 0.60];
+
+/* The rate the exit commission is actually charged at: the agency rate the
+   rest of the site uses, grossed up for VAT, both taken from the acquisition
+   module so the entry and exit pages cannot disagree. */
+export function assignmentExitRate() {
+  return EXAMPLE.agencyRate * (1 + FEES.vatRate);
+}
+
+export function assignment(price = EXAMPLE.price, share = 0.20) {
+  const rate = assignmentExitRate();
+  const premium = Math.round((price * rate) / (1 - rate));
+  const paid = Math.round(price * share);
+  return {
+    price, share, paid, rate, premium,
+    transfer: price + premium,
+    commission: Math.round((price + premium) * rate),
+    ofPrice: Number(((premium / price) * 100).toFixed(2)),
+    ofCapital: Number(((premium / paid) * 100).toFixed(2)),
+  };
+}
+
+export function assignmentGrid(price = EXAMPLE.price, shares = ASSIGNMENT_SHARES) {
+  return shares.map((x) => assignment(price, x));
 }
 
 export { money };

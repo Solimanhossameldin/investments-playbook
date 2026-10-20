@@ -24,12 +24,17 @@
    appear on no competing page: the AED 315 registrar fee, and the sentence
    that waives it when the buyer registers a mortgage the same day.
 
-   And the developer's NOC fee is set by nobody. No instrument fixes it, no
-   cap constrains it, and no register publishes it. It is therefore absent
-   from the arithmetic here, and the page says it is absent and why. It is
-   the only line in the seller's stack with no ceiling, which is the reason
-   to ask for it in writing before setting an asking price rather than after
-   agreeing one. */
+   And the developer's NOC fee is published by nobody, which is not the same
+   as being set by nobody. Article 7 of Law No. (13) of 2008 bars a master or
+   sub-developer from charging any fee on a sale or resale except
+   administrative costs the Land Department has approved, so the line is
+   bounded by an instrument whose bound no register prints. The page carried
+   the stronger claim -- no instrument, no cap -- until 20 October 2026, and
+   now carries the article and the two cautions that go with it: it names no
+   amount, and it sits in a law regulating the interim register. The fee is
+   therefore still absent from the arithmetic here, for want of a figure
+   rather than for want of a constraint, and the instrument and the exit
+   arithmetic built on it live on the off-plan page. */
 
 import { EXAMPLE as BUY, acquisition, mortgageCosts, operating, FEES, money } from "./acquisition.mjs";
 
