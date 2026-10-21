@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-21T14:53:42.118Z",
+ "fetchedAt": "2026-10-21T19:08:10.981Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -183,9 +183,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
    "published": "2026-10-13T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Minutes of the Money Market Committee meeting – September 2026",
@@ -273,9 +273,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
@@ -546,51 +546,6 @@
    "sourceLabel": "Speeches",
    "category": "rates",
    "feed": "fed-speeches"
-  },
-  {
-   "title": "SEC Charges Meyer Global Management and Its CEO With Defrauding Retail Investors in Private Funds That Held Interests in SpaceX and Other Pre-IPO Securities",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-98-sec-charges-meyer-global-management-its-ceo-defrauding-retail-investors-private-funds-held-interests",
-   "published": "2026-09-30T18:30:01.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "Christine Lagarde: Interview with La Croix",
-   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in260930~10084a5f3d.en.html",
-   "published": "2026-09-30T17:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "SEC Charges Two Individuals With Orchestrating Fraud Scheme That Targeted Veterans",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-97-sec-charges-two-individuals-orchestrating-fraud-scheme-targeted-veterans",
-   "published": "2026-09-30T16:42:15.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "SEC Proposes Amendments to Expand Responsible Retailization of Private Markets",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-96-sec-proposes-amendments-expand-responsible-retailization-private-markets",
-   "published": "2026-09-30T15:45:00.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "Isabel Schnabel: Monetary policy in a world of overlapping shocks",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260930_1~7c6c120482.en.html",
-   "published": "2026-09-30T15:45:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
