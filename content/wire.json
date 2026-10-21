@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-21T19:08:10.981Z",
+ "fetchedAt": "2026-10-21T22:21:55.416Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -537,15 +537,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "Cook, The Dual Mandate in Rural America",
-   "url": "https://www.federalreserve.gov/newsevents/speech/cook20260930a.htm",
-   "published": "2026-09-30T19:25:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
   }
  ]
 }
