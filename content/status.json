@@ -1,6 +1,42 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-10-21T23:59:08.170Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-10-21, so there is nothing to send.",
+   "ranAt": "2026-10-21T23:59:08.101Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-10-21T23:59:08.036Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-10-21T23:59:07.981Z"
+  },
+  {
+   "job": "fetch-photos",
+   "status": "ok",
+   "detail": "4 of 4 photographs published",
+   "ranAt": "2026-10-21T23:59:07.929Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "partial",
+   "detail": "10 figures refreshed. Notes: rates DGS2 Invalid time value; DGS10 Invalid time value; DGS30 Invalid time value; DFII10 Invalid time value; T10YIE Invalid time value; MORTGAGE30US Invalid time value; macro DCOILWTICO Invalid time value; DTWEXBGS Invalid time value; CPIAUCSL Invalid time value",
+   "ranAt": "2026-10-21T23:59:07.328Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "ok",
    "detail": "57 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
@@ -203,42 +239,6 @@
    "status": "ok",
    "detail": "68 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-10-20T07:34:45.457Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "67 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-10-20T02:07:59.989Z"
-  },
-  {
-   "job": "pipeline",
-   "status": "ok",
-   "detail": "update=success, deploy=success, submit=success",
-   "ranAt": "2026-10-20T00:18:08.783Z"
-  },
-  {
-   "job": "indexnow",
-   "status": "ok",
-   "detail": "submitted 150 urls, HTTP 200",
-   "ranAt": "2026-10-20T00:17:59.945Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-10-20T00:17:27.102Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-10-20, so there is nothing to send.",
-   "ranAt": "2026-10-20T00:17:27.031Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-10-20T00:17:26.967Z"
   }
  ]
 }
