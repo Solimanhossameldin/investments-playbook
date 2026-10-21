@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "pipeline",
+   "status": "ok",
+   "detail": "update=success, deploy=success, submit=success",
+   "ranAt": "2026-10-21T23:59:44.295Z"
+  },
+  {
    "job": "indexnow",
    "status": "ok",
    "detail": "submitted 150 urls, HTTP 200",
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "4 of 4 photographs published",
    "ranAt": "2026-10-20T08:24:17.090Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-10-20T08:24:16.597Z"
   }
  ]
 }
