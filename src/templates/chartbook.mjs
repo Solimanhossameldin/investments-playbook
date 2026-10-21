@@ -27,7 +27,7 @@ const NOTES = {
     ],
     links: [
       ["/playbooks/currency-risk-and-the-peg/", "Currency risk and the peg", "What the dirham's peg does to you, in both directions."],
-      ["/playbooks/mortgage-vs-cash/", "Mortgage versus cash", "When leverage helps and the point at which it stops."],
+      ["/playbooks/mortgage-vs-cash/", "Mortgage versus cash in Dubai", "The break-even mortgage rate, and the point at which leverage stops helping."],
     ],
   },
   curve: {

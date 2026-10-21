@@ -3835,5 +3835,162 @@ ok("every calculator points at a playbook that exists",
   }
 }
 
+/* ---- mortgage versus cash, and the break-even rate ----
+
+   The page's whole claim is a threshold: borrowing raises the return on the
+   buyer's own money below one mortgage rate and lowers it above. Four things
+   could rot without a browser noticing.
+
+   The threshold could drift from the module, which is the ordinary table
+   check. The two derivations could stop agreeing -- the module solves the
+   two-sided equation numerically AND prints a closed form, and the page
+   publishes the closed form as the thing a reader can reproduce, so the page
+   is only entitled to print it while the two still give the same number.
+
+   The ORDERING is the finding, and it is the part a well-meaning edit breaks.
+   The page says the threshold sits below all three published yields and that
+   it barely moves with the size of the loan. Both are behaviour, not
+   arithmetic the table can vouch for: a change to the fee schedule or the
+   service charge could leave every cell internally consistent and the claim
+   false. So both are checked against the module directly.
+
+   And the two rates the page is careful to separate -- the rate at which
+   leverage stops helping, and the higher rate at which the rent stops
+   covering the interest -- have to stay in that order and stay distinct, or
+   the paragraph distinguishing them is describing something that is not
+   there. */
+{
+  const p = playbooks.find((x) => x.slug === "mortgage-vs-cash");
+  ok("leverage: the page exists", !!p);
+  if (p) {
+    const B = mg.breakEvenRate();
+    const tables = tablesIn(p.body);
+    const prose = `${p.summary} ${p.body} ${p.formula}`;
+
+    /* The worked example is the net rental yield page's flat, so the two
+       pages chain and the threshold is a quotient of figures sourced there. */
+    ok("leverage: the example unit is the acquisition example",
+      p.body.includes(`AED ${aq.money(aq.EXAMPLE.price)}`) && p.body.includes(`AED ${aq.money(B.noi)}`),
+      `${aq.EXAMPLE.price} / ${B.noi}`);
+
+    /* 1. The threshold itself, in the lede, the finding and the formula. */
+    ok("leverage: the lede states the threshold", p.body.includes(`below ${mg.pctText(B.ratePct)}`), mg.pctText(B.ratePct));
+    ok("leverage: the finding carries the threshold", p.summary.includes(mg.pctText(B.ratePct)), mg.pctText(B.ratePct));
+    ok("leverage: both derivations give the same rate",
+      B.ratePct === B.closedFormPct, `${B.ratePct} vs ${B.closedFormPct}`);
+
+    /* 2. The ladder of yields, against the module. */
+    const ladder = tables.find((t) => /Overstates the threshold/i.test(t.head[2] || ""));
+    ok("leverage: the yield ladder table is on the page", !!ladder);
+    if (ladder) {
+      ok("leverage: every yield in the ladder is the module's",
+        same(col(ladder, 1), [B.grossPct, B.onPricePct, B.netPct, B.ratePct]),
+        JSON.stringify(col(ladder, 1)));
+      ok("leverage: every overstatement is the module's",
+        same(col(ladder, 2).slice(0, 3), [B.overstatedByGross, B.overstatedByOnPrice, B.overstatedByNet]),
+        JSON.stringify(col(ladder, 2)));
+    }
+
+    /* 3. The rate grid, against the module, including the break-even row,
+       whose money is taken at the exact threshold rather than the printed
+       one. */
+    const grid = tables.find((t) => /Return on your own money/i.test(t.head[3] || ""));
+    ok("leverage: the rate grid is on the page", !!grid);
+    if (grid) {
+      const rows = mg.LEVERAGE_RATES.map((r) => mg.leverage(r));
+      const want = [];
+      for (const r of rows) {
+        if (r.ratePct > B.ratePct && !want.some((w) => w[0] === B.ratePct)) {
+          want.push([B.ratePct, B.interestAtRate, B.afterInterestAtRate, B.cashReturnPct]);
+        }
+        want.push([r.ratePct, r.interest, r.afterInterest, r.leveredReturn]);
+      }
+      ok("leverage: the grid has a row per rate the module grids, plus the threshold",
+        grid.rows.length === want.length, `${grid.rows.length} vs ${want.length}`);
+      ok("leverage: every rate cell is the module's", same(col(grid, 0), want.map((w) => w[0])));
+      ok("leverage: every interest cell is the module's", same(col(grid, 1), want.map((w) => w[1])));
+      ok("leverage: every income-after-interest cell is the module's", same(col(grid, 2), want.map((w) => w[2])));
+      ok("leverage: every return cell is the module's", same(col(grid, 3), want.map((w) => w[3])));
+      /* The verdict column has to agree with the module's own test, or the
+         table is telling the reader the opposite of the arithmetic. */
+      const verdicts = grid.rows.map((r) => /Borrowing wins/i.test(r[4]));
+      ok("leverage: every verdict cell agrees with the module",
+        want.every((w, i) => (w[0] === B.ratePct ? /Level/i.test(grid.rows[i][4]) : verdicts[i] === (w[0] < B.ratePct))),
+        JSON.stringify(grid.rows.map((r) => [r[0], r[4]])));
+    }
+
+    /* 4. The claim that the threshold hardly moves with the loan. Behaviour:
+       the page may only make it while the spread across every band it prints
+       is at most one basis point. */
+    const byLtv = mg.breakEvenByLtv();
+    const spread = Math.max(...byLtv.map((r) => r.ratePct)) - Math.min(...byLtv.map((r) => r.ratePct));
+    ok("leverage: the threshold really is flat across the loan to value bands",
+      Number(spread.toFixed(2)) <= 0.01, `${spread.toFixed(2)} points`);
+    ok("leverage: the page only claims one basis point while that is true",
+      !/One basis point across a sixty per cent swing/.test(p.body) || Number(spread.toFixed(2)) <= 0.01);
+    const ltvTable = tables.find((t) => /Break-even rate/i.test(t.head[3] || ""));
+    ok("leverage: the loan to value table is on the page", !!ltvTable);
+    if (ltvTable) {
+      ok("leverage: the table has a row per band the module grids",
+        ltvTable.rows.length === byLtv.length, `${ltvTable.rows.length} vs ${byLtv.length}`);
+      ok("leverage: every band cell is the module's", same(col(ltvTable, 0), byLtv.map((r) => r.ltv)));
+      ok("leverage: every loan cell is the module's", same(col(ltvTable, 1), byLtv.map((r) => r.loan)));
+      ok("leverage: every money-in cell is the module's", same(col(ltvTable, 2), byLtv.map((r) => r.equityIn)));
+      ok("leverage: every break-even cell is the module's", same(col(ltvTable, 3), byLtv.map((r) => r.ratePct)));
+    }
+
+    /* 5. The two rates stay distinct and in order. The page spends a
+       paragraph on the difference between them; if they collide or invert,
+       that paragraph is describing nothing. */
+    ok("leverage: losing cover is dearer than losing the leverage advantage",
+      B.coverLostPct > B.ratePct, `${B.coverLostPct} vs ${B.ratePct}`);
+    ok("leverage: the page carries the rate at which the rent stops covering interest",
+      p.body.includes(mg.pctText(B.coverLostPct)), mg.pctText(B.coverLostPct));
+
+    /* 6. The bands are the consolidated text, not the superseded 2013 ones.
+       This page carried 75/65/60 against mortgage capacity's 80/70/60 for
+       weeks, sourced to a commercial summary, so the check is that the two
+       pages agree with the module and that the old figures appear only where
+       the page says they are the old figures. */
+    const bandTable = tables.find((t) => /Maximum loan to value/i.test(t.head[1] || ""));
+    ok("leverage: the loan to value band table is present", !!bandTable);
+    if (bandTable) {
+      const want = [
+        mg.ltvCapRate({ status: "expatriate", first: true, price: mg.CAPS.bandPrice - 1 }),
+        mg.ltvCapRate({ status: "expatriate", first: true, price: mg.CAPS.bandPrice + 1 }),
+        mg.ltvCapRate({ status: "expatriate", first: false }),
+        mg.CAPS.ltv.offPlan,
+      ].map((r) => Math.round(r * 100));
+      ok("leverage: every band cell is the module's", same(col(bandTable, 1), want), JSON.stringify(col(bandTable, 1)));
+    }
+    ok("leverage: the superseded bands appear only as the superseded bands",
+      !/\b75%, 65% and 60%\b/.test(p.body) || /original 2013 text/.test(p.body));
+
+    /* 7. The claims that carry the regulation's wording carry it verbatim,
+       and the page cites the article rather than a summary of it. */
+    for (const key of ["dbr", "ltvExpatFirst", "ltvExpatSecond", "ltvOffPlan", "term", "incomeMultiple"]) {
+      const c = mg.STATUTORY.find((x) => x.key === key);
+      ok(`leverage: carries Article 3 verbatim on ${key}`, prose.includes(c.claim), c.claim.slice(0, 48));
+    }
+    ok("leverage: cites Article 3 itself, not a commercial summary",
+      (p.sources || []).some((x) => x.url === mg.INSTRUMENTS.cbuaeMortgage.url));
+    ok("leverage: no commercial mortgage summary is cited for the caps",
+      !(p.sources || []).some((x) => /bank-uae\.com|grovy\.ae/.test(x.url || "")),
+      JSON.stringify((p.sources || []).map((x) => x.url)));
+
+    /* 8. The reason the mortgage's own fees sit in the denominator is the
+       page's mechanism, and it is the thing a reader checks. It has to be
+       stated, and the fees have to actually be in there. */
+    ok("leverage: the page says why the mortgage fees cannot be borrowed",
+      /a fee is not the property/.test(p.body));
+    ok("leverage: the money-in figure really includes both fee stacks",
+      B.equityIn === aq.EXAMPLE.price - B.loan + aq.acquisition().total + B.mortgageFees,
+      `${B.equityIn}`);
+    ok("leverage: the page prints the money in on both sides",
+      p.body.includes(`AED ${aq.money(B.equityIn)}`) && p.body.includes(`AED ${aq.money(B.cashIn)}`));
+  }
+}
+
+
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);

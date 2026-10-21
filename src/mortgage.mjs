@@ -209,3 +209,120 @@ export function countableRent(rent = aq.EXAMPLE.rent) {
 
 export const money = (n) => Number(Math.round(n)).toLocaleString("en-US");
 export const pctText = (n) => `${Number(n).toFixed(2)}%`;
+
+/* ---- the break-even mortgage rate ----
+
+   Every page on cash-versus-mortgage states the same rule: borrow when the
+   rental yield beats the mortgage rate. The rule is the right shape and
+   every published version of it uses the wrong yield, because the two sides
+   of the comparison do not have the same denominator.
+
+   The cash buyer's money is the price plus the whole acquisition stack. The
+   borrower's money is the deposit plus that same stack plus the mortgage's
+   own registration, trustee and title deed. Those fees cannot be borrowed --
+   the loan to value cap is a percentage of the value of the property, and a
+   fee is not the property -- so they sit in the borrower's denominator and
+   in nobody's loan. Setting the two returns equal and solving gives a
+   threshold rate, and the algebra collapses to one line:
+
+     break-even rate = net yield on total cash outlay
+                       x (1 - mortgage fees / loan)
+
+   Two things fall out of that form.
+
+   The threshold is BELOW every yield a reader is offered. Gross yield
+   overstates it by the running costs; net yield on the price alone still
+   overstates it by the acquisition stack; and even net yield on total outlay
+   overstates it, by the mortgage's own fees. Between the threshold and the
+   nearest published yield there is a band of mortgage rates where the
+   standard advice says borrow and the arithmetic says borrowing lowers the
+   return on the buyer's own money.
+
+   And the threshold barely moves with the size of the loan. The first factor
+   does not contain the loan at all; the second contains it only through the
+   fixed part of the mortgage fee schedule, spread over a larger balance. A
+   buyer who borrows more does not get a more forgiving break-even rate, which
+   is the opposite of how leverage is usually described. */
+
+export const LEVERAGE_RATES = [3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0];
+
+/* The return on the buyer's own money, both ways, at one interest rate.
+   Interest only: a repayment instalment also returns capital, which is
+   saving and not cost, and netting it against income would overstate the
+   drag. The page says so in as many words. */
+export function leverage(ratePct, i = aq.EXAMPLE) {
+  const o = aq.operating(i);
+  const a = aq.acquisition(i);
+  const m = aq.mortgageCosts(i);
+  const cashIn = i.price + a.total;
+  const equityIn = i.price - m.loan + a.total + m.total;
+  const interest = (ratePct / 100) * m.loan;
+  const pct = (n) => Number((n * 100).toFixed(2));
+  return {
+    ratePct,
+    loan: m.loan,
+    cashIn,
+    equityIn,
+    interest: Math.round(interest),
+    afterInterest: Math.round(o.net - interest),
+    cashReturn: pct(o.net / cashIn),
+    leveredReturn: pct((o.net - interest) / equityIn),
+    leverageHelps: (o.net - interest) / equityIn > o.net / cashIn,
+  };
+}
+
+/* The rate at which the two returns are equal, the yields a reader might
+   wrongly compare against it, and the band between. */
+export function breakEvenRate(i = aq.EXAMPLE) {
+  const o = aq.operating(i);
+  const a = aq.acquisition(i);
+  const m = aq.mortgageCosts(i);
+  const y = aq.yields(i);
+  const cashIn = i.price + a.total;
+  const equityIn = i.price - m.loan + a.total + m.total;
+  const cashReturn = o.net / cashIn;
+  const rate = (o.net - cashReturn * equityIn) / m.loan;
+  const pct = (n) => Number((n * 100).toFixed(2));
+  /* The same number by the closed form. The two agreeing is the check that
+     the derivation in the comment above is the one the grid is built on. */
+  const closed = cashReturn * (1 - m.total / m.loan);
+  return {
+    ratePct: pct(rate),
+    closedFormPct: pct(closed),
+    /* The interest and the income after it AT THE EXACT threshold, not at
+       the threshold rounded to two places. At a printed 4.30% the return
+       comes out a point of a basis point above the cash return, so a table
+       row that prints the rounded rate beside unrounded money has to take
+       its money from here or the row will not reconcile. */
+    interestAtRate: Math.round(rate * m.loan),
+    afterInterestAtRate: Math.round(o.net - rate * m.loan),
+    cashReturnPct: pct(cashReturn),
+    grossPct: y.gross,
+    onPricePct: y.onPrice,
+    netPct: y.net,
+    /* How far each published yield overstates the threshold, in points. */
+    overstatedByGross: Number((y.gross - pct(rate)).toFixed(2)),
+    overstatedByOnPrice: Number((y.onPrice - pct(rate)).toFixed(2)),
+    overstatedByNet: Number((y.net - pct(rate)).toFixed(2)),
+    /* The rate at which the rent stops covering the interest at all. Past
+       this the shortfall is funded from salary, whatever the asset does. */
+    coverLostPct: pct(o.net / m.loan),
+    loan: m.loan,
+    equityIn,
+    cashIn,
+    mortgageFees: m.total,
+    noi: o.net,
+  };
+}
+
+/* The threshold against the size of the loan, which is the claim that it
+   hardly moves. Reported for the loan to value bands a completed purchase
+   can actually use. */
+export const LEVERAGE_LTVS = [0.50, 0.60, 0.70, 0.75, 0.80];
+
+export function breakEvenByLtv(i = aq.EXAMPLE) {
+  return LEVERAGE_LTVS.map((ltv) => {
+    const b = breakEvenRate({ ...i, ltv });
+    return { ltv: Math.round(ltv * 100), loan: b.loan, equityIn: b.equityIn, ratePct: b.ratePct };
+  });
+}
