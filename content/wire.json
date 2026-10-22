@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-22T15:57:38.596Z",
+ "fetchedAt": "2026-10-22T19:54:10.103Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -465,33 +465,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "Bowman, Modernizing Financial Regulation: Initial Observations from eSLR",
-   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20261001a.htm",
-   "published": "2026-10-01T19:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
-  },
-  {
-   "title": "Jefferson, The U.S. Economy and Monetary Policy",
-   "url": "https://www.federalreserve.gov/newsevents/speech/jefferson20261001a.htm",
-   "published": "2026-10-01T17:30:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
-  },
-  {
-   "title": "SEC Proposal Would Address How Investment Advisers and Funds Can Custody Crypto Assets Under the Federal Securities Laws",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-100-sec-proposal-would-address-how-investment-advisers-funds-can-custody-crypto-assets-under-federal",
-   "published": "2026-10-01T16:16:07.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
   }
  ]
 }
