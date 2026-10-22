@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-22T19:54:10.103Z",
+ "fetchedAt": "2026-10-22T22:59:43.121Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Regulators unveil plans to simplify Senior Manager and Certification Regime",
+   "url": "https://www.bankofengland.co.uk/news/2026/october/regulators-unveil-plans-to-simplify-senior-manager-and-certification-regime",
+   "published": "2026-10-22T20:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
   {
    "title": "Piero Cipollone: Pontes and Appia: unlocking opportunities for banks",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261021_1~d190f2c349.en.pdf",
