@@ -3992,5 +3992,119 @@ ok("every calculator points at a playbook that exists",
 }
 
 
+/* ---- the cap rate and the one input that needs no rent ----
+
+   This page's finding is two identities, and both are the kind of claim that
+   looks fine in a browser long after it has stopped being true.
+
+   The first is that the service charge takes its own rate divided by the
+   price per square foot off the cap rate, which on the example flat is 0.06
+   points per dirham. That figure is a quotient of the example's own area and
+   price, so an edit to either has to move the prose. The second is that the
+   rent premium a dearer-to-run building needs equals its service charge
+   premium, stated on two named buildings in one district at rates the Land
+   Department approved -- so a row added to or corrected in
+   content/service-charges.json moves the table and the sentence, and fails
+   here if the prose did not move with them.
+
+   The ORDERING is the argument and it is checked as behaviour rather than as
+   arithmetic: the whole reason this page exists beside the net yield page is
+   that a cap rate's denominator carries no fee stack, so its drag per dirham
+   has to be the larger of the two. A change to the fee schedule could leave
+   every cell on both pages internally consistent and that sentence false. */
+{
+  const p = playbooks.find((x) => x.slug === "cap-rate");
+  ok("cap rate: the page exists", !!p);
+  if (p) {
+    const D = aq.capRateDrag(SERVICE_CHARGES.records);
+    const P = aq.areaPair(SERVICE_CHARGES.records, "Burj Khalifa District");
+    const tables = tablesIn(p.body);
+    const prose = `${p.summary} ${p.body} ${p.formula}`;
+
+    ok("cap rate: the drag is computable", !!D);
+    ok("cap rate: the district pair is computable", !!P);
+
+    /* The page is one of the Dubai property pages whose FAQ question is
+       declared rather than generated, and the declared question is the only
+       reason the answer engine sees anything better than "what is the short
+       answer". If it goes, the page silently falls back. */
+    ok("cap rate: declares its own question", !!p.question && p.question.endsWith("?"), p.question);
+
+    /* 1. The two figures the first identity rests on. */
+    ok("cap rate: prints the example price per square foot",
+      prose.includes(`AED ${D.pricePerSqft.toLocaleString("en-US", { minimumFractionDigits: 2 })} a foot`),
+      String(D.pricePerSqft));
+    ok("cap rate: prints the points per dirham it computed",
+      prose.includes(`${D.pointsPerDirham} points`), String(D.pointsPerDirham));
+
+    /* 2. The published range table, cell by cell against the module. */
+    const rangeTable = tables.find((t) => /Points of cap rate/i.test(t.head[4] || ""));
+    ok("cap rate: the published range table is present", !!rangeTable);
+    if (rangeTable) {
+      const want = [D.low, D.high, D.spread];
+      ok("cap rate: the range table names the buildings it computed",
+        same(rangeTable.rows.slice(0, 2).map((r) => r[0]), [D.low.project, D.high.project]),
+        JSON.stringify(rangeTable.rows.map((r) => r[0])));
+      ok("cap rate: the range table names the area of each building",
+        same(rangeTable.rows.slice(0, 2).map((r) => r[1]), [D.low.area, D.high.area]),
+        JSON.stringify(rangeTable.rows.map((r) => r[1])));
+      ok("cap rate: the range table matches the published rates",
+        same(col(rangeTable, 2), want.map((r) => r.psf)), JSON.stringify(col(rangeTable, 2)));
+      ok("cap rate: the range table matches the computed service charges",
+        same(col(rangeTable, 3), want.map((r) => r.serviceCharge)), JSON.stringify(col(rangeTable, 3)));
+      ok("cap rate: the range table matches the computed points of cap rate",
+        same(col(rangeTable, 4), want.map((r) => Number(r.points.toFixed(2)))),
+        JSON.stringify(col(rangeTable, 4)));
+    }
+    ok("cap rate: says how many buildings the range is drawn from",
+      prose.includes(`${D.count} buildings`), String(D.count));
+
+    /* 3. The second identity, on the named pair. The rent gap and the rate
+       gap are the same number in different units, and the page says so, so
+       both have to be the module's or the sentence is arithmetic fiction. */
+    if (P) {
+      ok("cap rate: names both buildings in the district pair",
+        prose.includes(P.low.project) && prose.includes(P.high.project),
+        `${P.low.project} / ${P.high.project}`);
+      ok("cap rate: prints both approved rates for the pair",
+        prose.includes(`AED ${P.low.psf} a foot`) && prose.includes(`AED ${P.high.psf} a foot`),
+        `${P.low.psf} / ${P.high.psf}`);
+      ok("cap rate: prints the rate gap the pair implies",
+        prose.includes(`AED ${P.psf} per square foot more rent`), String(P.psf));
+      ok("cap rate: prints the rent gap in dirhams a year",
+        prose.includes(`AED ${aq.money(P.rent)} a year`), String(P.rent));
+      ok("cap rate: the rent premium really is the service charge premium",
+        P.rent === Math.round(aq.EXAMPLE.sqft * P.psf), `${P.rent}`);
+      ok("cap rate: the pair is inside one area",
+        P.area === "Burj Khalifa District" && P.count >= 2, `${P.area} n=${P.count}`);
+    }
+
+    /* 4. The reader is sent to the table that carries the source and the
+       retrieval date, because that is what makes the figures checkable. */
+    ok("cap rate: the page sends the reader to the published table",
+      p.body.includes("](/service-charges/)"));
+
+    /* 5. The behaviour. A cap rate divides by the price; a net yield divides
+       by the price plus the whole transaction stack. So the same dirham has
+       to cost MORE of a cap rate than of a net yield, and the page's claim
+       that the gap between 0.06 and 0.056 is the fee stack depends on it. */
+    const netDrag = (aq.EXAMPLE.sqft / (aq.EXAMPLE.price + aq.acquisition().total)) * 100;
+    ok("cap rate: a dirham costs more cap rate than net yield",
+      D.pointsPerDirham > netDrag, `${D.pointsPerDirham} vs ${netDrag.toFixed(4)}`);
+    ok("cap rate: the gap between the two is the fee stack and nothing else",
+      Math.abs((aq.EXAMPLE.sqft / aq.EXAMPLE.price - aq.EXAMPLE.sqft / (aq.EXAMPLE.price + aq.acquisition().total)) * 100
+        - (D.pointsPerDirham - netDrag)) < 1e-9);
+
+    /* 6. An area with a single published row supports no pair, and the
+       function has to say so rather than compare a building with itself. */
+    ok("cap rate: a one-building area yields no pair",
+      aq.areaPair(SERVICE_CHARGES.records, "Downtown Dubai") === null ||
+      aq.areaPair(SERVICE_CHARGES.records, "Downtown Dubai").count >= 2);
+    ok("cap rate: an unknown area yields no pair",
+      aq.areaPair(SERVICE_CHARGES.records, "Nowhere At All") === null);
+  }
+}
+
+
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);

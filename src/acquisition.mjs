@@ -333,3 +333,78 @@ export function spreadVersusStack(records, i = EXAMPLE) {
   const t = drag(i).transaction;
   return Number((a.spreadPoints / t).toFixed(1));
 }
+
+/* ---- the cap rate's own relationship with the service charge ----
+
+   The net yield figures above all divide by the full cash outlay, so they
+   carry the fee stack in the denominator. A cap rate does not: its
+   denominator is the price alone. That makes the service charge's effect on
+   a cap rate simpler than its effect on anything else on this site, and the
+   simplicity is the finding.
+
+   Both the charge and the price are quoted per square foot, so the floor
+   area cancels and the charge removes exactly its own rate divided by the
+   price per square foot. No rent, no occupancy, no fee schedule enters it.
+   On the example flat that is 900 / 1,500,000, which is 0.06 points per
+   dirham per square foot, exactly -- and the reason it is 0.06 here and
+   0.056 on the net yield page is the fee stack, which is the whole
+   difference between the two measures stated as a number.
+
+   The second identity is the one worth the page. Two buildings at the same
+   price show the same cap rate only if their net incomes match, so the rent
+   premium the dearer-to-run building needs is exactly its service charge
+   premium -- per square foot, one for one, with no price term at all. */
+export function capRateDrag(records, i = EXAMPLE) {
+  const rs = (records || []).filter((r) => Number.isFinite(Number(r.psf)));
+  if (!rs.length) return null;
+  const pointsPerDirham = Number(((i.sqft / i.price) * 100).toFixed(4));
+  const at = (psf) => ({
+    psf: Number(psf),
+    serviceCharge: Math.round(i.sqft * Number(psf)),
+    points: Number((Number(psf) * pointsPerDirham).toFixed(4)),
+  });
+  const sorted = [...rs].sort((a, b) => a.psf - b.psf || String(a.project).localeCompare(String(b.project)));
+  const low = sorted[0];
+  const high = sorted[sorted.length - 1];
+  return {
+    count: sorted.length,
+    pricePerSqft: Number((i.price / i.sqft).toFixed(2)),
+    pointsPerDirham,
+    low: { project: low.project, area: low.area, period: low.period, ...at(low.psf) },
+    high: { project: high.project, area: high.area, period: high.period, ...at(high.psf) },
+    spread: {
+      psf: Number((high.psf - low.psf).toFixed(2)),
+      ...at(Number((high.psf - low.psf).toFixed(2))),
+    },
+  };
+}
+
+/* The cheapest and dearest published buildings inside ONE area, and the rent
+   the dearer one has to find to stand level on the cap rate.
+
+   Stated per area deliberately. Every competing page averages a community and
+   stops, and the averaging is what this refutes: the approval is per project,
+   so two towers in one district can sit a long way apart and the gap is a
+   rent requirement rather than a matter of taste. Returns null for an area
+   with fewer than two published rows, so a thinning dataset drops the claim
+   instead of making one up. */
+export function areaPair(records, area, i = EXAMPLE) {
+  const rs = (records || [])
+    .filter((r) => r.area === area && Number.isFinite(Number(r.psf)))
+    .sort((a, b) => a.psf - b.psf || String(a.project).localeCompare(String(b.project)));
+  if (rs.length < 2) return null;
+  const d = capRateDrag(records, i);
+  const low = rs[0];
+  const high = rs[rs.length - 1];
+  const psf = Number((high.psf - low.psf).toFixed(2));
+  return {
+    area,
+    count: rs.length,
+    low: { project: low.project, psf: Number(low.psf), serviceCharge: Math.round(i.sqft * low.psf) },
+    high: { project: high.project, psf: Number(high.psf), serviceCharge: Math.round(i.sqft * high.psf) },
+    psf,
+    /* The rent premium is the service charge premium, one for one. */
+    rent: Math.round(i.sqft * psf),
+    points: Number((psf * d.pointsPerDirham).toFixed(4)),
+  };
+}
