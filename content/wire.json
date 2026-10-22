@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-22T11:16:39.505Z",
+ "fetchedAt": "2026-10-22T15:57:38.596Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -183,9 +183,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
    "published": "2026-10-13T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the Money Market Committee meeting – September 2026",
@@ -273,9 +273,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
@@ -492,51 +492,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Isabel Schnabel: Central banks on-chain",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261001_1~a0be67193b.en.pdf",
-   "published": "2026-10-01T15:30:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "SEC’s Division of Examinations Announces New Exam Handbook",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-99-secs-division-examinations-announces-new-exam-handbook",
-   "published": "2026-10-01T15:03:35.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "Waller, The Data Version of Godzilla versus Kong: FRED Takes on AI",
-   "url": "https://www.federalreserve.gov/newsevents/speech/waller20261001a.htm",
-   "published": "2026-10-01T14:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
-  },
-  {
-   "title": "Christine Lagarde: Where AI risks meet",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261001~cf3c630379.en.html",
-   "published": "2026-10-01T13:30:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Minutes of the Meeting of the Court of Directors held on 16 July 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/july/court-minutes-16-july-2026",
-   "published": "2026-10-01T13:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
