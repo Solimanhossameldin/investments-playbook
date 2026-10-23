@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-23T20:06:11.074Z",
+ "fetchedAt": "2026-10-23T23:09:06.892Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -447,15 +447,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Federal Reserve Board announces approval of application by Fleur Capital Corporation",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20261002a.htm",
-   "published": "2026-10-02T20:45:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
   }
  ]
 }
