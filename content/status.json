@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "indexnow",
+   "status": "ok",
+   "detail": "submitted 150 urls, HTTP 200",
+   "ranAt": "2026-10-23T23:50:59.612Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "4 of 4 photographs published",
    "ranAt": "2026-10-22T08:29:56.364Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-10-22T08:29:55.847Z"
   }
  ]
 }
