@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-23T16:40:27.371Z",
+ "fetchedAt": "2026-10-23T20:06:11.074Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -452,15 +452,6 @@
    "title": "Federal Reserve Board announces approval of application by Fleur Capital Corporation",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20261002a.htm",
    "published": "2026-10-02T20:45:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
-  },
-  {
-   "title": "Federal Reserve Board announces it will extend, until November 4, the comment period on its proposal to modernize Regulation O",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20261002a.htm",
-   "published": "2026-10-02T20:00:00.000Z",
    "source": "Federal Reserve",
    "sourceLabel": "Press releases",
    "category": "rates",
