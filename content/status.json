@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "fetch-wire",
+   "status": "ok",
+   "detail": "50 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-10-23T11:56:04.408Z"
+  },
+  {
    "job": "pipeline",
    "status": "ok",
    "detail": "update=success, deploy=success, submit=success",
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "4 of 4 photographs published",
    "ranAt": "2026-10-21T23:59:07.929Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "partial",
-   "detail": "10 figures refreshed. Notes: rates DGS2 Invalid time value; DGS10 Invalid time value; DGS30 Invalid time value; DFII10 Invalid time value; T10YIE Invalid time value; MORTGAGE30US Invalid time value; macro DCOILWTICO Invalid time value; DTWEXBGS Invalid time value; CPIAUCSL Invalid time value",
-   "ranAt": "2026-10-21T23:59:07.328Z"
   }
  ]
 }

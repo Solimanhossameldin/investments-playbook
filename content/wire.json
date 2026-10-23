@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-23T06:19:34.056Z",
+ "fetchedAt": "2026-10-23T11:56:04.408Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -26,9 +26,27 @@
  ],
  "items": [
   {
+   "title": "ECB Consumer Expectations Survey results – September 2026",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261023~a3d201c97c.en.html",
+   "published": "2026-10-23T08:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
    "title": "Regulators unveil plans to simplify Senior Manager and Certification Regime",
    "url": "https://www.bankofengland.co.uk/news/2026/october/regulators-unveil-plans-to-simplify-senior-manager-and-certification-regime",
    "published": "2026-10-22T20:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "Minutes of the Securities Lending Committee meeting – September 2026",
+   "url": "https://www.bankofengland.co.uk/minutes/2026/september/securities-lending-committee-meeting-september-2026",
+   "published": "2026-10-22T15:35:53.000Z",
    "source": "Bank of England",
    "sourceLabel": "News",
    "category": "rates",
@@ -192,9 +210,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
    "published": "2026-10-13T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Minutes of the Money Market Committee meeting – September 2026",
@@ -282,9 +300,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
@@ -456,24 +474,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Boris Vujčić: Resilience, integration and competitiveness: building the future of European banking",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261002_1~419efe18e0.en.html",
-   "published": "2026-10-02T11:30:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Appointment of members of the Enforcement Decision Making Committee (EDMC)",
-   "url": "https://www.bankofengland.co.uk/news/2026/october/appointment-of-members-of-the-edmc",
-   "published": "2026-10-02T08:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
