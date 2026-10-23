@@ -1191,6 +1191,133 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
         (p.sources || []).some((x) => x.url === ix.sourceUrl), ix.sourceUrl);
     }
 
+    /* ---- the reserve split, which is the new half of this page ----
+
+       The finding is that the Service Charge Index publishes the approved
+       budget in two parts and that the part everybody compares, the headline
+       rate, barely predicts the part that decides a levy. Every figure
+       supporting it is derived from content/service-charges.json by
+       jointproperty.mjs, so the prose is pinned to the module rather than to
+       a literal: add a building, correct a reserve line, and the sentences
+       below have to move with it or the suite fails.
+
+       These pins exist because the failure they guard against is silent. A
+       corrected reserve figure leaves every sentence here grammatical and
+       plausible while making it false, and a reader cannot catch it without
+       re-running the lookup. */
+    {
+      const recs = SERVICE_CHARGES.records || [];
+      const sp = jp.reserveSpread(recs);
+      ok("service charge: the dataset still publishes a fund split to argue from", !!sp && sp.count >= 2,
+        sp ? String(sp.count) : "none");
+
+      /* One budget year and one retrieval date across the rows, or the
+         sentence cannot name either without qualifying it. */
+      const periods = [...new Set(recs.map((r) => r.period))];
+      const retrieved = recs.map((r) => r.retrievedAt).sort().pop() || "";
+      ok("service charge: every published row belongs to one budget year", periods.length === 1, JSON.stringify(periods));
+
+      if (sp && periods.length === 1) {
+        /* The quotable sentence. It carries the sample, both extremes with
+           their areas, the budget year, the source and the date it was read,
+           so it survives being lifted out of the page on its own -- which is
+           the only form in which anything here gets quoted. */
+        const finding = `**Of the ${recs.length} buildings this site reproduces, ${sp.count} publish the split, `
+          + `and the reserve's share of the approved charge runs from ${sp.lowest.share}% at ${sp.lowest.project} `
+          + `in ${sp.lowest.area} to ${sp.highest.share}% at ${sp.highest.project} in ${sp.highest.area}, `
+          + `on the ${periods[0]} budgets read from the Dubai Land Department's Service Charge Index `
+          + `on ${longDate(retrieved)}. The median is ${sp.median}%.**`;
+        ok("service charge: the prose carries the reserve-split finding the dataset supports",
+          p.body.includes(finding), finding);
+        ok("service charge: the prose carries the fold range the shares span",
+          p.body.includes(`An ${sp.fold}-fold range`), `${sp.fold}-fold`);
+        ok("service charge: the prose carries the correlation it argues from",
+          p.body.includes(`the correlation between the total charge and the reserve's share of it is ${sp.correlation}, an r² of ${sp.rSquared}`),
+          `${sp.correlation} / ${sp.rSquared}`);
+
+        /* The extremes, run forward through the same annuity as the levy
+           table, so the two halves of the page are in one unit. */
+        ok("service charge: the prose carries the cheapest reserve's ten-year accumulation",
+          p.body.includes(`Ten years of ${sp.lowest.project}'s approved reserve accumulates AED ${jp.reserveOver(sp.lowest.reserve).toFixed(2)} a foot`),
+          String(jp.reserveOver(sp.lowest.reserve)));
+        ok("service charge: the prose carries the dearest reserve's ten-year accumulation",
+          p.body.includes(`Ten years of ${sp.highest.project}'s accumulates AED ${jp.reserveOver(sp.highest.reserve).toFixed(2)}`),
+          String(jp.reserveOver(sp.highest.reserve)));
+        ok("service charge: the prose prices both extremes on this site's own flat",
+          p.body.includes(`AED ${jp.money(sp.lowest.reserve * aq.EXAMPLE.sqft)} a year going into the reserve account in the first building and AED ${jp.money(sp.highest.reserve * aq.EXAMPLE.sqft)} in the second`),
+          `${sp.lowest.reserve * aq.EXAMPLE.sqft} / ${sp.highest.reserve * aq.EXAMPLE.sqft}`);
+      }
+
+      /* The matched pair, which is the evidence rather than the illustration:
+         two approved rates a reader would call the same, with reserves that
+         are not. */
+      const pair = jp.closestPair(recs);
+      ok("service charge: the dataset holds two buildings priced within a few fils of each other", !!pair,
+        pair ? `${pair.full.project} / ${pair.lean.project}` : "none");
+      if (pair) {
+        ok("service charge: the matched pair really is matched on the headline rate",
+          pair.gap <= jp.PAIR_WITHIN, `${pair.gap} > ${jp.PAIR_WITHIN}`);
+        /* The pair the prose names has to be the widest-diverging one the
+           dataset currently offers, not one that merely still exists. */
+        const widest = jp.reserveRows(recs).filter((r) => r.reserve > 0).flatMap((a, i, all) =>
+          all.slice(i + 1).filter((b) => Math.abs(a.psf - b.psf) <= jp.PAIR_WITHIN)
+            .map((b) => Math.max(a.reserve, b.reserve) / Math.min(a.reserve, b.reserve)));
+        ok("service charge: the pair named is the widest-diverging matched pair in the dataset",
+          Math.abs(pair.ratio - Number(Math.max(...widest).toFixed(2))) < 0.005,
+          `${pair.ratio} vs ${Math.max(...widest)}`);
+
+        ok("service charge: the prose names both halves of the pair at their approved rates",
+          p.body.includes(`${pair.full.project} in ${pair.full.area} is approved at AED ${pair.full.psf.toFixed(2)} a foot and ${pair.lean.project} in ${pair.lean.area} at AED ${pair.lean.psf.toFixed(2)}`),
+          `${pair.full.psf} / ${pair.lean.psf}`);
+        ok("service charge: the prose carries the pair's reserve lines",
+          p.body.includes(`One puts AED ${pair.full.reserve.toFixed(2)} a foot into the separate account where the other puts AED ${pair.lean.reserve.toFixed(2)}`),
+          `${pair.full.reserve} / ${pair.lean.reserve}`);
+
+        /* The fils figure is written in words, so the word has to track the
+           dataset too. Nine is as far as this needs to count: anything wider
+           stops being a matched pair. */
+        const WORDS = ["zero", "one", "two", "three", "four", "five"];
+        const fils = Math.round(pair.gap * 100);
+        ok("service charge: the prose states the pair's gap in words that match the figures",
+          fils < WORDS.length && p.body.includes(`a pair ${WORDS[fils]} fils apart`)
+            && p.body.includes(`the dearer of the two by ${WORDS[fils]} fils a square foot a year`),
+          `${fils} fils`);
+
+        const full10 = jp.reserveOver(pair.full.reserve);
+        const lean10 = jp.reserveOver(pair.lean.reserve);
+        ok("service charge: the prose carries the pair's ten-year reserve accumulations",
+          p.body.includes(`ten years of contributions come to AED ${full10.toFixed(2)} a foot in one and AED ${lean10.toFixed(2)} in the other`),
+          `${full10} / ${lean10}`);
+
+        /* The point of the whole section: the invisible difference is of the
+           same order as a visible two-dirham one. Both sides computed here,
+           neither read off the page. */
+        const hidden = Number((full10 - lean10).toFixed(2));
+        const visible = Number(jp.breakEvenLevy({ gap: jp.LEVY_GAPS[0], years: jp.RESERVE_HORIZON, rate: jp.LEVY_RATE }).toFixed(2));
+        ok("service charge: the prose carries the gap the split hides and the one the rate shows",
+          p.body.includes(`That gap, AED ${hidden.toFixed(2)} a foot, is most of the cushion a two-dirham advantage in the headline rate buys over the same ten years, AED ${visible.toFixed(2)}`),
+          `${hidden} vs ${visible}`);
+        ok("service charge: the hidden gap really is most of the visible one, as the prose claims",
+          hidden > visible * 0.5 && hidden < visible, `${hidden} vs ${visible}`);
+      }
+
+      /* Identities, for the same reason the levy table has them: a future
+         edit could leave the figures plausible and the arithmetic wrong. */
+      ok("service charge: a reserve accumulated at a zero rate is the rate times the years",
+        jp.LEVY_YEARS.every((n) => jp.reserveOver(3, n, 0) === Number((3 * n).toFixed(2))));
+      ok("service charge: the reserve annuity is the same one the levy table uses",
+        jp.reserveOver(2, 10, jp.LEVY_RATE) === Number(jp.breakEvenLevy({ gap: 2, years: 10, rate: jp.LEVY_RATE }).toFixed(2)));
+      /* A row the index does not break out is absent, not a zero: scoring it
+         as a building that reserves nothing would invent the finding. */
+      ok("service charge: a row with no published reserve line is left out rather than scored as zero",
+        jp.reserveRows(recs).length === recs.filter((r) => typeof r.reserveFund === "number").length
+          && !jp.reserveRows(recs).some((r) => r.reserve === undefined));
+      ok("service charge: the correlation of a series with itself is one",
+        Math.abs(jp.correlation([1, 2, 3, 4], [1, 2, 3, 4]) - 1) < 1e-12);
+      ok("service charge: the correlation of a flat series is zero rather than NaN",
+        jp.correlation([1, 2, 3], [5, 5, 5]) === 0);
+    }
+
     /* The page's own rule, and the reason it can publish arithmetic on a
        query where every competitor publishes a rate card. It does not have a
        per-building service charge series it is willing to stand behind, so

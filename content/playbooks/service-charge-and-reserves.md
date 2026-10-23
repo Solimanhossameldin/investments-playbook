@@ -17,9 +17,11 @@
     "Paying an increase nobody approved. Article 27(a) forbids a management entity to collect any amount whatsoever without first obtaining the relevant approval of RERA, and the approved figure for a named project and year is a public lookup.",
     "Assuming a fully funded reserve is a sunk cost. You are buying a share of a separate bank account, and it is the only thing standing between you and Article 30(f).",
     "Forgetting that the charge is payable whether or not the unit is let, which is why it belongs in the fixed cost line of a [break-even occupancy](/playbooks/break-even-occupancy/) calculation.",
-    "Leaving arrears to the closing table. Article 32(a) gives the management entity a lien and says a Unit may not be disposed of unless these charges are paid, so an unpaid balance is not a negotiating position, it is a stopped [sale](/playbooks/selling-well/)."
+    "Leaving arrears to the closing table. Article 32(a) gives the management entity a lien and says a Unit may not be disposed of unless these charges are paid, so an unpaid balance is not a negotiating position, it is a stopped [sale](/playbooks/selling-well/).",
+    "Reading the published reserve line as a balance. The Service Charge Index publishes the contribution approved for a budget year, which is a flow; the cushion that stands between an owner and Article 30(f) is the accumulated balance, which is a stock. A building in its fifteenth year at a thin rate can hold more than one in its first year at a generous one, which is why the checks below still ask the manager for the balance and not only for the budget.",
+    "Treating thirty buildings as a sample of Dubai. The spread quoted here is what the 2026 approved budgets of the thirty buildings this site has read actually say. A building outside that set can sit anywhere, including outside the range, and the reserve share of a single project says nothing about its area."
   ],
-  "whenToUse": "Before making an offer on any apartment, and again every year, because the budget is approved annually and almost no owner reads it.",
+  "whenToUse": "Before making an offer on any apartment, and again every year, because the budget is approved annually and almost no owner reads it. Also whenever two buildings are being compared on the headline rate alone: the same free lookup splits that rate into a general fund and a reserve, and across the buildings published here the split varies far more than the rate does.",
   "sources": [
     {
       "name": "Law No. (6) of 2019 Concerning Ownership of Jointly Owned Real Property in the Emirate of Dubai, Articles 25, 27, 30, 32 and 34",
@@ -122,6 +124,22 @@ Read the table and the conventional warning stops being a rule and becomes a hol
 
 The honest caveat is the one that makes the arithmetic worth trusting: this compares two buildings that are otherwise the same. A tower with district cooling, a pool, a gym and a concierge should cost more per foot than a walk-up, and it is not deferring anything by doing so. The comparison only means something inside a set of buildings a tenant would treat as substitutes.
 
+## The reserve rate is published too, and the headline rate does not predict it
+
+The formula above prices the deferred bill and then hands the reader the one input it cannot supply: which of two buildings is actually reserving. Every page on this subject fills that hole the same way, by telling the buyer to ask the management company for the reserve fund balance. That is right, and it needs a cooperative seller and a week.
+
+For the first cut it is also unnecessary, because the Service Charge Index does not publish one figure per project. It publishes the approved budget in two parts, a general fund and a reserve, and the second part is the building's reserving policy for that budget year, proposed by the manager, approved by a RERA-recognised audit firm under Article 27(b), and ratified by RERA. It is free, it is per project, and no competing page mentions that it is there.
+
+**Of the 31 buildings this site reproduces, 30 publish the split, and the reserve's share of the approved charge runs from 2.2% at Abbey Crescent 1 in Motor City to 25.2% at Cayan Tower in Dubai Marina, on the 2026 budgets read from the Dubai Land Department's Service Charge Index on 16 October 2026. The median is 8.7%.** An 11.5-fold range, in the line that pays for the roof.
+
+The headline rate barely locates a building inside that range. Across the thirty, the correlation between the total charge and the reserve's share of it is 0.41, an r² of 0.17: the figure every buyer compares accounts for about a sixth of the variation in the figure that decides whether Article 30(f) ever arrives.
+
+The clearest case in the table is a pair three fils apart. Goldcrest Views in DMCC Master Community is approved at AED 16.79 a foot and Harbour Views in Dubai Creek Harbour at AED 16.82, the dearer of the two by three fils a square foot a year. One puts AED 2.85 a foot into the separate account where the other puts AED 1.28. Run both forward through the annuity in the table above and ten years of contributions come to AED 35.85 a foot in one and AED 16.10 in the other. That gap, AED 19.75 a foot, is most of the cushion a two-dirham advantage in the headline rate buys over the same ten years, AED 25.16, and unlike the two dirhams it is invisible in the number the two buildings get compared on.
+
+At the ends of the range it stops being a nuance. Ten years of Abbey Crescent 1's approved reserve accumulates AED 3.77 a foot. Ten years of Cayan Tower's accumulates AED 75.34. On the 900 square foot flat this site uses throughout, that is AED 270 a year going into the reserve account in the first building and AED 5,391 in the second.
+
+Which of those is correct is not a question arithmetic answers, and a thin reserve is not automatically a failure: a low-rise with little plant to replace needs less in the account than a tower with its own chillers, lifts to the fiftieth floor and a pool, and [the chiller charge](/playbooks/district-cooling-and-chiller-charges/) is itself the largest replacement liability in the second kind of building. What the split does is turn Article 30(f) from a rumour into a comparison anyone can make for free, on the same lookup that gives the headline rate, before making an offer. [The full table is published here](/service-charges/), one row per building, each carrying the day it was read.
+
 ## What a dirham a foot costs you
 
 On the illustrative one bedroom used throughout this site, 900 sq ft at AED 1,500,000 with AED 105,000 of rent, one dirham per square foot per year is AED 900. That is **0.86% of the gross rent** and **0.056 points of net yield** on the full cash outlay.
@@ -134,7 +152,7 @@ It is not, however, the whole of the fixed cost. In a building served by a distr
 
 Four of these are free public lookups, and together they take about an hour.
 
-**The approved rate for the project and year**, through the Service Charge Index lookup described above, taking care over which of a tower's entries is yours. If the figure you are quoted is not the approved figure, Article 27(a) is the article to cite.
+**The approved rate for the project and year**, through the Service Charge Index lookup described above, taking care over which of a tower's entries is yours. The same screen splits that rate into the general fund and the reserve, so the building's reserving policy comes free with its price. If the figure you are quoted is not the approved figure, Article 27(a) is the article to cite.
 
 **Whether the management company is on RERA's list.** Mollak publishes the register. A manager who is not on it cannot lawfully be collecting.
 
@@ -142,7 +160,7 @@ Four of these are free public lookups, and together they take about an hour.
 
 **The area on the title deed**, because that, and not the brochure, is what your share is calculated on.
 
-Then ask the seller or the manager for three documents that exist by law and are therefore reasonable to request. The **approved annual budget**, which shows the line items against those ten permitted headings. The **reserve fund balance**, which is the balance of a specific separate account and can be stated as such. And the **history of levies**, because a building that has invoked Article 30(f) before has told you something about how the first two are being run. Article 34(b) also requires the manager to supply RERA, "every six (6) months, with a periodic report" on the management and maintenance of the property, so a manager who claims nothing is written down is describing a compliance failure rather than a filing system.
+Then ask the seller or the manager for three documents that exist by law and are therefore reasonable to request. The **approved annual budget**, which shows the line items against those ten permitted headings. The **reserve fund balance**, which is the balance of a specific separate account and can be stated as such; the lookup above gives the contribution approved for this year, not what has accumulated, and only the balance answers the Article 30(f) question. And the **history of levies**, because a building that has invoked Article 30(f) before has told you something about how the first two are being run. Article 34(b) also requires the manager to supply RERA, "every six (6) months, with a periodic report" on the management and maintenance of the property, so a manager who claims nothing is written down is describing a compliance failure rather than a filing system.
 
 ## The part that bites on the way out
 
