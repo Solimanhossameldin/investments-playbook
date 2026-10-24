@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-24T01:35:33.953Z",
+ "fetchedAt": "2026-10-24T06:29:24.015Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Piero Cipollone: Interview with Milano Finanza",
+   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261024~ee2ba73cf3.en.html",
+   "published": "2026-10-24T06:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "SEC Announces Fiscal Year 2027 Examination Priorities",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-109-sec-announces-fiscal-year-2027-examination-priorities",
