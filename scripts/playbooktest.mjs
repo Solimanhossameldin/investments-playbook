@@ -204,7 +204,7 @@ function tablesIn(body) {
   return out;
 }
 const cellNum = (c) => {
-  const t = String(c).replace(/\*/g, "").replace(/[()%]/g, "").replace(/,/g, "").trim();
+  const t = String(c).replace(/\*/g, "").replace(/[()%]/g, "").replace(/,/g, "").replace(/\u2212/g, "-").trim();
   return /^-?\d+(\.\d+)?$/.test(t) ? Number(t) : null;
 };
 const col = (t, n) => t.rows.map((r) => cellNum(r[n]));

@@ -63,11 +63,11 @@ The buyer puts in **AED 478,503** of their own money: AED 375,000 of deposit, th
 |---|---|---|---|---|
 | 3.00% | 5,335 | 64,019 | 5,108 | 1.07% |
 | 3.50% | 5,632 | 67,584 | 1,543 | 0.32% |
-| 4.00% | 5,938 | 71,258 | −2,131 | −0.45% |
-| 4.50% | 6,253 | 75,037 | −5,910 | −1.24% |
-| 5.00% | 6,577 | 78,920 | −9,793 | −2.05% |
-| 5.50% | 6,908 | 82,902 | −13,775 | −2.88% |
-| 6.00% | 7,248 | 86,981 | −17,854 | −3.73% |
+| 4.00% | 5,938 | 71,258 | -2,131 | -0.45% |
+| 4.50% | 6,253 | 75,037 | -5,910 | -1.24% |
+| 5.00% | 6,577 | 78,920 | -9,793 | -2.05% |
+| 5.50% | 6,908 | 82,902 | -13,775 | -2.88% |
+| 6.00% | 7,248 | 86,981 | -17,854 | -3.73% |
 
 Every row above 3.71% is negative, and 3.71% is below every mortgage rate in the table bar the first two. On this flat, at this service charge, leverage at the regulatory maximum does not produce income. It produces a monthly bill and a claim on the price.
 
@@ -79,7 +79,7 @@ It is not a loss. Part of each instalment repays principal, and that part is equ
 |---|---|
 | Year-one interest | 50,115 |
 | Year-one principal | 24,922 |
-| Year-one cash flow | −5,910 |
+| Year-one cash flow | -5,910 |
 | Cash flow plus principal | 19,012 |
 
 So the honest statement is that the flat takes AED 5,910 out of the buyer's pocket and puts AED 24,922 into their equity, and whether that is a good trade depends on whether they have the AED 5,910 to spare every year without selling something. That is a liquidity question, not a return question, and it is the question the ratio exists to ask. A buyer who cannot fund the gap is a forced seller on a timetable set by their salary rather than by the market.
@@ -98,7 +98,7 @@ The two columns could not behave less alike. The return break-even moves **one b
 
 The mechanism is in the shape of each comparison. The return break-even sets a yield against a rate, and both sides scale with the loan, so the loan very nearly cancels out. The cash-flow break-even sets a fixed income against a payment that scales with the loan, and nothing cancels at all: the rent is what the flat produces, and it does not care how the purchase was financed.
 
-What follows is the opposite of how leverage is usually described. Borrowing more does not buy a more forgiving threshold: the rate at which borrowing stops paying is the same 4.30% at every band a completed purchase can use. It collapses the rate at which the flat stops paying for itself, from 7.94% at half the price to 3.11% at four fifths of it. A buyer at 50% loan to value can absorb a mortgage at almost eight per cent and still be paid by the flat. The same buyer at 80% cannot absorb one above three.
+What follows is the opposite of how leverage is usually described. Borrowing more does not buy a more forgiving threshold. The rate at which borrowing stops paying is the same 4.30% at every band a completed purchase can use. It collapses the rate at which the flat stops paying for itself, from 7.94% at half the price to 3.11% at four fifths of it. A buyer at 50% loan to value can absorb a mortgage at almost eight per cent and still be paid by the flat. The same buyer at 80% cannot absorb one above three.
 
 ## Check occupancy before you check either
 
