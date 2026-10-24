@@ -326,3 +326,147 @@ export function breakEvenByLtv(i = aq.EXAMPLE) {
     return { ltv: Math.round(ltv * 100), loan: b.loan, equityIn: b.equityIn, ratePct: b.ratePct };
   });
 }
+
+/* ---- cash on cash, and the second break-even nobody prints ----
+
+   The page above this one asks whether borrowing raises the return on the
+   buyer's own money, and answers it on interest alone, deliberately: a
+   repayment instalment also returns capital, which is saving rather than
+   cost. That is the right treatment for a question about return.
+
+   It is the wrong treatment for a question about cash. A lender is owed the
+   whole instalment whether or not the principal inside it is notionally the
+   buyer's own saving, and the bank account does not know the difference. So
+   cash on cash nets the FULL debt service against net operating income, and
+   the consequence is a second break-even rate, lower than the first.
+
+   The gap between the two is the amortisation, and it is a band with a
+   property worth stating plainly: inside it, borrowing raises the return on
+   the buyer's own money AND the flat takes cash out of their pocket every
+   month. Both are true at once. Every competing page on this query prints
+   one of those two facts and none prints the pair, which is how a buyer ends
+   up holding an asset that is, on the arithmetic they were shown, a good
+   investment they cannot afford to keep.
+
+   The second finding is about how the two break-evens respond to the size of
+   the loan, and they could not respond more differently.
+
+   The return break-even hardly moves: one basis point from a 50% loan to an
+   80% one. It compares a yield against a rate, and both sides scale with the
+   loan, so the loan very nearly cancels out of the comparison.
+
+   The cash-flow break-even moves across nearly five percentage points over
+   the same bands. It compares a fixed income against a payment that scales
+   with the loan, and nothing cancels at all. The rent is what the flat
+   produces and it does not care how the purchase was financed.
+
+   So the one piece of advice that follows from the pair is the opposite of
+   the one leverage is usually given: borrowing more does not change the rate
+   at which borrowing stops paying, and it collapses the rate at which the
+   flat stops paying for itself. */
+
+/* The full instalment, and the split inside the first twelve payments. The
+   interest is accumulated month by month rather than taken as the rate times
+   the opening balance, because the balance falls every month and the
+   one-line version overstates the interest and understates the principal. */
+export function debtService(loan, annualRatePct, years = CAPS.maxTermYears) {
+  const monthly = paymentFromLoan(loan, annualRatePct, years);
+  const r = annualRatePct / 100 / 12;
+  let balance = loan;
+  let interest = 0;
+  for (let k = 0; k < 12; k += 1) {
+    const due = balance * r;
+    interest += due;
+    balance -= monthly - due;
+  }
+  const annual = monthly * 12;
+  return {
+    monthly: Math.round(monthly),
+    annual: Math.round(annual),
+    interestYearOne: Math.round(interest),
+    principalYearOne: Math.round(annual - interest),
+  };
+}
+
+/* Cash on cash at one mortgage rate: what the flat puts in the buyer's
+   pocket in year one, over the money they actually put in. The denominator
+   is the borrower's, the same one the break-even rate above uses -- deposit,
+   acquisition stack, and the mortgage's own fees -- so the two pages are
+   measuring the same money and their figures are comparable. */
+export function cashOnCash(ratePct, i = aq.EXAMPLE) {
+  const o = aq.operating(i);
+  const a = aq.acquisition(i);
+  const m = aq.mortgageCosts(i);
+  const equityIn = i.price - m.loan + a.total + m.total;
+  const d = debtService(m.loan, ratePct);
+  const cashFlow = o.net - d.annual;
+  const pct = (n) => Number((n * 100).toFixed(2));
+  return {
+    ratePct,
+    loan: m.loan,
+    equityIn,
+    noi: o.net,
+    monthly: d.monthly,
+    debtService: d.annual,
+    interestYearOne: d.interestYearOne,
+    principalYearOne: d.principalYearOne,
+    cashFlow: Math.round(cashFlow),
+    cocPct: pct(cashFlow / equityIn),
+    /* The unleveraged comparison, which is the whole point of the ratio:
+       the same flat bought outright returns this, in cash, with no lender. */
+    cashReturnPct: pct(o.net / (i.price + a.total)),
+    positive: cashFlow > 0,
+  };
+}
+
+/* The rate at which the full instalment exactly consumes net operating
+   income, solved rather than rearranged: the annuity factor cannot be
+   inverted in closed form. Below it the flat pays the buyer; above it the
+   buyer pays the flat. */
+export function cashFlowBreakEvenPct(i = aq.EXAMPLE) {
+  const o = aq.operating(i);
+  const m = aq.mortgageCosts(i);
+  let lo = 0.0001, hi = 40;
+  for (let k = 0; k < 300; k += 1) {
+    const mid = (lo + hi) / 2;
+    if (paymentFromLoan(m.loan, mid) * 12 > o.net) hi = mid; else lo = mid;
+  }
+  return Number((((lo + hi) / 2)).toFixed(2));
+}
+
+/* The two break-evens side by side, and the band between them. Both are
+   reported to two places and the width is the difference of the printed
+   figures, so a reader checking the subtraction on the page gets the number
+   the page prints rather than a third one hidden in the rounding. */
+export function breakEvenPair(i = aq.EXAMPLE) {
+  const cashFlowPct = cashFlowBreakEvenPct(i);
+  const returnPct = breakEvenRate(i).ratePct;
+  return {
+    cashFlowPct,
+    returnPct,
+    bandPoints: Number((returnPct - cashFlowPct).toFixed(2)),
+    /* Cash on cash AT the return break-even: the arithmetic that makes the
+       band a real thing rather than a rounding artefact. At the rate where
+       borrowing stops improving the return, the flat is already losing
+       money every month, and this is how much. */
+    atReturnBreakEven: cashOnCash(returnPct, i),
+  };
+}
+
+/* The pair against the size of the loan. The claim is that one column is
+   flat and the other is not, so both are computed here and the page may
+   only make the claim while the spread in each is what it says. */
+export function breakEvenPairByLtv(i = aq.EXAMPLE) {
+  return LEVERAGE_LTVS.map((ltv) => {
+    const j = { ...i, ltv };
+    const m = aq.mortgageCosts(j);
+    const a = aq.acquisition(j);
+    return {
+      ltv: Math.round(ltv * 100),
+      loan: m.loan,
+      equityIn: j.price - m.loan + a.total + m.total,
+      returnPct: breakEvenRate(j).ratePct,
+      cashFlowPct: cashFlowBreakEvenPct(j),
+    };
+  });
+}
