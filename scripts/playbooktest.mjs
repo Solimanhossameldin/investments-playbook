@@ -4233,5 +4233,152 @@ ok("every calculator points at a playbook that exists",
 }
 
 
+/* ---- cash on cash, and the second break-even ----
+
+   This page and mortgage-versus-cash answer neighbouring questions off the
+   same flat, and the thing that makes the pair worth publishing is that
+   their two thresholds differ. So the checks here are mostly about the
+   RELATIONSHIP between the two numbers, which is the part an edit to either
+   page can quietly destroy while leaving both pages internally consistent.
+
+   The band is the finding. If the cash-flow break-even ever rises to meet
+   the return break-even, the middle row of the first table -- borrowing
+   raises the return AND the flat costs you money -- describes nothing, and
+   three paragraphs of this page are claims about an empty set. The suite
+   checks the band is non-empty and that the page's stated width is the
+   difference of the two figures it prints.
+
+   The second finding is a contrast between two columns: one flat across the
+   loan to value bands, one not. Either could become the other through a
+   change to the fee schedule with every cell still reconciling, so both
+   spreads are checked against the module rather than against the page. */
+{
+  const p = playbooks.find((x) => x.slug === "cash-on-cash");
+  ok("cash on cash: the page exists", !!p);
+  if (p) {
+    const P = mg.breakEvenPair();
+    const tables = tablesIn(p.body);
+
+    /* The worked example is the same flat as net rental yield and mortgage
+       versus cash, so the three pages chain and every figure here is a
+       quotient of amounts sourced on the first of them. */
+    ok("cash on cash: the example unit is the acquisition example",
+      p.body.includes(`AED ${aq.money(aq.EXAMPLE.price)}`) && p.body.includes(`AED ${aq.money(P.atReturnBreakEven.noi)}`),
+      `${aq.EXAMPLE.price} / ${P.atReturnBreakEven.noi}`);
+
+    /* 1. Both thresholds, in the lede and in the finding. */
+    ok("cash on cash: the lede states the cash-flow break-even",
+      p.body.includes(`above a mortgage rate of **${mg.pctText(P.cashFlowPct)}**`), mg.pctText(P.cashFlowPct));
+    ok("cash on cash: the lede states the return break-even too",
+      p.body.includes(`**${mg.pctText(P.returnPct)}**`), mg.pctText(P.returnPct));
+    ok("cash on cash: the finding carries both thresholds",
+      p.summary.includes(mg.pctText(P.cashFlowPct)) && p.summary.includes(mg.pctText(P.returnPct)),
+      p.summary.slice(0, 80));
+
+    /* 2. The band exists, and the page's arithmetic on it is the module's.
+       Non-emptiness is the licence to print the middle row at all. */
+    ok("cash on cash: the band between the two thresholds is non-empty",
+      P.cashFlowPct < P.returnPct, `${P.cashFlowPct} vs ${P.returnPct}`);
+    ok("cash on cash: the stated band width is the difference of the two printed rates",
+      P.bandPoints === Number((P.returnPct - P.cashFlowPct).toFixed(2)), `${P.bandPoints}`);
+    /* Split in two deliberately. Written as one check with an `||` it
+       passed while the finding said 0.60 and the lede still said 0.59,
+       because either half satisfied it. The band width is the one figure
+       this page adds to the pair, and it is quoted in both places, so both
+       places are checked. */
+    ok("cash on cash: the finding carries the band width",
+      p.summary.includes(`${P.bandPoints} points`), `${P.bandPoints}`);
+    ok("cash on cash: the lede carries the band width",
+      p.body.includes(`${P.bandPoints} points`), `${P.bandPoints}`);
+
+    /* 3. The band is a real band and not a rounding artefact: at the rate
+       where borrowing stops improving the return, the flat must ALREADY be
+       losing money, or the two thresholds are not in the order the page
+       says and the middle row is the wrong way round. */
+    ok("cash on cash: at the return break-even the flat is already cash negative",
+      P.atReturnBreakEven.cashFlow < 0, `${P.atReturnBreakEven.cashFlow}`);
+    ok("cash on cash: the page carries that shortfall and its return",
+      p.body.includes(aq.money(Math.abs(P.atReturnBreakEven.cashFlow))) &&
+      p.body.includes(mg.pctText(P.atReturnBreakEven.cocPct).replace("-", "−")),
+      `${P.atReturnBreakEven.cashFlow} / ${P.atReturnBreakEven.cocPct}`);
+
+    /* 4. The rate grid, cell by cell, against the module. */
+    const grid = tables.find((t) => /Cash on cash return/i.test(t.head[4] || ""));
+    ok("cash on cash: the rate grid is on the page", !!grid);
+    if (grid) {
+      const rows = mg.LEVERAGE_RATES.map((r) => mg.cashOnCash(r));
+      ok("cash on cash: the grid has a row per rate the module grids",
+        grid.rows.length === rows.length, `${grid.rows.length} vs ${rows.length}`);
+      ok("cash on cash: every rate cell is the module's", same(col(grid, 0), rows.map((r) => r.ratePct)), JSON.stringify(col(grid, 0)));
+      ok("cash on cash: every instalment cell is the module's", same(col(grid, 1), rows.map((r) => r.monthly)), JSON.stringify(col(grid, 1)));
+      ok("cash on cash: every debt service cell is the module's", same(col(grid, 2), rows.map((r) => r.debtService)), JSON.stringify(col(grid, 2)));
+      ok("cash on cash: every cash flow cell is the module's", same(col(grid, 3), rows.map((r) => r.cashFlow)), JSON.stringify(col(grid, 3)));
+      ok("cash on cash: every return cell is the module's", same(col(grid, 4), rows.map((r) => r.cocPct)), JSON.stringify(col(grid, 4)));
+      /* The sign of every row has to follow the threshold, or the grid is
+         contradicting the finding above it. */
+      ok("cash on cash: the sign of every row follows the cash-flow threshold",
+        rows.every((r) => r.positive === (r.ratePct < P.cashFlowPct)),
+        JSON.stringify(rows.map((r) => [r.ratePct, r.positive])));
+    }
+
+    /* 5. The split that makes the negative number honest. The page's claim
+       is that a cash loss and an equity gain happen together, so the three
+       figures have to reconcile: interest plus principal is the instalment,
+       and cash flow plus principal is the net position. */
+    const split = tables.find((t) => /^At \d/.test(t.head[0] || ""));
+    ok("cash on cash: the interest and principal split is on the page", !!split);
+    if (split) {
+      const c = mg.cashOnCash(4.5);
+      const want = [c.interestYearOne, c.principalYearOne, c.cashFlow, c.cashFlow + c.principalYearOne];
+      ok("cash on cash: every cell of the split is the module's", same(col(split, 1), want), JSON.stringify(col(split, 1)));
+      ok("cash on cash: interest and principal sum to the instalment",
+        c.interestYearOne + c.principalYearOne === c.debtService,
+        `${c.interestYearOne} + ${c.principalYearOne} vs ${c.debtService}`);
+      ok("cash on cash: the equity gain exceeds the cash loss at this rate",
+        c.principalYearOne > Math.abs(c.cashFlow), `${c.principalYearOne} vs ${c.cashFlow}`);
+    }
+
+    /* 6. The two thresholds against the size of the loan, which is the
+       page's second finding and entirely a claim about behaviour. */
+    const byLtv = mg.breakEvenPairByLtv();
+    const ltvTable = tables.find((t) => /Cash-flow break-even/i.test(t.head[4] || ""));
+    ok("cash on cash: the loan to value table is on the page", !!ltvTable);
+    if (ltvTable) {
+      ok("cash on cash: the table has a row per band the module grids",
+        ltvTable.rows.length === byLtv.length, `${ltvTable.rows.length} vs ${byLtv.length}`);
+      ok("cash on cash: every band cell is the module's", same(col(ltvTable, 0), byLtv.map((r) => r.ltv)));
+      ok("cash on cash: every loan cell is the module's", same(col(ltvTable, 1), byLtv.map((r) => r.loan)));
+      ok("cash on cash: every money-in cell is the module's", same(col(ltvTable, 2), byLtv.map((r) => r.equityIn)));
+      ok("cash on cash: every return break-even cell is the module's", same(col(ltvTable, 3), byLtv.map((r) => r.returnPct)), JSON.stringify(col(ltvTable, 3)));
+      ok("cash on cash: every cash-flow break-even cell is the module's", same(col(ltvTable, 4), byLtv.map((r) => r.cashFlowPct)), JSON.stringify(col(ltvTable, 4)));
+    }
+    const spreadOf = (k) => Number((Math.max(...byLtv.map((r) => r[k])) - Math.min(...byLtv.map((r) => r[k]))).toFixed(2));
+    const flat = spreadOf("returnPct");
+    const moves = spreadOf("cashFlowPct");
+    ok("cash on cash: the return threshold really is flat across the bands", flat <= 0.01, `${flat} points`);
+    ok("cash on cash: the cash-flow threshold really does move across them", moves >= 1, `${moves} points`);
+    ok("cash on cash: the page only contrasts them while the contrast holds",
+      !/could not behave less alike/.test(p.body) || (flat <= 0.01 && moves >= 1), `${flat} vs ${moves}`);
+    ok("cash on cash: the page carries the spread it claims for each column",
+      p.body.includes(`**${moves} points**`), `${moves}`);
+
+    /* 7. The sources. This page cited two commercial summaries for a figure
+       the Central Bank and the Land Department both publish, which is the
+       one thing the whole site is positioned against. */
+    ok("cash on cash: cites Article 3 itself",
+      (p.sources || []).some((x) => x.url === mg.INSTRUMENTS.cbuaeMortgage.url));
+    ok("cash on cash: no commercial summary is cited",
+      !(p.sources || []).some((x) => /grovy\.ae|realestateclubdubai\.com|bank-uae\.com/.test(x.url || "")),
+      JSON.stringify((p.sources || []).map((x) => x.url)));
+
+    /* 8. The tenor is the regulation's maximum and the page says so, because
+         every instalment on it is computed at 300 months. */
+    ok("cash on cash: carries Article 3 verbatim on the tenor",
+      `${p.summary} ${p.body} ${p.formula}`.includes(mg.STATUTORY.find((x) => x.key === "term").claim) ||
+      p.body.includes("25 year maximum tenor"));
+  }
+}
+
+
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);
