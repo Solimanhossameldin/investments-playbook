@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "pipeline",
+   "status": "ok",
+   "detail": "update=success, deploy=success, submit=success",
+   "ranAt": "2026-10-25T23:12:38.417Z"
+  },
+  {
    "job": "indexnow",
    "status": "ok",
    "detail": "submitted 152 urls, HTTP 200",
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "No brief written for 2026-10-24, so there is nothing to send.",
    "ranAt": "2026-10-24T11:21:35.103Z"
-  },
-  {
-   "job": "generate-daily-brief",
-   "status": "skipped",
-   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
-   "ranAt": "2026-10-24T11:21:35.062Z"
   }
  ]
 }
