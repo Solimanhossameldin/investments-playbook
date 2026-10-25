@@ -34,6 +34,10 @@ export const INSTRUMENTS = {
     name: "Central Bank of the UAE, Regulations Regarding Mortgage Loans (Circular No. 31/2013), Article 3, Important Ratios, consolidated version of 8 April 2020",
     url: "https://rulebook.centralbank.ae/en/rulebook/article-3-important-ratios",
   },
+  cbuaeIntroduction: {
+    name: "Central Bank of the UAE, Regulations Regarding Mortgage Loans (Circular No. 31/2013), Introduction",
+    url: "https://rulebook.centralbank.ae/en/rulebook/introduction-29",
+  },
   cbuaeDisclosure: {
     name: "Central Bank of the UAE, Regulations Regarding Mortgage Loans (Circular No. 31/2013), Article 4, Disclosure and Transparency",
     url: "https://rulebook.centralbank.ae/en/rulebook/article-4-disclosure-and-transparency",
@@ -54,6 +58,15 @@ export const STATUTORY = [
   { key: "eosb", claim: "The use of 'End of Service Benefit' is not allowed", instrument: "cbuaeMortgage" },
   { key: "retirement", claim: "serviced at a DBR of 50 percent of the borrower's post retirement income", instrument: "cbuaeMortgage" },
   { key: "lifetimeCost", claim: "Borrowers should be provided with information setting out the total cost of the loan during its lifetime", instrument: "cbuaeDisclosure" },
+  /* The two clauses that settle what the regulation does and does not sort
+     borrowers by. The first names the three categories it is written for,
+     and residency is not one of them. The second is the regulation stating,
+     in its own voice, which distinction it draws: owner occupier against
+     investor. Neither clause has a residency test in it, and no other clause
+     supplies one, which is why no loan to value band on this page turns on
+     where the borrower lives. */
+  { key: "scopeCategories", claim: "providing mortgage loans to UAE nationals, GCC nationals and expatriates", instrument: "cbuaeIntroduction" },
+  { key: "scopeDistinction", claim: "These Regulations make a distinction between loans to owner occupiers of residential property and investors in residential property", instrument: "cbuaeIntroduction" },
 ];
 
 /* Article 3, as rates rather than as prose. The loan to value bands are
@@ -179,8 +192,15 @@ export function incomeTable(price = aq.EXAMPLE.price, opts = {}) {
    yield page's, unchanged, plus the second registration the mortgage itself
    needs. Neither can be borrowed: the cap is a percentage of the value of
    the property, and the fees are not the property. */
-export function cashToClose({ price = aq.EXAMPLE.price, offPlan = false, status = "expatriate", first = true } = {}) {
-  const rate = ltvCapRate({ status, first, price, offPlan });
+export function cashToClose({ price = aq.EXAMPLE.price, offPlan = false, status = "expatriate", first = true, ltvRate = null } = {}) {
+  /* `ltvRate` is for the case the regulation does not reach. The bands below
+     are statutory ceilings; what a bank actually offers a borrower living
+     outside the UAE is its own policy, and a policy figure cannot be looked
+     up in an instrument. So the cash arithmetic takes whatever rate the
+     borrower is quoted, and the band is the default rather than the only
+     input. Everything downstream of the rate is unchanged, because the fee
+     stack does not care why the loan is the size it is. */
+  const rate = ltvRate === null ? ltvCapRate({ status, first, price, offPlan }) : ltvRate;
   const loan = Math.round(price * rate);
   const deposit = price - loan;
   const buying = aq.acquisition({ ...aq.EXAMPLE, price });
@@ -197,6 +217,23 @@ export function cashToClose({ price = aq.EXAMPLE.price, offPlan = false, status 
     actualPct: Math.round((total / price) * 10000) / 100,
     gapPoints: Math.round(((total - (price - Math.round(price * rate))) / price) * 10000) / 100,
   };
+}
+
+/* The loan to value figures a buyer living outside the UAE is actually
+   quoted, spanning the statutory ceiling for an expatriate first home at the
+   top and the half that brokers print as though it were a rule at the
+   bottom. The list is the span, not a schedule: no instrument sets any of
+   these for a non-resident, which is the point the page makes with them. */
+export const POLICY_LTVS = [0.80, 0.70, 0.60, 0.50];
+
+/* The same cash arithmetic as cashToClose, run across that span, so the
+   reader can find the row for the offer in front of them instead of the row
+   for the offer a regulation would have given them. */
+export function cashByLtv(price = aq.EXAMPLE.price) {
+  return POLICY_LTVS.map((rate) => {
+    const c = cashToClose({ price, ltvRate: rate });
+    return { ltvPct: Math.round(rate * 100), ...c };
+  });
 }
 
 /* Article 3.1 requires at least two months' rental income to be deducted

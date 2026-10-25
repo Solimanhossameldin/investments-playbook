@@ -7,7 +7,7 @@
 import playbooks from "../content/playbooks.mjs";
 import glossary from "../content/glossary.mjs";
 import { CALCULATORS } from "../src/templates/calculators.mjs";
-import { isoDate, longDate } from "../src/lib.mjs";
+import { isoDate, longDate, plainLinks } from "../src/lib.mjs";
 import * as hh from "../src/holidayhome.mjs";
 import * as rc from "../src/rentcap.mjs";
 import * as aq from "../src/acquisition.mjs";
@@ -2056,6 +2056,35 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
         new Set(rows.map((r) => r.binds)).size === 2, rows.map((r) => r.binds).join(", "));
     }
 
+    /* 2b. The non-resident table, cell by cell, against the module.
+
+       Every figure in it is hand-typed markdown, and the section's whole
+       argument is that the cash column is the one to plan against. An
+       unguarded cash column would make that argument with numbers nobody
+       checks. The advertised-deposit column is checked too, because the
+       spread between it and the cash share is the finding. */
+    const polTable = find((t) => /Loan to value offered/i.test(t.head[0] || ""));
+    ok("mortgage: the non-resident loan to value table is present", !!polTable);
+    if (polTable) {
+      const rows = mg.cashByLtv();
+      ok("mortgage: that table spans the module's quoted loan to value figures",
+        same(col(polTable, 0), rows.map((r) => r.ltvPct)), JSON.stringify(col(polTable, 0)));
+      ok("mortgage: its loans match the module",
+        same(col(polTable, 1), rows.map((r) => r.loan)), JSON.stringify(col(polTable, 1)));
+      ok("mortgage: its cash required matches the module",
+        same(col(polTable, 2), rows.map((r) => r.total)), JSON.stringify(col(polTable, 2)));
+      ok("mortgage: its cash share of the price matches the module",
+        same(col(polTable, 3), rows.map((r) => r.actualPct)), JSON.stringify(col(polTable, 3)));
+      ok("mortgage: its advertised deposits match the module",
+        same(col(polTable, 4), rows.map((r) => r.advertisedPct)), JSON.stringify(col(polTable, 4)));
+      /* The sentence under the table states the spread as a range, and the
+         range is only true because the stack barely moves with the loan. */
+      const gaps = rows.map((r) => r.gapPoints);
+      ok("mortgage: the page prints the spread the module computes",
+        p.body.includes(`${Math.min(...gaps).toFixed(2)} and ${Math.max(...gaps).toFixed(2)} percentage points`),
+        `${Math.min(...gaps)} / ${Math.max(...gaps)}`);
+    }
+
     /* 3. The crossover, printed to two places, and independent of income and
           of price. This is the claim the page is built on. */
     ok("mortgage: the page prints the computed crossover rate",
@@ -3458,6 +3487,45 @@ ok("every calculator points at a playbook that exists",
     ok(`${p.slug}: its declared question is about what the page answers`,
       content.length === 0 || hits.length / content.length >= 0.5,
       `only ${hits.length}/${content.length} of "${p.question}" appears in the finding or title`);
+  }
+
+  /* ---- the extra declared questions ----
+
+     A page may declare further questions beyond the three the template
+     generates from its fields, for the sections a reader reaches by scrolling
+     and an assistant reading the first screen never sees at all.
+
+     The answer is the whole risk in that idea, so the answer is the thing
+     checked. It has to be a sentence already in the body, verbatim, which
+     makes the markup incapable of saying anything the reader is not shown and
+     makes the field useless as a place to put keywords. Links and emphasis
+     are stripped before the comparison, because the body carries them and a
+     quoted answer should not. */
+  const withFaqs = playbooks.filter((p) => Array.isArray(p.faqs) && p.faqs.length);
+  ok("some playbooks declare extra questions", withFaqs.length > 0, `${withFaqs.length}`);
+  for (const p of withFaqs) {
+    const bodyText = plainLinks(p.body).replace(/\*/g, "");
+    for (const f of p.faqs) {
+      ok(`${p.slug}: extra question is phrased as a question`,
+        typeof f.q === "string" && f.q.trim().endsWith("?"), JSON.stringify(f.q));
+      ok(`${p.slug}: extra question is not one the template already generates`,
+        !/where does it break\?$|when should you use it\?$|short answer\?$/i.test(f.q || ""),
+        JSON.stringify(f.q));
+      ok(`${p.slug}: extra question is not the page's own declared question`,
+        (f.q || "").trim().toLowerCase() !== (p.question || "").trim().toLowerCase(),
+        JSON.stringify(f.q));
+      ok(`${p.slug}: extra answer is a real sentence`,
+        typeof f.a === "string" && f.a.trim().length >= 60 && f.a.trim().endsWith("."),
+        JSON.stringify((f.a || "").slice(0, 60)));
+      /* The check this field exists for. */
+      ok(`${p.slug}: extra answer appears verbatim in the body`,
+        typeof f.a === "string" && bodyText.includes(f.a.trim()),
+        `"${(f.a || "").slice(0, 70)}..." is not in the visible copy`);
+      ok(`${p.slug}: extra answer carries a figure`, /\d/.test(f.a || ""),
+        JSON.stringify((f.a || "").slice(0, 60)));
+    }
+    const qs = p.faqs.map((f) => (f.q || "").toLowerCase().trim());
+    ok(`${p.slug}: its extra questions are distinct`, new Set(qs).size === qs.length, qs.join(" | "));
   }
 
   /* Every page gets a question one way or the other, and the fallback has to

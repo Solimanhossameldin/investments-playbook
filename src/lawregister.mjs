@@ -72,6 +72,11 @@ const ENTRIES = [
     applied: "mortgage-capacity",
   },
   {
+    mod: mg, key: "cbuaeIntroduction", year: 2013, area: "Borrowing",
+    what: "States who the mortgage regulation is written for, being UAE nationals, GCC nationals and expatriates, and the single distinction it draws between borrowers, being owner occupier against investor. It sets no test of residency, which is why no loan to value band turns on whether the borrower lives in the country.",
+    applied: "mortgage-capacity",
+  },
+  {
     mod: mg, key: "cbuaeDisclosure", year: 2013, area: "Borrowing",
     what: "Requires the lender to give the borrower the lifetime cost of the loan and a separate schedule of fees and charges, and points the cap on early repayment charges back at the consumer lending regulation.",
     applied: "mortgage-capacity",

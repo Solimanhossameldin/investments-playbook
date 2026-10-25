@@ -6,7 +6,7 @@
   "category": "property",
   "tier": 1,
   "calculator": "net-rental-yield",
-  "reviewed": "17 September 2026",
+  "reviewed": "25 October 2026",
   "summary": "The Central Bank sets three caps on a Dubai mortgage, not two, and the deposit advertised as 20% is 26.91% of the price once the cash is counted.",
   "question": "How much cash do you actually need for a Dubai mortgage?",
   "formula": "Article 3 caps the loan three times over, and the smallest wins.\n\n  1. Against the property\n     Maximum loan = Value x the loan to value band\n     Expatriate, first home below AED 5 million: 80%\n     Expatriate, second or subsequent: 60%\n     Anything bought off plan: 50%\n\n  2. Against the monthly income, the debt burden ratio\n     Room for payments = Monthly income x 50% - other committed payments\n     Maximum loan = Room x (1 - (1 + r)^-n) / r\n     where r is the monthly stressed rate and n the number of months,\n     n is at most 300, and r is the contract rate plus 2 to 4 points\n\n  3. Against the annual income, the maximum financing amount\n     Maximum loan = Annual income x 7 for an expatriate, x 8 for a national\n\nCash needed on the day\n  Deposit (Value - loan)\n  + the whole acquisition stack, which cannot be borrowed\n  + the mortgage's own registration, trustee and title deed\n\nWhich income cap binds is decided by the stressed rate.\nBelow about 5.18% the multiple binds; above it the ratio does.",
@@ -15,7 +15,8 @@
     "Article 3 sets a maximum financing amount as well as a ratio: 'UAE Nationals: up to 8 years annual income. Expatriates: up to 7 years annual income'. It is widely quoted and rarely operative, because the stress test usually pushes the debt burden ratio below it. Widely quoted is not the same as binding.",
     "The deposit is not the cash requirement. The cap is a percentage of the value of the property, and the registration fee, agency commission, trustee fees and the mortgage's own registration are not the property. A buyer who has saved the headline deposit is short by nearly seven points of the price.",
     "The debt burden ratio counts commitments rather than balances. A car loan with eleven months left counts at its full monthly payment, so clearing a small loan before applying can buy more capacity than saving the same amount toward the deposit.",
-    "Rent from the property being bought does not count in full. Article 3 requires the lender to 'make a deduction of at least two months' rental income from the DBR calculation', so at most ten of the twelve months can be credited, and 'The use of 'End of Service Benefit' is not allowed' as a source of repayment at all."
+    "Rent from the property being bought does not count in full. Article 3 requires the lender to 'make a deduction of at least two months' rental income from the DBR calculation', so at most ten of the twelve months can be credited, and 'The use of 'End of Service Benefit' is not allowed' as a source of repayment at all.",
+    "The loan to value a non-resident is offered is bank policy, not a cap in any instrument, so it is a figure that varies between lenders, moves with credit conditions and is arguable in a way a regulation is not. The span on this page is the span buyers are quoted and nothing more: it is not a schedule, and a row in it is not an entitlement."
   ],
   "whenToUse": "Before viewing anything, so the search runs over properties that can actually be financed. Then again on any change to income, to committed debt, or to the rate, because the cap that binds can change without the price moving. Article 4 of the same regulation entitles you to the arithmetic: 'Borrowers should be provided with information setting out the total cost of the loan during its lifetime'.",
   "sources": [
@@ -30,11 +31,24 @@
     {
       "name": "Executive Council Resolution No. (30) of 2013 Approving Fees of the Land Department",
       "url": "https://dlp.dubai.gov.ae/Legislation%20Reference/2013/ECR%2030%20of%202013.html"
+    },
+    {
+      "name": "Central Bank of the UAE, Regulations Regarding Mortgage Loans (Circular No. 31/2013), Introduction",
+      "url": "https://rulebook.centralbank.ae/en/rulebook/introduction-29"
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Can a non-resident get a mortgage in Dubai?",
+      "a": "The Central Bank's regulation sets no loan to value cap on a buyer living outside the UAE: Article 3 bands the maximum loan by nationality status and by whether the property is a first home, an investment or off plan, and never by residency. The 50% that brokers quote is bank policy, and at 50% the cash required on the AED 1,500,000 Dubai apartment this page prices is AED 852,565, or 56.84% of the price."
+    },
+    {
+      "q": "What salary do you need to buy a one bedroom in Dubai?",
+      "a": "At a stressed rate of 6%, an expatriate borrowing the full 80% band on a AED 1,500,000 Dubai apartment needs a monthly income of AED 15,463 and no other debt at all, because Article 3 allows half of income to service every commitment the borrower has."
     }
   ]
 }
 ---
-
 Every page on this question says there are two tests. A loan to value cap that limits the loan against the property, a debt burden ratio that limits it against your income, and your capacity is the lower of the two.
 
 That is the summary of a regulation nobody has opened. [Article 3 of the Central Bank's Regulations Regarding Mortgage Loans](https://rulebook.centralbank.ae/en/rulebook/article-3-important-ratios) sets seven things, and **three of them cap the size of the loan**. The third is a maximum financing amount expressed as a multiple of annual income, and it sits in the same article, two clauses below the one everybody quotes.
@@ -87,6 +101,8 @@ Here is the same point as the number a buyer can use. On the illustrative one be
 
 Read the swap in the last column. It happens once, between the first two rows, and it happens at a rate low enough that the second row is the realistic one.
 
+At a stressed rate of 6%, an expatriate borrowing the full 80% band on a AED 1,500,000 Dubai apartment needs a monthly income of AED 15,463 and no other debt at all, because Article 3 allows half of income to service every commitment the borrower has.
+
 Two things follow that no advertisement mentions. The income in that table is the income needed **with no car loan, no personal loan and no credit card commitment**, so every dirham of other monthly obligation raises it by two. And the table is the answer to "what salary do I need to buy a one bedroom", which is asked far more often than it is answered with arithmetic.
 
 ## The deposit is not the deposit
@@ -111,6 +127,29 @@ The whole of that stack is what [transaction cost drag](/playbooks/transaction-c
 Article 3 is blunt about this: **the maximum LTV for mortgages on property being purchased off plans is 50% regardless of purpose, value, or category of purchaser**. No first-home band, no price bracket, no nationality.
 
 On the same unit that means a loan of AED 750,000 and cash of **AED 852,565**, or **56.84%** of the price. A buyer reading a 20/60/20 payment plan as "20% down" is out by a factor of nearly three on the cash the purchase needs, because the plan describes what the developer wants and the regulation describes what a bank may lend. The two have never been the same document. What happens if the instalments and the mortgage do not meet is [the off-plan page](/playbooks/off-plan-irr/), and it is the most expensive branch in Dubai property.
+
+## What the regulation sets for a non-resident, which is nothing
+
+The Central Bank's regulation sets no loan to value cap on a buyer living outside the UAE: Article 3 bands the maximum loan by nationality status and by whether the property is a first home, an investment or off plan, and never by residency. The 50% that brokers quote is bank policy, and at 50% the cash required on the AED 1,500,000 Dubai apartment this page prices is AED 852,565, or 56.84% of the price.
+
+The regulation says it in its own voice, twice, in the Introduction a summary never reaches. It describes institutions **providing mortgage loans to UAE nationals, GCC nationals and expatriates**, which is three nationality categories with no residency condition attached to any of them. And it states the one distinction it does draw: **These Regulations make a distinction between loans to owner occupiers of residential property and investors in residential property**. Owner occupier against investor. Not resident against non-resident.
+
+So the half that is printed on almost every page answering this question is not a cap, and the pages quoting it usually concede as much in the clause itself. The figure arrives as *some banks only finance up to 50% for non-resident applicants*, in the same article that attributes 20% and 30% down to "UAE Mortgage Law" without naming it. Those two are the regulation: they are the expatriate first-home bands either side of AED 5 million, stated as deposits. The 50% is a credit committee. Two different kinds of number, set out as one, which is why the answers disagree with each other from page to page while each one sounds settled.
+
+What follows from that is not a better figure. It is that the figure is the wrong thing to plan against. Here is the cash the same purchase needs across the whole span a buyer abroad is actually quoted, on the illustrative **AED 1,500,000** one bedroom, with the fee stack that does not change whatever the loan is.
+
+| Loan to value offered | Loan | Cash required on the day | As a share of the price | Against an advertised deposit of |
+|---|---|---|---|---|
+| 80% | 1,200,000 | 403,690 | 26.91% | 20% |
+| 70% | 1,050,000 | 553,315 | 36.89% | 30% |
+| 60% | 900,000 | 702,940 | 46.86% | 40% |
+| 50% | 750,000 | 852,565 | 56.84% | 50% |
+
+The gap in the last two columns is between **6.84 and 6.91 percentage points** on every row, because the acquisition stack is a share of the price and barely moves with the loan. A buyer who has prepared the deposit has prepared for the wrong number by about AED 103,000, and that is true at the statutory band and at the policy half alike.
+
+Three things are worth taking from the table rather than from the figure. The cash column is what a purchase is planned against, and it is knowable to the dirham before any bank has been approached. The loan to value in the first column is negotiable, because policy is: a borrower told 50% by one lender has been told the policy of one lender, and [the valuation](/playbooks/when-the-valuation-comes-in-low/) is a separate hazard sitting underneath whichever band is agreed. And the two income caps above this section still apply in full, assessed on income earned abroad: the seven-year multiple, the stress test, and the debt burden ratio that is nearly always the one that binds. Income in another currency against a loan in dirhams is the risk that arrives with them, and [the peg](/playbooks/currency-risk-and-the-peg/) is what that risk actually rests on.
+
+Whether the unit can be bought at all by a foreign national is a prior question with its own answer, which is a register rather than a policy: [freehold areas and foreign ownership](/playbooks/freehold-areas-and-foreign-ownership/).
 
 ## What counts as income, and what does not
 

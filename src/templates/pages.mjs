@@ -638,6 +638,27 @@ export function playbookPage({ site, pb, calcName, related = [], briefs = [], li
       name: `${copy(pb.title)}: where does it break?`,
       acceptedAnswer: { "@type": "Answer", text: modes.join(" ") },
     },
+    /* Questions a page declares for itself, beyond the three above.
+
+       The three generated questions come off fields every page has, so they
+       cover the page's headline finding and nothing else. A long page answers
+       more than one question, and a section buried two thirds of the way down
+       is invisible to anything reading only the first screen -- which is what
+       an assistant extracting an answer does. So a page may name the further
+       questions it answers.
+
+       The answer is not written here. It has to be a sentence already visible
+       in the body, copied verbatim, and the suite fails the page if it is
+       not: the markup can then only ever repeat what a reader is shown, which
+       is the rule the block above follows and the reason this cannot become a
+       place to put keywords. It also means the page is edited rather than the
+       schema when the answer changes, because editing the schema alone breaks
+       the build. */
+    ...(pb.faqs || []).map((f) => ({
+      "@type": "Question",
+      name: copy(f.q),
+      acceptedAnswer: { "@type": "Answer", text: copy(f.a) },
+    })),
   ].filter(Boolean);
 
   /* The limitations again, individually, under a type that is true of them.
