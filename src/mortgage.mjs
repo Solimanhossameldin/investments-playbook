@@ -236,6 +236,80 @@ export function cashByLtv(price = aq.EXAMPLE.price) {
   });
 }
 
+/* ---- the two charges nobody caps ----
+
+   Every cash figure above is built out of instruments: the registration fee
+   is a resolution, the trustee's fee and the title deed are a published
+   schedule, the mortgage's own registration is a quarter of one per cent set
+   by the same resolution. That is why they can be printed to the dirham.
+
+   Two charges on the same completion cannot. The bank's arrangement or
+   processing fee and, on a purchase, the bank's valuation fee are both paid
+   in cash on the day and neither is set by any instrument this site can read.
+   Appendix 2 of the Central Bank's retail fee caps is the obvious place to
+   look, because it is where the caps on a home loan actually live, and it
+   caps ten fees and not those two.
+
+   The refinancing page already says this about the same two charges and
+   calls its total a floor for that reason. This page was asserting the
+   opposite -- that the cash was knowable before a bank was approached -- on
+   the one page whose question is how much cash a buyer needs, so the data
+   below is here to make the claim the page makes a computed one.
+
+   The rows are Appendix 2's own, home loans only. What falls out of them is
+   not a figure for the arrangement fee; it is the shape of the schedule. The
+   fees the Central Bank caps are the small ones. */
+export const FEE_CAPS = {
+  /* Capped at a flat maximum, in dirhams. */
+  flat: [
+    { fee: "Late payment", aed: 700 },
+    { fee: "Issuance of liability letter", aed: 85 },
+    { fee: "Other certificate", aed: 75 },
+    { fee: "Non-standard statement production or copy of original documentation", aed: 100 },
+    { fee: "Property swaps administration", aed: 1320 },
+    { fee: "Issuance of NOC", aed: 150 },
+    { fee: "Clearance letter", aed: 95 },
+    { fee: "Request of other letters", aed: 90 },
+  ],
+  /* Capped against the outstanding balance rather than at a flat figure, so
+     they have no place in a dirham total and are counted separately. */
+  onBalance: [
+    { fee: "Early settlement" },
+    { fee: "Partial settlement charges" },
+  ],
+  /* Charged on a purchase completion and capped by nothing in the appendix.
+     No figure is published for either here, deliberately: this site holds no
+     dataset for them and will not estimate a bank's pricing. */
+  uncapped: [
+    { fee: "Arrangement or processing fee", charged: "on the loan" },
+    { fee: "Valuation, instructed on a purchase", charged: "at the bank's own rate" },
+  ],
+};
+
+/* The comparison the page prints. `flatTotal` is every flat cap in the
+   appendix added up, which is not a bill anyone receives -- a borrower
+   incurring all eight at their maximum would be having a remarkable year --
+   but it is the right bound on how much the capped fees can come to, and
+   that bound is the finding: it is smaller than the single fee charged to
+   register the mortgage. */
+export function completionCharges({ price = aq.EXAMPLE.price, ltvRate = null, status = "expatriate", first = true, offPlan = false } = {}) {
+  const c = cashToClose({ price, ltvRate, status, first, offPlan });
+  const flatTotal = FEE_CAPS.flat.reduce((a, r) => a + r.aed, 0);
+  const registration = Math.round(c.loan * aq.FEES.mortgageRate);
+  return {
+    loan: c.loan,
+    cappedCount: FEE_CAPS.flat.length + FEE_CAPS.onBalance.length,
+    flatCount: FEE_CAPS.flat.length,
+    uncappedCount: FEE_CAPS.uncapped.length,
+    flatTotal,
+    largestFlat: Math.max(...FEE_CAPS.flat.map((r) => r.aed)),
+    registration,
+    /* True on this loan and the reason the sentence is worth printing. */
+    flatTotalUnderRegistration: flatTotal < registration,
+    shortfallVsRegistration: registration - flatTotal,
+  };
+}
+
 /* Article 3.1 requires at least two months' rental income to be deducted
    before an investment property's rent is credited in the ratio. The share
    that survives is a property of the year, not of the rent. */

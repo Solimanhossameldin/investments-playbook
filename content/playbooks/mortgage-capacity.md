@@ -6,8 +6,8 @@
   "category": "property",
   "tier": 1,
   "calculator": "net-rental-yield",
-  "reviewed": "25 October 2026",
-  "summary": "The Central Bank sets three caps on a Dubai mortgage, not two, and the deposit advertised as 20% is 26.91% of the price once the cash is counted.",
+  "reviewed": "26 October 2026",
+  "summary": "The Central Bank sets three caps on a Dubai mortgage, not two, and the deposit advertised as 20% is at least 26.91% of the price once the cash is counted.",
   "question": "How much cash do you actually need for a Dubai mortgage?",
   "formula": "Article 3 caps the loan three times over, and the smallest wins.\n\n  1. Against the property\n     Maximum loan = Value x the loan to value band\n     Expatriate, first home below AED 5 million: 80%\n     Expatriate, second or subsequent: 60%\n     Anything bought off plan: 50%\n\n  2. Against the monthly income, the debt burden ratio\n     Room for payments = Monthly income x 50% - other committed payments\n     Maximum loan = Room x (1 - (1 + r)^-n) / r\n     where r is the monthly stressed rate and n the number of months,\n     n is at most 300, and r is the contract rate plus 2 to 4 points\n\n  3. Against the annual income, the maximum financing amount\n     Maximum loan = Annual income x 7 for an expatriate, x 8 for a national\n\nCash needed on the day\n  Deposit (Value - loan)\n  + the whole acquisition stack, which cannot be borrowed\n  + the mortgage's own registration, trustee and title deed\n\nWhich income cap binds is decided by the stressed rate.\nBelow about 5.18% the multiple binds; above it the ratio does.",
   "failureModes": [
@@ -16,6 +16,7 @@
     "The deposit is not the cash requirement. The cap is a percentage of the value of the property, and the registration fee, agency commission, trustee fees and the mortgage's own registration are not the property. A buyer who has saved the headline deposit is short by nearly seven points of the price.",
     "The debt burden ratio counts commitments rather than balances. A car loan with eleven months left counts at its full monthly payment, so clearing a small loan before applying can buy more capacity than saving the same amount toward the deposit.",
     "Rent from the property being bought does not count in full. Article 3 requires the lender to 'make a deduction of at least two months' rental income from the DBR calculation', so at most ten of the twelve months can be credited, and 'The use of 'End of Service Benefit' is not allowed' as a source of repayment at all.",
+    "The bank's own arrangement fee and, on a purchase, its valuation fee are excluded from every cash figure here. Appendix 2 of the Central Bank's fee caps publishes no maximum for either, this site holds no dataset for them, and neither is estimated, which makes each total a floor rather than a prediction. Ask for both in writing before an offer is made.",
     "The loan to value a non-resident is offered is bank policy, not a cap in any instrument, so it is a figure that varies between lenders, moves with credit conditions and is arguable in a way a regulation is not. The span on this page is the span buyers are quoted and nothing more: it is not a schedule, and a row in it is not an entitlement."
   ],
   "whenToUse": "Before viewing anything, so the search runs over properties that can actually be financed. Then again on any change to income, to committed debt, or to the rate, because the cap that binds can change without the price moving. Article 4 of the same regulation entitles you to the arithmetic: 'Borrowers should be provided with information setting out the total cost of the loan during its lifetime'.",
@@ -35,12 +36,20 @@
     {
       "name": "Central Bank of the UAE, Regulations Regarding Mortgage Loans (Circular No. 31/2013), Introduction",
       "url": "https://rulebook.centralbank.ae/en/rulebook/introduction-29"
+    },
+    {
+      "name": "Central Bank of the UAE, Amendments to Appendix 2 of the Regulations Regarding Bank Loans & Other Services Offered to Individual Customers",
+      "url": "https://rulebook.centralbank.ae/en/entiresection/4406"
     }
   ],
   "faqs": [
     {
       "q": "Can a non-resident get a mortgage in Dubai?",
       "a": "The Central Bank's regulation sets no loan to value cap on a buyer living outside the UAE: Article 3 bands the maximum loan by nationality status and by whether the property is a first home, an investment or off plan, and never by residency. The 50% that brokers quote is bank policy, and at 50% the cash required on the AED 1,500,000 Dubai apartment this page prices is AED 852,565, or 56.84% of the price."
+    },
+    {
+      "q": "What fees does a Dubai bank charge to set up a mortgage?",
+      "a": "Appendix 2 of the Central Bank's retail fee caps sets a maximum for ten fees on a Dubai home loan and sets none for the two charges that put the loan in place: the bank's arrangement or processing fee, charged on the loan, and the valuation, charged at the bank's own rate. The eight it caps at a flat figure come to AED 2,615 in total, less than the AED 3,000 it costs to register the mortgage on this flat, so the fees the Central Bank caps are the small ones."
     },
     {
       "q": "What salary do you need to buy a one bedroom in Dubai?",
@@ -147,9 +156,37 @@ What follows from that is not a better figure. It is that the figure is the wron
 
 The gap in the last two columns is between **6.84 and 6.91 percentage points** on every row, because the acquisition stack is a share of the price and barely moves with the loan. A buyer who has prepared the deposit has prepared for the wrong number by about AED 103,000, and that is true at the statutory band and at the policy half alike.
 
-Three things are worth taking from the table rather than from the figure. The cash column is what a purchase is planned against, and it is knowable to the dirham before any bank has been approached. The loan to value in the first column is negotiable, because policy is: a borrower told 50% by one lender has been told the policy of one lender, and [the valuation](/playbooks/when-the-valuation-comes-in-low/) is a separate hazard sitting underneath whichever band is agreed. And the two income caps above this section still apply in full, assessed on income earned abroad: the seven-year multiple, the stress test, and the debt burden ratio that is nearly always the one that binds. Income in another currency against a loan in dirhams is the risk that arrives with them, and [the peg](/playbooks/currency-risk-and-the-peg/) is what that risk actually rests on.
+Three things are worth taking from the table rather than from the figure. The cash column is what a purchase is planned against, and every line in it that an instrument sets is knowable to the dirham before any bank has been approached, which is all of it except the two charges the bank sets itself in the section below. The loan to value in the first column is negotiable, because policy is: a borrower told 50% by one lender has been told the policy of one lender, and [the valuation](/playbooks/when-the-valuation-comes-in-low/) is a separate hazard sitting underneath whichever band is agreed. And the two income caps above this section still apply in full, assessed on income earned abroad: the seven-year multiple, the stress test, and the debt burden ratio that is nearly always the one that binds. Income in another currency against a loan in dirhams is the risk that arrives with them, and [the peg](/playbooks/currency-risk-and-the-peg/) is what that risk actually rests on.
 
 Whether the unit can be bought at all by a foreign national is a prior question with its own answer, which is a register rather than a policy: [freehold areas and foreign ownership](/playbooks/freehold-areas-and-foreign-ownership/).
+
+## The two charges the Central Bank does not cap
+
+Every cash figure above is a floor. Appendix 2 of the Central Bank's retail fee caps sets a maximum for ten fees on a Dubai home loan and sets none for the two charges that put the loan in place: the bank's arrangement or processing fee, charged on the loan, and the valuation, charged at the bank's own rate. The eight it caps at a flat figure come to AED 2,615 in total, less than the AED 3,000 it costs to register the mortgage on this flat, so the fees the Central Bank caps are the small ones.
+
+The appendix is [published in full by the Central Bank](https://rulebook.centralbank.ae/en/entiresection/4406). Its flat maximums on a home loan are these:
+
+| Fee | Maximum, AED |
+|---|---|
+| Late payment | 700 |
+| Issuance of liability letter | 85 |
+| Other certificate | 75 |
+| Non-standard statement production or copy of original documentation | 100 |
+| Property swaps administration | 1,320 |
+| Issuance of NOC | 150 |
+| Clearance letter | 95 |
+| Request of other letters | 90 |
+| **Total** | **2,615** |
+
+Two more are capped against the balance rather than at a figure: the early settlement and the partial settlement charge, each at **1% of the outstanding balance or AED 10,000, whichever is less**. Both are exit charges, and [what it costs to move the loan to another bank](/playbooks/refinancing-a-dubai-mortgage/) prices them against the saving a lower rate actually produces.
+
+That is the whole of what the appendix caps, and every line of it is a letter, a certificate, a late payment or a way out. Not one of them is the charge for granting the loan.
+
+There is one place the appendix prices a valuation, and it is worth reading precisely because it is so narrow. The property swaps administration fee above is capped at AED 1,320 **with the valuation included**. So the Central Bank has set a ceiling on a valuation in the one transaction where it chose to, and set none on the valuation a buyer is charged on a purchase. A swap is a different transaction and that figure is not a ceiling a borrower can hold a bank to. It is only evidence that the number was capable of being capped.
+
+**What follows is a disclosure, not a figure.** This site does not publish an arrangement fee or a valuation fee, because no instrument sets either, no appendix caps either, and this site holds no dataset for either. Competing pages print ranges for both, a half to one per cent of the loan and two and a half to three and a half thousand dirhams, and those ranges are brokerage observation rather than a schedule, which is why they differ from page to page. Estimating them here would put a number in the one column of this page that is otherwise traceable to an instrument line by line.
+
+The practical consequence is the same one [the refinancing page](/playbooks/refinancing-a-dubai-mortgage/) reaches about the identical two charges. The arrangement fee is charged on the loan, so unlike every flat fee above it scales with how much you borrow, and it is the only charge in the whole completion that both scales and is negotiable. Ask the bank for both in writing before an offer is made, and set them beside the schedule Article 4 already entitles you to. A borrower who has the schedule and the two quotes has the real figure; a borrower who has only this page's table has a floor, and knowing which one you are holding is the point of this section.
 
 ## What counts as income, and what does not
 

@@ -2085,6 +2085,69 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
         `${Math.min(...gaps)} / ${Math.max(...gaps)}`);
     }
 
+    /* 2c. The fee caps the Central Bank publishes, against the two it does
+       not, and the disclosure that depends on the difference.
+
+       This page's answer is a cash figure, and for most of its life it said
+       that figure was knowable to the dirham before a bank was approached.
+       It is not: the arrangement fee and the purchase valuation are cash on
+       the same day and no instrument sets either. The refinancing page has
+       always declared exactly that about the same two charges and called its
+       total a floor. So three things have to hold together here, and each of
+       them is a thing a later edit could quietly undo.
+
+       The table has to be the appendix rather than a memory of it. The
+       sentence comparing the capped fees to the mortgage registration has to
+       be the module's arithmetic rather than a figure typed once. And the
+       page has to keep saying, in its failure modes, that the two uncapped
+       charges are excluded -- because the moment it stops saying so, every
+       cash total on it becomes an estimate presented as a schedule, which is
+       the exact failure this site's positioning is an attack on. */
+    const capTable = find((t) => /Maximum, AED/i.test((t.head[1] || "")));
+    ok("mortgage: the Appendix 2 fee cap table is present", !!capTable);
+    if (capTable) {
+      const cc = mg.completionCharges();
+      const flat = mg.FEE_CAPS.flat;
+      ok("mortgage: the fee cap table lists every flat cap and the total",
+        capTable.rows.length === flat.length + 1, `${capTable.rows.length} rows`);
+      ok("mortgage: the fee cap table names the appendix's fees in order",
+        same(capTable.rows.slice(0, flat.length).map((r) => r[0]), flat.map((f) => f.fee)),
+        JSON.stringify(capTable.rows.slice(0, flat.length).map((r) => r[0])));
+      ok("mortgage: its maximums match the appendix, and its total adds up",
+        same(col(capTable, 1), [...flat.map((f) => f.aed), cc.flatTotal]),
+        JSON.stringify(col(capTable, 1)));
+    }
+
+    {
+      const cc = mg.completionCharges();
+      /* The quotable sentence, which is also the page's third declared FAQ
+         answer, so an edit that breaks it breaks the markup too. */
+      ok("mortgage: the page prints the number of fees the appendix caps",
+        p.body.includes(`a maximum for ten fees`) && cc.cappedCount === 10,
+        `cappedCount ${cc.cappedCount}`);
+      ok("mortgage: the page prints the capped total the module sums",
+        p.body.includes(`come to AED ${mg.money(cc.flatTotal)} in total`), mg.money(cc.flatTotal));
+      ok("mortgage: it sets that total against the computed registration fee",
+        p.body.includes(`less than the AED ${mg.money(cc.registration)} it costs to register the mortgage`),
+        mg.money(cc.registration));
+      /* The comparison is only worth printing while it is true. If a future
+         price or band made the registration fee the smaller of the two, the
+         sentence would be false and this fails rather than ageing quietly. */
+      ok("mortgage: the capped fees really are smaller than the registration fee",
+        cc.flatTotalUnderRegistration, `${cc.flatTotal} vs ${cc.registration}`);
+      ok("mortgage: the narrow valuation cap is quoted as the appendix sets it",
+        p.body.includes(`capped at AED ${mg.money(cc.largestFlat)}`), mg.money(cc.largestFlat));
+      /* The disclosure itself. */
+      const modes = p.failureModes.join(" ");
+      ok("mortgage: a failure mode excludes the bank's arrangement fee",
+        /arrangement fee/i.test(modes), "no arrangement fee exclusion declared");
+      ok("mortgage: that exclusion calls the totals a floor",
+        /floor rather than a prediction|floor rather than an estimate/i.test(modes), "no floor declared");
+      ok("mortgage: the page no longer claims the cash is knowable to the dirham outright",
+        !p.body.includes("it is knowable to the dirham before any bank has been approached"),
+        "the superseded over-claim is back in the body");
+    }
+
     /* 3. The crossover, printed to two places, and independent of income and
           of price. This is the claim the page is built on. */
     ok("mortgage: the page prints the computed crossover rate",
