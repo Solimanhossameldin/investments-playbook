@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-26T05:59:39.370Z",
+ "fetchedAt": "2026-10-26T12:46:52.911Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Survey on the Access to Finance of Enterprises: lending conditions tightened",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261026~bde7b6d11a.en.html",
+   "published": "2026-10-26T09:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Frank Elderson: Taking action for nature – investing in economic resilience and prosperity",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261026~d903d7ad85.en.html",
@@ -237,9 +246,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
    "published": "2026-10-13T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the Money Market Committee meeting – September 2026",
@@ -327,9 +336,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
    "published": "2026-10-07T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
@@ -456,15 +465,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Philip R. Lane: Diagnostic Challenges for ECB Monetary Policy",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261005~1d8d998ef4.en.html",
-   "published": "2026-10-05T08:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
