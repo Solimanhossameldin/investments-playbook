@@ -1991,6 +1991,144 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 }
 
 
+/* ---- what it costs to buy, and the curve the leaflets print as a band ----
+
+   The page's whole claim is that the Dubai entry cost is not a percentage
+   but a percentage plus a flat block, so the rate falls as the price rises
+   and the "six to seven per cent" every competing page prints is a band
+   around a curve. That claim lives in the cells of four tables, and a table
+   is exactly the thing that can be edited into something false that still
+   renders perfectly. So every computed cell is recomputed here from
+   src/acquisition.mjs at the same five prices, the flat blocks are derived
+   rather than read, and the finding itself is asserted as an inequality
+   instead of as a sentence somebody typed. Proved by reverting: changing the
+   AED 400,000 row's mortgaged rate from 8.06% to 8.07% fails the rate check
+   in this block and nothing else in the suite. */
+{
+  const p = playbooks.find((x) => x.slug === "cost-of-buying-in-dubai");
+  ok("cost of buying: the page exists", !!p);
+  if (p) {
+    const PRICES = [400000, 750000, 1500000, 3000000, 5000000];
+    const at = (price) => {
+      const i = { ...aq.EXAMPLE, price };
+      const a = aq.acquisition(i);
+      const m = aq.mortgageCosts(i);
+      return { a, m, combined: a.total + m.total };
+    };
+    const rate = (n, price) => `${((n / price) * 100).toFixed(2)}%`;
+    const tables = tablesIn(p.body);
+    const byHead = (re) => tables.find((t) => re.test(t.head.join(" | ")));
+    const byFirstCell = (re) => tables.find((t) => t.rows.some((r) => re.test(r[0])));
+
+    /* 1. The headline table: four computed columns at five prices. This is
+          the page's first screen and the only thing an assistant lifting an
+          answer is likely to read, so it is pinned cell by cell. */
+    const head = byHead(/Fees, cash/);
+    ok("cost of buying: the headline table is on the page", !!head);
+    if (head) {
+      ok("cost of buying: the headline table runs the five prices it claims",
+        same(col(head, 0), PRICES), JSON.stringify(col(head, 0)));
+      ok("cost of buying: every cash total is the schedule's",
+        same(col(head, 1), PRICES.map((v) => at(v).a.total)), JSON.stringify(col(head, 1)));
+      ok("cost of buying: every cash rate is the schedule's",
+        same(head.rows.map((r) => r[2]), PRICES.map((v) => rate(at(v).a.total, v))),
+        JSON.stringify(head.rows.map((r) => r[2])));
+      ok("cost of buying: every mortgaged total is the schedule's",
+        same(col(head, 3), PRICES.map((v) => at(v).combined)), JSON.stringify(col(head, 3)));
+      ok("cost of buying: every mortgaged rate is the schedule's",
+        same(head.rows.map((r) => r[4]), PRICES.map((v) => rate(at(v).combined, v))),
+        JSON.stringify(head.rows.map((r) => r[4])));
+    }
+
+    /* 2. The itemised stack, including its bold total, so a line cannot be
+          edited and leave a total that no longer adds up. */
+    const items = byHead(/Set by/);
+    ok("cost of buying: the itemised table is on the page", !!items);
+    if (items) {
+      const A = at(1500000).a;
+      ok("cost of buying: the itemised lines are the module's, in order",
+        same(col(items, 1), [...A.lines.map(([, v]) => v), A.total]),
+        JSON.stringify(col(items, 1)));
+      ok("cost of buying: the itemised labels are the module's, in order",
+        same(items.rows.slice(0, A.lines.length).map((r) => r[0]), A.lines.map(([k]) => k)),
+        JSON.stringify(items.rows.map((r) => r[0])));
+    }
+
+    /* 3. The mortgage registration, which is a second transaction and is
+          where the flat half of the stack doubles. */
+    const mort = byFirstCell(/^Mortgage registration fee$/);
+    ok("cost of buying: the mortgage table is on the page", !!mort);
+    if (mort) {
+      const M = at(1500000).m;
+      ok("cost of buying: the mortgage lines are the module's, in order",
+        same(col(mort, 1), [...M.lines.map(([, v]) => v), M.total]), JSON.stringify(col(mort, 1)));
+    }
+
+    /* 4. The split table. The claim it carries is a legal one, so the saving
+          it prints has to be the seller's statutory half and nothing else. */
+    const split = byHead(/split as Article 3 splits it/);
+    ok("cost of buying: the split table is on the page", !!split);
+    if (split) {
+      ok("cost of buying: the convention column is the full stack",
+        same(col(split, 1), PRICES.map((v) => at(v).a.total)), JSON.stringify(col(split, 1)));
+      ok("cost of buying: the split column removes exactly the seller's half",
+        same(col(split, 2), PRICES.map((v) => at(v).a.total - at(v).a.sellerShare)),
+        JSON.stringify(col(split, 2)));
+      ok("cost of buying: the split rates are the schedule's",
+        same(split.rows.map((r) => r[3]),
+          PRICES.map((v) => rate(at(v).a.total - at(v).a.sellerShare, v))),
+        JSON.stringify(split.rows.map((r) => r[3])));
+    }
+
+    /* 5. The flat blocks, derived from the fee table rather than read off the
+          page, because they are the mechanism behind the whole finding. */
+    const flatOf = (price) =>
+      aq.trusteeFee(price) + aq.FEES.titleDeed + aq.FEES.mapApartment +
+      aq.FEES.knowledge + aq.FEES.innovation;
+    const mortgageFlat = Math.round(aq.FEES.mortgageTrustee * (1 + aq.FEES.vatRate)) +
+      aq.FEES.titleDeed + aq.FEES.knowledge + aq.FEES.innovation;
+    const flatHigh = flatOf(aq.FEES.trusteeThreshold);
+    const flatLow = flatOf(aq.FEES.trusteeThreshold - 1);
+    for (const [label, v] of [
+      ["the cash flat block at or above the trustee threshold", flatHigh],
+      ["the cash flat block below it", flatLow],
+      ["the mortgage flat block", mortgageFlat],
+      ["the combined flat block", flatHigh + mortgageFlat],
+    ]) {
+      ok(`cost of buying: the page prints ${label}`,
+        p.body.includes(`AED ${aq.money(v)}`), String(v));
+    }
+    ok("cost of buying: the whenToUse line prints the combined flat block",
+      p.whenToUse.includes(`AED ${aq.money(flatHigh + mortgageFlat)}`),
+      String(flatHigh + mortgageFlat));
+
+    /* 6. The finding, as arithmetic rather than as prose. If a future fee
+          change made the stack proportional, or progressive, the page would
+          be wrong in a way no cell check above could notice. */
+    const cashRates = PRICES.map((v) => at(v).a.total / v);
+    const mortRates = PRICES.map((v) => at(v).combined / v);
+    ok("cost of buying: the cash rate is strictly falling across the five prices",
+      cashRates.every((r, i) => i === 0 || r < cashRates[i - 1]), JSON.stringify(cashRates));
+    ok("cost of buying: the mortgaged rate is strictly falling across the five prices",
+      mortRates.every((r, i) => i === 0 || r < mortRates[i - 1]), JSON.stringify(mortRates));
+    ok("cost of buying: borrowing costs proportionally more on the cheapest unit",
+      mortRates[0] - cashRates[0] > mortRates[4] - cashRates[4],
+      `${mortRates[0] - cashRates[0]} vs ${mortRates[4] - cashRates[4]}`);
+
+    /* 7. The page is a junction for the clusters either side of it, so the
+          chain is checked rather than hoped. */
+    for (const target of ["net-rental-yield", "transaction-cost-drag", "mortgage-capacity",
+      "off-plan-irr", "selling-well", "due-diligence-before-an-offer",
+      "service-charge-and-reserves", "refinancing-a-dubai-mortgage"]) {
+      ok(`cost of buying: links to /playbooks/${target}/`,
+        p.body.includes(`](/playbooks/${target}/)`));
+    }
+    ok("cost of buying: the two pages it extends link back to it",
+      ["net-rental-yield", "transaction-cost-drag"].every((s) =>
+        playbooks.find((x) => x.slug === s).body.includes("](/playbooks/cost-of-buying-in-dubai/)")));
+  }
+}
+
 /* ---- mortgage capacity, and the three caps in Article 3 ----
 
    The statutory half is covered by STATUTORY_PAGES above, which makes the

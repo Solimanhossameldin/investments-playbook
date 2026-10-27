@@ -168,6 +168,6 @@ Small against the 4%, and beside the point. What debt changes is not the acquisi
 
 It cannot tell you the achieved rent, only the asking rent you were shown. It cannot tell you next year's service charge, because the owners association sets it. It cannot tell you what the property will be worth, and a net yield says nothing at all about that. And if the property comes with a tenant already in it, the rent you inherit may be capped for years by [the rent increase ladder](/playbooks/rent-increase-caps/), which is a materially different asset from the same unit bought vacant.
 
-What it does tell you is the denominator, with the instrument behind every line of it. [Run your own figures](/calculators/net-rental-yield/), then read [what it costs to get back out](/playbooks/selling-well/) before you decide the yield is enough.
+What it does tell you is the denominator, with the instrument behind every line of it. The same fee stack, priced at five purchase prices and split into the part that scales and the part that does not, is [what it costs to buy a property in Dubai](/playbooks/cost-of-buying-in-dubai/). [Run your own figures](/calculators/net-rental-yield/), then read [what it costs to get back out](/playbooks/selling-well/) before you decide the yield is enough.
 
 The resolution and the Land Department pages behind every line of the fee stack are listed, with what each sets in its own words, on the [Dubai property law register](/dubai-property-law/).

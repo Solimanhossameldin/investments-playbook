@@ -24,6 +24,7 @@ export default [
     lede: "Almost every first purchase goes wrong in the same place: the advertised yield is a gross yield, and the costs that turn it into a net one are not in the listing. Work through these in order and you will price a property the way its eventual buyer will, rather than the way its seller does.",
     order: [
       "net-rental-yield",
+      "cost-of-buying-in-dubai",
       "the-one-percent-rule",
       "mortgage-capacity",
       "transaction-cost-drag",
