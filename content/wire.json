@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-27T07:52:09.641Z",
+ "fetchedAt": "2026-10-27T14:02:36.908Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "October 2026 euro area bank lending survey",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261027~506ef03145.en.html",
+   "published": "2026-10-27T00:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Survey on the Access to Finance of Enterprises: lending conditions tightened",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261026~bde7b6d11a.en.html",
@@ -411,33 +420,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Minutes of the UK Money Markets Code Sub-Committee – September 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/september/uk-money-markets-committee-minutes-september-2026",
-   "published": "2026-10-06T13:07:03.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Frank Elderson: Effective supervision through timely remediation",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261006_1~0df91e4e44.en.html",
-   "published": "2026-10-06T13:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Piero Cipollone: Money in the digital age: digital euro, tokenisation and the role of central banks",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261006~0da978f159.en.html",
-   "published": "2026-10-06T13:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
