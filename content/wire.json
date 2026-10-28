@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-28T08:52:16.238Z",
+ "fetchedAt": "2026-10-28T15:45:23.885Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Remit for the Monetary Policy Committee - October 2026",
+   "url": "https://www.bankofengland.co.uk/letter/2026/mpc-remit-2026",
+   "published": "2026-10-28T14:16:49.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-10-28T14:01:13.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
   {
    "title": "October 2026 euro area bank lending survey",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261027~506ef03145.en.html",
@@ -114,15 +132,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-10-20T14:02:35.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "SEC and AMF Announce Supervisory MOU To Enhance Cooperation for Investment Advisers and Investment Service Providers",
@@ -348,42 +357,6 @@
    "sourceLabel": "Monetary policy",
    "category": "rates",
    "feed": "fed-monetary"
-  },
-  {
-   "title": "Minutes of the London FXJSC Legal Sub Committee Meeting – 16 June 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/june/fxjsc-legal-sub-committee-meeting-16-june-26",
-   "published": "2026-10-07T13:36:25.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Minutes of the London FXJSC Operations Sub-Committee Meeting – 16 June 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/june/fxjsc-operations-sub-committee-meeting-16-june-2026",
-   "published": "2026-10-07T09:49:25.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Minutes of the London FXJSC Main Committee Meeting – 24 June 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/june/fxjsc-main-committee-meeting-24-june-2026",
-   "published": "2026-10-07T09:08:40.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Regulatory thresholds set to shift to automatic increases",
-   "url": "https://www.bankofengland.co.uk/news/2026/october/regulatory-thresholds-set-to-shift-to-automatic-increases",
-   "published": "2026-10-07T09:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
