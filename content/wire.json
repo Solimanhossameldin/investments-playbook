@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-28T15:45:23.885Z",
+ "fetchedAt": "2026-10-28T20:48:36.286Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Federal Reserve issues FOMC statement",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+   "published": "2026-10-28T18:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Monetary policy",
+   "category": "rates",
+   "feed": "fed-monetary"
+  },
   {
    "title": "Remit for the Monetary Policy Committee - October 2026",
    "url": "https://www.bankofengland.co.uk/letter/2026/mpc-remit-2026",
@@ -348,15 +357,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "Minutes of the Federal Open Market Committee, September 15-16, 2026",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
-   "published": "2026-10-07T18:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
-   "category": "rates",
-   "feed": "fed-monetary"
   }
  ]
 }
