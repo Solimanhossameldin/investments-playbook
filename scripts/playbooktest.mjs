@@ -295,6 +295,103 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     ok("short let: the break-even rate is the first whole dirham that clears the long let",
       hh.shortLetNet({ ...hh.EXAMPLE.shortLet, nightlyRate: rate }).net >= L.net &&
       hh.shortLetNet({ ...hh.EXAMPLE.shortLet, nightlyRate: rate - 1 }).net < L.net);
+
+    /* ---- the published gross-yield claim, netted ----
+
+       Everything above is the illustrative unit. This section takes a figure
+       somebody else measured, which is the class of number this site treats
+       as radioactive, so it is pinned the same way the observed publisher
+       data on the break-even page is: both tables are compared line by line
+       to the module, the source has to carry its period and its retrieval
+       date, and the central claim is guarded by behaviour rather than by
+       wording.
+
+       The behaviour guard is the one that matters. The page's finding is that
+       a published gross lead for short letting reverses once both sides are
+       netted. If a future edit to the claim, the cost stack or the price ever
+       makes the netted short let actually win, the sentence asserting the
+       reversal becomes false, and this fails rather than shipping it. */
+    const G = hh.grossClaimRun();
+    const C = hh.GROSS_CLAIM;
+    const pc1 = (x) => Number((x * 100).toFixed(1));
+
+    const claimLongTable = find((t) => t.rows.length && /^Rent at /.test(t.rows[0][0]));
+    ok("short let: the netted claim's tenancy table is present", !!claimLongTable);
+    if (claimLongTable) {
+      ok("short let: the netted claim's tenancy table matches the computed lines",
+        same(col(claimLongTable, 1), [G.long.gross, ...G.long.lines.map(([, v]) => v), G.long.net]),
+        JSON.stringify(col(claimLongTable, 1)));
+    }
+
+    const claimShortTable = find((t) => t.rows.length && /^Gross at /.test(t.rows[0][0]));
+    ok("short let: the netted claim's holiday home table is present", !!claimShortTable);
+    if (claimShortTable) {
+      ok("short let: the netted claim's holiday home table matches the computed lines",
+        same(col(claimShortTable, 1),
+          [G.short.gross, ...G.short.lines.map(([, v]) => v), G.short.deductions, G.short.net]),
+        JSON.stringify(col(claimShortTable, 1)));
+    }
+
+    const districtTable = find((t) => /as the index names it/i.test(t.head[0] || ""));
+    ok("short let: the district table is present", !!districtTable);
+    if (districtTable) {
+      ok("short let: the district table names the districts the module holds",
+        same(districtTable.rows.map((r) => r[0]), C.districts.map((d) => d.name)),
+        JSON.stringify(districtTable.rows.map((r) => r[0])));
+      ok("short let: the district table matches the published occupancies",
+        same(col(districtTable, 1), C.districts.map((d) => pc1(d.occupancy))), JSON.stringify(col(districtTable, 1)));
+      ok("short let: the district table matches the computed nights",
+        same(col(districtTable, 2), G.districts.map((d) => d.nights)), JSON.stringify(col(districtTable, 2)));
+      ok("short let: the district table matches the computed nets",
+        same(col(districtTable, 3), G.districts.map((d) => d.net)), JSON.stringify(col(districtTable, 3)));
+    }
+
+    const claimClaims = [
+      ["the published gross pair", `gross yields of **${pc1(C.shortGross)}% for short letting against ${pc1(C.longGross)}% for long letting**`],
+      ["the published listing count", `**${hh.money(C.listings)} active listings**`],
+      ["the highest published nightly rate", `**AED ${C.highestAdrAed}** a night on ${C.highestAdrArea}`],
+      ["the derived night count", `is ${G.short.nights} nights sold, which is ${pc1(G.short.nights / 365)}% of the year`],
+      ["the turnover count the claim implies", `Cleaning, ${G.short.stays} stays at ${hh.EXAMPLE.shortLet.cleaningPerStay}`],
+      ["the netted tenancy yield", `annual tenancy keeps **${G.longYield.toFixed(2)}%** of the price`],
+      ["the netted holiday home yield", `holiday home keeps **${G.shortYield.toFixed(2)}%**`],
+      ["the net deficit", `net deficit of **${Math.abs(G.netLead).toFixed(2)} points**`],
+      ["the occupancy that draws level", `**${G.nightsToBeat} nights, or ${pc1(G.occupancyToBeat)}% occupancy**`],
+      ["the stronger district's margin", `beats the tenancy by **AED ${hh.money(G.districts[0].versusTenancy)}**`],
+      ["the weaker district's margin", `beats it by **AED ${hh.money(G.districts[1].versusTenancy)}**`],
+      ["the managed portfolio occupancy, kept out of the arithmetic", `**${pc1(C.portfolioOccupancy)}% portfolio occupancy**`],
+    ];
+    for (const [label, phrase] of claimClaims) {
+      ok(`short let: prose carries ${label}`, p.body.includes(phrase), phrase);
+    }
+
+    /* The finding, guarded by what is true rather than by what is written. */
+    ok("short let: the netted claim really does reverse, or the page may not say so",
+      G.short.net < G.long.net || !/reverses the ranking/.test(p.body),
+      `short ${G.short.net} vs long ${G.long.net}`);
+    ok("short let: the gross pair really does favour short letting",
+      C.shortGross > C.longGross, `${C.shortGross} vs ${C.longGross}`);
+    ok("short let: the occupancy the claim implies really is below the one it needs",
+      G.nightsToBeat !== null && G.short.nights < G.nightsToBeat,
+      `implies ${G.short.nights}, needs ${G.nightsToBeat}`);
+    ok("short let: the district called a dead heat really is the narrower of the two",
+      G.districts[1].versusTenancy > 0 &&
+      G.districts[1].versusTenancy < G.districts[0].versusTenancy,
+      JSON.stringify(G.districts.map((d) => d.versusTenancy)));
+    ok("short let: the netted claim's lines sum to its printed total",
+      G.short.deductions === G.short.lines.reduce((a, [, v]) => a + v, 0) &&
+      G.short.net === G.short.gross - G.short.deductions);
+
+    /* The source rule that applies to every measured figure on this site. */
+    const claimSource = (p.sources || []).find((x) => new RegExp(C.index, "i").test(x.name || ""));
+    ok("short let: the published index is cited as a source", !!claimSource, C.index);
+    if (claimSource) {
+      ok("short let: the index source carries the period it covers",
+        /quarter to June 2026/i.test(claimSource.name), claimSource.name);
+      ok("short let: the index source carries the date it was retrieved",
+        /retrieved \d{1,2} \w+ \d{4}/i.test(claimSource.name), claimSource.name);
+      ok("short let: the index source is the module's own",
+        claimSource.url === C.source.url, claimSource.url);
+    }
   }
 }
 

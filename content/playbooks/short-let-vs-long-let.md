@@ -43,12 +43,40 @@
     {
       "name": "Federal Tax Authority, value added tax",
       "url": "https://tax.gov.ae/en/"
+    },
+    {
+      "name": "First Class Property Management, inaugural UAE Short-Term Rental Index, quarter to June 2026, as reported by Khaleej Times, 29 July 2026, retrieved 28 October 2026",
+      "url": "https://www.khaleejtimes.com/business/property/dubai-short-term-rentals-show-resilience-as-longer-stays-support-market"
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Do Dubai short-term rentals really yield more than long-term rentals?",
+      "a": "Dubai short-let gross yields were published at 7.2% against 5.2% for long lets for the quarter to June 2026, and netted on the same AED 1,500,000 apartment those two figures become 1.70% against 3.60%, which reverses the ranking."
+    },
+    {
+      "q": "What occupancy does a published 7.2% short-let gross yield actually imply?",
+      "a": "At AED 682 a night, the highest nightly rate the index publishes anywhere in Dubai, a 7.2% gross yield on an AED 1,500,000 apartment is 158 nights sold, which is 43.3% of the year."
+    },
+    {
+      "q": "Can you charge a Dubai holiday home guest for electricity and water?",
+      "a": "There is an AED 2,000 fine for charging a guest for electricity or water. Cooling a Dubai apartment through August is therefore a cost of the strategy, in the month it is largest, and it is the single line most often left out of a projection."
+    },
+    {
+      "q": "How much is the Dubai holiday home permit per year?",
+      "a": "The holiday home permit is AED 300 per bedroom and capped at AED 1,200 a year, which is the cap a four bedroom villa reaches and a studio never does."
     }
   ]
 }
 ---
 
 The comparison is nearly always made on nightly rate multiplied by three hundred and sixty five, against the annual rent. That calculation has never been true for any property anywhere. What follows is the same comparison run net, with every statutory cost taken from the instrument that sets it rather than from a brochure.
+
+## The short answer
+
+Two published gross yields are not two yields. **Dubai short-let gross yields were published at 7.2% against 5.2% for long lets for the quarter to June 2026, and netted on the same AED 1,500,000 apartment those two figures become 1.70% against 3.60%, which reverses the ranking.** The gross figures put short letting 2.0 points ahead. The net figures put it 1.90 points behind. The source is First Class Property Management's own index, and the arithmetic is below.
+
+The page's worked example reaches the same shape from the other direction. The same illustrative one bedroom grosses AED 86,250 more as a holiday home than as an annual tenancy, and keeps AED 3,850 of it.
 
 ## The costs Dubai law actually imposes
 
@@ -66,7 +94,7 @@ Three things follow that most pages on this question get wrong.
 
 **The tourism dirham is charged per room, not per unit.** A two bedroom standard holiday home accrues twice what a one bedroom does on the same night. It is collected from the guest and remitted to the Department, and it has to be paid **before the sixteenth day of the month following collection**.
 
-**The permit is per bedroom too**, at AED 300 per bedroom and capped at AED 1,200 a year, which is the cap a four bedroom villa reaches and a studio never does.
+**The permit is per bedroom too.** The holiday home permit is AED 300 per bedroom and capped at AED 1,200 a year, which is the cap a four bedroom villa reaches and a studio never does.
 
 **You cannot bill the guest for utilities.** There is an AED 2,000 fine for charging a guest for electricity or water. Cooling a Dubai apartment through August is therefore a cost of the strategy, in the month it is largest, and it is the single line most often left out of a projection.
 
@@ -135,6 +163,60 @@ Holding the nightly rate at AED 750 and moving only how full the unit is:
 The annual tenancy nets 78,550 and does it without an occupancy assumption at all. Ten points of occupancy is worth about AED 20,000 here, which is why the operator's forecast is the number to interrogate hardest, and why an operator paid on gross has no reason to interrogate it at all.
 
 The three firms that sell observed Dubai occupancy and nightly rates publish emirate-wide averages, and all three of them, run through this cost stack at their own published figures, land below the annual tenancy. [Break-even occupancy](/playbooks/break-even-occupancy/) sets out each one with its period, its source and the denominator it is counting, which is the detail that decides whether a quoted occupancy means what a reader thinks it means.
+
+## The newest published claim, run net
+
+Everything above is an illustrative unit at an assumed nightly rate. The three firms that sell observed Dubai data publish a nightly rate and an occupancy, and [break-even occupancy](/playbooks/break-even-occupancy/) runs all three through this cost stack. The press is given a different shape of claim, and it is the more misleading of the two: two gross yields side by side, with no cost stack under either.
+
+First Class Property Management's inaugural **UAE Short-Term Rental Index**, for the quarter to June 2026, is the newest instance of it. It reports **33,795 active listings** in Dubai at quarter end, an average length of stay of **six nights**, **AED 682** a night on Palm Jumeirah as the highest average daily rate in the city, and, across comparable one bedroom units, gross yields of **7.2% for short letting against 5.2% for long letting**.
+
+That pair is the exact comparison the top of this page says is never true. So take both of its own figures and run them through both of this page's own cost stacks, on the AED 1,500,000 apartment the rest of the site is built on. Nothing below is assumed about the market: the two gross yields, the nightly rate and the length of stay are all the index's, and only the cost lines are the illustrative unit's.
+
+**At 5.2% gross, as an annual tenancy**
+
+| Line | AED |
+|---|---|
+| Rent at 5.2% gross | 78,000 |
+| Service charge | (14,000) |
+| Letting and management, 5% | (3,900) |
+| Maintenance reserve | (3,000) |
+| Vacancy allowance, 4% | (3,120) |
+| **Net** | **53,980** |
+
+**At 7.2% gross, as a holiday home.** The index publishes no city-wide nightly rate, only the highest one in the city, so the night count is derived from that. **At AED 682 a night, the highest nightly rate the index publishes anywhere in Dubai, a 7.2% gross yield on an AED 1,500,000 apartment is 158 nights sold, which is 43.3% of the year.** A higher rate means fewer nights for the same gross, and fewer nights means less tourism dirham and fewer cleans, so this is the night count most favourable to the short let that the index's own figures permit.
+
+| Line | AED |
+|---|---|
+| Gross at 7.2%, 682 x 158 nights | 107,756 |
+| Operator and platform, 20% of gross | (21,551) |
+| Cleaning, 26 stays at 150 | (3,900) |
+| Utilities, cooling, internet, consumables | (18,000) |
+| Tourism dirham, 10 x 158 nights | (1,580) |
+| Holiday home permit, one bedroom | (300) |
+| Service charge | (14,000) |
+| Maintenance and replacement | (8,000) |
+| Furnishing, 75,000 over five years | (15,000) |
+| Total deductions | (82,331) |
+| **Net** | **25,425** |
+
+The annual tenancy keeps **3.60%** of the price. The holiday home keeps **1.70%**. A published gross lead of 2.0 points is a net deficit of **1.90 points**, and the whole of the reversal is in lines the gross comparison does not carry.
+
+### The index's own two numbers do not agree with each other
+
+Hold the nightly rate at AED 682 and ask what occupancy it takes to merely draw level with the 5.2% tenancy. It is **215 nights, or 58.9% occupancy**. The index's own 7.2% gross yield, at the index's own highest nightly rate, implies 43.3%. The two figures it publishes side by side describe a unit that does not reach the bar the other one sets.
+
+Where the index does report occupancy, the numbers clear that bar, and this is the honest counterweight to everything above.
+
+| District, as the index names it | Occupancy | Nights | Net, AED | Against the 5.2% tenancy |
+|---|---|---|---|---|
+| Dubai Creek Harbour | 66% | 240 | 67,244 | +13,264 |
+| Downtown Dubai | 59% | 215 | 54,454 | +474 |
+
+Creek Harbour, at the occupancy the index reports for it, beats the tenancy by **AED 13,264** on this cost stack. Downtown beats it by **AED 474**, which on a six figure gross is a dead heat rather than a win. Both are the districts the index itself singles out as its strongest, so they are the top of its range and not the middle of it.
+
+The firm's **87% portfolio occupancy** is a different kind of number again and is not used above. It describes the properties that firm manages, not the market, and a professionally managed portfolio is a selected sample of exactly the units most likely to perform. An owner comparing their own flat to it is comparing it to the result of the service being sold.
+
+So the finding is not that Dubai short lets lose. It is narrower and more useful than that. **The gross pair that gets quoted reverses when both sides are netted, and the occupancy that the quoted gross yield implies is well below the occupancy the same arithmetic needs.** The districts where the published occupancy is high enough are named, there are two of them, and one of them wins by AED 474.
 
 ## The question you will ask next
 

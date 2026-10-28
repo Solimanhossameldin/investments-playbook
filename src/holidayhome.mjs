@@ -12,6 +12,15 @@
    fails, which is what stops a page and its own arithmetic drifting apart
    the first time somebody edits one line of a table. */
 
+/* The price of the illustrative unit is not this module's to choose. It is
+   the one the acquisition stack and the net yield page are built on, so it is
+   imported rather than restated: a published gross yield is a percentage of a
+   price, and the price has to be the same one the rest of the site uses or
+   the comparison is with a different apartment. */
+import { EXAMPLE as ACQUISITION_EXAMPLE } from "./acquisition.mjs";
+
+export const ACQUISITION_PRICE = ACQUISITION_EXAMPLE.price;
+
 export const INSTRUMENTS = {
   tourismDirham: {
     name: "Executive Council Resolution No. (2) of 2014, Schedule 1",
@@ -323,5 +332,89 @@ export function observedRun(o, stayNights = EXAMPLE.shortLet.averageStayNights) 
     nightsToBeat,
     occupancyToBeat: nightsToBeat === null ? null : nightsToBeat / 365,
     contribution: contributionPerNight(i),
+  };
+}
+
+/* ---- a published gross-yield claim, netted ----
+
+   The three sources above publish a nightly rate and an occupancy, which is
+   what an owner is quoted by an operator. The press is quoted a different
+   shape of claim, and it is the more misleading of the two: two gross yields
+   side by side, short let against long let, with no cost stack under either.
+
+   It is the exact comparison the top of this page says is never true, so the
+   honest thing is to take the newest published instance of it and run both
+   of its own figures through both of this page's own cost stacks. Nothing is
+   assumed about the market: the two gross yields, the nightly rate, the
+   average length of stay and the district occupancies are all the index's,
+   and only the cost stack is the illustrative unit's.
+
+   One choice in the method is worth naming because it is deliberate. The
+   index publishes no city-wide nightly rate, only the highest one in the
+   city, so the night count is derived from that. A higher rate means fewer
+   nights for the same gross, and fewer nights means less tourism dirham and
+   fewer cleans, so the derived night count is the one most favourable to the
+   short let that the index's own figures permit. */
+
+export const GROSS_CLAIM = {
+  publisher: "First Class Property Management",
+  index: "UAE Short-Term Rental Index",
+  period: "the quarter to June 2026",
+  shortGross: 0.072,
+  longGross: 0.052,
+  listings: 33795,
+  averageStayNights: 6,
+  highestAdrAed: 682,
+  highestAdrArea: "Palm Jumeirah",
+  portfolioOccupancy: 0.87,
+  /* Highest first. These are the two the index names as its strongest, which
+     is what makes them the fair test: if the best district it reports does
+     not clear the frontier, no district it reports does. */
+  districts: [
+    { name: "Dubai Creek Harbour", occupancy: 0.66 },
+    { name: "Downtown Dubai", occupancy: 0.59 },
+  ],
+  source: {
+    name: "First Class Property Management, inaugural UAE Short-Term Rental Index, quarter to June 2026, as reported by Khaleej Times, 29 July 2026, retrieved 28 October 2026",
+    url: "https://www.khaleejtimes.com/business/property/dubai-short-term-rentals-show-resilience-as-longer-stays-support-market",
+  },
+};
+
+/* The short let inputs implied by a published gross-yield claim: the index's
+   own nightly rate and length of stay, and the night count its own gross
+   yield needs at that rate. */
+export function grossClaimInputs(c = GROSS_CLAIM, price = ACQUISITION_PRICE) {
+  const shortGross = Math.round(price * c.shortGross);
+  const nights = Math.round(shortGross / c.highestAdrAed);
+  return {
+    ...EXAMPLE.shortLet,
+    nightlyRate: c.highestAdrAed,
+    occupancy: nights / 365,
+    averageStayNights: c.averageStayNights,
+  };
+}
+
+export function grossClaimRun(c = GROSS_CLAIM, price = ACQUISITION_PRICE) {
+  const longRent = Math.round(price * c.longGross);
+  const long = longLetNet({ ...EXAMPLE.longLet, rent: longRent });
+  const i = grossClaimInputs(c, price);
+  const short = shortLetNet(i);
+  const nightsToBeat = breakEvenNights(long.net, i);
+  return {
+    price,
+    long,
+    short,
+    inputs: i,
+    longYield: (long.net / price) * 100,
+    shortYield: (short.net / price) * 100,
+    grossLead: (c.shortGross - c.longGross) * 100,
+    netLead: ((short.net - long.net) / price) * 100,
+    nightsToBeat,
+    occupancyToBeat: nightsToBeat === null ? null : nightsToBeat / 365,
+    districts: c.districts.map((d) => {
+      const nights = Math.floor(365 * d.occupancy);
+      const net = netAtNights(nights, i);
+      return { ...d, nights, net, versusTenancy: net - long.net };
+    }),
   };
 }
