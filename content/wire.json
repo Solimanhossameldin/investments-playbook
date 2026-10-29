@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-29T06:29:26.803Z",
+ "fetchedAt": "2026-10-29T13:37:14.694Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,33 @@
   }
  ],
  "items": [
+  {
+   "title": "Monetary policy decisions",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html",
+   "published": "2026-10-29T13:15:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Bank of England sets out approach to tokenised collateral in central clearing",
+   "url": "https://www.bankofengland.co.uk/news/2026/october/bank-of-england-sets-out-approach-to-tokenised-collateral-in-central-clearing",
+   "published": "2026-10-29T10:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "ECB President Lagarde to step down on 7 February 2027",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
+   "published": "2026-10-29T10:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Federal Reserve issues FOMC statement",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
@@ -321,24 +348,6 @@
    "sourceLabel": "Press releases",
    "category": "rates",
    "feed": "fed-all"
-  },
-  {
-   "title": "Meeting of 9-10 September 2026",
-   "url": "https://www.ecb.europa.eu//press/accounts/2026/html/ecb.mg261008~a10153d090.en.html",
-   "published": "2026-10-08T11:30:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Waller, The Signaling Value of the Summary of Economic Projections",
-   "url": "https://www.federalreserve.gov/newsevents/speech/waller20261008a.htm",
-   "published": "2026-10-08T08:30:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
   }
  ]
 }
