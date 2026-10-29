@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-28T20:48:36.286Z",
+ "fetchedAt": "2026-10-29T00:37:43.728Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -348,15 +348,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Bank of England announces the four animals that will feature on our next series of banknotes",
-   "url": "https://www.bankofengland.co.uk/news/2026/october/boe-announces-the-four-animals-that-will-feature-on-next-series-of-banknotes",
-   "published": "2026-10-07T23:01:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }

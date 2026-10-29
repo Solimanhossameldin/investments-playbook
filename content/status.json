@@ -3,6 +3,12 @@
   {
    "job": "fetch-wire",
    "status": "ok",
+   "detail": "36 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-10-29T00:37:43.728Z"
+  },
+  {
+   "job": "fetch-wire",
+   "status": "ok",
    "detail": "37 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
    "ranAt": "2026-10-28T20:48:36.286Z"
   },
@@ -233,12 +239,6 @@
    "status": "incomplete",
    "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
    "ranAt": "2026-10-27T00:23:12.367Z"
-  },
-  {
-   "job": "fetch-photos",
-   "status": "ok",
-   "detail": "4 of 4 photographs published",
-   "ranAt": "2026-10-27T00:23:12.320Z"
   }
  ]
 }
