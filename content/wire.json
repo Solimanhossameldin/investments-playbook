@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-29T00:37:43.728Z",
+ "fetchedAt": "2026-10-29T06:29:26.803Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -339,15 +339,6 @@
    "sourceLabel": "Speeches",
    "category": "rates",
    "feed": "fed-speeches"
-  },
-  {
-   "title": "Piero Cipollone: Interview with Corriere della Sera",
-   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261008~3184e7d0d0.en.html",
-   "published": "2026-10-08T06:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
