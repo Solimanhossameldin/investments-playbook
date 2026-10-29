@@ -28,6 +28,7 @@ import * as vl from "../src/valuation.mjs";
 import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
 import * as gv from "../src/goldenvisa.mjs";
+import * as ct from "../src/corporatetax.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -166,6 +167,12 @@ const FOREIGN_STATUTORY_PAGES = [
      under that heading would be wrong for the reader who went there looking
      for the decree behind a fee. */
   ["golden-visa-vs-portugal-d7", gv],
+  /* UAE federal corporate tax, deliberately in this list and not the Dubai
+     one. The law register is a register of Dubai property law: a federal
+     decree-law on the taxation of corporations filed under that heading
+     would send a reader looking for the decree behind a Dubai fee to a tax
+     statute that sets no fee at all. */
+  ["corporate-vs-personal-ownership", ct],
 ];
 
 const ALL_STATUTORY_PAGES = [...STATUTORY_PAGES, ...FOREIGN_STATUTORY_PAGES];
@@ -3785,6 +3792,107 @@ ok("every calculator points at a playbook that exists",
     ok(`${p.slug}: its declared question is about what the page answers`,
       content.length === 0 || hits.length / content.length >= 0.5,
       `only ${hits.length}/${content.length} of "${p.question}" appears in the finding or title`);
+  }
+
+  /* ---- the corporate ownership page and the thresholds behind it ----
+
+     The statutory half is covered by FOREIGN_STATUTORY_PAGES above: the rate
+     limbs, the 375,000 band, the natural person carve out and the nexus limb
+     all have to appear in the page word for word or that loop fails.
+
+     What is left is the arithmetic, and it is the whole point of the page.
+     The version this replaced carried no figure at all: it asserted that a
+     company is "taxable at nine percent above the threshold" without ever
+     naming the threshold, which left the reader unable to work out the one
+     thing that decides the question. Nine percent of nothing is nothing, and
+     a single flat's net operating income is a long way below the band, so
+     the page's finding is that the small landlord's corporate tax bill is
+     zero on both sides of the comparison.
+
+     That finding is only true while the arithmetic holds, and the arithmetic
+     moves if the band moves, if the rate moves, or if the illustrative unit
+     the acquisition module prices changes. So the table is pinned to the
+     module column by column rather than figure by figure: an earlier pattern
+     in this suite proved that checking whether a number appears somewhere on
+     a page passes happily when the number is in the wrong row. */
+  {
+    const p = playbooks.find((x) => x.slug === "corporate-vs-personal-ownership");
+    ok("corporate: the page exists", !!p);
+    if (p) {
+      const rows = ct.scale();
+      const bs = ct.bandScale();
+      const cl = ct.ceiling();
+      const u = ct.unit();
+      const tables = tablesIn(p.body);
+      const t = tables.find((x) => x.rows.length && /^Units$/.test(x.head[0] || ""));
+      ok("corporate: the scale table is present", !!t);
+      if (t) {
+        ok("corporate: the scale table lists the module's portfolio sizes",
+          same(col(t, 0), rows.map((r) => r.units)), JSON.stringify(col(t, 0)));
+        ok("corporate: its prices are the module's",
+          same(col(t, 1), rows.map((r) => r.price)), JSON.stringify(col(t, 1)));
+        ok("corporate: its net operating income column is the module's",
+          same(col(t, 2), rows.map((r) => r.noi)), JSON.stringify(col(t, 2)));
+        ok("corporate: its taxed-above-the-band column is the module's",
+          same(col(t, 3), rows.map((r) => r.above)), JSON.stringify(col(t, 3)));
+        ok("corporate: its tax column is the module's",
+          same(col(t, 4), rows.map((r) => r.tax)), JSON.stringify(col(t, 4)));
+        ok("corporate: its share-of-income column is the module's",
+          same(col(t, 5), rows.map((r) => r.shareOfNoi)), JSON.stringify(col(t, 5)));
+        ok("corporate: its net yield column is the module's",
+          same(col(t, 6), rows.map((r) => r.netAfter)), JSON.stringify(col(t, 6)));
+      }
+
+      const prose = `${p.summary} ${p.body} ${p.formula} ${p.whenToUse} ${p.failureModes.join(" ")}`;
+
+      /* The band is the figure the page exists to supply, so it has to be
+         the module's and it has to be in the lifted sentence rather than
+         only in a table two screens down. */
+      ok("corporate: the summary carries the band and the unit's income",
+        p.summary.includes(`AED ${ct.BAND.toLocaleString("en-US")}`)
+          && p.summary.includes(`AED ${aq.money(u.noi)}`), p.summary);
+      ok("corporate: the summary carries the rate",
+        p.summary.includes(`${ct.RATE * 100}%`), p.summary);
+
+      /* Where the tax begins, in both the form a reader counts in and the
+         form he buys in. */
+      ok("corporate: the page states the units it takes to reach the band",
+        prose.includes(`Six of the illustrative one bedroom, AED ${aq.money(bs.atUnits)} of property, is where the first dirham of corporate tax falls due`),
+        `${bs.units} units, ${bs.atUnits}`);
+      ok("corporate: the page states what five of them earn, inside the band",
+        prose.includes(`five of them earn AED ${aq.money(5 * u.noi)} and stay inside the AED ${ct.BAND.toLocaleString("en-US")} band`),
+        `${5 * u.noi}`);
+      ok("corporate: the page states the exact crossing",
+        prose.includes(`${bs.exact} units, AED ${aq.money(bs.price)} of property`),
+        `${bs.exact} / ${bs.price}`);
+
+      /* The ceiling is the number that decides whether any of this is worth
+         restructuring for, so it is quotable or it is useless. */
+      ok("corporate: the page states the ceiling as a yield cost",
+        prose.includes(`takes net yield from ${aq.pctText(cl.net)} to ${aq.pctText(cl.netAfter)}, a cost of ${cl.points} percentage points a year`),
+        JSON.stringify(cl));
+      ok("corporate: the ceiling's share of income is the rate",
+        cl.shareOfNoi === ct.RATE * 100, `${cl.shareOfNoi}`);
+
+      /* The natural person threshold is quoted as a claim above; this is the
+         page using it as a figure, which is the thing that can drift. */
+      ok("corporate: the page states the natural person turnover test as a figure",
+        prose.includes(`AED ${ct.NP_TURNOVER.toLocaleString("en-US")} turnover test`),
+        `${ct.NP_TURNOVER}`);
+
+      /* The page's own claim about the repealed instrument. A reader acting
+         on a pre-2025 note is the reason the section exists, so the year has
+         to be the one the current decision names. */
+      ok("corporate: the page names the date the replaced nexus rule stopped applying",
+        prose.includes("Tax Periods that commenced before 1 January 2025")
+          && prose.includes("Cabinet Decision No. 56 of 2023"));
+
+      /* The page is a comparison, so it has to reach the pages it compares
+         itself against rather than asserting the comparison. */
+      for (const slug of ["net-rental-yield", "residency-and-tax", "short-let-vs-long-let", "cost-of-buying-in-dubai", "service-charge-and-reserves"]) {
+        ok(`corporate: links to ${slug}`, p.body.includes(`/playbooks/${slug}/`));
+      }
+    }
   }
 
   /* ---- the extra declared questions ----
