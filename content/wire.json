@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-30T02:47:48.520Z",
+ "fetchedAt": "2026-10-30T09:40:49.034Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Results of the ECB Survey of Professional Forecasters for the fourth quarter of 2026",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261030~e92c3c838c.en.html",
+   "published": "2026-10-30T09:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Federal Reserve Board announces approval of application by The Bank of Nova Scotia",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20261029a.htm",
@@ -102,9 +111,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
    "published": "2026-10-28T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Remit for the Monetary Policy Committee - October 2026",
@@ -345,9 +354,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
    "published": "2026-10-13T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Minutes of the Money Market Committee meeting – September 2026",
@@ -375,15 +384,6 @@
    "sourceLabel": "Press releases",
    "category": "rates",
    "feed": "fed-all"
-  },
-  {
-   "title": "CMORG holds sector-wide cloud outage simulation exercise",
-   "url": "https://www.bankofengland.co.uk/news/2026/october/cmorg-holds-sector-wide-cloud-outage-simulation-exercise",
-   "published": "2026-10-09T09:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
