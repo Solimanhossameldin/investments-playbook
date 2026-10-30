@@ -19,8 +19,8 @@
    it, and the page says so.
 
    The finding is in the last function. Cross where the owner lives with
-   where the flat is, and Dubai's lead is 1.98 points of net yield for an
-   owner who lives in Dubai and 0.81 for a UK higher rate taxpayer. Most of
+   where the flat is, and Dubai's lead is 1.91 points of net yield for an
+   owner who lives in Dubai and 0.75 for a UK higher rate taxpayer. Most of
    the headline gap belongs to the owner's residence, not to the building,
    and the function computes both leads rather than asserting either. */
 
@@ -63,21 +63,55 @@ export const STATUTORY = [
   { key: "rates2027", claim: "22% at the property basic rate, 42% at the property higher rate, and 47% at the property additional rate for 2027 to 2028", instrument: "rates2027" },
 ];
 
-/* The Office for National Statistics' London averages, from the bulletin
-   released 16 September 2026. The rent is the Price Index of Private Rents
-   average for August 2026; the price is the UK House Price Index average
-   for July 2026. They are averages of different stocks of homes, which the
-   page says, and they are the only London yield inputs this site is
-   willing to quote because nobody chose them to sell anything. */
+/* The London inputs, each taken from the release that actually prints it.
+
+   The rent is the Office for National Statistics' Price Index of Private
+   Rents average for London. The price is not, and the split is deliberate:
+   the ONS bulletin gives London's annual change and its distance from the
+   peak, but it never prints the level, so the level comes from the UK
+   House Price Index summary that does print it, published by HM Land
+   Registry on the same day from the same joint series.
+
+   The figure this block carried until 30 October 2026 was wrong, and the
+   error is worth recording rather than quietly overwriting. It read
+   569,000 and dated it July 2026. That is the July 2025 peak. London's
+   actual July 2026 average was 550,037, and its August 2026 average is the
+   554,430 below. The mistake inflated the price by 3.4%, and with it the
+   stamp duty, while deflating the gross yield, which is exactly the class
+   of error this page exists to correct in other people's work. Both
+   figures now come from a document that states them as levels.
+
+   The two series are averages of different stocks of homes, the rented one
+   and the sold one, and they carry different reference months. The page
+   says both things. They remain the only London yield inputs this site is
+   willing to quote, because nobody chose them in order to sell anything. */
 export const ONS = {
-  name: "Office for National Statistics, Private rent and house prices, UK: September 2026, released 16 September 2026, retrieved 21 September 2026",
-  url: "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/privaterentandhousepricesuk/september2026",
-  monthlyRent: 2332,
-  rentMonth: "August 2026",
-  price: 569000,
-  priceMonth: "July 2026",
-  priceChange: -3.3,
-  belowPeak: 19000,
+  name: "Office for National Statistics, Private rent and house prices, UK: October 2026, released 21 October 2026, retrieved 30 October 2026",
+  url: "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/privaterentandhousepricesuk/october2026",
+  monthlyRent: 2338,
+  rentMonth: "September 2026",
+  rentChange: 3.5,
+  /* The bulletin's own London price commentary. The level is not here
+     because the bulletin does not state one; these are the distances it
+     states, and HPI.price below is the level they describe. */
+  priceChange: -2.2,
+  priceChangeMonth: "August 2026",
+  peak: 569000,
+  peakMonth: "July 2025",
+  belowPeak: 15000,
+  /* The line that matters most to a buyer of a flat, which is what this
+     comparison buys: the London average is being pulled down by the half
+     of it that the reader is actually shopping in. */
+  flatsChange: -5.0,
+};
+
+/* The price level, from the release that prints it. Same joint series as
+   the bulletin above, same publication day, different document. */
+export const HPI = {
+  name: "HM Land Registry, UK House Price Index summary: August 2026, released 21 October 2026, retrieved 30 October 2026",
+  url: "https://www.gov.uk/government/statistics/uk-house-price-index-for-august-2026/uk-house-price-index-summary-august-2026",
+  price: 554430,
+  priceMonth: "August 2026",
 };
 
 /* Stamp Duty Land Tax, England, residential. `to` is the top of each band;
@@ -136,15 +170,15 @@ export const costRatio = () => aq.operating().net / aq.EXAMPLE.rent;
 export function london({ rate = UKTAX.basic2026, allowance = false, nonResident = true } = {}) {
   const rent = ONS.monthlyRent * 12;
   const noi = Math.round(rent * costRatio());
-  const stamp = sdlt(ONS.price, { additional: true, nonResident });
-  const outlay = ONS.price + stamp.total;
+  const stamp = sdlt(HPI.price, { additional: true, nonResident });
+  const outlay = HPI.price + stamp.total;
   const taxable = Math.max(0, noi - (allowance ? UKTAX.personalAllowance : 0));
   const tax = Math.round(taxable * rate);
   const kept = noi - tax;
   return {
-    price: ONS.price, rent, noi, stamp: stamp.total, stampRate: stamp.rate, outlay, tax, kept,
-    gross: pct(rent / ONS.price),
-    onPrice: pct(noi / ONS.price),
+    price: HPI.price, rent, noi, stamp: stamp.total, stampRate: stamp.rate, outlay, tax, kept,
+    gross: pct(rent / HPI.price),
+    onPrice: pct(noi / HPI.price),
     preTax: pct(noi / outlay),
     net: pct(kept / outlay),
     entryYears: Number((stamp.total / kept).toFixed(2)),

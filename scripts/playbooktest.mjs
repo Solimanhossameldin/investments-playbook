@@ -3069,7 +3069,7 @@ ok("every calculator points at a playbook that exists",
     const n = (c) => cellNum(c);
     const r2 = (x) => Number(Number(x).toFixed(2));
 
-    const st = ld.sdlt(ld.ONS.price);
+    const st = ld.sdlt(ld.HPI.price);
     const t1 = byHead(/^Slice of the/);
     ok("dubai vs london: the stamp duty table is present", !!t1);
     if (t1) {
@@ -3090,7 +3090,7 @@ ok("every calculator points at a playbook that exists",
     ok("dubai vs london: the prose states the stamp duty and its rate",
       p.body.includes(`£${ld.money(st.total)}, ${ld.pctText(st.rate)} of the price`));
     ok("dubai vs london: the prose states the resident buyer's stamp duty",
-      p.body.includes(`pays £${ld.money(ld.sdlt(ld.ONS.price, { nonResident: false }).total)}`));
+      p.body.includes(`pays £${ld.money(ld.sdlt(ld.HPI.price, { nonResident: false }).total)}`));
 
     const rows = ld.taxRows();
     const t2 = byHead(/^Tax year and allowance/);
@@ -3146,11 +3146,31 @@ ok("every calculator points at a playbook that exists",
       rows[0].noi === Math.round(ld.ONS.monthlyRent * 12 * aq.operating().net / aq.EXAMPLE.rent));
     ok("dubai vs london: the ONS source is cited with its retrieval date",
       (p.sources || []).some((x) => x.url === ld.ONS.url && x.name === ld.ONS.name && /retrieved \d+ \w+ \d{4}/.test(x.name)));
-    ok("dubai vs london: the ONS rent and price are on the page with their months",
+    /* The price level and the rent come from two different releases, so the
+       page has to cite both. The bulletin states London's annual change and
+       its distance from the peak but never the level, which is how this page
+       once came to print the July 2025 peak as if it were the current price. */
+    ok("dubai vs london: the price level's own source is cited with its retrieval date",
+      (p.sources || []).some((x) => x.url === ld.HPI.url && x.name === ld.HPI.name && /retrieved \d+ \w+ \d{4}/.test(x.name)));
+    ok("dubai vs london: the rent and price are on the page with their months",
       p.body.includes(`**£${ld.money(ld.ONS.monthlyRent)} a month** in ${ld.ONS.rentMonth}`) &&
-      p.body.includes(`**£${ld.money(ld.ONS.price)}** in ${ld.ONS.priceMonth}`));
-    ok("dubai vs london: the ONS price fall is quoted as the ONS states it",
-      p.body.includes(`down ${Math.abs(ld.ONS.priceChange)}% in the twelve months to July 2026`) && p.body.includes(`£${ld.money(ld.ONS.belowPeak)} below`));
+      p.body.includes(`**£${ld.money(ld.HPI.price)}** in ${ld.HPI.priceMonth}`));
+    ok("dubai vs london: the price fall is quoted as the bulletin states it, for the month it states",
+      p.body.includes(`down ${Math.abs(ld.ONS.priceChange)}% in the twelve months to ${ld.ONS.priceChangeMonth}`) &&
+      p.body.includes(`£${ld.money(ld.ONS.belowPeak)} below`));
+    /* The bug this guards: the peak is a different number from the price, and
+       the page must never present the peak as the price it divides the rent
+       by. Both figures appear on the page, so the test is that the gross
+       yield is the rent over the level, not over the peak. */
+    ok("dubai vs london: the peak is not used as the current price",
+      ld.HPI.price !== ld.ONS.peak &&
+      l.gross === Number(((ld.ONS.monthlyRent * 12 / ld.HPI.price) * 100).toFixed(2)) &&
+      p.body.includes(`peak of £${ld.money(ld.ONS.peak)}`));
+    /* The comparison unit is a flat, and the city average is not a flat's
+       average. The page carries the segment figure for that reason. */
+    ok("dubai vs london: the flats fall is on the page with its direction",
+      p.body.includes(`a London flat fell ${Math.abs(ld.ONS.flatsChange).toFixed(1)}%`) &&
+      /London houses rose/.test(p.body));
     ok("dubai vs london: the capital gains figures are the module's",
       p.body.includes(`**£${ld.money(ld.cgtOnNetGain(100000, ld.UKTAX.cgtHigh))}** at 24%`) &&
       p.body.includes(`**£${ld.money(ld.cgtOnNetGain(100000, ld.UKTAX.cgtLow))}** at 18%`));
