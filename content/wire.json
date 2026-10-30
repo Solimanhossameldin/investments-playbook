@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-30T09:40:49.034Z",
+ "fetchedAt": "2026-10-30T16:15:15.368Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,33 @@
   }
  ],
  "items": [
+  {
+   "title": "Philip R. Lane: AI adoption in Europe",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261030~08d9d540f0.en.html",
+   "published": "2026-10-30T16:10:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Decisions taken by the Governing Council of the ECB (in addition to decisions setting interest rates)",
+   "url": "https://www.ecb.europa.eu//press/govcdec/otherdec/2026/html/ecb.gc261030~e40f864093.en.html",
+   "published": "2026-10-30T14:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-10-30T12:30:25.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
   {
    "title": "Results of the ECB Survey of Professional Forecasters for the fourth quarter of 2026",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261030~e92c3c838c.en.html",
@@ -111,9 +138,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
    "published": "2026-10-28T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Remit for the Monetary Policy Committee - October 2026",
@@ -123,15 +150,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-10-28T14:01:13.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "October 2026 euro area bank lending survey",
@@ -354,9 +372,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
    "published": "2026-10-13T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Minutes of the Money Market Committee meeting – September 2026",
@@ -366,24 +384,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "SEC Proposes Expanding Securities Eligible for Cross Trading by Registered Funds",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-104-sec-proposes-expanding-securities-eligible-cross-trading-registered-funds",
-   "published": "2026-10-09T14:59:00.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "Federal Reserve Board releases results of the 2025 Survey of Consumer Finances, which provides the public and policymakers with detailed insights into the economic condition of American families",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/other20261009a.htm",
-   "published": "2026-10-09T14:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
   }
  ]
 }
