@@ -162,4 +162,6 @@ Set the number from achieved transactions in the same building over the last six
 
 **Vacant or tenanted.** A tenanted unit sells to investors only, priced off the passing rent. A vacant unit sells to investors and to end users, and end users are buying a home rather than a yield. Against that, an empty unit earns nothing while it sits, and ending a tenancy in order to sell requires twelve months of correctly served notice under the tenancy law, which is why the decision has to be made a year ahead and why it is so often made by default. If the tenancy sits well below the index, you are asking an investor to buy a capped income stream and they will price it accordingly, which is the seller's side of [rent increase caps](/playbooks/rent-increase-caps/).
 
+A tenanted unit is a different sale again, because the twelve month notice under Article 25(2) is the alternative to accepting a discount, and [selling a tenanted property](/playbooks/selling-a-tenanted-property-in-dubai/) prices both sides of that trade on this same flat.
+
 Every instrument cited here is listed, with what it sets and a link to its official text, in the [Dubai property law register](/dubai-property-law/).

@@ -119,7 +119,7 @@ That is the same question asked in money. Against the identical unit bought empt
 
 And it does not end in year five. The rent is frozen 9.3% below the index, so the tenanted unit keeps giving up about **AED 11,216 a year, indefinitely**, under a flat index.
 
-A buyer choosing between this unit tenanted and the one next door vacant now has a number instead of an instinct. If the vacant unit costs less than about AED 121,000 more, before any view on what happens after year five, it is the cheaper purchase. That comparison belongs in the [net rental yield](/playbooks/net-rental-yield/) calculation, not beside it, and the first year figure is the one that goes into [break-even occupancy](/playbooks/break-even-occupancy/).
+A buyer choosing between this unit tenanted and the one next door vacant now has a number instead of an instinct. If the vacant unit costs less than about AED 121,000 more, before any view on what happens after year five, it is the cheaper purchase. That comparison belongs in the [net rental yield](/playbooks/net-rental-yield/) calculation, not beside it, and the first year figure is the one that goes into [break-even occupancy](/playbooks/break-even-occupancy/). It is also the buyer's half of a negotiation the owner is running from the other side: what the discount on a tenanted unit can and cannot be is priced in [selling a tenanted property](/playbooks/selling-a-tenanted-property-in-dubai/), where the ladder above turns out to matter less than how long the lease has left to run.
 
 ## A rising index makes it worse, not better
 

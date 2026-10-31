@@ -29,6 +29,7 @@ import * as ld from "../src/london.mjs";
 import * as sg from "../src/singapore.mjs";
 import * as gv from "../src/goldenvisa.mjs";
 import * as ct from "../src/corporatetax.mjs";
+import * as vp from "../src/vacantpossession.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -2598,6 +2599,135 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     ok("refinance: the page names the arrangement and valuation fees as uncapped and excluded",
       /no cap on a mortgage arrangement or processing fee, and none on the bank's valuation fee/.test(p.body)
       && /floor on the cost of switching rather than a prediction/.test(p.body));
+  }
+}
+
+/* ---- selling a property that has a tenant in it ----
+
+   The page's claim is a pair of break-even discounts: what a seller can give
+   up before waiting out the twelve month notice is better, and what a buyer
+   needs before the empty unit next door is better. Four published tables
+   carry it, and a table is exactly the thing that can be edited into
+   something false that still renders perfectly, so every computed cell is
+   recomputed here from src/vacantpossession.mjs.
+
+   The statutory claims get the word-for-word treatment the STATUTORY_PAGES
+   loop gives the other pages, but locally. The tenancy law is already filed
+   in the law register under rent-increase-caps, and the register holds one
+   instrument under one page, so adding this page to that list would make the
+   register check fail rather than make the page safer. The two assertions
+   that matter are made here instead.
+
+   The findings themselves are asserted as inequalities rather than as
+   sentences somebody typed: that the bargaining range barely responds to the
+   rent gap, that the rate at which it opens is the unit's own net operating
+   yield, and that an unexpired lease of eighteen months closes it. Proved by
+   reverting: changing the 25% row's seller ceiling from 32,316 to 32,317
+   fails the side-by-side table check and nothing else in the suite. */
+{
+  const p = playbooks.find((x) => x.slug === "selling-a-tenanted-property-in-dubai");
+  ok("tenanted sale: the page exists", !!p);
+  if (p) {
+    const prose = `${p.summary} ${p.body} ${p.formula} ${p.whenToUse} ${p.failureModes.join(" ")}`;
+    const urls = new Set((p.sources || []).map((x) => x.url));
+    for (const item of vp.STATUTORY) {
+      ok(`tenanted sale: carries the statutory claim "${item.key}"`, prose.includes(item.claim), item.claim);
+      const inst = vp.INSTRUMENTS[item.instrument];
+      ok(`tenanted sale: cites the instrument behind "${item.key}"`,
+        !!inst && urls.has(inst.url), inst ? inst.url : item.instrument);
+    }
+
+    const tables = tablesIn(p.body);
+    const find = (re) => tables.find((t) => re.test(t.head[0] || ""));
+
+    const byGap = vp.byGap();
+    const t1 = find(/^Sitting rent against the index$/);
+    ok("tenanted sale: the side-by-side table is present", !!t1);
+    if (t1) {
+      ok("tenanted sale: the side-by-side table has a row per rent gap",
+        t1.rows.length === byGap.length, t1.rows.length);
+      ok("tenanted sale: the sitting rents are the computed ones",
+        same(col(t1, 1), byGap.map((r) => r.rent)), JSON.stringify(col(t1, 1)));
+      ok("tenanted sale: the seller ceilings are the computed ones",
+        same(col(t1, 2), byGap.map((r) => r.sellerAED)), JSON.stringify(col(t1, 2)));
+      ok("tenanted sale: the buyer floors are the computed ones",
+        same(col(t1, 3), byGap.map((r) => r.buyerAED)), JSON.stringify(col(t1, 3)));
+      ok("tenanted sale: the published range is the difference between them",
+        same(col(t1, 4), byGap.map((r) => r.sellerAED - r.buyerAED)), JSON.stringify(col(t1, 4)));
+    }
+
+    const byRate = vp.byRate();
+    const t2 = find(/otherwise earn/);
+    ok("tenanted sale: the discount rate table is present", !!t2);
+    if (t2) {
+      ok("tenanted sale: the rate table matches the computed ceilings",
+        same(col(t2, 1), byRate.map((r) => Number(r.sellerPct.toFixed(2)))), JSON.stringify(col(t2, 1)));
+      ok("tenanted sale: the rate table matches the computed floors",
+        same(col(t2, 2), byRate.map((r) => Number(r.buyerPct.toFixed(2)))), JSON.stringify(col(t2, 2)));
+      ok("tenanted sale: the rate table matches the computed ranges",
+        same(col(t2, 3), byRate.map((r) => Number(r.rangePts.toFixed(2)))), JSON.stringify(col(t2, 3)));
+      ok("tenanted sale: the rate table says yes exactly where the range is positive",
+        t2.rows.every((r, i) => /^Yes$/i.test(r[4]) === byRate[i].clears),
+        JSON.stringify(t2.rows.map((r) => r[4])));
+    }
+
+    const byTerm = vp.byLeaseTerm();
+    const t3 = find(/^Unexpired lease, months$/);
+    ok("tenanted sale: the lease term table is present", !!t3);
+    if (t3) {
+      ok("tenanted sale: the lease term table carries the terms it computes",
+        same(col(t3, 0), byTerm.map((r) => r.unexpired)), JSON.stringify(col(t3, 0)));
+      ok("tenanted sale: the wait is the later of the notice and the unexpired term",
+        same(col(t3, 1), byTerm.map((r) => r.months)), JSON.stringify(col(t3, 1)));
+      ok("tenanted sale: the lease term table matches the computed floors",
+        same(col(t3, 2), byTerm.map((r) => r.buyerAED)), JSON.stringify(col(t3, 2)));
+      ok("tenanted sale: the lease term table matches the computed ranges",
+        same(col(t3, 4), byTerm.map((r) => r.rangeAED)), JSON.stringify(col(t3, 4)));
+    }
+
+    const ladder = vp.noticeLadder();
+    const t4 = find(/^Months of notice already run$/);
+    ok("tenanted sale: the served notice table is present", !!t4);
+    if (t4) {
+      ok("tenanted sale: the served notice table runs the months it computes",
+        same(col(t4, 0), ladder.map((r) => r.monthsRun)), JSON.stringify(col(t4, 0)));
+      ok("tenanted sale: the served notice table matches the computed floors",
+        same(col(t4, 2), ladder.map((r) => r.buyerAED)), JSON.stringify(col(t4, 2)));
+      ok("tenanted sale: what the notice is worth is the floor it removes",
+        same(col(t4, 3), ladder.map((r) => r.worthAED)), JSON.stringify(col(t4, 3)));
+    }
+
+    /* The findings, as inequalities. */
+    const ranges = byGap.map((r) => r.rangePts);
+    ok("tenanted sale: the bargaining range barely responds to the rent gap",
+      Math.max(...ranges) - Math.min(...ranges) < 0.1,
+      `${Math.min(...ranges).toFixed(3)} to ${Math.max(...ranges).toFixed(3)}`);
+    ok("tenanted sale: a wider rent gap raises both sides, not one",
+      byGap.every((r, i) => i === 0 || (r.sellerAED > byGap[i - 1].sellerAED && r.buyerAED > byGap[i - 1].buyerAED)));
+
+    const crossings = vp.GAPS.map((g) => vp.crossoverRate(g));
+    ok("tenanted sale: the range opens at the unit's own net operating yield",
+      crossings.every((c) => Math.abs(c - vp.netOperatingYield()) < 0.15),
+      `${Math.min(...crossings).toFixed(3)} to ${Math.max(...crossings).toFixed(3)} against ${vp.netOperatingYield().toFixed(3)}`);
+    ok("tenanted sale: the page prints the crossing rate it computes",
+      prose.includes(vp.pct2(vp.crossoverRate(vp.BASE_GAP))) && prose.includes(vp.pct2(vp.netOperatingYield())));
+
+    /* Below the crossing the seller should wait at any price, which is the
+       claim that a negative ceiling is not a typographical error. */
+    ok("tenanted sale: at 3% a year the seller's ceiling is negative",
+      vp.decision(vp.BASE_GAP, 3).sellerPct < 0, vp.decision(vp.BASE_GAP, 3).sellerPct);
+
+    const clears = (m) => vp.decision(vp.BASE_GAP, vp.RATE, m).buyerAED <= vp.decision(vp.BASE_GAP, vp.RATE).sellerAED;
+    ok("tenanted sale: an unexpired lease of seventeen months still clears", clears(17));
+    ok("tenanted sale: an unexpired lease of eighteen months does not", !clears(18));
+
+    /* Article 26 prices the own use ground and the sale ground does not, so
+       the page must carry the bar's present value and not merely mention it. */
+    ok("tenanted sale: the page prices the Article 26 re-letting bar",
+      prose.includes(vp.money(vp.reletBar().presentValue))
+        && prose.includes(vp.money(vp.reletBar("nonResidential").presentValue)));
+    ok("tenanted sale: the page prices the filing fee on the sitting rent",
+      prose.includes(vp.money(vp.rdcFiling(vp.sittingRent(vp.BASE_GAP)).allIn)));
   }
 }
 
