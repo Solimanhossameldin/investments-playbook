@@ -30,6 +30,7 @@ import * as sg from "../src/singapore.mjs";
 import * as gv from "../src/goldenvisa.mjs";
 import * as ct from "../src/corporatetax.mjs";
 import * as vp from "../src/vacantpossession.mjs";
+import * as sc from "../src/succession.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -174,6 +175,12 @@ const FOREIGN_STATUTORY_PAGES = [
      would send a reader looking for the decree behind a Dubai fee to a tax
      statute that sets no fee at all. */
   ["corporate-vs-personal-ownership", ct],
+  /* UAE federal civil personal status, deliberately in this list and not the
+     Dubai one. The law register is a register of Dubai property law; a federal
+     decree-law on who inherits an estate sets no Dubai fee, and a reader who
+     went to the register looking for the decree behind a transfer charge
+     should not land on an inheritance statute. */
+  ["uae-wills-and-succession", sc],
 ];
 
 const ALL_STATUTORY_PAGES = [...STATUTORY_PAGES, ...FOREIGN_STATUTORY_PAGES];
@@ -5000,6 +5007,147 @@ ok("every calculator points at a playbook that exists",
     ok("cash on cash: carries Article 3 verbatim on the tenor",
       `${p.summary} ${p.body} ${p.formula}`.includes(mg.STATUTORY.find((x) => x.key === "term").claim) ||
       p.body.includes("25 year maximum tenor"));
+  }
+}
+
+
+/* ---- wills and succession, and the sentence that does not finish ----
+
+   The statutory half is covered by ALL_STATUTORY_PAGES above, which already
+   holds every quotation on the page to the instrument word for word. What is
+   left is the arithmetic, and on this page the arithmetic has an unusual job:
+   it prices an ambiguity rather than computing a result.
+
+   Article 11(2) fixes the spouse's share where there are children and leaves
+   it unfixed where there are none. The page's central claim is that the three
+   readings in circulation span the entire unit. That claim is only true while
+   the readings stay as recorded and the estate stays the net yield page's
+   flat, so both are checked here as identities rather than matched against a
+   table. An edit that quietly resolved the ambiguity to one reading -- the
+   substitution that would turn this page back into every other page on the
+   query -- would still render a plausible table, and would fail here by name.
+
+   The fee ratios are checked the same way, because the comparison the page
+   draws is to the Land Department's 4% and not to a number typed in. */
+{
+  const p = playbooks.find((x) => x.slug === "uae-wills-and-succession");
+  ok("succession: the page exists", !!p);
+  if (p) {
+    const estate = sc.ESTATE;
+    const tables = tablesIn(p.body);
+
+    /* The estate is the net yield page's unit. If either moves, the pages
+       start describing different flats. */
+    ok("succession: the estate is the net yield page's unit",
+      estate === aq.EXAMPLE.price, String(estate));
+
+    /* The first sentence of Article 11(2), computed. The spouse's half does
+       not move with the number of children; each child's share does. */
+    const kids = tables.find((t) => /Surviving family/i.test(t.head[0] || ""));
+    ok("succession: the spouse-and-children table is present", !!kids);
+    if (kids) {
+      ok("succession: the table has a row for every child count in the module",
+        kids.rows.length === sc.CHILD_COUNTS.length, String(kids.rows.length));
+      sc.CHILD_COUNTS.forEach((n, i) => {
+        const r = sc.withChildren(estate, n);
+        const row = kids.rows[i];
+        ok(`succession: with ${n} child(ren) the spouse's share is the module's`,
+          !!row && cellNum(row[1]) === Math.round(r.spouse),
+          `${row && row[1]} vs ${Math.round(r.spouse)}`);
+        ok(`succession: with ${n} child(ren) each child's share is the module's`,
+          !!row && cellNum(row[2]) === Math.round(r.perChild),
+          `${row && row[2]} vs ${Math.round(r.perChild)}`);
+      });
+      /* The half is a half, stated as an identity so a future edit cannot
+         make the spouse's share drift with the child count. */
+      ok("succession: the spouse's share does not move with the child count",
+        sc.CHILD_COUNTS.every((n) => sc.withChildren(estate, n).spouse === estate / 2));
+    }
+
+    /* The childless-spouse readings, which are the page. Each has to be in
+       the published table, and the spread has to be the whole unit -- which
+       is the claim the prose makes in words and must keep making in figures. */
+    const cs = sc.childlessSpouse(estate);
+    const read = tables.find((t) => /Reading/i.test(t.head[0] || ""));
+    ok("succession: the childless-spouse table is present", !!read);
+    if (read) {
+      ok("succession: the table carries one row per reading in the module",
+        read.rows.length === sc.CHILDLESS_READINGS.length, String(read.rows.length));
+      ok("succession: the published amounts are the module's",
+        same(col(read, 1), cs.rows.map((r) => Math.round(r.amount))),
+        JSON.stringify(col(read, 1)));
+    }
+    ok("succession: the three readings still span the whole unit",
+      cs.spread === estate, `${cs.spread} vs ${estate}`);
+    ok("succession: one reading pays the childless spouse nothing",
+      cs.low === 0, String(cs.low));
+    ok("succession: one reading pays the childless spouse the whole estate",
+      cs.high === estate, String(cs.high));
+    ok("succession: the page says in words that the spread is the entire unit",
+      /the entire\s*\n?\s*unit/i.test(p.body) || /entire unit/i.test(p.body));
+
+    /* The determinate clauses. Article 11(2) does fix these two, and the page
+       prints them because they are the cases where inaction has a knowable
+       result. */
+    const det = tables.find((t) => /^Case$/i.test(t.head[0] || ""));
+    ok("succession: the determinate-clause table is present", !!det);
+    if (det) {
+      const one = sc.oneParentGone(estate, 2);
+      const sib = sc.siblingsOnly(estate, 2);
+      ok("succession: the surviving parent's half is the module's",
+        det.rows.some((r) => r.join(" ").includes(Math.round(one.parent).toLocaleString("en-US"))),
+        JSON.stringify(det.rows[0]));
+      ok("succession: the siblings-only clause takes the whole estate",
+        sib.perSibling * sib.siblings === estate);
+    }
+
+    /* The fee comparison, against the Land Department's rate and not a typed
+       number. One eighth is the page's headline on cost and it is a
+       consequence of 7,500 against 4% of the unit. */
+    const fees = tables.find((t) => /Will type/i.test(t.head[0] || ""));
+    ok("succession: the will fee table is present", !!fees);
+    if (fees) {
+      for (const w of sc.DIFC_WILLS.filter((x) => fees.rows.some((r) => r[0].includes(x.name)))) {
+        const row = fees.rows.find((r) => r[0].includes(w.name));
+        ok(`succession: the published single fee for the ${w.name} is the module's`,
+          cellNum(row[1]) === w.single, `${row[1]} vs ${w.single}`);
+        ok(`succession: the published mirror fee for the ${w.name} is the module's`,
+          cellNum(row[2]) === w.mirror, `${row[2]} vs ${w.mirror}`);
+        ok(`succession: the ${w.name} ratio to the transfer fee is the module's`,
+          Math.abs(cellNum(row[3]) - sc.feeAgainstTransfer(w.key, estate) * 100) < 0.05,
+          `${row[3]} vs ${(sc.feeAgainstTransfer(w.key, estate) * 100).toFixed(1)}`);
+      }
+    }
+    ok("succession: the transfer fee compared against is the Land Department's rate",
+      sc.transferFeePaid(estate) === estate * aq.FEES.transferRate,
+      String(sc.transferFeePaid(estate)));
+    ok("succession: a Property Will is one eighth of the transfer fee",
+      Math.abs(sc.feeAgainstTransfer("property", estate) - 0.125) < 1e-9,
+      String(sc.feeAgainstTransfer("property", estate)));
+
+    /* The date the default changed. The page is worthless if it drifts off
+       the commencement date, because the whole claim is "since this date". */
+    ok("succession: the page carries the commencement date",
+      p.body.includes(sc.IN_FORCE), sc.IN_FORCE);
+
+    /* The honest-sourcing rule. The real-property claim is the weakest
+       citation on the page and the page has to keep saying so; an edit that
+       promoted it to an official citation without finding the official text
+       would fail here. */
+    ok("succession: the unofficial translation is labelled unofficial in the sources",
+      (p.sources || []).some((x) => /unofficial/i.test(x.name || "")),
+      JSON.stringify((p.sources || []).map((x) => x.name)));
+    ok("succession: the prose admits the weaker source",
+      /unofficial translation/i.test(p.body));
+
+    /* No commercial summary stands in for the instrument. This is the rule
+       the whole site is positioned on, and this page's subject is the one
+       where law-firm blogs are most tempting. */
+    ok("succession: the Decree-Law itself is cited",
+      (p.sources || []).some((x) => x.url === sc.INSTRUMENTS.decree41.url));
+    ok("succession: no law firm summary is cited in place of the instrument",
+      !(p.sources || []).some((x) => /almaazmilawyers|jamesberrylaw|lexology|motei\.com|alramsyadvocates/.test(x.url || "")),
+      JSON.stringify((p.sources || []).map((x) => x.url)));
   }
 }
 
