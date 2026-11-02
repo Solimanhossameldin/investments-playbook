@@ -1476,6 +1476,107 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
         JSON.stringify(eff));
     }
 
+    /* ---- the premium the deferral can bear, and the rate it implies ----
+
+       This is the page's own finding and it is two tables of one relation
+       read in opposite directions, which is exactly the arrangement that
+       rots. Four things can go wrong and none of them breaks a build: a cell
+       can be edited away from the module; the premium column can stop being
+       monotone in the discount rate, which would make the page's central
+       claim about direction false; the two tables can drift until they no
+       longer invert each other; and the lede sentence can lose the figure
+       that makes it liftable, which is the only thing standing between this
+       page and the advertorials it is competing with on this query. */
+    const prem = tables.find((t) => /Premium plan B can bear/i.test(t.head[3] || ""));
+    ok("off-plan: the break-even premium table is present", !!prem);
+    if (prem) {
+      const pgrid = op.premiumGrid(price);
+      ok("off-plan: the premium table has a row per rate the module grids",
+        prem.rows.length === pgrid.length, `${prem.rows.length} vs ${pgrid.length}`);
+      ok("off-plan: every discount-rate cell is the module's",
+        same(col(prem, 0), pgrid.map((r) => r.ratePct)), JSON.stringify(col(prem, 0)));
+      ok("off-plan: every plan A present value in the premium table is the module's",
+        same(col(prem, 1), pgrid.map((r) => r.pvA)), JSON.stringify(col(prem, 1)));
+      ok("off-plan: every plan B present value in the premium table is the module's",
+        same(col(prem, 2), pgrid.map((r) => r.pvB)), JSON.stringify(col(prem, 2)));
+      ok("off-plan: every break-even premium cell is the module's",
+        same(col(prem, 3), pgrid.map((r) => r.premiumPct)), JSON.stringify(col(prem, 3)));
+      ok("off-plan: every premium-in-dirhams cell is the module's",
+        same(col(prem, 4), pgrid.map((r) => r.premiumAed)), JSON.stringify(col(prem, 4)));
+      ok("off-plan: the premium the plan can bear rises with the discount rate, which is the page's claim about direction",
+        pgrid.every((r, i) => i === 0 || r.premiumPct > pgrid[i - 1].premiumPct),
+        JSON.stringify(pgrid.map((r) => r.premiumPct)));
+      ok("off-plan: the break-even premium is plan A's present value over plan B's, to the dirham",
+        pgrid.every((r) => Math.abs(r.premiumPct - (r.pvA / r.pvB - 1) * 100) < 0.01),
+        JSON.stringify(pgrid.map((r) => r.premiumPct)));
+    }
+
+    const impl = tables.find((t) => /The rate it is finance at/i.test(t.head[2] || ""));
+    ok("off-plan: the implied finance rate table is present", !!impl);
+    if (impl) {
+      const igrid = op.impliedRateGrid(price);
+      ok("off-plan: the implied-rate table has a row per premium the module grids",
+        impl.rows.length === igrid.length, `${impl.rows.length} vs ${igrid.length}`);
+      ok("off-plan: every quoted-premium cell is the module's",
+        same(col(impl, 0), igrid.map((r) => r.premiumPct)), JSON.stringify(col(impl, 0)));
+      ok("off-plan: every premium-in-dirhams cell in the implied-rate table is the module's",
+        same(col(impl, 1), igrid.map((r) => r.premiumAed)), JSON.stringify(col(impl, 1)));
+      ok("off-plan: every implied-rate cell is the module's",
+        same(col(impl, 2), igrid.map((r) => r.ratePct)), JSON.stringify(col(impl, 2)));
+      ok("off-plan: the implied rate rises with the premium quoted",
+        igrid.every((r, i) => i === 0 || r.ratePct > igrid[i - 1].ratePct),
+        JSON.stringify(igrid.map((r) => r.ratePct)));
+    }
+
+    /* The identity the two tables stand on. Either direction drifting would
+       leave the page printing two tables that disagree about one relation. */
+    ok("off-plan: the implied rate inverts the break-even premium, on every rate the page publishes",
+      op.PREMIUM_RATES.every((r) => {
+        const q = op.premiumBreakEven(price, E.a, E.b, r, E.months);
+        return Math.abs(op.impliedFinanceRate(price, E.a, E.b, q, E.months) - r) < 1e-6;
+      }));
+    ok("off-plan: the break-even premium inverts the implied rate, on every premium the page publishes",
+      op.QUOTED_PREMIUMS.every((q) => {
+        const r = op.impliedFinanceRate(price, E.a, E.b, q, E.months);
+        return Math.abs(op.premiumBreakEven(price, E.a, E.b, r, E.months) - q) < 1e-6;
+      }));
+    ok("off-plan: a plan quoted at no premium is finance at nothing",
+      op.impliedFinanceRate(price, E.a, E.b, 0, E.months) === 0);
+
+    /* AI visibility. The two sentences an assistant can lift whole off this
+       page, each carrying the figure, the unit, the period and the condition
+       it holds under. A page that buries these under setup answers the query
+       and does not get quoted for it. */
+    const sixPct = op.premiumGrid(price).find((r) => r.ratePct === E.discountRate);
+    ok("off-plan: the premium section leads with the figure, the unit and the condition",
+      p.body.includes(`worth ${sixPct.premiumPct}% of the headline price at a six percent discount rate, which is AED ${op.money(sixPct.premiumAed)}`) &&
+      p.body.includes(`quoted more than ${sixPct.premiumPct}% above the front-loaded plan`),
+      `${sixPct.premiumPct}% / ${sixPct.premiumAed}`);
+    const tenPctPremium = op.impliedRateGrid(price).find((r) => r.premiumPct === 10);
+    ok("off-plan: the implied-rate section leads with the rate, standing alone",
+      p.body.includes(`vendor finance at ${tenPctPremium.ratePct}% a year on the money you defer`),
+      String(tenPctPremium.ratePct));
+    ok("off-plan: the meta description carries the break-even premium, because the clamp publishes the summary's first clause",
+      p.summary.slice(0, 155).includes(`${sixPct.premiumPct}%`), p.summary.slice(0, 155));
+    ok("off-plan: the declared question is the one a buyer quoted a premium actually types",
+      /post-handover payment plan/i.test(p.question || "") && /higher price/i.test(p.question || ""),
+      p.question);
+
+    /* The premium is the reader's input, not a market observation. This site
+       holds no dataset of developer premiums and the page has to keep saying
+       so, because the single most tempting edit here is to helpfully supply
+       "developers typically charge five to ten per cent" -- a sentence with
+       no source, on a finance page, which is the exact failure the site's
+       positioning attacks. */
+    ok("off-plan: the page states it holds no dataset of developer premiums",
+      p.body.includes("this site holds no dataset of developer premiums"));
+    ok("off-plan: the borrowing comparison is named as an illustration, not a market rate",
+      p.body.includes(`${op.BORROWING_REFERENCE_RATE.toFixed(2)}%`) &&
+      p.body.includes("It is an illustration rather than a market rate"));
+    ok("off-plan: the borrowing comparison carries the two things that stop it being a straight one",
+      /most banks will not lend against an off-plan unit before handover/i.test(p.body) &&
+      /arrangement and valuation fees/i.test(p.body));
+
     const bands = tables.find((t) => /Completion of the project/i.test(t.head[0] || ""));
     ok("off-plan: the retention band table is present", !!bands);
     if (bands) {

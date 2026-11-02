@@ -7,10 +7,12 @@
   "tier": 1,
   "calculator": "off-plan-irr",
   "reviewed": "14 September 2026",
-  "summary": "Two off-plan payment plans quoted at the same headline price are not the same price, because money paid later costs less in present value, and the gap between a front loaded plan and a post handover plan is commonly five to fifteen percent of the headline figure, while the same plan also fixes, by statute, what a default costs you.",
-  "question": "Are two Dubai off-plan payment plans at the same headline price really the same price?",
-  "formula": "Monthly discount rate\n  m = (1 + annual discount rate) ^ (1/12) - 1\n\nPresent value of a plan\n  = down payment\n  + sum over k of (construction instalment / (1 + m)^k)\n  + handover payment / (1 + m)^months\n  + sum over j of (post-handover instalment / (1 + m)^(months + j))\n\nEffective discount to headline\n  = 1 - (present value / headline price)\n\nWhat a default costs, Article 11\n  ceiling  = retention band x contract price of the unit\n  retained = the lesser of amounts paid and the ceiling\n  refund   = amounts paid - ceiling, or nothing if that is negative\n\nThe ceiling is a fraction of the price. It is not\na fraction of what you have paid, and it does not\ngrow as you pay.",
+  "summary": "A Dubai post-handover payment plan quoted more than 8.24% above the front-loaded plan on the same flat costs more, not less, because 8.24% of the headline price is all the four year deferral is worth at a six percent discount rate; read backwards, the premium is the rate the developer charges, and ten percent higher is finance at 7.35% a year.",
+  "question": "Is a Dubai post-handover payment plan worth a higher price?",
+  "formula": "Monthly discount rate\n  m = (1 + annual discount rate) ^ (1/12) - 1\n\nPresent value of a plan\n  = down payment\n  + sum over k of (construction instalment / (1 + m)^k)\n  + handover payment / (1 + m)^months\n  + sum over j of (post-handover instalment / (1 + m)^(months + j))\n\nEffective discount to headline\n  = 1 - (present value / headline price)\n\nWhat a default costs, Article 11\n  ceiling  = retention band x contract price of the unit\n  retained = the lesser of amounts paid and the ceiling\n  refund   = amounts paid - ceiling, or nothing if that is negative\n\nThe ceiling is a fraction of the price. It is not\na fraction of what you have paid, and it does not\ngrow as you pay.\n\nThe premium the deferral can bear\n\n  Present value is linear in price, so a plan quoted\n  q% higher is worth (1 + q) x its value at the same\n  price. Setting the two plans equal:\n\n    q* = PV(plan A) / PV(plan B) - 1\n\n  At six percent, on the illustrative unit\n    PV(A) = 1,394,818   PV(B) = 1,288,608\n    q*    = 8.24% of the headline price\n          = AED 123,634\n\n  Above q*, the post-handover plan is the dearer one.\n\nThe rate the premium implies\n\n  q* read backwards: the discount rate at which a\n  quoted premium of q exactly cancels the deferral.\n  Solved rather than derived -- the rate sits inside\n  the exponents.\n\n    6% premium  -> 4.32% a year\n    8% premium  -> 5.82% a year\n   10% premium  -> 7.35% a year\n\n  A post-handover plan is vendor finance. The premium\n  is the interest, and it is not zero.",
   "failureModes": [
+    "The break-even premium is computed on these two schedules, at this discount rate, on one unit. Both numbers move with all three, which is why the tables publish the whole curve rather than one figure, and why the method rather than the number is what transfers to the plan you are actually quoted.",
+    "The implied rate is the rate on the deferral alone. It is not comparable to a mortgage without also carrying the mortgage's own costs -- the arrangement and valuation fees the Central Bank caps neither, and the two Land Department registrations -- and most banks will not lend against an off-plan unit before handover at all, so for many buyers the comparison is against cash rather than against credit.",
     "It assumes both plans are available on the same unit at the same headline price. They usually are not. Price the plans as actually offered or the comparison is fictional.",
     "It cannot price handover risk, which is the dominant risk in off-plan. A cheaper present value on a project that completes two years late is not cheaper.",
     "It ignores the costs that begin at handover: service charges from day one, the leasing lag before first rent, and any snagging and fit out.",
@@ -21,7 +23,7 @@
     "Article 6 gives the right to dispose of a registered off-plan unit, and the sale and purchase agreement commonly conditions the developer's processing of a transfer on a minimum share of the price having been paid. That condition is a contract term rather than a statutory one: no instrument sets the threshold, no cap constrains it, and the thirty-to-fifty per cent ranges printed for it elsewhere carry no source, so it is the clause to read in your own agreement before relying on the table above.",
     "The default arithmetic below is the statutory ceiling, not a prediction. Article 11 says how much a developer may keep, not how much he will ask for, and the rules and procedures stipulated in this Article are considered part of public order, so a contract term that goes further does not rescue him."
   ],
-  "whenToUse": "Whenever a developer offers you a choice of payment plans, and whenever you are comparing two projects with different schedules. Run it before you discuss price, because the structure is often worth more than the discount you were going to ask for, and because the plan you sign also fixes what both exits cost you if your circumstances change: what a termination forfeits under Article 11, and what an assignment has to clear before it returns you a dirham.",
+  "whenToUse": "Whenever a developer offers you a choice of payment plans, and specifically at the moment the extended plan is quoted at a higher price than the front-loaded one, because that is the moment the arithmetic on this page stops agreeing with the brochure. Run it before you discuss price, because the structure is often worth more than the discount you were going to ask for, and because the plan you sign also fixes what both exits cost you if your circumstances change: what a termination forfeits under Article 11, and what an assignment has to clear before it returns you a dirham.",
   "sources": [
     {
       "name": "Law No. (19) of 2020 amending Law No. (13) of 2008, Article 11",
@@ -61,11 +63,51 @@ On the two plans above, at a six percent discount rate:
 
 Plan B is roughly one hundred and six thousand dirhams cheaper, on the same unit, at the same advertised price. That is seven percent of the purchase, which is more than most people negotiate off a price and considerably more than the agency commission they argue about. The [off-plan payment plan calculator](/calculators/off-plan-irr/) runs the same arithmetic on your own figures.
 
-## The catch, and it is a real one
+## The catch, priced: how much higher a price the deferral can carry
 
-Developers know this arithmetic better than buyers do. That is precisely why the extended plan often carries a higher headline price, or is only available on units that are harder to sell, or on floors nobody wants. **Compare plans at their actual quoted prices, not at a single price.** Once you do, the advantage frequently shrinks, and sometimes reverses.
+**On the illustrative unit, the four year post-handover deferral is worth 8.24% of the headline price at a six percent discount rate, which is AED 123,634, so a post-handover plan quoted more than 8.24% above the front-loaded plan on the same flat costs more in today's money rather than less.** That figure is the answer to the question the rest of this query's literature asks and leaves open.
 
-The discount rate matters as much as the schedule. Use what your money would genuinely earn if you did not hand it over, which for most people is a cash or bond rate, not a hoped for equity return. A high discount rate flatters back loaded plans. Be conservative or you will talk yourself into the wrong plan with your own optimism.
+Every page on post-handover plans, this one included until now, ends the comparison with some version of *compare them at their actual quoted prices*. It is the right instruction and it is not an answer, because the buyer standing in the sales office has been quoted a gap and has no way to tell whether the gap is small enough. The gap that is small enough is one number and it is exact.
+
+Present value is linear in price. A plan quoted q percent higher has a present value of exactly (1 + q) times its present value at the same price, so the premium at which the two plans cost the same is arithmetic rather than a search:
+
+    q* = present value of plan A / present value of plan B - 1
+
+At the six percent used above, that is 1,394,818 / 1,288,608 - 1, or 8.24%. It is not a market observation and this site holds no dataset of developer premiums. It is the ceiling your own discount rate puts on the premium you are willing to pay, and it moves with that rate:
+
+| Your discount rate | Plan A, today's money | Plan B, today's money | Premium plan B can bear | In dirhams |
+|---|---|---|---|---|
+| 3% | 1,445,113 | 1,386,802 | 4.20% | 63,071 |
+| 4% | 1,427,865 | 1,352,539 | 5.57% | 83,538 |
+| 5% | 1,411,106 | 1,319,838 | 6.92% | 103,726 |
+| 6% | 1,394,818 | 1,288,608 | 8.24% | 123,634 |
+| 7% | 1,378,984 | 1,258,762 | 9.55% | 143,261 |
+| 8% | 1,363,584 | 1,230,221 | 10.84% | 162,609 |
+| 9% | 1,348,604 | 1,202,910 | 12.11% | 181,677 |
+| 10% | 1,334,028 | 1,176,760 | 13.36% | 200,467 |
+
+The direction is the one that catches people out. A **higher** discount rate lets the plan bear a **larger** premium, because the more your money is worth to you, the more the deferral is worth. A buyer whose cash would sit in a current account earning nothing has a discount rate near zero and a premium tolerance near zero with it: for him the post-handover plan is worth almost nothing, and any premium at all is a loss. The plan is worth most to the buyer who least needs it.
+
+### Read backwards, the premium is an interest rate
+
+A post-handover plan is vendor finance. The developer holds forty percent of the price for four years and charges for it in the headline. So the honest way to read a quoted premium is to ask what rate it corresponds to, which is the same relation inverted:
+
+| Premium you are quoted | In dirhams | The rate it is finance at, a year |
+|---|---|---|
+| 2% | 30,000 | 1.41% |
+| 4% | 60,000 | 2.85% |
+| 6% | 90,000 | 4.32% |
+| 8% | 120,000 | 5.82% |
+| 10% | 150,000 | 7.35% |
+| 12% | 180,000 | 8.91% |
+
+**A post-handover plan quoted ten percent above the front-loaded plan is vendor finance at 7.35% a year on the money you defer.** The word *interest-free*, which appears on nearly every page selling these plans, is true of the schedule and silent about the price, and the price is where the interest is.
+
+The reference point worth holding next to that column is the 5.00% the [refinancing page](/playbooks/refinancing-a-dubai-mortgage/) uses on its illustrative loan. It is an illustration rather than a market rate, and this site publishes no mortgage rate dataset, but it fixes the shape of the answer: at 5.00% the premium that breaks even is 6.92%, so a plan quoted much beyond that is dearer than the same money borrowed. Two things keep that from being a straight comparison, and both matter. A mortgage carries its own costs, including the arrangement and valuation fees [the Central Bank caps neither](/playbooks/refinancing-a-dubai-mortgage/) and two separate Land Department registrations. And most banks will not lend against an off-plan unit before handover at all, which for many buyers makes the real alternative cash rather than credit, and the relevant rate the one their cash actually earns.
+
+Use what your money would genuinely earn if you did not hand it over, which for most people is a cash or bond rate, not a hoped for equity return. A high discount rate flatters back loaded plans twice over: once in the present value and again in the premium it will tolerate. Be conservative, or you will talk yourself into the wrong plan with your own optimism. The [off-plan payment plan calculator](/calculators/off-plan-irr/) runs the present value of both plans on your own schedules and discount rate; divide plan A's figure by plan B's and subtract one and you have your own break-even premium, which is the whole of the arithmetic above.
+
+There is one more reason the extended plan is dearer than it looks, and it has nothing to do with the price: it is frequently offered only on the units that are harder to sell, on the floors nobody wants, in the phase that has not moved. That is not in any of the arithmetic above and it cannot be, so ask which units the plan is available on before you ask what it costs.
 
 ## The other half of the plan, which nobody prices
 

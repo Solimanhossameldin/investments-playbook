@@ -249,3 +249,97 @@ export function assignmentGrid(price = EXAMPLE.price, shares = ASSIGNMENT_SHARES
 }
 
 export { money };
+
+/* ---- the premium the deferral can bear, and the rate it implies ----
+
+   The present-value section above is true and incomplete in a way the page
+   admits in prose and then does not compute: it prices both plans at one
+   price. Developers do not. The extended plan carries a higher headline, and
+   every page on this query -- including, until now, this one -- says
+   "compare them at their quoted prices" without saying what quoted gap
+   turns the advantage into a loss.
+
+   It is one number and it is exact. Present value is linear in price, so a
+   plan quoted q percent higher has a present value (1 + q) times its value
+   at the same price. Setting the two equal:
+
+     PV_A(price) = (1 + q*) x PV_B(price)
+     q*          = PV_A / PV_B - 1
+
+   No search, no iteration. q* is the whole of the deferral's worth,
+   expressed in the only unit a buyer is quoted in.
+
+   Inverted, it is the figure that answers the question people actually ask.
+   A post-handover plan is vendor finance: the developer holds forty per cent
+   of the price for four years and charges for it in the headline. The rate
+   he is charging is the discount rate at which a premium of q exactly
+   cancels the deferral -- which is q* read backwards. That has no closed
+   form, because the discount rate sits inside the exponents, so it is
+   solved. Bisection rather than Newton: the function is monotone in the
+   rate over any range a buyer would use, the bracket is known, and fifty
+   bisections on a bracket of two hundred points is a rate good to fourteen
+   decimal places. Speed is not the constraint here; being obviously right
+   is.
+
+   The two functions are exact inverses, and the suite asserts it both ways.
+   That identity is the check that matters: either one drifting away from the
+   other would leave the page printing two tables that quietly disagree
+   about the same relation, which is worse than printing one. */
+
+export const PREMIUM_RATES = [3, 4, 5, 6, 7, 8, 9, 10];
+export const QUOTED_PREMIUMS = [2, 4, 6, 8, 10, 12];
+
+/* The quoted premium, in per cent of the headline price, at which the
+   post-handover plan stops being cheaper than the front-loaded one. */
+export function premiumBreakEven(price, a, b, annualRatePercent, months) {
+  const pvA = planPresentValue(price, a, annualRatePercent, months);
+  const pvB = planPresentValue(price, b, annualRatePercent, months);
+  return (pvA / pvB - 1) * 100;
+}
+
+export function premiumGrid(price = EXAMPLE_PLAN.price, rates = PREMIUM_RATES, plan = EXAMPLE_PLAN) {
+  return rates.map((ratePct) => {
+    const pvA = planPresentValue(price, plan.a, ratePct, plan.months);
+    const pvB = planPresentValue(price, plan.b, ratePct, plan.months);
+    const premiumPct = (pvA / pvB - 1) * 100;
+    return {
+      ratePct,
+      pvA: Math.round(pvA),
+      pvB: Math.round(pvB),
+      premiumPct: Number(premiumPct.toFixed(2)),
+      premiumAed: Math.round((premiumPct / 100) * price),
+    };
+  });
+}
+
+/* The annual rate at which a plan quoted `premiumPercent` higher costs
+   exactly the same as the front-loaded plan. Below this rate the premium is
+   more than the deferral is worth; above it, less. It is the rate the
+   developer is charging on the money he lets you keep. */
+export function impliedFinanceRate(price, a, b, premiumPercent, months, bracket = 200) {
+  const gap = (r) =>
+    planPresentValue(price, a, r, months) -
+    (1 + premiumPercent / 100) * planPresentValue(price, b, r, months);
+  if (premiumPercent <= 0) return 0;
+  let lo = 0, hi = bracket;
+  if (gap(hi) < 0) return NaN;
+  for (let i = 0; i < 200; i++) {
+    const mid = (lo + hi) / 2;
+    if (gap(mid) > 0) hi = mid; else lo = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+export function impliedRateGrid(price = EXAMPLE_PLAN.price, premiums = QUOTED_PREMIUMS, plan = EXAMPLE_PLAN) {
+  return premiums.map((premiumPct) => ({
+    premiumPct,
+    premiumAed: Math.round((premiumPct / 100) * price),
+    ratePct: Number(impliedFinanceRate(price, plan.a, plan.b, premiumPct, plan.months).toFixed(2)),
+  }));
+}
+
+/* The rate the refinancing page's illustrative loan carries. Named here, and
+   named as illustrative on the page, because the comparison a buyer needs is
+   against borrowing rather than against nothing -- and because this site
+   holds no dataset of mortgage rates and will not assert a market one. */
+export const BORROWING_REFERENCE_RATE = 5.0;

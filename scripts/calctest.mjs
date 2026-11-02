@@ -173,9 +173,23 @@ console.log("\nThe off-plan worked example against the calculator");
   const WORD = { three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
     twelve: 12, fifteen: 15, twenty: 20 };
   const gapPoints = numOf(r.bEff) - numOf(r.aEff);
-  check("the summary's range contains the gap the worked example produces",
-    !!range && gapPoints >= WORD[range[1]] && gapPoints <= WORD[range[2]],
+  check("any range the page still claims contains the gap the worked example produces",
+    !range || (gapPoints >= WORD[range[1]] && gapPoints <= WORD[range[2]]),
     [range && range.slice(1, 3), gapPoints.toFixed(1)]);
+
+  /* The summary now leads on the break-even premium instead of a range, and
+     that figure has to be the calculator's own, not a number typed beside
+     it. Present value is linear in price, so the premium at which the two
+     plans cost the same is aPV/bPV - 1 and nothing else. This is the stronger
+     form of the check above: the range was prose about the worked example,
+     where this ties the one sentence an answer engine lifts to the module
+     that computes it. If the schedules, the discount rate or the unit ever
+     move, the summary has to move with them or the build stops. */
+  const breakEven = ((numOf(r.aPV) / numOf(r.bPV)) - 1) * 100;
+  const claimed = (page.match(/quoted more than ([\d.]+)% above the front-loaded plan/) || [])[1];
+  check("the summary's break-even premium is the calculator's present values, to two places",
+    !!claimed && Math.abs(parseFloat(claimed) - breakEven) < 0.01,
+    [claimed, breakEven.toFixed(2)]);
 
   // The instalment timing has to stay stated, or the numbers stop being
   // reproducible and the check above is testing a coincidence.
