@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-03T14:35:31.144Z",
+ "fetchedAt": "2026-11-03T20:38:53.503Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-11-03T15:00:20.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
   {
    "title": "Regulators explore credit union reforms to support growth, innovation and better outcomes for members",
    "url": "https://www.bankofengland.co.uk/news/2026/november/regulators-explore-credit-union-reforms-to-support-growth-innovation-and-better-outcomes-for-members",
@@ -71,15 +80,6 @@
    "feed": "ecb"
   },
   {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-10-30T12:30:25.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
-  },
-  {
    "title": "Results of the ECB Survey of Professional Forecasters for the fourth quarter of 2026",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261030~e92c3c838c.en.html",
    "published": "2026-10-30T09:00:00.000Z",
@@ -116,15 +116,6 @@
    "feed": "ecb"
   },
   {
-   "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
-   "published": "2026-10-29T14:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
    "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
    "published": "2026-10-29T14:00:00.000Z",
@@ -134,9 +125,27 @@
    "feed": "ecb"
   },
   {
+   "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
+   "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
+   "published": "2026-10-29T14:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
    "title": "Monetary policy decisions",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html",
    "published": "2026-10-29T13:15:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "ECB President Lagarde to step down on 7 February 2027",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
+   "published": "2026-10-29T10:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
@@ -150,15 +159,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "ECB President Lagarde to step down on 7 February 2027",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
-   "published": "2026-10-29T10:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   },
   {
    "title": "Federal Reserve issues FOMC statement",
@@ -384,33 +384,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Philip R. Lane: The AI opportunity for Europe",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261013~9db9bf4fd6.en.html",
-   "published": "2026-10-13T18:30:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Minutes of the Board's discount rate meetings on August 17, September 9, and September 16, 2026",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
-   "published": "2026-10-13T18:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
-  },
-  {
-   "title": "Minutes of the Money Market Committee meeting – September 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/september/money-markets-committee-minutes-september-2026",
-   "published": "2026-10-13T15:04:27.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
