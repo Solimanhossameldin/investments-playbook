@@ -45,6 +45,20 @@ export const INSTRUMENTS = {
     name: "HM Revenue and Customs, Check if you can claim the 4-year foreign income and gains regime",
     url: "https://www.gov.uk/guidance/check-if-you-can-claim-the-4-year-foreign-income-and-gains-regime",
   },
+  /* India's operative statute. The 1961 Act is the one every competing page
+     cites and it is not the one that governs the year this page is read in:
+     the 2025 Act commenced 1 April 2026. Both URLs are the tax department's
+     own, and the consolidated Act is the version as amended by the Finance
+     Act, 2026, which is the only version whose section numbers are safe to
+     print. */
+  itAct2025: {
+    name: "Income-tax Act, 2025 (30 of 2025), as amended by the Finance Act, 2026, Income Tax Department, India",
+    url: "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+  },
+  cbdtTransition: {
+    name: "Central Board of Direct Taxes, FAQs on the interplay and transition from the Income-tax Act, 1961 to the Income-tax Act, 2025",
+    url: "https://www.incometaxindia.gov.in/documents/81799/11848482/Updated-FQAs-on-Interplay%26Transitions.pdf/e10ad2b6-9495-de90-58d3-20606d8954ae?t=1775128640970",
+  },
 };
 
 /* Claims the page carries word for word, in the instrument's own wording.
@@ -58,6 +72,26 @@ export const STATUTORY = [
   { key: "reducer", claim: "The reduction is the basic rate value (currently 20%) of the lower of", instrument: "financeCosts" },
   { key: "figYears", claim: "still within your first 4 years as a UK tax resident following at least a 10-year period as a non-UK tax resident", instrument: "figRegime" },
   { key: "figProperty", claim: "profits of an overseas property business", instrument: "figRegime" },
+  /* India, and the second mechanism. The United Kingdom half above is the
+     ordinary one: resident there, treaty empty, charge stands. India's
+     section 6(7) runs the other way and can make a man resident *because*
+     the UAE charges nothing -- the absence of a Dubai tax is written into
+     the test as one of its three conditions. These are the words that do
+     that work, and the page carries every one of them or the suite names it.
+
+     The commencement and repeal claims are here because the section numbers
+     are worthless without them: a reader who checks "section 6(7)" against
+     the 1961 Act will not find this rule, and the pages that rank on this
+     query are citing the repealed Act. */
+  { key: "inCommencement", claim: "it shall come into force on the 1st April, 2026", instrument: "itAct2025" },
+  { key: "inRepeal", claim: "The Income-tax Act, 2025 replaces the Income-tax Act, 1961 with effect from 01.04.2026", instrument: "cbdtTransition" },
+  { key: "inWorldwide", claim: "accrues or arises to such person outside India in that year", instrument: "itAct2025" },
+  { key: "inDeemed", claim: "an individual shall be deemed to be resident in India for a tax year", instrument: "itAct2025" },
+  { key: "inCitizen", claim: "is a citizen of India", instrument: "itAct2025" },
+  { key: "inNotLiable", claim: "is not liable to tax in any other country or territory due to his domicile, residence, or similar criteria", instrument: "itAct2025" },
+  { key: "inThreshold", claim: "has total income exceeding fifteen lakh rupees during such tax year (other than the income from foreign sources)", instrument: "itAct2025" },
+  { key: "inOnlyNonResident", claim: "shall not apply to an individual, who is resident in India for a tax year under sub-sections (2) to (6)", instrument: "itAct2025" },
+  { key: "inForeignSource", claim: "the income, which accrues or arises outside India", instrument: "itAct2025" },
 ];
 
 /* The 2026 to 2027 bands, as the rates page prints them. `floor` is the
@@ -136,6 +170,82 @@ export function financeCostGap(interest, key) {
   if (!b) throw new Error(`no such band: ${key}`);
   const gap = Math.max(0, b.rate - UK.basicRateValue);
   return { gap: Number(gap.toFixed(2)), cost: Math.round(interest * gap) };
+}
+
+/* India's deeming rule, as a predicate rather than as prose.
+
+   Section 6(7) of the Income-tax Act, 2025 deems an individual resident in
+   India when three things are all true: he is a citizen of India, he is not
+   liable to tax anywhere else by reason of domicile or residence, and his
+   income other than from foreign sources exceeds fifteen lakh rupees.
+   Section 6(8) then withholds the rule from anyone already resident on the
+   day counts, which is the part that decides who it reaches: it is aimed
+   only at people whose day count is clean.
+
+   The asymmetry is the finding and it is why this is code and not a
+   sentence. The threshold in condition (c) excludes income from foreign
+   sources, which section 6(14) defines as income accruing outside India, so
+   Dubai rent counts nothing toward the test. Once the test is failed,
+   section 5(1)(c) brings the whole of that same Dubai rent into Indian
+   total income. The flat is invisible to the trigger and fully exposed to
+   the consequence, and `qualifyingIncome` below is deliberately unable to
+   see it -- passing a Dubai rent in cannot move the answer, which is the
+   property the page claims. */
+export const INDIA = {
+  /* "fifteen lakh rupees", section 6(7)(c). */
+  deemedThreshold: 1500000,
+  /* Section 6(2): the day counts the rule only applies past. */
+  daysInYear: 182,
+  daysWithHistory: 60,
+  daysPreceding: 365,
+  commencement: "1 April 2026",
+};
+
+/* The income the fifteen lakh test is measured on: Indian-source income
+   only. Foreign-source income is excluded by the words of condition (c),
+   so this function takes it and discards it rather than not taking it, so
+   that the exclusion is a tested behaviour and not an omission. */
+export function qualifyingIncome({ indianIncome = 0, foreignIncome = 0 } = {}) {
+  return { indianIncome, foreignIncome, qualifying: indianIncome, excluded: foreignIncome };
+}
+
+/* Resident on the day counts alone, section 6(2). */
+export function residentOnDays({ daysInIndia = 0, daysPrecedingFour = 0 } = {}) {
+  if (daysInIndia >= INDIA.daysInYear) return true;
+  return daysInIndia >= INDIA.daysWithHistory && daysPrecedingFour >= INDIA.daysPreceding;
+}
+
+/* Section 6(7) read with section 6(8). Returns which condition failed, so
+   the page's claim about *why* someone is caught can be checked rather
+   than asserted. */
+export function deemedResident({
+  citizen = false,
+  liableToTaxElsewhere = false,
+  indianIncome = 0,
+  foreignIncome = 0,
+  daysInIndia = 0,
+  daysPrecedingFour = 0,
+} = {}) {
+  const onDays = residentOnDays({ daysInIndia, daysPrecedingFour });
+  const q = qualifyingIncome({ indianIncome, foreignIncome });
+  const conditions = {
+    citizen,
+    notLiableElsewhere: !liableToTaxElsewhere,
+    overThreshold: q.qualifying > INDIA.deemedThreshold,
+  };
+  const allMet = conditions.citizen && conditions.notLiableElsewhere && conditions.overThreshold;
+  /* Section 6(8): withheld from anyone already resident on the day counts. */
+  const deemed = allMet && !onDays;
+  return {
+    deemed,
+    residentOnDays: onDays,
+    /* Resident at all, by either route. */
+    resident: onDays || deemed,
+    conditions,
+    qualifying: q.qualifying,
+    excludedForeign: q.excluded,
+    threshold: INDIA.deemedThreshold,
+  };
 }
 
 export const money = aq.money;

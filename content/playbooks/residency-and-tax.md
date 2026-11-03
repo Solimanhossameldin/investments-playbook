@@ -17,7 +17,10 @@
     "Deducting the mortgage interest. Relief for finance costs on a residential letting is given as a reduction of the tax bill at the basic rate value rather than as a deduction from profit, so a geared property can carry a tax bill computed on income the interest has already consumed.",
     "Confusing the day count with the whole test. Most residence rules combine days with ties such as an available home, family, or business presence, and the ties are what decide the arguable cases.",
     "Treating the year of departure as clean. Split-year treatment, exit charges on unrealised gains, and the country's own definition of when residence ended all make the transition year the most complicated one, not the simplest.",
-    "Forgetting that estate tax follows the asset rather than the owner. A US-domiciled fund holds US-situs assets for estate purposes no matter where the investor lives, which is the trap that fund domicile exists to solve."
+    "Forgetting that estate tax follows the asset rather than the owner. A US-domiciled fund holds US-situs assets for estate purposes no matter where the investor lives, which is the trap that fund domicile exists to solve.",
+    "Reading an Indian answer to this question against the wrong statute. The Income-tax Act, 2025 replaced the Income-tax Act, 1961 with effect from 1 April 2026, so the year you are in is governed by the new Act and its section numbers. A page that cites the 1961 Act's sections for a current year is citing a repealed statute, and the deeming rule described here is not found where those numbers point.",
+    "Assuming a clean day count settles Indian residence. Section 6(7) deems an Indian citizen resident on three conditions that have nothing to do with days, and section 6(8) applies it only to people who are not resident on the day counts. A better day count moves nobody out of its reach.",
+    "Expecting the size of the Dubai holding to matter to the Indian residence test. It is excluded from the threshold as income from foreign sources, so a larger Dubai rent brings you no closer to being deemed resident and makes the charge no smaller once you are."
   ],
   "whenToUse": "Before buying, if you are tax resident anywhere that taxes worldwide income, because the charge lands on the same rent the yield was calculated from and changes which properties clear your hurdle. Before the move rather than after, because the departure year is the one with the exit charges and the split-year rules in it. Then again whenever an asset is bought in a country you do not live in, which restarts the source and situs questions.",
   "sources": [
@@ -48,6 +51,24 @@
     {
       "name": "UK government, tax on UK income while living abroad",
       "url": "https://www.gov.uk/tax-uk-income-live-abroad/rent"
+    },
+    {
+      "name": "Income-tax Act, 2025 (30 of 2025), as amended by the Finance Act, 2026, Income Tax Department, India",
+      "url": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf"
+    },
+    {
+      "name": "Central Board of Direct Taxes, FAQs on the interplay and transition from the Income-tax Act, 1961 to the Income-tax Act, 2025",
+      "url": "https://www.incometaxindia.gov.in/documents/81799/11848482/Updated-FQAs-on-Interplay%26Transitions.pdf/e10ad2b6-9495-de90-58d3-20606d8954ae?t=1775128640970"
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Can an Indian citizen living in Dubai be taxed in India on Dubai rental income?",
+      "a": "Section 6(7) of India's Income-tax Act, 2025 deems an Indian citizen resident in India for a tax year if he is not liable to tax in any other country and his income other than from foreign sources exceeds fifteen lakh rupees, so the UAE's zero income tax is one of the three conditions rather than a protection from them."
+    },
+    {
+      "q": "Does Dubai rental income count toward India's fifteen lakh rupee residence threshold?",
+      "a": "Dubai rent accrues outside India, so it counts nothing toward the 1,500,000 rupees that decides whether the rule bites, and the whole of that same Dubai rent falls into Indian total income if it does."
     }
   ]
 }
@@ -149,6 +170,35 @@ This is why the framework says do it before rather than after. The decisions ava
 Almost everyone knows there is a day count. Fewer know that clearing it is necessary rather than sufficient.
 
 A home that remains available to you, a family who stayed, a business you still run, memberships and registrations: these are ties, and ties tests exist precisely to catch people who moved on paper. Someone spending under the threshold while keeping a house, a spouse and a company in the old country can still be resident there, and will find out at the least convenient moment.
+
+## India writes the zero into the test itself
+
+Section 6(7) of India's Income-tax Act, 2025 deems an Indian citizen resident in India for a tax year if he is not liable to tax in any other country and his income other than from foreign sources exceeds fifteen lakh rupees, so the UAE's zero income tax is one of the three conditions rather than a protection from them.
+
+That is a different mechanism from the British one above, and it runs the other way. The United Kingdom case is the ordinary one: you are resident there already, the treaty is empty, the charge stands. India's rule can make you resident in the first place, and the absence of a Dubai tax is not incidental to it. It is written into it.
+
+Start with which statute is in force, because the section numbers are worthless without it. India replaced its tax code. The Income-tax Act, 2025 provides that **it shall come into force on the 1st April, 2026**, and the Central Board of Direct Taxes states in its own transition guidance that **The Income-tax Act, 2025 replaces the Income-tax Act, 1961 with effect from 01.04.2026**. The year this page is being read in is governed by the new Act. A page answering this question with section numbers from the 1961 Act is citing a statute that no longer governs the year it is about, and a reader who checks those numbers against the Act in force will not find the rule below at all.
+
+Under the new Act a resident's total income includes income which **accrues or arises to such person outside India in that year**. Dubai rent is exactly that. So the whole question is residence, and residence has a second test most people have never read.
+
+The day counts are the familiar part: 182 days in India in the tax year, or 60 days in the year together with 365 across the four preceding ones. Clear both and you are not resident on the day count. Then comes section 6(7), which provides that irrespective of those sub-sections, **an individual shall be deemed to be resident in India for a tax year** if three things are all true of him. He **is a citizen of India**. He **is not liable to tax in any other country or territory due to his domicile, residence, or similar criteria**. And he **has total income exceeding fifteen lakh rupees during such tax year (other than the income from foreign sources)**.
+
+Read the second condition against the first page of any Dubai brochure. The UAE levies no personal income tax, so an Indian citizen living in Dubai is not liable to tax there by reason of his residence, and the condition is satisfied by the very feature that brought him. The zero is not neutral and it is not merely useless to him, as it is to the British owner further up this page. It is one of the three things the deeming rule requires.
+
+## The flat is invisible to the trigger and fully exposed to the charge
+
+The threshold in the third condition is on income **other than the income from foreign sources**, and the Act defines income from foreign sources as **the income, which accrues or arises outside India**. Dubai rent accrues outside India, so it counts nothing toward the 1,500,000 rupees that decides whether the rule bites, and the whole of that same Dubai rent falls into Indian total income if it does.
+
+| Source of income | Counts toward the 1,500,000 rupee test | Taxed if the test is failed |
+|---|---|---|
+| Indian rent, interest, dividends, Indian capital gains | Yes | Yes |
+| Dubai rental income | No | Yes |
+
+Both halves of that matter, and they point in opposite directions. Buying a larger Dubai portfolio does not move you one rupee closer to being deemed resident. It also does not make the consequence any smaller on the day something else moves you there, and the something else is ordinary: an Indian flat let out, a fixed deposit, a dividend, the gain on a single Indian share sale.
+
+The rule is also aimed precisely at the people who got the day count right. Section 6(8) provides that sub-section (7) **shall not apply to an individual, who is resident in India for a tax year under sub-sections (2) to (6)**, so it reaches only someone who is *not* resident on the day tests. The standard advice on this subject is to keep the days down. Keeping the days down is what puts a person inside the only population section 6(7) can reach, and clearing the day count more comfortably does not help at all once the three conditions are met.
+
+What this costs is Indian income tax at the owner's own rate on the rent, and **this page does not print that rate.** The rate schedule for the year in question belongs to the 2025 Act as amended by the Finance Act, 2026, and the deductions available against house property income belong to its own sections; this site prints a figure only once it has read the instrument that sets it, which is the treatment the [net rental yield](/playbooks/net-rental-yield/) page gives the developer's transfer fee. The three conditions above are the part the statute settles, and they are the part that decides whether the rate concerns you at all. Take the conditions to an Indian adviser; do not take a number off a brokerage page.
 
 ## What no income tax does not mean
 

@@ -2936,6 +2936,64 @@ ok("every calculator points at a playbook that exists",
       /credit against the UK charge is nil/.test(p.body));
     ok("tax on rent: the page keeps the permissive reading of Article 6",
       p.body.includes("*may be taxed*, not *shall be taxable only*"));
+
+    /* ---- India's deeming rule ----
+
+       The statutory wording is covered by FOREIGN_STATUTORY_PAGES above,
+       which makes the page carry all nine quotations word for word and cite
+       the tax department's own two documents. What is left is the argument,
+       and the argument is a predicate, so it is checked as one.
+
+       The asymmetry is the finding: Dubai rent is excluded from the
+       threshold that decides whether the rule applies, and included in the
+       income the rule exposes. Four cases pin it, and the third is the one
+       that matters most, because it is the claim a reader would most
+       reasonably doubt: an arbitrarily large Dubai rent, on its own, moves
+       the answer not at all. */
+    const DUBAI_OWNER = { citizen: true, liableToTaxElsewhere: false, daysInIndia: 10 };
+    const over = ht.deemedResident({ ...DUBAI_OWNER, indianIncome: ht.INDIA.deemedThreshold + 1 });
+    const under = ht.deemedResident({ ...DUBAI_OWNER, indianIncome: ht.INDIA.deemedThreshold });
+    const foreignOnly = ht.deemedResident({ ...DUBAI_OWNER, indianIncome: 0, foreignIncome: 50000000 });
+    const onDays = ht.deemedResident({ citizen: true, liableToTaxElsewhere: false, indianIncome: ht.INDIA.deemedThreshold * 10, daysInIndia: 200 });
+
+    ok("india: an Indian citizen in Dubai over the threshold is deemed resident",
+      over.deemed === true && over.conditions.notLiableElsewhere === true);
+    ok("india: the threshold is exceeded, not merely met",
+      under.deemed === false && under.conditions.overThreshold === false);
+    ok("india: Dubai rent alone never triggers the rule, however large",
+      foreignOnly.deemed === false && foreignOnly.qualifying === 0 && foreignOnly.excludedForeign === 50000000);
+    ok("india: section 6(8) withholds the deeming from someone resident on the day counts",
+      onDays.deemed === false && onDays.residentOnDays === true && onDays.resident === true);
+    /* The UAE's zero rate is a condition of the rule, not a defence against
+       it. If this ever reads the other way the page's central claim is
+       wrong, so it is asserted rather than left to the prose. */
+    ok("india: being liable to tax elsewhere is what defeats the rule",
+      ht.deemedResident({ ...DUBAI_OWNER, liableToTaxElsewhere: true, indianIncome: ht.INDIA.deemedThreshold * 10 }).deemed === false);
+    ok("india: a non-citizen is outside the rule",
+      ht.deemedResident({ ...DUBAI_OWNER, citizen: false, indianIncome: ht.INDIA.deemedThreshold * 10 }).deemed === false);
+
+    /* Page and module agreement on the one figure the page prints. */
+    ok("india: the page prints the threshold the module holds",
+      p.body.includes(`${ht.money(ht.INDIA.deemedThreshold)} rupees`), ht.money(ht.INDIA.deemedThreshold));
+    ok("india: the page names the statute that is actually in force",
+      p.body.includes("Income-tax Act, 2025") && !/Income-tax Act, 1961's section/.test(p.body));
+    /* The page must not print an Indian rate it has not read. This is the
+       declared exclusion, and it is the check that stops a future run
+       quietly filling the gap with a number off a brokerage page. */
+    ok("india: the page declares that it does not print the Indian rate",
+      p.body.includes("this page does not print that rate"));
+
+    /* The asymmetry table the reader sees, against the predicate. */
+    const it = tablesIn(p.body).find((x) => (x.head[0] || "") === "Source of income");
+    ok("india: the page carries the asymmetry table", !!it);
+    if (it) {
+      const dubaiRow = it.rows.find((r) => (r[0] || "").includes("Dubai rental income"));
+      ok("india: the Dubai row says the rent is outside the test and inside the charge",
+        !!dubaiRow && /No/.test(dubaiRow[1]) && /Yes/.test(dubaiRow[2]), JSON.stringify(dubaiRow));
+      const indianRow = it.rows.find((r) => (r[0] || "").includes("Indian rent"));
+      ok("india: the Indian row is inside both",
+        !!indianRow && /Yes/.test(indianRow[1]) && /Yes/.test(indianRow[2]), JSON.stringify(indianRow));
+    }
   }
 }
 
