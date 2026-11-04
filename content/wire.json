@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-04T15:39:59.881Z",
+ "fetchedAt": "2026-11-04T21:30:27.913Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "SEC Adopts Amendments to Update Definitions of Small Entity for Investment Companies and Investment Advisers",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-112-sec-adopts-amendments-update-definitions-small-entity-investment-companies-investment-advisers",
+   "published": "2026-11-04T16:28:00.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
+  {
+   "title": "Summary of the RTGS CHAPS Industry Forum - 13 October 2026",
+   "url": "https://www.bankofengland.co.uk/minutes/2026/october/rtgs-chaps-industry-forum-13-october-2026",
+   "published": "2026-11-04T14:51:45.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
   {
    "title": "ECB wage tracker suggests slightly higher wage growth in first three quarters of 2027 compared with the full year of 2026",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261104~caf181d7ac.en.html",
@@ -174,9 +192,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
    "published": "2026-10-28T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Remit for the Monetary Policy Committee - October 2026",
