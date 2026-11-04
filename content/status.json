@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "pipeline",
+   "status": "ok",
+   "detail": "update=success, deploy=success, submit=success",
+   "ranAt": "2026-11-04T01:18:25.723Z"
+  },
+  {
    "job": "indexnow",
    "status": "ok",
    "detail": "submitted 154 urls, HTTP 200",
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "submitted 154 urls, HTTP 200",
    "ranAt": "2026-11-02T08:45:25.899Z"
-  },
-  {
-   "job": "mail-audit",
-   "status": "skipped",
-   "detail": "no api key",
-   "ranAt": "2026-11-02T08:44:29.034Z"
   }
  ]
 }
