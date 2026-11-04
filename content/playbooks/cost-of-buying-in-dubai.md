@@ -173,6 +173,8 @@ Four things, each left out for a stated reason rather than by omission.
 
 **Does a non-resident pay more?** Not on this schedule. Nothing in the registration fee, the trustee fee or the title deed varies by the buyer's residency, and the place residency does bite is the loan, not the fee, which is [mortgage capacity](/playbooks/mortgage-capacity/).
 
+**What if the buyer is my wife, my child or my own company?** Then it is not a sale and the 4% is not the fee. The Land Department registers a transfer between first-degree relatives at 0.125% of the valuation with a floor of AED 2,000 under it, which makes the whole stack AED 4,620 rather than AED 64,720 on this unit and a flat amount below a valuation of AED 1,600,000. That schedule is [gifting a Dubai property to family](/playbooks/gifting-a-dubai-property-to-family/).
+
 **What should I actually check before I sign?** The things a schedule cannot tell you: that the seller owns what he is selling, that the service charge is what the budget says, and that nothing is outstanding on the unit. That list is [due diligence before an offer](/playbooks/due-diligence-before-an-offer/).
 
 ## Then do the arithmetic the fees are only the denominator of

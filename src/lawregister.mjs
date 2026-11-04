@@ -25,6 +25,7 @@ import * as dc from "./districtcooling.mjs";
 import * as rb from "./rentbuy.mjs";
 import * as fo from "./foreignownership.mjs";
 import * as rf from "./refinance.mjs";
+import * as gf from "./gift.mjs";
 
 /* Each entry names a module and an instrument key inside it. `what` is the
    one-sentence description of the instrument's job; the fee and percentage
@@ -201,6 +202,11 @@ const ENTRIES = [
     what: "Determines where a non-UAE national may own real property in Dubai, plot by numbered plot across twenty-three named areas and by the maps attached to it, and grants freehold without time restriction, usufruct and leasehold of up to ninety-nine years as three distinct interests rather than as grades of one.",
     applied: "freehold-areas-and-foreign-ownership",
   },
+  {
+    mod: gf, key: "dldGift", year: null, area: "Buying and selling",
+    what: "The Land Department's service page for registering a gift of property, which publishes the closed list of relatives the service is open to, the requirement that it be made without compensation, the valuation the service terms require first, and the service partner threshold that is not the one on its sale page.",
+    applied: "gifting-a-dubai-property-to-family",
+  },
 ];
 
 export function register() {
@@ -214,6 +220,6 @@ export function register() {
 
 /* The playbooks that cite instruments. Kept here so the page and the suite
    agree on what "every instrument the site cites" means. */
-export const APPLIED = ["refinancing-a-dubai-mortgage", "freehold-areas-and-foreign-ownership", "due-diligence-before-an-offer", "price-per-square-foot", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let", "district-cooling-and-chiller-charges", "rent-vs-buy"];
+export const APPLIED = ["gifting-a-dubai-property-to-family", "refinancing-a-dubai-mortgage", "freehold-areas-and-foreign-ownership", "due-diligence-before-an-offer", "price-per-square-foot", "net-rental-yield", "off-plan-irr", "mortgage-capacity", "selling-well", "service-charge-and-reserves", "rent-increase-caps", "short-let-vs-long-let", "district-cooling-and-chiller-charges", "rent-vs-buy"];
 
 export const AREAS = ["Buying and selling", "Buying off-plan", "Borrowing", "Owning in a building", "Renting", "Holiday homes"];

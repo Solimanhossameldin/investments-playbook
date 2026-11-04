@@ -22,6 +22,7 @@ import * as dc from "../src/districtcooling.mjs";
 import * as rb from "../src/rentbuy.mjs";
 import * as fo from "../src/foreignownership.mjs";
 import * as rf from "../src/refinance.mjs";
+import * as gf from "../src/gift.mjs";
 import * as orr from "../src/offplanready.mjs";
 import * as hp from "../src/holdperiod.mjs";
 import * as vl from "../src/valuation.mjs";
@@ -150,6 +151,7 @@ const STATUTORY_PAGES = [
   ["rent-vs-buy", rb],
   ["freehold-areas-and-foreign-ownership", fo],
   ["refinancing-a-dubai-mortgage", rf],
+  ["gifting-a-dubai-property-to-family", gf],
 ];
 
 /* Pages whose instruments are statute somewhere other than Dubai. They get
@@ -2707,6 +2709,169 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     ok("refinance: the page names the arrangement and valuation fees as uncapped and excluded",
       /no cap on a mortgage arrangement or processing fee, and none on the bank's valuation fee/.test(p.body)
       && /floor on the cost of switching rather than a prediction/.test(p.body));
+  }
+}
+
+/* ---- gifting a property to family, and the floor under the famous rate ----
+
+   The statutory half is covered by STATUTORY_PAGES above, which makes the
+   page carry the eligibility list, the without-compensation condition and
+   the valuation requirement word for word and cite the service page behind
+   them. What is left is the arithmetic, and it has one property the whole
+   page rests on: the 0.125% in row 5 of the Schedule has a dirham floor
+   under it, so below a valuation this module derives the fee is flat and the
+   rate every competing page prints is the lowest the fee ever reaches.
+
+   Three things could rot here without looking wrong in a browser. The
+   crossover could be edited to a round number that is not what the two
+   figures imply. A cell in one of the four tables could be changed so the
+   page says something the module does not compute. And the page's flat-band
+   claim, which is the finding, could survive a change to the floor or to any
+   of the five flat lines that would make it false. So the crossover is
+   recomputed from the Schedule's own two numbers, every computed cell is
+   recomputed from src/gift.mjs, and the flat band is checked by asserting
+   that the stack really is the same number across the band rather than by
+   trusting the sentence that says it is. */
+{
+  const p = playbooks.find((x) => x.slug === "gifting-a-dubai-property-to-family");
+  ok("gift: the page exists", !!p);
+  if (p) {
+    const tables = tablesIn(p.body);
+    const byHead = (re) => tables.find((t) => re.test(t.head.join(" | ")));
+
+    /* 1. The crossover. Derived from the rate and the floor rather than
+          typed, and the page may only print it while it is what they imply. */
+    ok("gift: the derived crossover is the floor divided by the rate",
+      gf.floorBindsBelow === gf.FEES.giftMinimum / gf.FEES.giftRate);
+    ok("gift: the page prints the derived crossover",
+      p.body.includes(gf.money(gf.floorBindsBelow)), gf.money(gf.floorBindsBelow));
+    ok("gift: the valuation below the crossover is floored and the crossover itself is not",
+      gf.floorBinds(gf.floorBindsBelow - 1) && !gf.floorBinds(gf.floorBindsBelow));
+    ok("gift: at the crossover the two halves of row 5 give the same fee",
+      gf.giftFee(gf.floorBindsBelow) === gf.FEES.giftMinimum
+      && gf.giftFee(gf.floorBindsBelow) === Math.round(gf.floorBindsBelow * gf.FEES.giftRate));
+
+    /* 2. The fee share table, which is where the claim that 0.125% is a
+          ceiling rather than a rate is actually shown. */
+    const share = byHead(/^Valuation \| Gift fee \| Share of the valuation \| Which half of row 5 applies$/);
+    ok("gift: the fee share table is present", !!share);
+    if (share) {
+      const F = gf.feeShareTable();
+      ok("gift: the fee share table's valuations match the module",
+        same(col(share, 0), F.map((r) => r.value)), JSON.stringify(col(share, 0)));
+      ok("gift: the fee share table's fees match the module",
+        same(col(share, 1), F.map((r) => r.fee)), JSON.stringify(col(share, 1)));
+      ok("gift: the fee share table's shares match the module",
+        same(col(share, 2), F.map((r) => r.sharePct)), JSON.stringify(col(share, 2)));
+      /* The shape of the finding, not any one cell: the share falls while
+         the floor binds and is pinned at the headline rate once it does not. */
+      const floored = F.filter((r) => r.floorBinds);
+      ok("gift: the share really does fall across every floored valuation",
+        floored.every((r, i) => i === 0 || r.sharePct < floored[i - 1].sharePct),
+        JSON.stringify(floored.map((r) => r.sharePct)));
+      ok("gift: once the floor stops binding the share is exactly the headline rate",
+        F.filter((r) => !r.floorBinds).every((r) => r.sharePct === gf.FEES.giftRate * 100),
+        JSON.stringify(F.filter((r) => !r.floorBinds).map((r) => r.sharePct)));
+      ok("gift: every floored valuation pays a higher rate than the headline one",
+        floored.every((r) => r.sharePct > gf.FEES.giftRate * 100));
+    }
+
+    /* 3. The stack. Compared line by line and in order, so a figure edited
+          in the page fails even when the right figure is printed elsewhere. */
+    const stack = byHead(/^Line \| Amount \| Who sets it$/);
+    ok("gift: the stack table is present", !!stack);
+    if (stack) {
+      const S = gf.giftStack();
+      ok("gift: the stack table matches the computed lines and total",
+        same(col(stack, 1), [...S.lines.map(([, v]) => v), S.total]), JSON.stringify(col(stack, 1)));
+      ok("gift: the stack's total is the sum of its own lines",
+        S.total === S.lines.reduce((a, [, v]) => a + v, 0));
+      ok("gift: the page prints the stack as a rate of the illustrative valuation",
+        p.body.includes(`${S.ratePct.toFixed(3)}%`), `${S.ratePct}`);
+    }
+
+    /* 4. The flat band, which is the page's headline claim. Asserted against
+          the stack computed at both ends of the band rather than against the
+          sentence, so changing the floor or any flat line breaks this. */
+    const band = gf.flatBand();
+    ok("gift: the stack really is one number across the whole floored band",
+      [1, 1000, 250000, 500000, 999999, band.upTo - 1].every((v) => gf.giftStack(v).total === band.total),
+      JSON.stringify([1, 500000, band.upTo - 1].map((v) => gf.giftStack(v).total)));
+    ok("gift: the page prints the flat band total and the valuation it holds to",
+      p.body.includes(gf.money(band.total)) && p.body.includes(gf.money(band.upTo)));
+    ok("gift: the page only claims the cost is flat below the crossover while it is",
+      /the entire cost of a Dubai gift transfer is AED 4,620, whatever the property is worth/.test(p.body)
+      && band.total === 4620 && band.upTo === 1600000);
+
+    /* 5. The trustee threshold. It is not the sale page's threshold, and the
+          step it creates is the only discontinuity in either stack. The page
+          claims the rate rises across it, which is a thing that can stop
+          being true if either threshold moves. */
+    ok("gift: the gift trustee threshold is not the sale trustee threshold",
+      gf.FEES.trusteeThreshold !== aq.FEES.trusteeThreshold);
+    ok("gift: between the two thresholds a gift really pays half what a sale pays",
+      gf.trusteeFee(1500000) * 2 === aq.trusteeFee(1500000),
+      `${gf.trusteeFee(1500000)} vs ${aq.trusteeFee(1500000)}`);
+    const step = gf.trusteeStep();
+    ok("gift: the page prints the step at the threshold and the totals either side",
+      [step.below, step.at, step.step].every((v) => p.body.includes(gf.money(v))),
+      JSON.stringify([step.below, step.at, step.step]));
+    ok("gift: the page only says the rate rises across the threshold while it does",
+      gf.giftStack(gf.FEES.trusteeThreshold).ratePct > gf.giftStack(gf.floorBindsBelow).ratePct
+      && /higher\*\* at AED 2,000,000/.test(p.body),
+      `${gf.giftStack(gf.FEES.trusteeThreshold).ratePct} vs ${gf.giftStack(gf.floorBindsBelow).ratePct}`);
+
+    /* 6. The comparison with the sale route, which is the number a reader
+          came for, and the one cell of it the page argues from. */
+    const cmp = byHead(/^Valuation \| Gift \| Sale \| Gap \| Gift as a share of the sale$/);
+    ok("gift: the comparison table is present", !!cmp);
+    if (cmp) {
+      const C = gf.comparisonTable();
+      ok("gift: the comparison table's gift totals match the module",
+        same(col(cmp, 1), C.map((r) => r.gift.total)), JSON.stringify(col(cmp, 1)));
+      ok("gift: the comparison table's sale totals match the module",
+        same(col(cmp, 2), C.map((r) => r.sale.total)), JSON.stringify(col(cmp, 2)));
+      ok("gift: the comparison table's gaps are the difference of its own two columns",
+        same(col(cmp, 3), C.map((r) => r.sale.total - r.gift.total)), JSON.stringify(col(cmp, 3)));
+      ok("gift: the comparison table's shares match the module",
+        same(col(cmp, 4), C.map((r) => r.giftSharePct)), JSON.stringify(col(cmp, 4)));
+      /* The relief is worth proportionally more the dearer the property,
+         which is the sentence under the table. */
+      ok("gift: the gift's share of the sale cost is lower on the dearest unit than the cheapest",
+        C[C.length - 1].giftSharePct < C[0].giftSharePct);
+      /* No agency commission on either side. The sale total must be fees
+         only, or the comparison is flattering the gift route. */
+      const sale = gf.saleStack(aq.EXAMPLE.price);
+      ok("gift: the sale side is fees only, with no agency commission in it",
+        sale.total === Math.round(aq.EXAMPLE.price * aq.FEES.transferRate)
+          + gf.flatLines().total + aq.trusteeFee(aq.EXAMPLE.price));
+    }
+
+    /* 7. The headline sentence and the honesty claim. The summary is the
+          answer an assistant quotes off this page, so it carries the two
+          figures it asserts, and the excluded valuation fee has to stay
+          named and unpriced. */
+    ok("gift: the summary carries the flat band total and the crossover",
+      p.summary.includes(gf.money(band.total)) && p.summary.includes(gf.money(band.upTo)));
+    ok("gift: the page leads with the two totals rather than burying them",
+      p.body.slice(0, 400).includes(gf.money(gf.giftStack().total))
+      && p.body.slice(0, 400).includes(gf.money(gf.saleStack().total)));
+    ok("gift: the page names the valuation fee as unpriced and excluded",
+      gf.UNPRICED.length === 1
+      && /publishes no price for it, and this site holds no dataset for it, so it is named rather than estimated/.test(p.body)
+      && /is a floor on the cost of a gift transfer/.test(p.body));
+
+    /* 8. The page is a junction, so the chain is checked rather than hoped,
+          and the three pages that send readers here have to keep doing it. */
+    for (const target of ["cost-of-buying-in-dubai", "uae-wills-and-succession",
+      "corporate-vs-personal-ownership", "refinancing-a-dubai-mortgage",
+      "residency-and-tax", "net-rental-yield", "transaction-cost-drag"]) {
+      ok(`gift: links to /playbooks/${target}/`, p.body.includes(`](/playbooks/${target}/)`));
+    }
+    ok("gift: the three pages whose readers need it link back to it",
+      ["cost-of-buying-in-dubai", "uae-wills-and-succession", "corporate-vs-personal-ownership"]
+        .every((s) => playbooks.find((x) => x.slug === s).body
+          .includes("](/playbooks/gifting-a-dubai-property-to-family/)")));
   }
 }
 

@@ -155,6 +155,8 @@ For one or two properties let on ordinary tenancies, personal ownership is almos
 
 For a genuine business, multiple owners, or a portfolio past the point where governance matters, a structure may earn its keep, and the reasons will be operational. Even there the tax is a rounding error next to the yield: 0.39 points at the ceiling.
 
+One cost of getting into a structure is knowable before any of that. Moving a property you already own into your own company is a registration, and the Land Department charges it at the gift rate of 0.125% of the valuation rather than the 4% it charges on a sale, which is priced line by line on [gifting a Dubai property to family](/playbooks/gifting-a-dubai-property-to-family/). It is the cheapest number in this decision and it is the one the structuring pitch leads with.
+
 Anyone proposing a structure primarily for tax reasons should be asked which tax, on what income, above what threshold. The three figures are AED 375,000, 9%, and on a single flat, zero. Run the income side on the [net rental yield calculator](/calculators/net-rental-yield/) and the tax side is one subtraction away.
 
 ## The necessary caveat

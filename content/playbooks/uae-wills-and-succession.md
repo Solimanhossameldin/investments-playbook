@@ -147,6 +147,8 @@ You can therefore have a perfectly drafted will directing assets to your family,
 
 **Review after every material change.** Marriage, divorce, a birth, a new property, a change of residency.
 
+The other alternative to a will is not waiting at all. The Land Department's own fee Schedule prices registering a gift of the property at the same 0.125% it charges to register a will over it, so moving a flat to a spouse or a child now and recording who gets it later cost the same rate, and the choice between them is about control rather than fees. The arithmetic on the transfer side is [gifting a Dubai property to family](/playbooks/gifting-a-dubai-property-to-family/).
+
 If you hold the flat through a company rather than in your own name, the succession question changes shape and becomes a question about shares. The [company or own name](/playbooks/corporate-vs-personal-ownership/) page sets out that threshold, and [residency and tax](/playbooks/residency-and-tax/) covers where you are resident for tax while you hold it.
 
 ## The honest caveat
