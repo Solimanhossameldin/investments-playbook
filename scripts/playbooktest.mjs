@@ -32,6 +32,7 @@ import * as gv from "../src/goldenvisa.mjs";
 import * as ct from "../src/corporatetax.mjs";
 import * as vp from "../src/vacantpossession.mjs";
 import * as sc from "../src/succession.mjs";
+import * as dy from "../src/disposalyear.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -183,6 +184,11 @@ const FOREIGN_STATUTORY_PAGES = [
      went to the register looking for the decree behind a transfer charge
      should not land on an inheritance statute. */
   ["uae-wills-and-succession", sc],
+  /* UK capital gains, deliberately in this list and not the Dubai one. The
+     law register is a register of Dubai property law: a UK Finance Act filed
+     under that heading would send a reader looking for the decree behind a
+     Dubai fee to a statute that sets no Dubai fee at all. */
+  ["the-year-you-sell", dy],
 ];
 
 const ALL_STATUTORY_PAGES = [...STATUTORY_PAGES, ...FOREIGN_STATUTORY_PAGES];
@@ -5334,6 +5340,131 @@ ok("every calculator points at a playbook that exists",
   }
 }
 
+
+/* ---- capital gains on the way out, and the date that decides the bill ----
+
+   The statutory half is covered by ALL_STATUTORY_PAGES above, which makes the
+   page carry paragraph 110's four conditions in the statute's own words and
+   cite the Finance Act behind them. What is left is the arithmetic, and it
+   has three properties worth guarding directly.
+
+   The first is ordinary: the charge table has to be the module's, cell by
+   cell, with a reconciliation so a hand edit to one column cannot pass by
+   matching the module in another.
+
+   The second is the claim the page's usefulness rests on. The argument is
+   that the effective rate never leaves a narrow band, so a reader can take
+   24% of his own gain and stop. That is a claim about the ENDS of the table,
+   and a table comparison does not test it: every cell could match while the
+   prose quoted a range from somewhere else entirely. So the two figures the
+   prose names are pinned to the extremes the module computes.
+
+   The third is the one that would otherwise rot quietly. This is a sterling
+   charge and the site holds no sterling exchange rate it would stand behind,
+   so the page converts nothing. A future edit that helpfully added "about
+   AED X" would be inventing an exchange rate, which is the one thing this
+   site cannot do, and it would read as more helpful rather than less. The
+   check is therefore that the page states no dirham figure at all. */
+{
+  const p = playbooks.find((x) => x.slug === "the-year-you-sell");
+  ok("capital gains out: the page exists", !!p);
+  if (p) {
+    const g = dy.grid();
+    const prose = `${p.summary} ${p.body} ${p.formula} ${p.whenToUse} ${p.failureModes.join(" ")}`;
+    /* The body with its table rows dropped. A claim about what a table shows
+       has to be checked against the sentence making it, not against the
+       table, or the table satisfies the check about itself. */
+    const outsideTables = p.body.split("\n").filter((l) => !l.startsWith("|")).join("\n");
+
+    const t = tablesIn(p.body).find((x) => (x.head[0] || "") === "Gain");
+    ok("capital gains out: the page carries the charge table", !!t);
+    if (t) {
+      ok("capital gains out: the table has a row per modelled gain",
+        t.rows.length === g.length, String(t.rows.length));
+      ok("capital gains out: its gains are the module's", same(col(t, 0), g.map((r) => r.gain)));
+      ok("capital gains out: its taxable amounts are the module's",
+        same(col(t, 1), g.map((r) => r.taxable)));
+      ok("capital gains out: its charges are the module's", same(col(t, 2), g.map((r) => r.tax)));
+      ok("capital gains out: its effective rates are the module's",
+        same(col(t, 3), g.map((r) => r.effective)));
+      /* The allowance has to be the thing separating the first two columns,
+         or one of them was edited by hand to match the module. */
+      ok("capital gains out: every row reconciles through the annual exempt amount",
+        t.rows.every((r) => cellNum(r[0]) - cellNum(r[1]) === dy.UK.annualExemptAmount));
+    }
+
+    /* The range claim, pinned to the ends of the table.
+
+       Written first against `prose`, which includes the table, so the check
+       was satisfied by the table containing its own cells and break-testing
+       it changed nothing: quoting a range of 23.10% in the sentence passed.
+       That is the fault this suite keeps finding, so it is recorded rather
+       than quietly fixed. The haystack is now the body with its table rows
+       removed, which is the sentence the reader actually relies on. */
+    const eff = g.map((r) => r.effective);
+    const lo = Math.min(...eff).toFixed(2);
+    const hi = Math.max(...eff).toFixed(2);
+    ok("capital gains out: the sentence names the lowest effective rate it computes",
+      outsideTables.includes(`${lo}%`), lo);
+    ok("capital gains out: the sentence names the highest effective rate it computes",
+      outsideTables.includes(`${hi}%`), hi);
+    /* And the rate the reader is told to use has to be the statutory one. */
+    ok("capital gains out: the prose names the published rate",
+      prose.includes(`${dy.UK.higherRate * 100}%`), String(dy.UK.higherRate));
+
+    /* The basic rate band, priced. The page's point is that the band is too
+       small to matter, so both the ceiling and its effect on the worked gain
+       are the module's rather than a reassuring sentence. */
+    const bv = dy.bandValue();
+    /* Scoped to the body, which excludes the formula block. Against `prose`
+       the ceiling could be struck out of the body entirely and the check
+       would still pass on the formula's copy of it, and the formula is a
+       summary of the argument rather than the argument. Break-tested by
+       removing it from both body sentences: against `prose` that passed,
+       against the body it fails. */
+    ok("capital gains out: the body states the band's ceiling",
+      outsideTables.includes(dy.money(bv.value)), dy.money(bv.value));
+    ok("capital gains out: the band's ceiling is the band times the rate gap",
+      bv.value === Math.round(dy.UK.basicRateBand * (dy.UK.higherRate - dy.UK.basicRate)));
+    ok("capital gains out: the prose names the band itself",
+      prose.includes(dy.money(dy.UK.basicRateBand)), dy.money(dy.UK.basicRateBand));
+    const worked = 400000;
+    ok("capital gains out: the band's effect on the worked gain is the module's",
+      prose.includes(`${dy.bandValueOn(worked).points}`), String(dy.bandValueOn(worked).points));
+
+    /* The headline figure the summary is lifted for. */
+    ok("capital gains out: the summary's charge is the module's charge on the worked gain",
+      p.summary.includes(dy.money(dy.chargeOn(worked).tax)), p.summary);
+    ok("capital gains out: the summary names the gain it charges",
+      p.summary.includes(dy.money(worked)), p.summary);
+
+    /* Section 10AA(5) worked through to a date, because a reader wants the
+       date. A return in the tax year ending 2027 keeps the year of departure
+       assessable until the second anniversary of 31 January 2028. */
+    const dl = dy.assessmentDeadline(2027);
+    /* Scoped to the body, not to `prose`. Against `prose` the check passed
+       with the date deleted from the page's own working, because a failure
+       mode happens to repeat it. The worked-through date is the thing a
+       reader takes away, so that is the thing pinned. */
+    ok("capital gains out: the body works the assessment deadline through to a date",
+      p.body.includes(dl.deadline), dl.deadline);
+    ok("capital gains out: the deadline is the second anniversary it derives from",
+      dl.deadline === `31 January ${dl.filingJanuary + 2}`, JSON.stringify(dl));
+
+    /* The two integers out of paragraph 110, stated as the statute states
+       them rather than as a rounded recollection. */
+    ok("capital gains out: the prose carries the statutory period",
+      prose.includes(`${dy.RULE.temporaryYears} years or less`), String(dy.RULE.temporaryYears));
+    ok("capital gains out: the prose carries the entry test's counts",
+      prose.includes(`${dy.RULE.soleUkYears} of the ${dy.RULE.ofPrecedingYears} tax years`),
+      `${dy.RULE.soleUkYears}/${dy.RULE.ofPrecedingYears}`);
+
+    /* The check that stops a helpful edit from inventing an exchange rate. */
+    ok("capital gains out: the page converts nothing into dirhams",
+      !/\bAED\b|\bdirham/i.test(prose),
+      (prose.match(/.{0,40}(AED|dirham).{0,40}/i) || [])[0]);
+  }
+}
 
 /* ---- wills and succession, and the sentence that does not finish ----
 

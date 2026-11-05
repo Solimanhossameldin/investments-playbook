@@ -132,7 +132,7 @@ Add the entry to the exit. Buying this property costs AED 96,220 in acquisition 
 
 That is the number to hold against any projected gain. [Net rental yield](/playbooks/net-rental-yield/) computes a smaller round trip because it buys for cash; the difference is the cost of the debt registration going in and the release coming out. The developer's NOC is in neither, so both figures are floors rather than estimates.
 
-[Transaction cost drag](/playbooks/transaction-cost-drag/) is the general form of the argument, and [the year you sell](/playbooks/the-year-you-sell/) is the timing question that sits on top of it.
+[Transaction cost drag](/playbooks/transaction-cost-drag/) is the general form of the argument, and [capital gains and the move to Dubai](/playbooks/the-year-you-sell/) is the timing question that sits on top of it.
 
 ## The price you have to sell at
 

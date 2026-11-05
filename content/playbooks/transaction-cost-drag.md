@@ -139,6 +139,6 @@ Compute the round trip from the actual schedules for the actual price, not from 
 
 If the answer is yes, the drag is a cost of doing business. If the answer is no, the round trip is being funded by the market rather than by the asset, and the table above is what that has looked like.
 
-[What it costs to buy a property in Dubai](/playbooks/cost-of-buying-in-dubai/) is the entry half of this round trip, priced at five purchase prices. [The year you sell](/playbooks/the-year-you-sell/) is the timing question that sits on top of this one, [rent or buy](/playbooks/rent-vs-buy/) is the same arithmetic run against not owning at all, and the [minimum hold period](/glossary/minimum-hold-period/) is the term itself. [Run the net yield on your own figures](/calculators/net-rental-yield/) to get the denominator this page divides by.
+[What it costs to buy a property in Dubai](/playbooks/cost-of-buying-in-dubai/) is the entry half of this round trip, priced at five purchase prices. [Capital gains and the move to Dubai](/playbooks/the-year-you-sell/) is the timing question that sits on top of this one, [rent or buy](/playbooks/rent-vs-buy/) is the same arithmetic run against not owning at all, and the [minimum hold period](/glossary/minimum-hold-period/) is the term itself. [Run the net yield on your own figures](/calculators/net-rental-yield/) to get the denominator this page divides by.
 
 Every instrument cited here is listed, with what it sets in its own words and a link to the official text, on the [Dubai property law register](/dubai-property-law/).

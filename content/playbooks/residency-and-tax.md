@@ -163,7 +163,7 @@ The common assumption is that the move is a clean line: taxed there before, not 
 
 Split-year treatment decides how the year of departure is divided. Exit charges in some countries tax unrealised gains as though you had sold on the way out. And the country's own definition of when residence ended is often not the date on the flight.
 
-This is why the framework says do it before rather than after. The decisions available in advance, about when to sell, when to move, and in which order, are largely unavailable once the year has closed. [The year you sell](/playbooks/the-year-you-sell/) sets out that sequence in full.
+This is why the framework says do it before rather than after. The decisions available in advance, about when to sell, when to move, and in which order, are largely unavailable once the year has closed. [Capital gains and the move to Dubai](/playbooks/the-year-you-sell/) prices the other end of it: a gain realised while abroad is charged on the return to the UK if the absence lasts five years or less.
 
 ## The ties test is what people get wrong
 
