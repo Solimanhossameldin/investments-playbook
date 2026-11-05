@@ -33,6 +33,7 @@ import * as ct from "../src/corporatetax.mjs";
 import * as vp from "../src/vacantpossession.mjs";
 import * as sc from "../src/succession.mjs";
 import * as dy from "../src/disposalyear.mjs";
+import * as sq from "../src/sequencerisk.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -4132,6 +4133,7 @@ ok("every calculator points at a playbook that exists",
    with its bars pointing at nothing. */
 {
   const { playbookCharts, CHART_REGISTRY } = await import("../src/playbookcharts.mjs");
+  const { labelGutter, labelWidth, LABEL_PAD } = await import("../src/charts.mjs");
   const pctf = (v) => `${Number(v).toFixed(2)}%`;
   const pct1f = (v) => `${Number(v).toFixed(1)}%`;
   const aedf = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
@@ -4155,6 +4157,29 @@ ok("every calculator points at a playbook that exists",
       { label: "Net of running costs", shown: pctf(y.onPrice) },
       { label: "Net, on what you actually paid", shown: pctf(y.net) },
     ]; })(),
+    /* The first chart on a page that is not about Dubai, so the first with
+       no currency in it. The top row is the control, pinned to the module's
+       no-cash-flow terminal value: if a future edit drew that as two bars,
+       or from one order only, the identity the page rests on would quietly
+       stop being demonstrated and every other bar would still look right. */
+    "sequence-of-returns": (() => {
+      const c = sq.comparison();
+      const plain = (v) => Math.round(v).toLocaleString("en-US");
+      /* Two figures, so two groups. The labels repeat across them on
+         purpose, which is exactly why each group is paired against its own
+         figure: flattened, "Bad decade last" would match the wrong value. */
+      return [
+        [
+          { label: "No withdrawals, either order", shown: plain(c.noCashFlows) },
+          { label: "Bad decade last", shown: plain(c.badLastEnd) },
+          { label: "Bad decade first", shown: plain(c.badFirstEnd) },
+        ],
+        [
+          { label: "Bad decade last", shown: pctf(c.badLastRate) },
+          { label: "Bad decade first", shown: pctf(c.badFirstRate) },
+        ],
+      ];
+    })(),
     "dubai-vs-singapore": [
       { label: "Dubai, net", shown: pctf(sg.dubai().net) },
       { label: "Singapore, net", shown: pctf(sg.singapore().net) },
@@ -4445,6 +4470,15 @@ ok("every calculator points at a playbook that exists",
   const CAPTIONS = {
     "break-even-occupancy": [],
     "net-rental-yield": [],
+    /* The two figures the captions exist to state: the shortfall the order
+       costs, and what the order is worth in points of withdrawal rate. */
+    "sequence-of-returns": (() => {
+      const c = sq.comparison();
+      return [
+        Math.round(c.shortfall).toLocaleString("en-US"),
+        (c.badLastRate - c.badFirstRate).toFixed(2),
+      ];
+    })(),
     "dubai-vs-singapore": [pctf(sg.dubai().stampRate), pctf(sg.singapore().stampRate)],
     "dubai-vs-london": [],
     "mortgage-capacity": [],
@@ -4513,14 +4547,75 @@ ok("every calculator points at a playbook that exists",
       alt.includes(want.endsAt), `expected ${want.endsAt} in the accessible sentence`);
   }
 
+  /* A page may carry more than one figure, and until sequence-of-returns
+     none did. The check read `svg.match(/<title/)` without the global flag,
+     so it compared every expectation against the FIRST figure's sentence and
+     counted rects across all of them at once. On a two figure page that
+     passes the rect count by coincidence and fails the pairing for reasons
+     that have nothing to do with the chart being wrong.
+
+     So an expectation is now either a flat array, meaning one figure, which
+     is what every entry above still is, or an array of arrays, one per
+     figure. Each figure is then checked against its own sentence and its own
+     bars, which is the strictness the pairing check was written for. */
+  const figuresIn = (html) =>
+    (html.match(/<figure[\s\S]*?<\/figure>/g) || []).filter((f) => f.includes("<svg"));
+
+  /* ---- a label the gutter cannot seat ----
+
+     SVG text does not wrap, does not shrink and does not warn. A bar label
+     wider than the gutter is cut off by the viewBox while the bar and its
+     value stay correct beside it, which is the one failure mode the whole
+     derive-the-chart discipline does not catch: the numbers were right the
+     entire time the words were missing. Three labels on the due diligence
+     page had been shipping with their first twenty characters cut off.
+
+     Written first as labelGutter(labels) recomputed from the labels, which
+     was useless: it never read the gutter the chart actually drew, so
+     reverting barChart to its old constant 150 changed nothing and the
+     check passed on the exact bug it was written for. The third
+     self-satisfying check today.
+
+     It reads the rendered SVG instead. Each label is drawn at x = padL - 12
+     with text-anchor end, so that x IS the room the label has, and the only
+     question is whether the widest one fits in it. */
+  for (const slug of registered) {
+    const svg = playbookCharts(slug);
+    for (const [i, fig] of figuresIn(svg).entries()) {
+      const labs = [...fig.matchAll(/<text x="([\d.]+)"[^>]*class="ch__blab"[^>]*>([^<]*)<\/text>/g)]
+        .map((m) => ({ x: Number(m[1]), label: m[2] }));
+      if (!labs.length) continue;
+      const widest = labs.reduce((a, l) => (labelWidth(l.label) > labelWidth(a.label) ? l : a), labs[0]);
+      ok(`charts: ${slug} figure ${i + 1} seats its longest label inside the gutter it drew`,
+        labelWidth(widest.label) <= widest.x,
+        `"${widest.label}" needs ${labelWidth(widest.label)}px, drawn with ${widest.x}px`);
+    }
+  }
+
   for (const slug of registered.filter((x) => EXPECT[x])) {
     const svg = playbookCharts(slug);
-    const want = EXPECT[slug] || [];
-    const alt = (svg.match(/<title[^>]*>([^<]*)</) || [])[1] || "";
+    const raw = EXPECT[slug] || [];
+    const groups = Array.isArray(raw[0]) ? raw : [raw];
+    const figures = figuresIn(svg);
 
-    ok(`charts: ${slug} renders one bar per value it claims to plot`,
-      /<svg/.test(svg) && (svg.match(/<rect/g) || []).length === want.length,
-      `rects=${(svg.match(/<rect/g) || []).length} expected=${want.length}`);
+    ok(`charts: ${slug} renders a figure for every group of values expected`,
+      figures.length === groups.length, `figures=${figures.length} expected=${groups.length}`);
+
+    const want = groups.flat();
+    const alt = figures.map((f) => (f.match(/<title[^>]*>([^<]*)</) || [])[1] || "").join(" \u00b6 ");
+
+    groups.forEach((group, i) => {
+      const fig = figures[i] || "";
+      ok(`charts: ${slug} figure ${i + 1} renders one bar per value it claims to plot`,
+        /<svg/.test(fig) && (fig.match(/<rect/g) || []).length === group.length,
+        `rects=${(fig.match(/<rect/g) || []).length} expected=${group.length}`);
+      /* Paired against this figure's own sentence, not the page's first. */
+      for (const w of group) {
+        ok(`charts: ${slug} figure ${i + 1} pairs ${w.label} with ${w.shown}`,
+          ((fig.match(/<title[^>]*>([^<]*)</) || [])[1] || "").includes(`${w.label}, ${w.shown}`),
+          `expected "${w.label}, ${w.shown}" in figure ${i + 1}`);
+      }
+    });
 
     /* The behavioural pin. Every bar's printed value must equal what the
        module computes, and so must the accessible sentence -- otherwise a
@@ -5340,6 +5435,97 @@ ok("every calculator points at a playbook that exists",
   }
 }
 
+
+/* ---- sequence of returns, and the claim the page used to assert ----
+
+   This page said for months that one ordering "can leave a portfolio intact
+   after thirty years and another can exhaust it in eighteen". Nothing
+   computed it, and when something finally did, it was not true at the
+   withdrawal rate the rest of the library uses: neither order depletes at
+   4%. The sentence is gone and these checks are why it cannot come back.
+
+   The identity is the first thing pinned, because it is the page's control.
+   If the two orders ever stopped agreeing on the no-cash-flow terminal
+   value, every other figure on the page would still look reasonable and the
+   argument underneath them would be gone. */
+{
+  const p = playbooks.find((x) => x.slug === "sequence-of-returns");
+  ok("sequence: the page exists", !!p);
+  if (p) {
+    const c = sq.comparison();
+    const prose = `${p.summary} ${p.body} ${p.formula} ${p.whenToUse} ${p.failureModes.join(" ")}`;
+    const plain = (v) => Math.round(v).toLocaleString("en-US");
+
+    /* The control. Exact in arithmetic, one unit in the last place in IEEE
+       754, so it is asserted to the cent rather than bitwise. */
+    const id = sq.identityGap();
+    ok("sequence: both orders reach the same terminal value with no cash flows",
+      id.sameToTheCent, `${id.a} vs ${id.b}`);
+    ok("sequence: and the gap between them is floating point, not finance",
+      id.gap < 0.01 && id.gap / id.a < 1e-12, String(id.gap));
+
+    /* The two orders really are the same multiset, or the comparison is not
+       controlled and the whole page is an illusion. */
+    const sorted = (xs) => xs.slice().sort((a, b) => a - b).join(",");
+    ok("sequence: the reversed order holds exactly the same returns",
+      sorted(sq.badFirst()) === sorted(sq.badLast()));
+    ok("sequence: and therefore the same arithmetic mean",
+      sq.mean(sq.badFirst()).toFixed(10) === sq.mean(sq.badLast()).toFixed(10));
+
+    /* The figures the reader is shown. */
+    for (const [what, v] of [
+      ["the no-cash-flow terminal value", plain(c.noCashFlows)],
+      ["the bad-decade-first ending balance", plain(c.badFirstEnd)],
+      ["the bad-decade-last ending balance", plain(c.badLastEnd)],
+      ["the shortfall the order costs", plain(c.shortfall)],
+      ["the share the bad order keeps", `${c.keptShare}%`],
+      /* Formatted to two places, as a rate is. The module stores 7.6 and
+         the page prints 7.60%, and the check compares what the reader sees. */
+      ["the arithmetic mean", `${c.arithmetic.toFixed(2)}%`],
+      ["the geometric mean", `${c.geometric.toFixed(2)}%`],
+      ["the survivable rate, bad decade first", `${c.badFirstRate}%`],
+      ["the survivable rate, bad decade last", `${c.badLastRate}%`],
+    ]) ok(`sequence: the prose carries ${what}`, prose.includes(v), v);
+
+    /* The headline, derived from the two published rates rather than from a
+       third figure that could drift away from them. */
+    ok("sequence: what the order is worth is the gap between the two rates",
+      sq.orderWorth() === Number((c.badLastRate - c.badFirstRate).toFixed(2)));
+    ok("sequence: the prose carries what the order is worth",
+      prose.includes(`${sq.orderWorth()} percentage points`), String(sq.orderWorth()));
+
+    /* The ending-balance table, cell by cell. */
+    const t1 = tablesIn(p.body).find((x) => (x.head[1] || "").includes("After thirty years") &&
+      (x.head[0] || "").includes("per 1,000,000"));
+    ok("sequence: the page carries the ending balance table", !!t1);
+    if (t1) ok("sequence: its figures are the module's",
+      same(col(t1, 1), [c.noCashFlows, c.badLastEnd, c.badFirstEnd]), JSON.stringify(col(t1, 1)));
+
+    /* The cluster table, which tests the page's oldest unproven claim: that
+       the first decade carries the exposure. Monotone is the claim, so
+       monotone is checked, not just the three values. */
+    const cl = sq.byClusterPosition();
+    const t2 = tablesIn(p.body).find((x) => (x.head[0] || "").includes("Where the worst run sits"));
+    ok("sequence: the page carries the cluster table", !!t2);
+    if (t2) ok("sequence: its figures are the module's",
+      same(col(t2, 1), cl.map((r) => r.end)), JSON.stringify(col(t2, 1)));
+    ok("sequence: moving the bad run later never costs the retiree money",
+      cl.every((r, i) => i === 0 || r.end > cl[i - 1].end), JSON.stringify(cl.map((r) => r.end)));
+
+    /* The claim that was removed. It asserted a depletion year that the
+       arithmetic does not produce, so the page may not say it again. */
+    ok("sequence: the page no longer claims a depletion it never computed",
+      !/exhaust it in eighteen/i.test(prose));
+    ok("sequence: and neither order actually depletes at the modelled rate",
+      sq.run(sq.badFirst()).depletedYear === null && sq.run(sq.badLast()).depletedYear === null);
+
+    /* Currency free, deliberately: this page is read by somebody holding
+       pounds, dollars or dirhams and the site holds no rate between them. */
+    ok("sequence: the page states no currency it cannot convert",
+      !/\bAED\b|\bdirham|£|\$/.test(prose),
+      (prose.match(/.{0,40}(AED|dirham|£|\$).{0,40}/) || [])[0]);
+  }
+}
 
 /* ---- capital gains on the way out, and the date that decides the bill ----
 

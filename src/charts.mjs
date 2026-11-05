@@ -187,12 +187,41 @@ ${xl}
    falling short IS the finding, and a warning colour would editorialise it. The
    reference line is labelled, because a bar chart without the threshold
    drawn is a picture of three numbers rather than of a finding. */
+/* How wide the label gutter has to be.
+
+   It was a constant 150, and that was wrong for most of the library. SVG
+   text does not wrap and does not shrink: a label wider than the gutter is
+   simply cut off by the viewBox, silently, with the bars and the values
+   still perfectly correct beside it. Measured in the browser at the 14px
+   the stylesheet sets, ordinary English runs 6.3 to 7.2 pixels a character,
+   so "Reading the approved service charge budget" wanted 297 pixels, had
+   138, and had been shipping with its first twenty characters missing.
+
+   Nobody proof-reads an SVG. That is the same sentence that justifies
+   deriving the bars, and it turns out to apply to the words as well.
+
+   7.3 is above the measured range for prose and well under the 12.6 of a
+   string of capital Ms, which is why LABEL_MAX below exists: the clamp
+   keeps the bars from vanishing, and the suite refuses a label the clamp
+   cannot seat. */
+export const LABEL_PX_PER_CH = 7.3;
+export const LABEL_PAD = 24;
+export const LABEL_MIN = 150;
+export const LABEL_MAX = 360;
+
+export const labelWidth = (s) => Math.ceil(String(s).length * LABEL_PX_PER_CH);
+export function labelGutter(labels = []) {
+  const widest = labels.reduce((a, l) => Math.max(a, labelWidth(l)), 0);
+  return Math.max(LABEL_MIN, Math.min(widest + LABEL_PAD, LABEL_MAX));
+}
+
 export function barChart(s, { id = s.key } = {}) {
   const bars = s.bars || [];
   if (!bars.length) return "";
 
   const w = 900;
-  const rowH = 52, padT = 18, padB = 46, padL = 150, padR = 92;
+  const padL = labelGutter(bars.map((b) => b.label));
+  const rowH = 52, padT = 18, padB = 46, padR = 92;
   const h = padT + bars.length * rowH + padB;
   const x1 = w - padR;
 

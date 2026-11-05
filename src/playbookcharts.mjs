@@ -39,6 +39,7 @@ import { premiumTable, minimumPremium, ASSUMED_RT } from "./districtcooling.mjs"
 import { ladder as usufructLadder, MAX_TERM, remainingTerm } from "./foreignownership.mjs";
 import { outcomes, plateau } from "./holdperiod.mjs";
 import { analyse as analysePriceIndex } from "./priceindex.mjs";
+import { comparison as seqComparison, EXAMPLE as SEQ_EXAMPLE } from "./sequencerisk.mjs";
 import { readFileSync } from "node:fs";
 
 /* The published index, analysed once. The hold-period outcomes are scored
@@ -581,6 +582,49 @@ function freeholdAreasAndForeignOwnership() {
   ];
 }
 
+/* Sequence of returns: the first chart on a page that is not about Dubai.
+
+   The bars are one sequence and its own reverse, so the returns, their
+   arithmetic mean and their geometric mean are identical across all three
+   rows by construction. The top bar is the control: with nothing withdrawn
+   the two orders land on the same figure, which is why it is drawn as one
+   bar rather than two. Everything below it is the cost of the cash flow.
+
+   Currency free on purpose. This page is read by somebody holding pounds,
+   dollars or dirhams, the site holds no exchange rate it would stand behind
+   for any of them, and the argument is a ratio: the bars are per million of
+   opening balance and travel unchanged. */
+function sequenceOfReturns() {
+  const c = seqComparison();
+  const plain = (v) => Math.round(v).toLocaleString("en-US");
+  return [
+    {
+      key: "seq-ending-balance",
+      label: `After ${c.years} years, per 1,000,000 of opening balance`,
+      format: plain,
+      bars: [
+        { label: "No withdrawals, either order", value: c.noCashFlows },
+        { label: "Bad decade last", value: c.badLastEnd },
+        { label: "Bad decade first", value: c.badFirstEnd },
+      ],
+      caption:
+        `The same ${c.years} returns in all three bars. The top one is a single bar because with nothing taken out the order cannot matter: both sequences end on ${plain(c.noCashFlows)}, to the cent. Start withdrawing ${(SEQ_EXAMPLE.withdrawalRate * 100).toFixed(0)}% a year and the order decides roughly half the ending balance, a shortfall of ${plain(c.shortfall)} caused by nothing but the order the returns arrived in.`,
+    },
+    {
+      key: "seq-survivable-rate",
+      label: `The highest withdrawal rate that survives ${c.years} years`,
+      format: pct,
+      reference: SEQ_EXAMPLE.withdrawalRate * 100,
+      bars: [
+        { label: "Bad decade last", value: c.badLastRate },
+        { label: "Bad decade first", value: c.badFirstRate },
+      ],
+      caption:
+        `Solved by bisection on the rate, not read off a table. The line is the ${(SEQ_EXAMPLE.withdrawalRate * 100).toFixed(0)}% the bars above model: both orders clear it, but one clears it by ${(c.badFirstRate - SEQ_EXAMPLE.withdrawalRate * 100).toFixed(2)} points and the other by ${(c.badLastRate - SEQ_EXAMPLE.withdrawalRate * 100).toFixed(2)}. The order of the returns is worth ${(c.badLastRate - c.badFirstRate).toFixed(2)} points of withdrawal rate.`,
+    },
+  ];
+}
+
 const REGISTRY = {
   "break-even-occupancy": breakEvenOccupancy,
   "net-rental-yield": netRentalYield,
@@ -601,6 +645,7 @@ const REGISTRY = {
   "district-cooling-and-chiller-charges": districtCoolingAndChillerCharges,
   "transaction-cost-drag": transactionCostDrag,
   "freehold-areas-and-foreign-ownership": freeholdAreasAndForeignOwnership,
+  "sequence-of-returns": sequenceOfReturns,
 };
 
 /* Returns rendered figures for a playbook, or "" when the page has none. */
