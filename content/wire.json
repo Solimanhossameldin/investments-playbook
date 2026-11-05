@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-05T01:48:25.583Z",
+ "fetchedAt": "2026-11-05T09:02:06.353Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Isabel Schnabel: Navigating stormy waters: reflections on monetary policy",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261105_1~5e97d9d5a0.en.html",
+   "published": "2026-11-05T08:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "Piero Cipollone: Shaping the future of money",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261105~6495a0df6f.en.html",
+   "published": "2026-11-05T07:30:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "SEC Adopts Amendments to Update Definitions of Small Entity for Investment Companies and Investment Advisers",
    "url": "https://www.sec.gov/newsroom/press-releases/2026-112-sec-adopts-amendments-update-definitions-small-entity-investment-companies-investment-advisers",
@@ -143,15 +161,6 @@
    "feed": "ecb"
   },
   {
-   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
-   "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
-   "published": "2026-10-29T14:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
    "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
    "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
    "published": "2026-10-29T14:00:00.000Z",
@@ -161,18 +170,18 @@
    "feed": "boe"
   },
   {
-   "title": "Monetary policy decisions",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html",
-   "published": "2026-10-29T13:15:00.000Z",
+   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
+   "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
+   "published": "2026-10-29T14:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
   },
   {
-   "title": "ECB President Lagarde to step down on 7 February 2027",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
-   "published": "2026-10-29T10:00:00.000Z",
+   "title": "Monetary policy decisions",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html",
+   "published": "2026-10-29T13:15:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
@@ -186,6 +195,15 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
+  },
+  {
+   "title": "ECB President Lagarde to step down on 7 February 2027",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
+   "published": "2026-10-29T10:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
   },
   {
    "title": "Federal Reserve issues FOMC statement",
@@ -375,24 +393,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "Minutes of the SONIA Stakeholder Advisory Group - 25 September 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/september/sonia-stakeholder-advisory-group-25-september-2026",
-   "published": "2026-10-15T08:27:59.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
-   "title": "Bowman, Supervisory Modernization After Silicon Valley Bank",
-   "url": "https://www.federalreserve.gov/newsevents/speech/bowman20261014a.htm",
-   "published": "2026-10-15T02:55:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Speeches",
-   "category": "rates",
-   "feed": "fed-speeches"
   }
  ]
 }
