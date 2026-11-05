@@ -34,6 +34,8 @@ import * as vp from "../src/vacantpossession.mjs";
 import * as sc from "../src/succession.mjs";
 import * as dy from "../src/disposalyear.mjs";
 import * as sq from "../src/sequencerisk.mjs";
+import * as dd2 from "../src/drawdown.mjs";
+import * as fd from "../src/feedrag.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -4133,7 +4135,7 @@ ok("every calculator points at a playbook that exists",
    with its bars pointing at nothing. */
 {
   const { playbookCharts, CHART_REGISTRY } = await import("../src/playbookcharts.mjs");
-  const { labelGutter, labelWidth, LABEL_PAD } = await import("../src/charts.mjs");
+  const { labelWidth, valueWidth } = await import("../src/charts.mjs");
   const pctf = (v) => `${Number(v).toFixed(2)}%`;
   const pct1f = (v) => `${Number(v).toFixed(1)}%`;
   const aedf = (v) => `AED ${Math.round(v).toLocaleString("en-AE")}`;
@@ -4180,6 +4182,15 @@ ok("every calculator points at a playbook that exists",
         ],
       ];
     })(),
+    "drawdown-recovery-math": dd2.table().map((r) => ({
+      label: `${r.lossPct}% fall`, shown: `${r.years.toFixed(1)} years`,
+    })),
+    "fee-drag": [
+      fd.table().filter((r) => r.fee > 0).map((r) => ({
+        label: `${r.feePct}% a year`, shown: pct1f(r.costShare),
+      })),
+      fd.byHorizon().map((r) => ({ label: `${r.years} years`, shown: pct1f(r.costShare) })),
+    ],
     "dubai-vs-singapore": [
       { label: "Dubai, net", shown: pctf(sg.dubai().net) },
       { label: "Singapore, net", shown: pctf(sg.singapore().net) },
@@ -4479,6 +4490,15 @@ ok("every calculator points at a playbook that exists",
         (c.badLastRate - c.badFirstRate).toFixed(2),
       ];
     })(),
+    "drawdown-recovery-math": (() => {
+      const rows = dd2.table();
+      return [rows[0].years.toFixed(1), rows.at(-1).years.toFixed(1)];
+    })(),
+    "fee-drag": (() => {
+      const a = fd.amplification()[0];
+      const h = fd.byHorizon();
+      return [pct1f(a.costShare), String(a.times), pct1f(h[0].costShare), pct1f(h.at(-1).costShare)];
+    })(),
     "dubai-vs-singapore": [pctf(sg.dubai().stampRate), pctf(sg.singapore().stampRate)],
     "dubai-vs-london": [],
     "mortgage-capacity": [],
@@ -4589,6 +4609,24 @@ ok("every calculator points at a playbook that exists",
       ok(`charts: ${slug} figure ${i + 1} seats its longest label inside the gutter it drew`,
         labelWidth(widest.label) <= widest.x,
         `"${widest.label}" needs ${labelWidth(widest.label)}px, drawn with ${widest.x}px`);
+
+      /* The same question on the other side of the bar, and asked
+         generically rather than against a second constant: every value is
+         drawn at an x with an anchor, so its two edges are computable, and
+         both have to be inside the viewBox. Anchored start it runs right,
+         anchored end it runs left towards the labels. A negative bar uses
+         the second case, which is why this is not simply a right-margin
+         check. */
+      const vbw = Number((fig.match(/viewBox="0 0 ([\d.]+) /) || [])[1] || 900);
+      for (const m of fig.matchAll(
+        /<text x="([\d.]+)"[^>]*class="ch__v"[^>]*text-anchor="(start|end)"[^>]*>([^<]*)<\/text>/g
+      )) {
+        const x = Number(m[1]), anchor = m[2], val = m[3];
+        const wv = valueWidth(val);
+        const [l, r] = anchor === "start" ? [x, x + wv] : [x - wv, x];
+        ok(`charts: ${slug} figure ${i + 1} keeps the value ${val} inside the frame`,
+          l >= 0 && r <= vbw, `"${val}" spans ${l.toFixed(0)} to ${r.toFixed(0)} in a ${vbw}px frame`);
+      }
     }
   }
 
@@ -5432,6 +5470,104 @@ ok("every calculator points at a playbook that exists",
     ok("cash on cash: carries Article 3 verbatim on the tenor",
       `${p.summary} ${p.body} ${p.formula}`.includes(mg.STATUTORY.find((x) => x.key === "term").claim) ||
       p.body.includes("25 year maximum tenor"));
+  }
+}
+
+
+/* ---- the two asymmetries, one sudden and one slow ----
+
+   drawdown-recovery-math and fee-drag are the same shape of argument and
+   neither had a module. Both were arithmetically right, which is why this
+   is a pinning exercise rather than a correction: the figures in print all
+   reproduced. What both lacked was the column that makes the case land, and
+   those columns are new, so they are the ones most worth guarding.
+
+   The drawdown page had the required gain and mentioned the years twice in
+   prose. The fee page had the multiple and kept "one percent costs about
+   25%" in the formula block where no reader meets it. */
+{
+  const d = playbooks.find((x) => x.slug === "drawdown-recovery-math");
+  ok("drawdown: the page exists", !!d);
+  if (d) {
+    const rows = dd2.table();
+    const prose = `${d.summary} ${d.body} ${d.formula} ${d.whenToUse} ${d.failureModes.join(" ")}`;
+
+    /* The identity the page is built on, checked as an identity. */
+    ok("drawdown: the required gain is the fall over one minus the fall",
+      rows.every((r) => Math.abs(r.gain - Math.round((r.loss / (1 - r.loss)) * 100)) < 1e-9));
+    /* Recovering the required gain must return exactly to par, or the two
+       columns are describing different things.
+
+       Written first against a local requiredGainOf() that recomputed the
+       formula instead of calling the module's, which made it a check that
+       the arithmetic agrees with itself: breaking requiredGain to loss*100
+       left it passing. It calls the module now. */
+    ok("drawdown: recovering the module's required gain lands back at par",
+      rows.every((r) => Math.abs((1 - r.loss) * (1 + dd2.requiredGain(r.loss) / 100) - 1) < 1e-9));
+
+    const tbl = tablesIn(d.body).find((x) => (x.head[0] || "") === "Fall");
+    ok("drawdown: the page carries the recovery table", !!tbl);
+    if (tbl) {
+      ok("drawdown: its falls are the module's", same(col(tbl, 0), rows.map((r) => r.lossPct)));
+      ok("drawdown: its required gains are the module's", same(col(tbl, 1), rows.map((r) => r.gain)));
+      ok("drawdown: its years are the module's", same(col(tbl, 2), rows.map((r) => r.years)));
+    }
+
+    /* The turn, which the page used to assert and now derives. */
+    const turn = dd2.turnsAt();
+    ok("drawdown: the turn is the first fall needing more than double back",
+      turn.ratio >= 2 && dd2.amplification().filter((r) => r.lossPct < turn.lossPct).every((r) => r.ratio < 2),
+      JSON.stringify(turn));
+    ok("drawdown: the prose names the turn", prose.includes(`2.00 at fifty percent`), String(turn.lossPct));
+    for (const v of [`${turn.years.toFixed(1)} years`, `${rows.at(-1).years.toFixed(1)} years`])
+      ok(`drawdown: the prose carries ${v}`, prose.includes(v), v);
+
+    /* The rate is declared rather than buried, because every year figure on
+       the page depends on it. */
+    ok("drawdown: the page states the rate its years assume",
+      prose.includes(`${(dd2.RECOVERY_RATE * 100).toFixed(0)}% a year`) ||
+      prose.includes("eight percent a year"));
+  }
+
+  const f = playbooks.find((x) => x.slug === "fee-drag");
+  ok("fee drag: the page exists", !!f);
+  if (f) {
+    const rows = fd.table();
+    const prose = `${f.summary} ${f.body} ${f.formula} ${f.whenToUse} ${f.failureModes.join(" ")}`;
+
+    /* The model is the page's own: the fee as a reduction in the rate. */
+    ok("fee drag: the multiple is the page's own formula",
+      rows.every((r) => Math.abs(r.multiple - Number(Math.pow(1 + fd.GROSS - r.fee, fd.YEARS).toFixed(2))) < 1e-9));
+    /* A zero fee must cost nothing, or the share is measured off the wrong
+       base and every other row is wrong by the same amount. */
+    ok("fee drag: a zero fee takes nothing", rows[0].fee === 0 && rows[0].costShare === 0);
+    /* The claim the page makes in words: the damage is not linear in the
+       fee. Three points cost less than three times one point. */
+    const one = rows.find((r) => r.feePct === 1), three = rows.find((r) => r.feePct === 3);
+    ok("fee drag: three points cost less than three times one point",
+      three.costShare < one.costShare * 3, `${three.costShare} vs ${one.costShare * 3}`);
+
+    const t1 = tablesIn(f.body).find((x) => (x.head[0] || "") === "Annual fee");
+    ok("fee drag: the page carries the fee table", !!t1);
+    if (t1) {
+      ok("fee drag: its multiples are the module's", same(col(t1, 1), rows.map((r) => r.multiple)));
+      ok("fee drag: its shares are the module's", same(col(t1, 2), rows.map((r) => r.costShare)));
+    }
+
+    const hor = fd.byHorizon();
+    const t2 = tablesIn(f.body).find((x) => (x.head[0] || "") === "Holding period");
+    ok("fee drag: the page carries the horizon table", !!t2);
+    if (t2) ok("fee drag: its shares are the module's", same(col(t2, 1), hor.map((r) => r.costShare)));
+    /* Longer horizon, bigger bite, always. */
+    ok("fee drag: a longer horizon never costs the investor less",
+      hor.every((r, i) => i === 0 || r.costShare > hor[i - 1].costShare), JSON.stringify(hor));
+
+    /* The sentence worth quoting off this page. */
+    const amp = fd.amplification()[0];
+    ok("fee drag: the prose carries the amplification",
+      prose.includes(`${amp.times} times`), String(amp.times));
+    ok("fee drag: and the share one point takes",
+      prose.includes(`${amp.costShare}%`), String(amp.costShare));
   }
 }
 

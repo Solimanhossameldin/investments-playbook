@@ -215,14 +215,42 @@ export function labelGutter(labels = []) {
   return Math.max(LABEL_MIN, Math.min(widest + LABEL_PAD, LABEL_MAX));
 }
 
+/* The same bug on the other side of the bar, caught before it bit.
+
+   The value sits outside the bar at its end, and the longest bar ends at
+   w - padR, so the value has padR - 8 pixels of room. padR was a constant
+   92, giving 84. Measured at the 13px semibold the stylesheet sets, the
+   widest value in the library, "126.1 months", is 81.2px: it fits by three
+   pixels. "AED 1,200,000" is 94.6px and would not.
+
+   So nothing is clipped on this side today and something would have been
+   the first time a figure crossed a million or a format grew a word. The
+   value side now sizes itself too. 7.4 is above the measured range for the
+   semibold face, which runs 6.8 to 7.3. */
+export const VALUE_PX_PER_CH = 7.4;
+export const VALUE_PAD = 16;
+export const VALUE_MIN = 92;
+export const VALUE_MAX = 220;
+
+export const valueWidth = (s) => Math.ceil(String(s).length * VALUE_PX_PER_CH);
+export function valueGutter(values = []) {
+  const widest = values.reduce((a, v) => Math.max(a, valueWidth(v)), 0);
+  return Math.max(VALUE_MIN, Math.min(widest + VALUE_PAD, VALUE_MAX));
+}
+
 export function barChart(s, { id = s.key } = {}) {
   const bars = s.bars || [];
   if (!bars.length) return "";
 
   const w = 900;
   const padL = labelGutter(bars.map((b) => b.label));
-  const rowH = 52, padT = 18, padB = 46, padR = 92;
+  const rowH = 52, padT = 18, padB = 46;
   const h = padT + bars.length * rowH + padB;
+
+  /* padR is sized from the formatted values, so the formatter has to be
+     resolved before the geometry rather than after it. */
+  const fmt = s.format || ((v) => String(Math.round(v)));
+  const padR = valueGutter(bars.map((b) => fmt(b.value)));
   const x1 = w - padR;
 
   const vals = bars.map((b) => b.value).concat(s.reference != null ? [s.reference] : []);
@@ -231,8 +259,6 @@ export function barChart(s, { id = s.key } = {}) {
   const span = hi - lo || 1;
   const sx = (v) => padL + ((v - lo) / span) * (x1 - padL);
   const zero = sx(0);
-
-  const fmt = s.format || ((v) => String(Math.round(v)));
 
   const rows = bars
     .map((b, i) => {

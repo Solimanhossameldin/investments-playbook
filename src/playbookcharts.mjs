@@ -40,6 +40,8 @@ import { ladder as usufructLadder, MAX_TERM, remainingTerm } from "./foreignowne
 import { outcomes, plateau } from "./holdperiod.mjs";
 import { analyse as analysePriceIndex } from "./priceindex.mjs";
 import { comparison as seqComparison, EXAMPLE as SEQ_EXAMPLE } from "./sequencerisk.mjs";
+import * as dd2 from "./drawdown.mjs";
+import * as fd from "./feedrag.mjs";
 import { readFileSync } from "node:fs";
 
 /* The published index, analysed once. The hold-period outcomes are scored
@@ -625,6 +627,75 @@ function sequenceOfReturns() {
   ];
 }
 
+/* Drawdown recovery: the column the page only ever mentioned in prose.
+
+   The required-gain table is already in the body and reads 11, 25, 43 and
+   on up to 900, which is correct and, past about sixty, an abstraction. A
+   reader cannot feel 900%. He can feel thirty years. So the chart is the
+   time axis, at the recovery rate the page declares, and it is the one that
+   bounds a human being rather than a spreadsheet. */
+function drawdownRecoveryMath() {
+  const rows = dd2.table();
+  const turn = dd2.turnsAt();
+  return [
+    {
+      key: "dd-years",
+      label: `Years to climb back, at ${(dd2.RECOVERY_RATE * 100).toFixed(0)}% a year`,
+      format: (v) => `${Number(v).toFixed(1)} years`,
+      bars: rows.map((r) => ({ label: `${r.lossPct}% fall`, value: r.years })),
+      /* The turn, derived rather than eyeballed: the first fall whose
+         recovery is more than double the fall itself. Everything to the
+         right of the line is past it.
+
+         turnsAt() can return null, if no modelled fall needs double itself
+         back. Reading .years off that threw and took the whole build down,
+         not just the figure, which a break-test found by breaking the
+         required-gain formula. A chart with nothing to mark should lose its
+         line and say so, not crash the site. */
+      ...(turn
+        ? { reference: turn.years, referenceLabel: `the turn, at a ${turn.lossPct}% fall` }
+        : {}),
+      caption:
+        `The same falls as the table above, priced in time rather than in the gain they need. A ${rows[0].lossPct}% fall is back inside ${rows[0].years.toFixed(1)} years and a ${rows.at(-1).lossPct}% fall takes ${rows.at(-1).years.toFixed(1)}, which is a working life. ${
+          turn
+            ? `The line is the turn: a ${turn.lossPct}% fall is the first that needs more than double itself back, and it takes ${turn.years.toFixed(1)} years at this rate.`
+            : "No reference line is drawn: no fall in this range needs more than double itself back, so there is no turn to mark."
+        } The required gain doubles and redoubles past it; the years do not, and that is why the years are the number to reason with.`,
+    },
+  ];
+}
+
+/* Fee drag: the share, not the multiple.
+
+   The page's formula block carried "one percent costs about 25% of the
+   result" and the body never showed it. The multiple is the mechanism and
+   the share is the finding, so the share is what is drawn. The second
+   figure is the page's other unprinted claim, that the gap widens with the
+   horizon, which it states and never quantifies. */
+function feeDrag() {
+  const rows = fd.table().filter((r) => r.fee > 0);
+  const amp = fd.amplification();
+  const hor = fd.byHorizon();
+  return [
+    {
+      key: "fee-share",
+      label: `Share of the result the fee takes, over ${fd.YEARS} years at ${(fd.GROSS * 100).toFixed(0)}% gross`,
+      format: pct1,
+      bars: rows.map((r) => ({ label: `${r.feePct}% a year`, value: r.costShare })),
+      caption:
+        `Not the fee, the share of the outcome it removes. ${amp[0].feePct}% a year takes ${amp[0].costShare}% of the result, which is ${amp[0].times} times the number in the brochure. The multiple falls from ${fd.table()[0].multiple}x to ${rows.at(-1).multiple}x across these bars, and every point of it was compounding that never happened. No reference line is drawn: the only benchmark these bars share is a zero fee, which is the axis they already start from.`,
+    },
+    {
+      key: "fee-horizon",
+      label: `What a single ${(fd.table()[1].fee * 100).toFixed(0)}% fee takes, by how long you hold`,
+      format: pct1,
+      bars: hor.map((r) => ({ label: `${r.years} years`, value: r.costShare })),
+      caption:
+        `The same fee, the same gross return, four horizons. It takes ${hor[0].costShare.toFixed(1)}% over ${hor[0].years} years and ${hor.at(-1).costShare.toFixed(1)}% over ${hor.at(-1).years}, because the money it removed would itself have been compounding for whatever is left. The page said the gap widens; this is by how much.`,
+    },
+  ];
+}
+
 const REGISTRY = {
   "break-even-occupancy": breakEvenOccupancy,
   "net-rental-yield": netRentalYield,
@@ -646,6 +717,8 @@ const REGISTRY = {
   "transaction-cost-drag": transactionCostDrag,
   "freehold-areas-and-foreign-ownership": freeholdAreasAndForeignOwnership,
   "sequence-of-returns": sequenceOfReturns,
+  "drawdown-recovery-math": drawdownRecoveryMath,
+  "fee-drag": feeDrag,
 };
 
 /* Returns rendered figures for a playbook, or "" when the page has none. */

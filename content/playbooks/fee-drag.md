@@ -6,7 +6,7 @@
   "category": "portfolio",
   "tier": 1,
   "calculator": "safe-withdrawal-rate",
-  "reviewed": "26 August 2026",
+  "reviewed": "5 November 2026",
   "summary": "Fee drag is the compounding cost of every percentage charged against a portfolio each year, and because it is deducted from the base that would otherwise have compounded, a one percent annual fee costs far more than one percent of the final result.",
   "formula": "Value after n years\n  = Contribution x (1 + r - f)^n\n\n  where r is the gross return and f is the total annual fee.\n\nWorked, 30 years at 7% gross\n  no fee     (1.07)^30  = 7.61x\n  1% fee     (1.06)^30  = 5.74x\n  2% fee     (1.05)^30  = 4.32x\n  3% fee     (1.04)^30  = 3.24x\n\n  One percent costs about 25% of the result.\n  Three percent costs about 57% of it.\n\nTotal cost of ownership\n  fund expense ratio\n  + platform or custody\n  + advice or management\n  + product or wrapper charges\n  = the number that belongs in the formula",
   "failureModes": [
@@ -35,11 +35,31 @@ A fee is quoted as an annual percentage, which makes it sound like a small annua
 
 ## The arithmetic that surprises people
 
-A portfolio compounding at seven percent for thirty years multiplies by roughly 7.6. The same portfolio compounding at six percent, because a one percent fee was deducted, multiplies by roughly 5.7.
+A portfolio compounding at seven percent for thirty years multiplies by **7.61**. The same portfolio compounding at six percent, because a one percent fee was deducted, multiplies by **5.74**.
 
-The fee was one percent a year. It took about a quarter of the final result.
+The fee was one percent a year. It took **24.5%** of the final result, which is **24.5 times** the number in the brochure.
 
-Extend to forty years and the gap widens again, because the missing money would itself have been compounding for the whole period. This is the same asymmetry as [drawdown recovery](/playbooks/drawdown-recovery-math/), running slowly instead of suddenly.
+That ratio is the whole argument and it is worth seeing across the range, because it does not grow the way people expect:
+
+| Annual fee | Multiple after thirty years | Share of the result it takes |
+|---|---|---|
+| 0% | 7.61 | 0.0% |
+| 1% | 5.74 | 24.5% |
+| 2% | 4.32 | 43.2% |
+| 3% | 3.24 | 57.4% |
+
+Three percent a year does not cost three times what one percent costs. It costs **57.4%** against **24.5%**, a little over twice, because each additional point is levied on a base the earlier points have already shrunk. The fee schedule is linear and the damage is not.
+
+Extend the horizon and the same single fee takes more, because the money it removed would itself have been compounding for whatever is left. The page used to say the gap widens; this is by how much:
+
+| Holding period | What a 1% annual fee takes |
+|---|---|
+| 10 years | 9.0% |
+| 20 years | 17.1% |
+| 30 years | 24.5% |
+| 40 years | 31.3% |
+
+A fee is therefore priced in years, not in percent. The same one percent is a nine percent haircut to somebody with a decade left and a **31.3%** haircut to a thirty year old. This is the same asymmetry as [drawdown recovery](/playbooks/drawdown-recovery-math/), running slowly instead of suddenly.
 
 ## Where the layers hide
 

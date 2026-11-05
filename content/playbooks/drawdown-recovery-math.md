@@ -5,7 +5,7 @@
   "title": "Drawdown recovery math",
   "category": "risk",
   "tier": 2,
-  "reviewed": "26 August 2026",
+  "reviewed": "5 November 2026",
   "summary": "Losses and gains are not symmetric: a fall of fifty percent requires a gain of one hundred percent to get back to where you started, and the required recovery accelerates sharply as the loss deepens.",
   "formula": "Gain required to recover a loss\n  = L / (1 - L)\n  where L is the loss as a decimal\n\n  30% loss  ->  0.30 / 0.70  =  42.9%\n  50% loss  ->  0.50 / 0.50  =  100%\n  70% loss  ->  0.70 / 0.30  =  233%\n\nYears to recover at an annual return r\n  = ln(1 / (1 - L)) / ln(1 + r)\n\n  A 50% loss at 8% a year takes about 9 years.\n  A 70% loss at 8% a year takes about 15.6 years.\n\nWith leverage\n  Equity is wiped out when the asset falls by\n  the deposit percentage. A 25% deposit is gone\n  on a 25% fall in the asset.",
   "failureModes": [
@@ -29,19 +29,21 @@ This is the most important piece of arithmetic in risk management and it takes o
 
 If you lose x percent, the gain required to get back to level is x divided by one minus x. That is not intuitive, and the gap between intuition and reality is where a great deal of money goes.
 
-| Fall | Gain required to recover |
-|---|---|
-| 10% | 11% |
-| 20% | 25% |
-| 30% | 43% |
-| 40% | 67% |
-| 50% | 100% |
-| 60% | 150% |
-| 70% | 233% |
-| 80% | 400% |
-| 90% | 900% |
+| Fall | Gain required to recover | Years to recover, at 8% a year |
+|---|---|---|
+| 10% | 11% | 1.4 |
+| 20% | 25% | 2.9 |
+| 30% | 43% | 4.6 |
+| 40% | 67% | 6.6 |
+| 50% | 100% | 9.0 |
+| 60% | 150% | 11.9 |
+| 70% | 233% | 15.6 |
+| 80% | 400% | 20.9 |
+| 90% | 900% | 29.9 |
 
-Notice where it turns. Up to about twenty percent, losses and recoveries are roughly in the same neighbourhood, and time fixes them. Past fifty percent, the required recovery becomes something you can no longer wait for at any reasonable rate of return: a hundred percent gain at eight percent a year takes nine years, and a four hundred percent gain takes twenty one.
+Notice where it turns, and note that the turn is a computed point rather than an impression. The ratio of the required gain to the fall itself is 1.11 at a ten percent fall and reaches exactly **2.00 at fifty percent**, which is the first fall that needs more than double itself back. Past that the recovery becomes something you can no longer wait for at any reasonable rate of return: a hundred percent gain at eight percent a year takes **9.0 years**, and a four hundred percent gain takes **20.9**.
+
+The third column is the one to reason with. The required gain doubles and redoubles until it stops meaning anything: nobody has an intuition for nine hundred percent. The years do not behave that way. They rise steeply but they stay inside a scale a person can feel, and a ninety percent fall priced at **29.9 years** is not an abstraction, it is a working life. That is the honest statement of what a large drawdown costs somebody who is fifty.
 
 ## What follows from this
 
