@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-06T11:02:40.122Z",
+ "fetchedAt": "2026-11-06T17:57:28.919Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -26,6 +26,15 @@
  ],
  "items": [
   {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-11-06T13:31:35.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
+  {
    "title": "ECB publishes consolidated banking data for end-June 2026",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261106~356f2fc73a.en.html",
    "published": "2026-11-06T09:00:00.000Z",
@@ -42,15 +51,6 @@
    "sourceLabel": "Press releases",
    "category": "rates",
    "feed": "fed-all"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-11-05T13:30:19.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "Bank rate increased to 4% - November 2026 Monetary Policy Summary and Minutes",
@@ -188,15 +188,6 @@
    "feed": "ecb"
   },
   {
-   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
-   "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
-   "published": "2026-10-29T14:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
    "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
    "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
    "published": "2026-10-29T14:00:00.000Z",
@@ -206,18 +197,18 @@
    "feed": "boe"
   },
   {
-   "title": "Monetary policy decisions",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html",
-   "published": "2026-10-29T13:15:00.000Z",
+   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
+   "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
+   "published": "2026-10-29T14:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
   },
   {
-   "title": "ECB President Lagarde to step down on 7 February 2027",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
-   "published": "2026-10-29T10:00:00.000Z",
+   "title": "Monetary policy decisions",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html",
+   "published": "2026-10-29T13:15:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
@@ -233,13 +224,22 @@
    "feed": "boe"
   },
   {
+   "title": "ECB President Lagarde to step down on 7 February 2027",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
+   "published": "2026-10-29T10:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
    "title": "Federal Reserve issues FOMC statement",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
    "published": "2026-10-28T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Remit for the Monetary Policy Committee - October 2026",
@@ -393,15 +393,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Federal Reserve Board announces termination of enforcement actions with Gardner Bancshares, Inc. and Small Business Bank",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20261016a.htm",
-   "published": "2026-10-16T15:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
   }
  ]
 }
