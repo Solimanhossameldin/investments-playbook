@@ -36,6 +36,7 @@ import * as dy from "../src/disposalyear.mjs";
 import * as sq from "../src/sequencerisk.mjs";
 import * as dd2 from "../src/drawdown.mjs";
 import * as fd from "../src/feedrag.mjs";
+import * as pm from "../src/management.mjs";
 import { register, APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
 import { readFileSync } from "node:fs";
@@ -5928,6 +5929,174 @@ ok("every calculator points at a playbook that exists",
   }
 }
 
+
+/* ---- the management fee, and the ceiling a share of rent cannot pass ----
+
+   The page's argument is an identity rather than a figure: a fee charged on
+   rent collected can only be recovered from vacancy it removes or rent it
+   raises, and the first route closes at a fee rate equal to the vacancy rate,
+   because a manager cannot remove more vacancy than the flat has. Four things
+   could rot that silently. The ceiling could be replaced by a typed literal
+   that happens to look right. The ladder could be edited so a row no longer
+   matches the closed form, which renders perfectly and is false. The
+   "recoverable" column could survive a change in the vacancy allowance that
+   flipped it. And the page's two prose findings -- that no fee in the ladder
+   fits inside the decree's five per cent band, and that the fee costs 0.30
+   points of net yield -- could outlive the arithmetic that produced them.
+
+   Each has its own check and each was proved by reverting the thing it
+   guards. The quoted claims get the word-for-word treatment locally rather
+   than through STATUTORY_PAGES: all three instruments are already filed in
+   the law register under other pages, and the register holds one instrument
+   under one page, so adding this page to that list would make the register
+   check fail rather than make the page safer. */
+{
+  const p = playbooks.find((x) => x.slug === "property-management-fees-in-dubai");
+  ok("management: the page exists", !!p);
+  if (p) {
+    const L = pm.ladder();
+    const tables = tablesIn(p.body);
+    const byHead = (re) => tables.find((t) => re.test(t.head.join(" | ")));
+
+    /* 1. The ceiling, which is the whole page. It is solved by bisection on
+          the cut and has to land on the vacancy rate; a typed literal would
+          pass the printing check below and fail this one. */
+    ok("management: the fee ceiling is solved rather than asserted, and lands on the vacancy rate",
+      pm.ceilingAgrees, `${pm.feeCeiling} vs ${pm.VACANCY}`);
+    ok("management: the page prints the derived ceiling",
+      p.body.includes(`${pm.ceilingPct}%`), String(pm.ceilingPct));
+    ok("management: the page prints the allowance in the days it argues in",
+      p.body.includes(String(pm.vacancyDays)), String(pm.vacancyDays));
+
+    /* 2. The ceiling really is one: at it, a manager who never leaves the
+          flat empty exactly matches self-management, and a tenth of a point
+          above it loses. Stated as money rather than as algebra, because the
+          reader's objection is about money. */
+    {
+      const R = aq.EXAMPLE.rent;
+      const self = R * (1 - pm.VACANCY);
+      const atCeiling = R * (1 - pm.feeCeiling);
+      const above = R * (1 - (pm.feeCeiling + 0.001));
+      ok("management: at the ceiling a vacancy-free manager exactly matches self-management",
+        Math.abs(atCeiling - self) < 0.01, `${atCeiling} vs ${self}`);
+      ok("management: a tenth of a point above the ceiling cannot be recovered at any occupancy",
+        above < self, `${above} vs ${self}`);
+    }
+
+    /* 3. The ladder, compared to the module line by line and in order, so a
+          figure edited on the page fails even where the right figure still
+          appears somewhere else on it. */
+    const lad = byHead(/^Fee on rent collected \| Vacancy it must remove, days \|/);
+    ok("management: the vacancy ladder is present", !!lad);
+    if (lad) {
+      ok("management: the ladder's fee rates match the module",
+        same(col(lad, 0), L.map((r) => r.feePct)), JSON.stringify(col(lad, 0)));
+      ok("management: the ladder's required vacancy cut in days matches the closed form",
+        same(col(lad, 1), L.map((r) => r.cutDays)), JSON.stringify(col(lad, 1)));
+      ok("management: the ladder's weeks column matches the module",
+        same(col(lad, 2), L.map((r) => r.cutWeeks)), JSON.stringify(col(lad, 2)));
+      ok("management: the ladder's share of the allowance matches the module",
+        same(col(lad, 3), L.map((r) => r.shareOfAllowance)), JSON.stringify(col(lad, 3)));
+      ok("management: the ladder's recoverable column matches the ceiling test",
+        same(lad.rows.map((r) => r[4].trim()), L.map((r) => (r.recoverable ? "yes" : "no"))),
+        JSON.stringify(lad.rows.map((r) => r[4].trim())));
+      /* The column is the finding, so it is also checked against the
+         arithmetic directly rather than only against the module that
+         produced it: a share above a hundred per cent is impossible and
+         must be the rows marked no. */
+      ok("management: every row marked not recoverable needs more vacancy than the flat has",
+        L.every((r) => r.recoverable === (r.shareOfAllowance < 100)),
+        JSON.stringify(L.map((r) => [r.feePct, r.shareOfAllowance, r.recoverable])));
+    }
+
+    /* 4. The rent route, and the band finding. */
+    const up = byHead(/^Fee on rent collected \| Rent uplift it needs \|/);
+    ok("management: the rent uplift table is present", !!up);
+    if (up) {
+      ok("management: the uplift column matches f / (1 - f)",
+        same(col(up, 1), L.map((r) => r.upliftPct)), JSON.stringify(col(up, 1)));
+      ok("management: each row names the lowest band the decree permits it in",
+        up.rows.every((r, i) => r[2].includes(`permits ${L[i].tierIncrease}%`)),
+        JSON.stringify(up.rows.map((r) => r[2])));
+    }
+    /* The page's sharpest claim: the decree's five per cent band is too
+       small for even the smallest fee in the ladder, so the rent route
+       needs a rent at least 21% below the index. Asserted as the
+       inequality rather than as the sentence somebody typed. */
+    ok("management: no fee in the ladder fits inside the decree's five per cent band",
+      L.every((r) => r.tierIncrease > 5), JSON.stringify(L.map((r) => r.tierIncrease)));
+    ok("management: the page only claims 21% below the index while that is the lowest band that works",
+      !/at least 21% below the Smart Rental Index/.test(p.body)
+      || L[0].tierUpTo === 30, String(L[0].tierUpTo));
+
+    /* 5. What the fee costs in the unit the reader compares in, taken from
+          the acquisition module so the two pages cannot disagree. */
+    {
+      const y = pm.yieldCost();
+      ok("management: the yield cost is the acquisition module's own two yields",
+        y.withFee === aq.yields(aq.EXAMPLE).net
+        && y.without === aq.yields({ ...aq.EXAMPLE, managementRate: 0 }).net,
+        `${y.withFee} / ${y.without}`);
+      ok("management: the page prints both yields, the gap and the fee in dirhams",
+        [`${y.withFee}%`, `${y.without}%`, `${y.points.toFixed(2)} points`, aq.money(y.dirhams)]
+          .every((t) => p.body.includes(t)),
+        JSON.stringify([y.withFee, y.without, y.points, y.dirhams]));
+      ok("management: the page prints the gap as a share of the whole net yield",
+        p.body.includes(`${y.shareOfNet}%`), String(y.shareOfNet));
+    }
+
+    /* 6. The one published line, taken from the tenancy module rather than
+          retyped, and the page's claim that it is built rather than rounded. */
+    {
+      const g = pm.registration();
+      ok("management: the registration figures are the tenancy module's",
+        g.app === rb.ejariFee() && g.centre === rb.ejariFee({ centre: true }),
+        `${g.app} / ${g.centre}`);
+      ok("management: the page prints both registration channels",
+        p.body.includes(String(g.app)) && p.body.includes(String(g.centre)),
+        `${g.app} / ${g.centre}`);
+    }
+
+    /* 7. The quoted claims, word for word, each with its instrument in the
+          page's own source list. */
+    for (const q of pm.QUOTED) {
+      ok(`management: carries the "${q.key}" claim word for word`,
+        p.body.includes(q.claim), q.claim);
+      ok(`management: cites the instrument behind "${q.key}"`,
+        (p.sources || []).some((x) => x.url === pm.CITED[q.instrument].url),
+        pm.CITED[q.instrument].url);
+    }
+
+    /* 8. The honesty rule this page exists to keep. It must name the fee as
+          the one figure with no published maximum and must not estimate one,
+          which is the treatment the yield page gives the developer NOC and
+          the refinancing page gives the arrangement fee. */
+    ok("management: the fee is named as the unpriced line", pm.UNPRICED.length === 1);
+    ok("management: the page says it estimates no rate and holds no dataset",
+      /no rate is estimated anywhere on this page/.test(p.body)
+      && /holds no dataset of what firms actually charge/.test(p.body));
+    ok("management: the page frames the ladder as a span rather than a market claim",
+      /none of them is a claim about what the market charges/.test(p.body));
+
+    /* 9. The answer is on the first screen, because that is all an assistant
+          extracting one reads. */
+    ok("management: the page leads with the ceiling rather than burying it",
+      p.body.slice(0, 1200).includes(`${pm.ceilingPct}%`));
+
+    /* 10. The page is a junction, so the chain is checked rather than hoped,
+           and the four pages whose readers need it have to keep sending
+           them. */
+    for (const target of ["net-rental-yield", "break-even-occupancy",
+      "short-let-vs-long-let", "rent-increase-caps"]) {
+      ok(`management: links to /playbooks/${target}/`,
+        p.body.includes(`](/playbooks/${target}/)`));
+    }
+    ok("management: the four pages that carry a management line link back to it",
+      ["net-rental-yield", "break-even-occupancy", "cap-rate", "short-let-vs-long-let"]
+        .every((sl) => playbooks.find((x) => x.slug === sl).body
+          .includes("](/playbooks/property-management-fees-in-dubai/)")));
+  }
+}
 
 console.log(`\n${fail === 0 ? `All ${pass} playbook checks passed across ${playbooks.length} frameworks.` : `${fail} FAILED, ${pass} passed.`}`);
 process.exit(fail === 0 ? 0 : 1);

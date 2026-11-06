@@ -81,7 +81,7 @@ The same illustrative unit as [net rental yield](/playbooks/net-rental-yield/): 
 
 The service charge is the clearest case, and it is set by an instrument rather than by a landlord: Law No. (6) of 2019 puts the charge on the owner of the unit, which is why an empty flat in a serviced tower keeps billing. [Service charges and reserves](/playbooks/service-charge-and-reserves/) takes that apart properly. A district cooling capacity charge passes the same test for the same reason: it is billed on contracted capacity rather than on consumption, so it does not stop when the unit empties either, and [the chiller bill](/playbooks/district-cooling-and-chiller-charges/) prices the void it accrues.
 
-So a fully let year collects AED 105,000, pays AED 5,250 in management, and has AED 99,750 to cover AED 22,950 of fixed cost. **Break-even occupancy is 23.01%.** The unit can sit empty for nine months of the year and still not cost its owner money.
+So a fully let year collects AED 105,000, pays AED 5,250 in management, and has AED 99,750 to cover AED 22,950 of fixed cost. The management line is the one cost here that is scaled by a rate nobody publishes, and [property management fees](/playbooks/property-management-fees-in-dubai/) works out what that rate has to earn back. **Break-even occupancy is 23.01%.** The unit can sit empty for nine months of the year and still not cost its owner money.
 
 That is the number for a property with no mortgage. It is also the number almost nobody actually has.
 

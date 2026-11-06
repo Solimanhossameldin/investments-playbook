@@ -80,7 +80,7 @@ Two honest qualifications. The convention is close to universal, the standard Fo
 
 ## The rent, after the building has taken its share
 
-Vacancy comes off first, because management is a share of rent actually collected, not of rent hoped for.
+Vacancy comes off first, because management is a share of rent actually collected, not of rent hoped for. That line is also the only one in the stack no instrument sets, and the fee it represents has a ceiling above which it cannot be recovered at all: [property management fees](/playbooks/property-management-fees-in-dubai/) derives it.
 
 | Line | AED |
 |---|---|

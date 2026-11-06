@@ -115,6 +115,8 @@ One bedroom. The annual rent, the service charge and the nightly rate below are 
 | Vacancy allowance, 4% | (4,200) |
 | **Net** | **78,550** |
 
+The letting and management line on the long let side is charged on rent collected and is capped by no instrument; [property management fees](/playbooks/property-management-fees-in-dubai/) works out the vacancy a long let fee has to remove before it pays for itself, which is a different test from the one below because the operator share here is charged on gross booking revenue instead.
+
 **As a standard holiday home**, at AED 750 a night and 70% occupancy, which is 255 nights sold, at an average stay of three nights, so 85 turnovers.
 
 | Line | AED |

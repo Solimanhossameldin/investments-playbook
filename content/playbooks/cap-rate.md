@@ -86,7 +86,7 @@ Whether it can is a letting question, and it is a much better one than the listi
 
 Net operating income is doing all the work, and it is the part most often reported dishonestly.
 
-It is the achieved rent, not the asking rent. It is after the service charge, which in Dubai is the single largest running cost and varies enormously between a well run building and a badly run one. It is after management, after a maintenance reserve, after insurance, and after an allowance for the weeks the unit is empty between tenants. It is **before** any mortgage payment, because the mortgage belongs to you rather than to the building.
+It is the achieved rent, not the asking rent. It is after the service charge, which in Dubai is the single largest running cost and varies enormously between a well run building and a badly run one. It is after management, whose rate is set by no instrument and whose break-even is worked out on [property management fees](/playbooks/property-management-fees-in-dubai/), after a maintenance reserve, after insurance, and after an allowance for the weeks the unit is empty between tenants. It is **before** any mortgage payment, because the mortgage belongs to you rather than to the building.
 
 Miss any one of those deductions and the rate you calculate is not comparable to anyone else's. Miss all of them and you have computed the [gross rental yield](/glossary/gross-rental-yield/) and given it a better name.
 
