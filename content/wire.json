@@ -1,7 +1,7 @@
 {
- "fetchedAt": "2026-11-07T02:35:10.525Z",
+ "fetchedAt": "2026-11-07T09:16:28.150Z",
  "sourcesTotal": 7,
- "sourcesOk": 6,
+ "sourcesOk": 7,
  "retired": [
   {
    "name": "U.S. Treasury",
@@ -188,15 +188,6 @@
    "feed": "ecb"
   },
   {
-   "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
-   "published": "2026-10-29T14:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
    "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
    "published": "2026-10-29T14:00:00.000Z",
@@ -206,9 +197,27 @@
    "feed": "ecb"
   },
   {
+   "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
+   "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
+   "published": "2026-10-29T14:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
    "title": "Monetary policy decisions",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html",
    "published": "2026-10-29T13:15:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "ECB President Lagarde to step down on 7 February 2027",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
+   "published": "2026-10-29T10:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
@@ -222,15 +231,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "ECB President Lagarde to step down on 7 February 2027",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261029~abbb6dc64b.en.html",
-   "published": "2026-10-29T10:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   },
   {
    "title": "Federal Reserve issues FOMC statement",
@@ -380,15 +380,6 @@
    "title": "Frank Elderson: From climate and nature risks to economic resilience and competitiveness",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261019~f0a3e053de.en.html",
    "published": "2026-10-19T06:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Christine Lagarde: IMFC Statement",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261017~7015ea3099.en.html",
-   "published": "2026-10-17T05:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
