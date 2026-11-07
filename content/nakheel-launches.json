@@ -1,0 +1,26 @@
+{
+  "developer": "Nakheel",
+  "source": "Property Finder, Nakheel developer listing",
+  "sourceUrl": "https://www.propertyfinder.ae/en/new-projects/dev/nakheel",
+  "retrievedAt": "2026-11-07",
+  "note": "Launch prices as the listing states them, not a Nakheel price list. A launch price is the lowest unit in the release, so it is a floor on the project rather than the price of a unit anybody would choose.",
+  "launches": [
+    { "name": "Ibis at Jumeirah Village Circle", "priceAed": 600000, "delivery": "Q4 2027", "location": "Jumeirah Village Circle" },
+    { "name": "Paradise One", "priceAed": 1200000, "delivery": "Q2 2027", "location": "Dubai", "note": "Construction progress shown as 68%" },
+    { "name": "Naya Phase 3", "priceAed": 1373020, "delivery": "Q3 2027", "location": "District One" },
+    { "name": "Naya Phase 2", "priceAed": 1700000, "delivery": "Q3 2028", "location": "District One" },
+    { "name": "Bay Grove Residences Phase 4", "priceAed": 2000000, "delivery": "Q3 2028", "location": "Dubai Islands" },
+    { "name": "Palm Central Private Residences Frond M", "priceAed": 2500000, "delivery": "Q3 2029", "location": "Palm Jebel Ali" },
+    { "name": "Beach Residences Dubai Islands", "priceAed": 2600000, "delivery": "Q1 2027", "location": "Dubai Islands" },
+    { "name": "Rixos Beach Residences Phase 2", "priceAed": 2600000, "delivery": "Q4 2026", "location": "Dubai Islands" },
+    { "name": "Palm Central Private Residences Phase 2", "priceAed": 2700000, "delivery": "Q3 2030", "location": "Palm Jebel Ali" },
+    { "name": "Palm Central Residences Frond N", "priceAed": 2700000, "delivery": "Q4 2030", "location": "Palm Jebel Ali", "soldOut": true },
+    { "name": "Palm Springs", "priceAed": 3800000, "delivery": "Q4 2026", "location": "Jebel Ali Hills" },
+    { "name": "Bay Estate Agora", "priceAed": 4700000, "delivery": "Q1 2031", "location": "Dubai Islands" },
+    { "name": "Bay Estate", "priceAed": 5000000, "delivery": "Q4 2029", "location": "Dubai Islands" },
+    { "name": "Podium Villas", "priceAed": 5300000, "delivery": "Q1 2027", "location": "Palm Beach Towers" },
+    { "name": "Bay Estate Verda", "priceAed": 5300000, "delivery": "", "location": "Dubai Islands" },
+    { "name": "Bay Estate Cala", "priceAed": 5900000, "delivery": "Q1 2031", "location": "Dubai Islands" },
+    { "name": "Villa Blue Horizon", "priceAed": 18100000, "delivery": "Q4 2028", "location": "Palm Jebel Ali", "note": "Listing shows two payment plans" }
+  ]
+}

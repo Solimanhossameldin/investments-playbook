@@ -73,7 +73,7 @@ Present value is linear in price. A plan quoted q percent higher has a present v
 
     q* = present value of plan A / present value of plan B - 1
 
-At the six percent used above, that is 1,394,818 / 1,288,608 - 1, or 8.24%. It is not a market observation and this site holds no dataset of developer premiums. It is the ceiling your own discount rate puts on the premium you are willing to pay, and it moves with that rate:
+At the six percent used above, that is 1,394,818 / 1,288,608 - 1, or 8.24%. It is not a market observation and this site holds no dataset of developer premiums. A current launch list is the nearest thing to one, and [the Nakheel launches](/nakheel-launches/) are published here with the date they were read and the registration split priced per project. It is the ceiling your own discount rate puts on the premium you are willing to pay, and it moves with that rate:
 
 | Your discount rate | Plan A, today's money | Plan B, today's money | Premium plan B can bear | In dirhams |
 |---|---|---|---|---|

@@ -17,6 +17,8 @@ import { serviceChargePage } from "../src/templates/service-charges.mjs";
 import { validate as validateServiceCharges, validateIndex as validateServiceChargeIndex } from "../src/servicecharges.mjs";
 import { validate as validatePhotos } from "../src/photos.mjs";
 import { priceIndexPage } from "../src/templates/price-index.mjs";
+import { launchesPage } from "../src/templates/launches.mjs";
+import { validate as validateLaunches } from "../src/launches.mjs";
 import { propertyLawPage } from "../src/templates/property-law.mjs";
 import { APPLIED } from "../src/lawregister.mjs";
 import { analyse as analysePriceIndex } from "../src/priceindex.mjs";
@@ -52,6 +54,7 @@ const callResults = read("content/call-results.json", { resolvedAt: null, result
 const chartbook = read("content/chartbook.json", { asOf: null, windowYears: 12, series: {}, errors: {} });
 const serviceCharges = read("content/service-charges.json", { records: [] });
 const priceIndex = read("content/dld-price-index.json", null);
+const nakheelLaunches = read("content/nakheel-launches.json", null);
 
 /* Photographs on the same terms as every figure: an image without a named
    owner, a permitting licence and a resolvable source fails the build rather
@@ -196,6 +199,16 @@ if ((serviceCharges.records || []).length) {
    playbook's prose, so they are checked whether or not the dataset above has
    a single row in it. An undated count is refused here rather than printed. */
 if (serviceCharges.officialIndex) validateServiceChargeIndex(serviceCharges.officialIndex);
+
+/* A developer's current launch list, on the same terms as the datasets above:
+   the page exists only if the data does, and validate() throws rather than
+   publish a developer's prices with no source or no retrieval date. The
+   sitemap date is the day the listing was read, because that is the only
+   thing on the page that can go stale. */
+if (nakheelLaunches) {
+  const lx = validateLaunches(nakheelLaunches);
+  emit(launchesPage({ site, index: lx }), lx.retrievedAt);
+}
 
 /* The DLD price index, on the same terms as the service charges above: the
    page exists only if the data does, and analyse() throws rather than let a

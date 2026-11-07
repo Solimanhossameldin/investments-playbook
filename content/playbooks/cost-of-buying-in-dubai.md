@@ -115,7 +115,7 @@ Which inverts a piece of advice people give each other. A first, small, mortgage
 
 ## Who the law makes liable, which is not who pays
 
-Article 3 of Executive Council Resolution No. (30) of 2013 makes the registration fee shared equally by the seller and purchaser in the absence of an agreement to the contrary, and the Land Department's own service page prints it as 2% of the sale value on each side, so a buyer carrying the whole 4% is a term of the sale contract rather than a rule of law.
+Article 3 of Executive Council Resolution No. (30) of 2013 makes the registration fee shared equally by the seller and purchaser in the absence of an agreement to the contrary, and the Land Department's own service page prints it as 2% of the sale value on each side, so a buyer carrying the whole 4% is a term of the sale contract rather than a rule of law. On an initial sale the seller is the developer, which makes that half a named amount per project: [the current Nakheel launch list](/nakheel-launches/) prices it across seventeen of them.
 
 What that is worth is simply the seller's half.
 
