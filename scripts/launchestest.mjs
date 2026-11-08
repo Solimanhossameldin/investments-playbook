@@ -114,6 +114,54 @@ const inbound = ["cost-of-buying-in-dubai", "off-plan-irr"]
   .filter((s) => readFileSync(`content/playbooks/${s}.md`, "utf8").includes("](/nakheel-launches/)"));
 ok("launches: at least two frameworks link to the page", inbound.length >= 2, inbound.join(", "));
 
+/* ---- the photograph, when there is one ----
+
+   The page must work with and without one: the photo arrives from the
+   pipeline, so a build before it has run has none, and that must not be a
+   broken page. When one is there it carries its own credit and licence, and
+   the caption says the picture is of the place rather than of a project,
+   because an image asserts things a table does not. */
+{
+  const shot = {
+    file: "dubai-islands-causeway.jpg",
+    alt: "A long test caption describing the causeway and the water",
+    credit: "Iwona Rege", licence: "CC-BY-SA-4.0",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Deira_Bridge.jpg",
+    width: 960, height: 640,
+  };
+  const withPhoto = launchesPage({ site, index: ix, photos: [shot] }).body;
+  const without = launchesPage({ site, index: ix, photos: [] }).body;
+
+  ok("launches: with no photograph the page still builds and shows no figure",
+    !/<figure/.test(without));
+  ok("launches: a photograph renders as a figure with its own credit and licence",
+    /<figure/.test(withPhoto) && withPhoto.includes("Iwona Rege")
+    && withPhoto.includes("CC-BY-SA-4.0") && withPhoto.includes(shot.sourceUrl));
+  ok("launches: the photograph carries the alt text it was given",
+    withPhoto.includes(shot.alt));
+  ok("launches: the caption says the picture is of the place, not of a project",
+    /photograph is of the place, not of a project in the table/.test(withPhoto));
+  ok("launches: the caption counts the Dubai Islands rows rather than asserting a number",
+    withPhoto.includes(`${ix.rows.filter((r) => r.location === "Dubai Islands").length} of the ${ix.count} launches`),
+    String(ix.rows.filter((r) => r.location === "Dubai Islands").length));
+}
+
+/* The curated source entry is what makes the photograph appear at all, so the
+   page's own slug has to be the one it is filed under. */
+{
+  const sources = JSON.parse(readFileSync("content/photo-sources.json", "utf8")).sources;
+  const mine = sources.filter((s) => s.slug === "nakheel-launches");
+  ok("launches: exactly one photograph is curated for this page", mine.length === 1,
+    JSON.stringify(mine.map((s) => s.file)));
+  if (mine[0]) {
+    ok("launches: it names a Commons file and carries alt text a reader could use",
+      /^File:/.test(mine[0].commons) && String(mine[0].alt).trim().split(/\s+/).length >= 6,
+      mine[0].commons);
+    ok("launches: it claims no place, because the file carries no coordinates to check one against",
+      mine[0].place === undefined, String(mine[0].place));
+  }
+}
+
 ok("launches: the page declares a dated Dataset that names its source and claims no licence", (() => {
   const d = (spec.jsonld || []).find((x) => x["@type"] === "Dataset");
   return !!d && d.dateModified === ix.retrievedAt && d.isAccessibleForFree === true

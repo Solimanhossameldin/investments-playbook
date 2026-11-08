@@ -1,5 +1,6 @@
 import { esc, longDate, pageTitle } from "../lib.mjs";
 import { whatsappUrl } from "./contact.mjs";
+import { photoFigures } from "./pages.mjs";
 import { ownShare, FEES } from "../launches.mjs";
 
 /* A developer's launch list, dated, with the fee split done per project.
@@ -18,7 +19,7 @@ import { ownShare, FEES } from "../launches.mjs";
 
 const aed = (n) => n.toLocaleString("en-US");
 
-export function launchesPage({ site, index }) {
+export function launchesPage({ site, index, photos = [] }) {
   const { developer, source, sourceUrl, retrievedAt, note, rows, count, liveCount,
     soldOutCount, low, high, shareLow, shareHigh, locations } = index;
 
@@ -49,6 +50,9 @@ export function launchesPage({ site, index }) {
     <b>What these figures are, and what they are not</b>
     Every price here is the launch price <a href="${esc(sourceUrl)}" rel="noopener nofollow" target="_blank">${esc(source)}</a> states, read on ${longDate(retrievedAt)}. ${note ? esc(note) + " " : ""}This site has no agency relationship with ${esc(developer)}, and nothing here is an offer. Launch prices move, releases sell out, and a figure is worth exactly the date printed beside it.
   </div>
+
+  ${photoFigures(photos)}${photos.length ? `
+  <p class="cb__src" style="max-width:var(--prose)">The photograph is of the place, not of a project in the table. Dubai Islands is the location of ${rows.filter((r) => r.location === "Dubai Islands").length} of the ${count} launches below, and the causeway in the picture is how they are reached.</p>` : ""}
 
   <div class="section-head" style="margin-top:44px;margin-bottom:8px">
     <h2>The list, cheapest first</h2>

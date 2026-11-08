@@ -207,7 +207,7 @@ if (serviceCharges.officialIndex) validateServiceChargeIndex(serviceCharges.offi
    thing on the page that can go stale. */
 if (nakheelLaunches) {
   const lx = validateLaunches(nakheelLaunches);
-  emit(launchesPage({ site, index: lx }), lx.retrievedAt);
+  emit(launchesPage({ site, index: lx, photos: photoIndex.bySlug.get("nakheel-launches") || [] }), lx.retrievedAt);
 }
 
 /* The DLD price index, on the same terms as the service charges above: the

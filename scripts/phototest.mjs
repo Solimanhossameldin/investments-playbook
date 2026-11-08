@@ -251,7 +251,12 @@ const PREV = { commons: "File:Dubai Marina in March 2022 04.jpg", file: "dubai-m
     check(`${s.file}: names a Commons file`, /^File:.+\.jpe?g$/i.test(s.commons || ""));
     check(`${s.file}: is a plain JPEG filename`, /^[a-z0-9][a-z0-9-]*\.jpe?g$/.test(s.file || ""));
     if (s.preview) { check(`${s.file}: a preview carries no slug, so it cannot be mistaken for a published photo`, !s.slug); continue; }
-    check(`${s.file}: belongs to a page that exists`, fs.existsSync(path.join(root, "content/playbooks", `${s.slug}.md`)), s.slug);
+    /* A photo belongs to a page. Most pages are playbooks; the dated market
+       pages are not, and a photo on one is still a photo on a page. Both
+       shapes are named here so that a slug matching neither still fails. */
+    const DATA_PAGES = new Set(["nakheel-launches"]);
+    check(`${s.file}: belongs to a page that exists`,
+      fs.existsSync(path.join(root, "content/playbooks", `${s.slug}.md`)) || DATA_PAGES.has(s.slug), s.slug);
     check(`${s.file}: its alt text describes something`, String(s.alt || "").trim().split(/\s+/).length >= 6);
     if (s.place) check(`${s.file}: a named place comes with a box to check it against`, Array.isArray(s.bbox) && s.bbox.length === 4 && s.bbox[0] < s.bbox[2] && s.bbox[1] < s.bbox[3]);
   }

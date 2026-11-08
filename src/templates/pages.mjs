@@ -8,7 +8,7 @@ import { playbookCharts } from "../playbookcharts.mjs";
    photographer alone: it is what lets a reader check that the picture is of
    the thing it sits beside. A synthetic image says so in the caption, in
    words, every time. */
-function photoFigures(list = []) {
+export function photoFigures(list = []) {
   if (!list.length) return "";
   return list
     .map((ph) => {
