@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-09T00:03:21.669Z",
+ "fetchedAt": "2026-11-09T06:29:11.753Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -246,9 +246,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
    "published": "2026-10-28T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Remit for the Monetary Policy Committee - October 2026",
@@ -384,15 +384,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Frank Elderson: From climate and nature risks to economic resilience and competitiveness",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261019~f0a3e053de.en.html",
-   "published": "2026-10-19T06:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
