@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-10T00:33:35.198Z",
+ "fetchedAt": "2026-11-10T07:45:30.302Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -375,15 +375,6 @@
    "sourceLabel": "Press releases",
    "category": "markets",
    "feed": "sec"
-  },
-  {
-   "title": "Frank Elderson: Interview with Die Presse",
-   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261020~97e2e4bc38.en.html",
-   "published": "2026-10-20T07:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
