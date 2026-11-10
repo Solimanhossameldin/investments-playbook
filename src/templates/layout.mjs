@@ -41,6 +41,7 @@ export function head({ site, title, description, path, jsonld = [], ogType = "we
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${esc(url)}">
 ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
+${path === "/" ? '<meta name="google-site-verification" content="kbB3fLp9-HIi7X1UBzw4bDErI3RD5rrQOSxpoiCODm0">' : ""}
 <meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:type" content="${ogType}">
 <meta property="og:title" content="${esc(title)}">

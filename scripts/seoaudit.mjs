@@ -106,6 +106,7 @@ for (const file of walk(dist)) {
     description: pick(/<meta name="description" content="([^"]*)"/i),
     canonical: pick(/<link rel="canonical" href="([^"]*)"/i),
     noindex: /name="robots" content="noindex/.test(html),
+    verifyTag: /name="google-site-verification"/.test(html),
     h1s: [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map((m) => m[1].replace(/<[^>]+>/g, "").trim()),
     headings: [...html.matchAll(/<h([1-6])\b/gi)].map((m) => Number(m[1])),
     pageDate: (html.match(/<time datetime="(\d{4}-\d{2}-\d{2})"/i) || [])[1] || "",
@@ -192,6 +193,19 @@ const findings = [];
 const note = (level, kind, detail) => findings.push({ level, kind, detail });
 
 for (const b of broken) note("error", "broken link", `${b.from} -> ${b.href}`);
+
+/* The Search Console ownership tag. It belongs on exactly one page: Google
+   reads it from the property root, and a verification token repeated on a
+   hundred and fifty pages is a token published a hundred and fifty times for
+   no gain. Both failure directions are errors -- gone, and the property stops
+   verifying; everywhere, and it leaked out of its conditional. */
+{
+  const carrying = indexable.filter((p) => p.verifyTag);
+  if (!carrying.length) note("error", "no Search Console verification tag", "expected it on /");
+  else if (carrying.length > 1 || carrying[0].url !== "/")
+    note("error", "Search Console verification tag is not confined to the home page",
+      carrying.map((p) => p.url).slice(0, 5).join(", "));
+}
 
 for (const p of indexable) {
   const n = inbound.get(p.url).size;
