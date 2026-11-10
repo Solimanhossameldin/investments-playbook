@@ -63,6 +63,20 @@
    "checkedAt": "2026-11-10",
    "place": "Abu Dhabi",
    "verified": true
+  },
+  {
+   "file": "dubai-islands-causeway.jpg",
+   "slug": "nakheel-launches",
+   "alt": "The low road causeway to Dubai Islands crossing the water from the Deira corniche, with wooden dhows moored along the quay in the foreground and the Deira skyline behind it in haze",
+   "credit": "Iwona Rege",
+   "licence": "CC-BY-SA-4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Deira_Bridge.jpg",
+   "retrievedAt": "2026-11-10",
+   "width": 960,
+   "height": 640,
+   "commons": "File:Deira Bridge.jpg",
+   "commonsSha1": "4a0e4c34976fe9f8236c43dbacdd2776e4d58c0e",
+   "checkedAt": "2026-11-10"
   }
  ]
 }
