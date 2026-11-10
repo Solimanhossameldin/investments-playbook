@@ -21,6 +21,20 @@
     "Amortising a fixed cost over a longer hold does not make the cost smaller, only the annual figure. It is a legitimate way to look at it and a poor way to justify holding an asset you should sell."
   ],
   "whenToUse": "Before every purchase, as a test of whether your intended holding period is long enough to absorb the round trip out of rent rather than out of hope. Also before every sale, to see what the exit costs against the reason you are selling.",
+  "faqs": [
+    {
+      "q": "How much of a Dubai apartment's return do transaction costs take in year one?",
+      "a": "Against a net yield of 4.33% the drag is most of the return in year one, a third of it by year three and a quarter of it by year five."
+    },
+    {
+      "q": "How often has a Dubai apartment actually cleared its round-trip costs?",
+      "a": "Between three years and eight years the annualised drag falls from 3.24% to 1.22%, and the share of holds that cleared the round trip moves from 52% to 51%."
+    },
+    {
+      "q": "How many years of rent do Dubai transaction costs consume?",
+      "a": "The round trip on this unit is 2.11 years of net operating income, or 1.85 if it was bought for cash."
+    }
+  ],
   "sources": [
     {
       "name": "Dubai Land Department, Residential Properties Sale Index (Data Dubai)",

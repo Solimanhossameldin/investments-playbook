@@ -21,6 +21,24 @@
     "This is general information and not financial or legal advice."
   ],
   "whenToUse": "When a bank or broker offers to move your mortgage, before you agree to a valuation. Also at the end of any fixed period, because the rate you revert to is the rate the arithmetic below should be run against rather than the one you originally signed.",
+  "faqs": [
+    {
+      "q": "What is the early settlement fee on a Dubai mortgage?",
+      "a": "The home loan block caps early settlement at \"Max 1% of outstanding balance or 10,000, whichever is less\", the liability letter at AED 85, the clearance letter at AED 95 and the bank's own no objection certificate at AED 150."
+    },
+    {
+      "q": "Does the early settlement fee fall as a share of a bigger Dubai mortgage?",
+      "a": "The larger the mortgage, the less it costs to leave it, and at AED 5,000,000 outstanding the charge is a fifth of one per cent."
+    },
+    {
+      "q": "How much does the rate have to drop for a Dubai refinance to pay for itself?",
+      "a": "From five per cent you need 2.70 percentage points to recover the switch inside a year and 1.30 points inside two."
+    },
+    {
+      "q": "What does moving a Dubai mortgage cost besides the bank's fee?",
+      "a": "The Schedule to Executive Council Resolution No. (30) of 2013 prices \"Transferring a mortgage\" at 0.25% of the mortgage (debt) value, the identical rate it charges for registering one, and \"Discharging a mortgage\" at AED 1,000.00."
+    }
+  ],
   "sources": [
     {
       "name": "Central Bank of the UAE, Regulations Regarding Bank Loans & Other Services Offered to Individual Customers, Article 20(2), as added by the amendment of page (14), Circular No. 2705/2012",

@@ -20,6 +20,20 @@
     "The fee schedule is the current one. Fees in Dubai are set by resolution and can be amended by resolution, so a figure here is only as good as the date at the top of this page."
   ],
   "whenToUse": "Before any offer on an income producing property, and on every property already in your portfolio at least once a year. If you have never calculated it on something you already own, that is the first calculation to run.",
+  "faqs": [
+    {
+      "q": "Who pays the 4% Land Department fee in Dubai, the buyer or the seller?",
+      "a": "Article 3 of the resolution says that unless agreed otherwise, the fee for the sale of real property will be shared equally by the seller and purchaser."
+    },
+    {
+      "q": "Do running costs or buying costs do more damage to Dubai rental yield?",
+      "a": "Running costs are 8.5 times more destructive than the transaction stack, and the transaction stack is what every buyer negotiates over."
+    },
+    {
+      "q": "How much of a Dubai apartment's net yield do the buying costs take?",
+      "a": "The entire transaction stack, the 4% and the agency commission and the trustee and the rest of it, takes 0.28 percentage points."
+    }
+  ],
   "sources": [
     {
       "name": "Executive Council Resolution No. (30) of 2013 Approving Fees of the Land Department, Article 3 and Schedule",

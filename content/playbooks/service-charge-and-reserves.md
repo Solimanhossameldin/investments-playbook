@@ -22,6 +22,20 @@
     "Treating thirty buildings as a sample of Dubai. The spread quoted here is what the 2026 approved budgets of the thirty buildings this site has read actually say. A building outside that set can sit anywhere, including outside the range, and the reserve share of a single project says nothing about its area."
   ],
   "whenToUse": "Before making an offer on any apartment, and again every year, because the budget is approved annually and almost no owner reads it. Also whenever two buildings are being compared on the headline rate alone: the same free lookup splits that rate into a general fund and a reserve, and across the buildings published here the split varies far more than the rate does.",
+  "faqs": [
+    {
+      "q": "Where do I find the approved service charge for my Dubai building?",
+      "a": "Your own building's figure is three dropdowns away, and the spread inside one area is wider than the gap between areas: on 16 October 2026 Marina Promenade in Dubai Marina was approved at AED 13.74 a foot and Cayan Tower, in the same marina, at AED 23.74."
+    },
+    {
+      "q": "Can a Dubai building collect a service charge RERA has not approved?",
+      "a": "There is an approved rate for a named project, a stated usage and a budget year, and under Article 27(a) anything else is not collectable."
+    },
+    {
+      "q": "How is my share of a Dubai service charge calculated?",
+      "a": "Article 25(b) then removes the ambiguity: the share is calculated \"based on the area of his Unit as recorded in the Real Property Register\"."
+    }
+  ],
   "sources": [
     {
       "name": "Law No. (6) of 2019 Concerning Ownership of Jointly Owned Real Property in the Emirate of Dubai, Articles 25, 27, 30, 32 and 34",

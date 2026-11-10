@@ -67,6 +67,31 @@ const ok = (name, cond, got) => {
   else { fail++; console.log(`  FAIL  ${name}${got === undefined ? "" : `\n        ${got}`}`); }
 };
 
+
+/* The answer's own span in the markdown, emphasis included.
+
+   Built by walking rather than by regex. The earlier regex version joined the
+   answer's words with an optional-asterisk separator, which cannot cross a
+   "**" that falls inside a word -- and "AED 1,648,915**," is exactly that, so
+   it matched nothing and the check it fed silently passed the one case it
+   existed for. Stripping the asterisks, finding the answer there, and then
+   replaying the original character by character has no such blind spot. */
+function answerSpan(body, answer) {
+  const src = String(body);
+  const stripped = src.replace(/\*/g, "");
+  const want = String(answer).trim();
+  const at = stripped.indexOf(want);
+  if (at < 0) return "";
+  let seen = 0, from = -1;
+  for (let i = 0; i < src.length; i += 1) {
+    if (src[i] === "*") continue;
+    if (seen === at && from < 0) from = i;
+    seen += 1;
+    if (seen === at + want.length) return src.slice(from, i + 1);
+  }
+  return "";
+}
+
 const slugs = new Set(playbooks.map((p) => p.slug));
 const calcSlugs = new Set(CALCULATORS.map((c) => c.slug));
 const termSlugs = new Set(glossary.map((t) => t.slug));
@@ -4452,6 +4477,23 @@ ok("every calculator points at a playbook that exists",
         typeof f.a === "string" && bodyText.includes(f.a.trim()),
         `"${(f.a || "").slice(0, 70)}..." is not in the visible copy`);
       ok(`${p.slug}: extra answer carries a figure`, /\d/.test(f.a || ""),
+        JSON.stringify((f.a || "").slice(0, 60)));
+      /* The audit checks this page's rendered copy, and markup flattens: an
+         answer lifted from a sentence with bold inside it comes back with
+         stray spaces around the emphasis and stops matching, which surfaces
+         as "FAQ answer is not visible on the page" with no hint why. Caught
+         here instead, where the field is being written.
+
+         Scoped to the first 60 characters, which is the window the audit
+         compares, and narrowed to the one shape that actually breaks it.
+         Emphasis with a space on each side flattens to a double space and
+         both sides normalise, so it matches fine and is not forbidden here.
+         Emphasis closing straight onto a comma or a full stop does not:
+         "**AED 1,648,915**," renders as "AED 1,648,915 ," and the stray
+         space before the punctuation survives normalisation. That is the
+         case this catches, and reverting it is what proved the check. */
+      ok(`${p.slug}: the answer's opening carries no emphasis that closes against punctuation`,
+        !/\*\*[.,;:!?)]/.test(answerSpan(p.body, String(f.a || "").trim().slice(0, 60))),
         JSON.stringify((f.a || "").slice(0, 60)));
     }
     const qs = p.faqs.map((f) => (f.q || "").toLowerCase().trim());

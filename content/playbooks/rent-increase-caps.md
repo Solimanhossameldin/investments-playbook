@@ -24,6 +24,20 @@
     "This is general information and not legal advice. A live dispute belongs with the Rental Dispute Centre or a lawyer, not with a calculator."
   ],
   "whenToUse": "Before buying any tenanted property, because the achievable rent is a legal question before it is a market one, and because the difference between the passing rent and the index is the number that tells you what vacant possession is worth. Also every year before serving or receiving a renewal notice.",
+  "faqs": [
+    {
+      "q": "How much notice must a Dubai landlord give before raising the rent?",
+      "a": "Changing any term of a tenancy, rent included, requires the other party to be notified no less than ninety days before the date on which the lease contract expires, under Article 14 of Law No. (26) of 2007 as amended by Law No. (33) of 2008, unless the parties have agreed otherwise."
+    },
+    {
+      "q": "How long does it take a below-market Dubai rent to catch up with the index?",
+      "a": "From 50% below it takes five renewals and stops about 8% short; from 15% below it takes two and stops about 6% short."
+    },
+    {
+      "q": "Which rent index does the Dubai increase cap use?",
+      "a": "Article 3 names the authority: the average rental value is determined by the Rent Index of the Emirate of Dubai approved by the Real Estate Regulatory Agency."
+    }
+  ],
   "sources": [
     {
       "name": "Decree No. (43) of 2013 determining rent increase for real property in the Emirate of Dubai",
