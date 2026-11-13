@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-13T07:21:06.961Z",
+ "fetchedAt": "2026-11-13T15:36:06.177Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-11-13T15:01:02.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
+  {
+   "title": "The Bank of England, the Monetary Authority of Singapore, and the Bank of Thailand: Project Meridian FX APAC",
+   "url": "https://www.bankofengland.co.uk/news/2026/november/the-boe-monetary-authority-of-singapore-and-bank-of-thailand-media-release",
+   "published": "2026-11-13T09:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
   {
    "title": "Isabel Schnabel: Made in Europe",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261113~3883f1f187.en.html",
@@ -105,15 +123,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-11-10T13:30:23.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "Exchange of letters between the Governor and the Chancellor on the Asset Purchase Facility - November 2026",
@@ -305,15 +314,6 @@
    "feed": "ecb"
   },
   {
-   "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
-   "published": "2026-10-29T14:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
    "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
    "published": "2026-10-29T14:00:00.000Z",
@@ -321,6 +321,15 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
+  },
+  {
+   "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
+   "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
+   "published": "2026-10-29T14:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
   },
   {
    "title": "Monetary policy decisions",
@@ -398,24 +407,6 @@
    "title": "Piero Cipollone: Interview with Milano Finanza",
    "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261024~ee2ba73cf3.en.html",
    "published": "2026-10-24T06:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "SEC Announces Fiscal Year 2027 Examination Priorities",
-   "url": "https://www.sec.gov/newsroom/press-releases/2026-109-sec-announces-fiscal-year-2027-examination-priorities",
-   "published": "2026-10-23T14:10:00.000Z",
-   "source": "Securities and Exchange Commission",
-   "sourceLabel": "Press releases",
-   "category": "markets",
-   "feed": "sec"
-  },
-  {
-   "title": "ECB Consumer Expectations Survey results – September 2026",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261023~a3d201c97c.en.html",
-   "published": "2026-10-23T08:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
