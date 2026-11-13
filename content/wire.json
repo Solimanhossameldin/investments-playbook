@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-13T15:36:06.177Z",
+ "fetchedAt": "2026-11-13T21:39:12.253Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Agencies extend comment period for proposed third-party risk management guidance",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20261113a.htm",
+   "published": "2026-11-13T21:15:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
+  {
+   "title": "SEC Proposes Executive and Director Compensation Disclosure Reforms",
+   "url": "https://www.sec.gov/newsroom/press-releases/2026-114-sec-proposes-executive-director-compensation-disclosure-reforms",
+   "published": "2026-11-13T16:57:00.000Z",
+   "source": "Securities and Exchange Commission",
+   "sourceLabel": "Press releases",
+   "category": "markets",
+   "feed": "sec"
+  },
   {
    "title": "Major Economic Indicators Latest Numbers",
    "url": "https://www.bls.gov/bls/",
@@ -66,9 +84,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm",
    "published": "2026-11-12T17:45:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Federal Reserve Board issues enforcement action with former employee of United Community Bank",
@@ -314,15 +332,6 @@
    "feed": "ecb"
   },
   {
-   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
-   "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
-   "published": "2026-10-29T14:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
    "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
    "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
    "published": "2026-10-29T14:00:00.000Z",
@@ -330,6 +339,15 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
+  },
+  {
+   "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
+   "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
+   "published": "2026-10-29T14:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
   },
   {
    "title": "Monetary policy decisions",
@@ -363,9 +381,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
    "published": "2026-10-28T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Remit for the Monetary Policy Committee - October 2026",
