@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-14T01:49:16.241Z",
+ "fetchedAt": "2026-11-14T08:40:23.175Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -341,15 +341,6 @@
    "feed": "ecb"
   },
   {
-   "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
-   "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
-   "published": "2026-10-29T14:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "Christine Lagarde, Boris Vujčić: Monetary policy statement (with Q&A)",
    "url": "https://www.ecb.europa.eu//press/press_conference/monetary-policy-statement/2026/html/ecb.is261029~5c5ffe99e5.en.html",
    "published": "2026-10-29T14:00:00.000Z",
@@ -357,6 +348,15 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
+  },
+  {
+   "title": "Minutes of the Meeting of the Court of Directors held on 17 September 2026",
+   "url": "https://www.bankofengland.co.uk/minutes/2026/september/court-minutes-17-september-2026",
+   "published": "2026-10-29T14:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
   },
   {
    "title": "Monetary policy decisions",
@@ -425,15 +425,6 @@
    "title": "Frank Elderson: Taking action for nature – investing in economic resilience and prosperity",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261026~d903d7ad85.en.html",
    "published": "2026-10-26T05:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
-   "title": "Piero Cipollone: Interview with Milano Finanza",
-   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261024~ee2ba73cf3.en.html",
-   "published": "2026-10-24T06:00:00.000Z",
    "source": "European Central Bank",
    "sourceLabel": "Press",
    "category": "rates",
