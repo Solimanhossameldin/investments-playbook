@@ -1,80 +1,80 @@
 {
- "asOf": "2026-11-13T10:48:59.670Z",
+ "asOf": "2026-11-14T01:25:21.519Z",
  "quotes": [
   {
    "symbol": "us-2y",
    "label": "US 2Y Treasury",
    "category": "rate",
-   "value": 4.73,
-   "changeAbs": 0.17,
-   "changePct": 3.73,
+   "value": 4.86,
+   "changeAbs": 0.13,
+   "changePct": 2.75,
    "unit": "%",
    "source": "U.S. Treasury via FRED",
    "sourceUrl": "https://fred.stlouisfed.org/series/DGS2",
-   "asOf": "2026-11-10T00:00:00.000Z",
+   "asOf": "2026-11-12T00:00:00.000Z",
    "order": 1,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "us-10y",
    "label": "US 10Y Treasury",
    "category": "rate",
-   "value": 4.98,
-   "changeAbs": 0.1,
-   "changePct": 2.05,
+   "value": 5.1,
+   "changeAbs": 0.12,
+   "changePct": 2.41,
    "unit": "%",
    "source": "U.S. Treasury via FRED",
    "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
-   "asOf": "2026-11-10T00:00:00.000Z",
+   "asOf": "2026-11-12T00:00:00.000Z",
    "order": 2,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "us-30y",
    "label": "US 30Y Treasury",
    "category": "rate",
-   "value": 5.35,
-   "changeAbs": 0.09,
-   "changePct": 1.71,
+   "value": 5.43,
+   "changeAbs": 0.08,
+   "changePct": 1.5,
    "unit": "%",
    "source": "U.S. Treasury via FRED",
    "sourceUrl": "https://fred.stlouisfed.org/series/DGS30",
-   "asOf": "2026-11-10T00:00:00.000Z",
+   "asOf": "2026-11-12T00:00:00.000Z",
    "order": 3,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "us-10y-real",
    "label": "US 10Y Real Yield",
    "category": "rate",
-   "value": 2.78,
-   "changeAbs": 0.12,
-   "changePct": 4.51,
+   "value": 2.86,
+   "changeAbs": 0.08,
+   "changePct": 2.88,
    "unit": "%",
    "source": "U.S. Treasury via FRED",
    "sourceUrl": "https://fred.stlouisfed.org/series/DFII10",
-   "asOf": "2026-11-10T00:00:00.000Z",
+   "asOf": "2026-11-12T00:00:00.000Z",
    "order": 4,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "breakeven-10y",
    "label": "10Y Breakeven Inflation",
    "category": "rate",
    "value": 2.24,
-   "changeAbs": 0.04,
-   "changePct": 1.82,
+   "changeAbs": 0,
+   "changePct": 0,
    "unit": "%",
    "source": "Federal Reserve Bank of St. Louis",
    "sourceUrl": "https://fred.stlouisfed.org/series/T10YIE",
-   "asOf": "2026-11-12T00:00:00.000Z",
+   "asOf": "2026-11-13T00:00:00.000Z",
    "order": 5,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "us-30y-mortgage",
@@ -89,7 +89,7 @@
    "asOf": "2026-11-12T00:00:00.000Z",
    "order": 6,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "us-cpi",
@@ -104,37 +104,37 @@
    "asOf": "2026-10-01T00:00:00.000Z",
    "order": 7,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "xau",
    "label": "Gold",
    "category": "commodity",
-   "value": 3896.4,
+   "value": 3887.6,
    "changePct": null,
    "changeAbs": null,
    "unit": "USD/oz",
    "source": "gold-api.com",
    "sourceUrl": "https://api.gold-api.com",
-   "asOf": "2026-11-13T10:48:53Z",
+   "asOf": "2026-11-14T01:25:09Z",
    "order": 30,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "xag",
    "label": "Silver",
    "category": "commodity",
-   "value": 49.9,
+   "value": 48.65,
    "changePct": null,
    "changeAbs": null,
    "unit": "USD/oz",
    "source": "gold-api.com",
    "sourceUrl": "https://api.gold-api.com",
-   "asOf": "2026-11-13T10:48:52Z",
+   "asOf": "2026-11-14T01:25:09Z",
    "order": 31,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "wti",
@@ -149,52 +149,52 @@
    "asOf": "2026-11-11T00:00:00.000Z",
    "order": 32,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "usd-eur",
    "label": "USD / EUR",
    "category": "fx",
-   "value": 0.9035,
+   "value": 0.906,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-13T00:02:31.000Z",
+   "asOf": "2026-11-14T00:02:31.000Z",
    "order": 40,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "usd-gbp",
    "label": "USD / GBP",
    "category": "fx",
-   "value": 0.7551,
+   "value": 0.7564,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-13T00:02:31.000Z",
+   "asOf": "2026-11-14T00:02:31.000Z",
    "order": 41,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "usd-jpy",
    "label": "USD / JPY",
    "category": "fx",
-   "value": 159.7954,
+   "value": 159.7995,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-13T00:02:31.000Z",
+   "asOf": "2026-11-14T00:02:31.000Z",
    "order": 42,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "usd-aed",
@@ -206,40 +206,40 @@
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-13T00:02:31.000Z",
+   "asOf": "2026-11-14T00:02:31.000Z",
    "order": 43,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "usd-chf",
    "label": "USD / CHF",
    "category": "fx",
-   "value": 0.8344,
+   "value": 0.8386,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-13T00:02:31.000Z",
+   "asOf": "2026-11-14T00:02:31.000Z",
    "order": 44,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "usd-inr",
    "label": "USD / INR",
    "category": "fx",
-   "value": 94.0861,
+   "value": 94.2897,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-13T00:02:31.000Z",
+   "asOf": "2026-11-14T00:02:31.000Z",
    "order": 45,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "dxy-broad",
@@ -254,37 +254,37 @@
    "asOf": "2026-11-06T00:00:00.000Z",
    "order": 46,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "btc-usd",
    "label": "Bitcoin",
    "category": "crypto",
-   "value": 69281.7,
-   "changeAbs": -2089,
-   "changePct": -2.93,
+   "value": 68281.8,
+   "changeAbs": 44.4,
+   "changePct": 0.07,
    "unit": "USD",
    "source": "Kraken",
    "sourceUrl": "https://www.kraken.com",
-   "asOf": "2026-11-13T10:48:59.149Z",
+   "asOf": "2026-11-14T01:25:21.393Z",
    "order": 50,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   },
   {
    "symbol": "eth-usd",
    "label": "Ethereum",
    "category": "crypto",
-   "value": 1949.69,
-   "changeAbs": -67.47,
-   "changePct": -3.34,
+   "value": 1930.35,
+   "changeAbs": 2.16,
+   "changePct": 0.11,
    "unit": "USD",
    "source": "Kraken",
    "sourceUrl": "https://www.kraken.com",
-   "asOf": "2026-11-13T10:48:59.149Z",
+   "asOf": "2026-11-14T01:25:21.393Z",
    "order": 51,
    "stale": false,
-   "fetched_at": "2026-11-13T10:48:59.670Z"
+   "fetched_at": "2026-11-14T01:25:21.519Z"
   }
  ]
 }
