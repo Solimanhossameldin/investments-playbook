@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-16T10:48:19.363Z",
+ "fetchedAt": "2026-11-16T20:49:19.965Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,24 @@
   }
  ],
  "items": [
+  {
+   "title": "Warsh, Opening Remarks",
+   "url": "https://www.federalreserve.gov/newsevents/speech/warsh20261116a.htm",
+   "published": "2026-11-16T17:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
+  },
+  {
+   "title": "Frank Elderson: Smart supervision for small banks",
+   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261116_1~11dd7f62af.en.html",
+   "published": "2026-11-16T13:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Barr, Some Potential Financial Stability Implications of Artificial Intelligence",
    "url": "https://www.federalreserve.gov/newsevents/speech/barr20261116a.htm",
@@ -111,9 +129,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm",
    "published": "2026-11-12T17:45:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Federal Reserve Board issues enforcement action with former employee of United Community Bank",
@@ -408,9 +426,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
    "published": "2026-10-28T18:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Remit for the Monetary Policy Committee - October 2026",
