@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "fetch-wire",
+   "status": "ok",
+   "detail": "48 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
+   "ranAt": "2026-11-18T02:55:45.517Z"
+  },
+  {
    "job": "pipeline",
    "status": "ok",
    "detail": "update=success, deploy=success, submit=success",
@@ -233,12 +239,6 @@
    "status": "ok",
    "detail": "update=success, deploy=success, submit=success",
    "ranAt": "2026-11-16T00:59:10.196Z"
-  },
-  {
-   "job": "indexnow",
-   "status": "ok",
-   "detail": "submitted 157 urls, HTTP 200",
-   "ranAt": "2026-11-16T00:59:01.079Z"
   }
  ]
 }
