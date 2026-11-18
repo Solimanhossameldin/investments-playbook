@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-18T11:15:43.697Z",
+ "fetchedAt": "2026-11-18T19:29:35.687Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,33 @@
   }
  ],
  "items": [
+  {
+   "title": "Minutes of the Federal Open Market Committee, October 27-28, 2026",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261118a.htm",
+   "published": "2026-11-18T19:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
+  {
+   "title": "Barr, Investing in America’s Underserved Communities",
+   "url": "https://www.federalreserve.gov/newsevents/speech/barr20261118a.htm",
+   "published": "2026-11-18T18:35:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Speeches",
+   "category": "rates",
+   "feed": "fed-speeches"
+  },
+  {
+   "title": "Major Economic Indicators Latest Numbers",
+   "url": "https://www.bls.gov/bls/",
+   "published": "2026-11-18T15:00:23.000Z",
+   "source": "Bureau of Labor Statistics",
+   "sourceLabel": "Economic indicators",
+   "category": "macro",
+   "feed": "bls"
+  },
   {
    "title": "Boris Vujčić: Financial Stability Review - November 2026",
    "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261118~86f1e8147e.en.pdf",
@@ -60,15 +87,6 @@
    "sourceLabel": "Speeches",
    "category": "rates",
    "feed": "fed-speeches"
-  },
-  {
-   "title": "Major Economic Indicators Latest Numbers",
-   "url": "https://www.bls.gov/bls/",
-   "published": "2026-11-17T13:30:25.000Z",
-   "source": "Bureau of Labor Statistics",
-   "sourceLabel": "Economic indicators",
-   "category": "macro",
-   "feed": "bls"
   },
   {
    "title": "Warsh, Opening Remarks",
@@ -456,24 +474,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Federal Reserve issues FOMC statement",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
-   "published": "2026-10-28T18:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
-  },
-  {
-   "title": "Remit for the Monetary Policy Committee - October 2026",
-   "url": "https://www.bankofengland.co.uk/letter/2026/mpc-remit-2026",
-   "published": "2026-10-28T14:16:49.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
