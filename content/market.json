@@ -1,5 +1,5 @@
 {
- "asOf": "2026-11-22T11:01:21.945Z",
+ "asOf": "2026-11-23T01:37:02.376Z",
  "quotes": [
   {
    "symbol": "us-2y",
@@ -14,7 +14,7 @@
    "asOf": "2026-11-19T00:00:00.000Z",
    "order": 1,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "us-10y",
@@ -29,7 +29,7 @@
    "asOf": "2026-11-19T00:00:00.000Z",
    "order": 2,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "us-30y",
@@ -44,7 +44,7 @@
    "asOf": "2026-11-19T00:00:00.000Z",
    "order": 3,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "us-10y-real",
@@ -59,7 +59,7 @@
    "asOf": "2026-11-19T00:00:00.000Z",
    "order": 4,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "breakeven-10y",
@@ -74,7 +74,7 @@
    "asOf": "2026-11-20T00:00:00.000Z",
    "order": 5,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "us-30y-mortgage",
@@ -89,7 +89,7 @@
    "asOf": "2026-11-19T00:00:00.000Z",
    "order": 6,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "us-cpi",
@@ -104,37 +104,37 @@
    "asOf": "2026-10-01T00:00:00.000Z",
    "order": 7,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "xau",
    "label": "Gold",
    "category": "commodity",
-   "value": 3539,
+   "value": 3617.6,
    "changePct": null,
    "changeAbs": null,
    "unit": "USD/oz",
    "source": "gold-api.com",
    "sourceUrl": "https://api.gold-api.com",
-   "asOf": "2026-11-22T11:01:09Z",
+   "asOf": "2026-11-23T01:36:41Z",
    "order": 30,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "xag",
    "label": "Silver",
    "category": "commodity",
-   "value": 41.08,
+   "value": 42.13,
    "changePct": null,
    "changeAbs": null,
    "unit": "USD/oz",
    "source": "gold-api.com",
    "sourceUrl": "https://api.gold-api.com",
-   "asOf": "2026-11-22T11:01:09Z",
+   "asOf": "2026-11-23T01:36:40Z",
    "order": 31,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "wti",
@@ -149,22 +149,22 @@
    "asOf": "2026-11-17T00:00:00.000Z",
    "order": 32,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "usd-eur",
    "label": "USD / EUR",
    "category": "fx",
-   "value": 0.9113,
+   "value": 0.9111,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-22T00:02:32.000Z",
+   "asOf": "2026-11-23T00:02:32.000Z",
    "order": 40,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "usd-gbp",
@@ -176,25 +176,25 @@
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-22T00:02:32.000Z",
+   "asOf": "2026-11-23T00:02:32.000Z",
    "order": 41,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "usd-jpy",
    "label": "USD / JPY",
    "category": "fx",
-   "value": 158.7475,
+   "value": 158.7014,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-22T00:02:32.000Z",
+   "asOf": "2026-11-23T00:02:32.000Z",
    "order": 42,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "usd-aed",
@@ -206,40 +206,40 @@
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-22T00:02:32.000Z",
+   "asOf": "2026-11-23T00:02:32.000Z",
    "order": 43,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "usd-chf",
    "label": "USD / CHF",
    "category": "fx",
-   "value": 0.8403,
+   "value": 0.8404,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-22T00:02:32.000Z",
+   "asOf": "2026-11-23T00:02:32.000Z",
    "order": 44,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "usd-inr",
    "label": "USD / INR",
    "category": "fx",
-   "value": 92.8891,
+   "value": 92.7535,
    "changePct": null,
    "changeAbs": null,
    "unit": "",
    "source": "ExchangeRate-API",
    "sourceUrl": "https://www.exchangerate-api.com",
-   "asOf": "2026-11-22T00:02:32.000Z",
+   "asOf": "2026-11-23T00:02:32.000Z",
    "order": 45,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "dxy-broad",
@@ -254,37 +254,37 @@
    "asOf": "2026-11-13T00:00:00.000Z",
    "order": 46,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "btc-usd",
    "label": "Bitcoin",
    "category": "crypto",
-   "value": 60785.6,
-   "changeAbs": 695.7,
-   "changePct": 1.16,
+   "value": 61076.7,
+   "changeAbs": -93.4,
+   "changePct": -0.15,
    "unit": "USD",
    "source": "Kraken",
    "sourceUrl": "https://www.kraken.com",
-   "asOf": "2026-11-22T11:01:21.642Z",
+   "asOf": "2026-11-23T01:37:01.914Z",
    "order": 50,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   },
   {
    "symbol": "eth-usd",
    "label": "Ethereum",
    "category": "crypto",
-   "value": 1707.32,
-   "changeAbs": 25.04,
-   "changePct": 1.49,
+   "value": 1715.09,
+   "changeAbs": -6.52,
+   "changePct": -0.38,
    "unit": "USD",
    "source": "Kraken",
    "sourceUrl": "https://www.kraken.com",
-   "asOf": "2026-11-22T11:01:21.642Z",
+   "asOf": "2026-11-23T01:37:01.914Z",
    "order": 51,
    "stale": false,
-   "fetched_at": "2026-11-22T11:01:21.945Z"
+   "fetched_at": "2026-11-23T01:37:02.376Z"
   }
  ]
 }
