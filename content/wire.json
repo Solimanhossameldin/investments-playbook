@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-23T09:05:44.778Z",
+ "fetchedAt": "2026-11-23T21:25:11.076Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,33 @@
   }
  ],
  "items": [
+  {
+   "title": "Philip R. Lane: Climate change and monetary policy",
+   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp261123~b5816801a0.en.pdf",
+   "published": "2026-11-23T14:30:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
+   "title": "General insurance stress test highlights value of rehearsing crisis response and recovery",
+   "url": "https://www.bankofengland.co.uk/news/2026/november/general-insurance-stress-test-highlights-value-of-rehearsing-crisis-response-and-recovery",
+   "published": "2026-11-23T10:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "ECB expands acceptance of DLT-based assets as eligible Eurosystem collateral",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261123~76b6f57b74.en.html",
+   "published": "2026-11-23T10:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Federal Reserve announces College Fed Challenge winners",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/other20261120b.htm",
@@ -465,15 +492,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "Boris Vujčić: Integrated, open and resilient: Europe’s strengths in a fragmenting world",
-   "url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp.261102~70003226e9.en.html",
-   "published": "2026-11-02T09:30:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
