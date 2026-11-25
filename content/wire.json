@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-24T16:10:49.520Z",
+ "fetchedAt": "2026-11-25T00:44:23.489Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Minutes of the Board's discount rate meetings on October 19 and October 28, 2026",
+   "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261124a.htm",
+   "published": "2026-11-24T19:00:00.000Z",
+   "source": "Federal Reserve",
+   "sourceLabel": "Press releases",
+   "category": "rates",
+   "feed": "fed-all"
+  },
   {
    "title": "Daniel E. Pinto appointed to the Bank of England’s Financial Policy Committee",
    "url": "https://www.bankofengland.co.uk/news/2026/november/daniel-pinto-appointment-fpc",
@@ -492,15 +501,6 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
-  },
-  {
-   "title": "ECB wage tracker suggests slightly higher wage growth in first three quarters of 2027 compared with the full year of 2026",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261104~caf181d7ac.en.html",
-   "published": "2026-11-04T00:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
   }
  ]
 }
