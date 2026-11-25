@@ -1,6 +1,42 @@
 {
  "runs": [
   {
+   "job": "mail-audit",
+   "status": "skipped",
+   "detail": "no api key",
+   "ranAt": "2026-11-25T04:07:55.790Z"
+  },
+  {
+   "job": "mail-daily-brief",
+   "status": "skipped",
+   "detail": "No brief written for 2026-11-25, so there is nothing to send.",
+   "ranAt": "2026-11-25T04:07:55.729Z"
+  },
+  {
+   "job": "generate-daily-brief",
+   "status": "skipped",
+   "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
+   "ranAt": "2026-11-25T04:07:55.669Z"
+  },
+  {
+   "job": "configuration",
+   "status": "incomplete",
+   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
+   "ranAt": "2026-11-25T04:07:55.620Z"
+  },
+  {
+   "job": "fetch-photos",
+   "status": "ok",
+   "detail": "5 of 5 photographs published, 2 staged for preview",
+   "ranAt": "2026-11-25T04:07:55.567Z"
+  },
+  {
+   "job": "fetch-market-data",
+   "status": "partial",
+   "detail": "17 figures refreshed. Notes: metals fetch failed",
+   "ranAt": "2026-11-25T04:07:54.903Z"
+  },
+  {
    "job": "fetch-wire",
    "status": "ok",
    "detail": "53 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
@@ -203,42 +239,6 @@
    "status": "skipped",
    "detail": "No model API key configured. Set GEMINI_API_KEY or OPENAI_API_KEY.",
    "ranAt": "2026-11-23T01:37:03.442Z"
-  },
-  {
-   "job": "configuration",
-   "status": "incomplete",
-   "detail": "nothing configured. Missing: GEMINI_API_KEY, MAILERLITE_API_KEY",
-   "ranAt": "2026-11-23T01:37:03.411Z"
-  },
-  {
-   "job": "fetch-photos",
-   "status": "ok",
-   "detail": "5 of 5 photographs published, 2 staged for preview",
-   "ranAt": "2026-11-23T01:37:03.373Z"
-  },
-  {
-   "job": "fetch-market-data",
-   "status": "ok",
-   "detail": "19 figures refreshed",
-   "ranAt": "2026-11-23T01:37:02.376Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "50 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-11-23T01:05:33.083Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "50 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-11-22T20:28:58.631Z"
-  },
-  {
-   "job": "fetch-wire",
-   "status": "ok",
-   "detail": "50 items from 7 of 7 feeds. Withdrawn, still asked: treasury, imf, uae-cb, dubai-media, wam",
-   "ranAt": "2026-11-22T13:37:10.730Z"
   }
  ]
 }
