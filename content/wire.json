@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-26T11:23:16.351Z",
+ "fetchedAt": "2026-11-26T20:23:54.709Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,33 @@
   }
  ],
  "items": [
+  {
+   "title": "Payments systems Memorandum of Understanding",
+   "url": "https://www.bankofengland.co.uk/news/2024/march/payment-systems-memorandum-of-understanding",
+   "published": "2026-11-26T15:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "Statistical Notice 2026/09 - Update to the classification of accounts guide",
+   "url": "https://www.bankofengland.co.uk/statistics/notice/2026/statistical-notice-2026-09",
+   "published": "2026-11-26T12:33:57.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
+  },
+  {
+   "title": "Meeting of 28-29 October 2026",
+   "url": "https://www.ecb.europa.eu//press/accounts/2026/html/ecb.mg261126~ccf28c8071.en.html",
+   "published": "2026-11-26T12:30:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Financial Policy Committee Record – November 2026",
    "url": "https://www.bankofengland.co.uk/financial-policy-committee-record/2026/november-2026",
@@ -102,9 +129,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261124a.htm",
    "published": "2026-11-24T19:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Daniel E. Pinto appointed to the Bank of England’s Financial Policy Committee",
@@ -273,9 +300,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261118a.htm",
    "published": "2026-11-18T19:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Barr, Investing in America’s Underserved Communities",
@@ -417,9 +444,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm",
    "published": "2026-11-12T17:45:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Monetary policy",
+   "sourceLabel": "Press releases",
    "category": "rates",
-   "feed": "fed-monetary"
+   "feed": "fed-all"
   },
   {
    "title": "Federal Reserve Board issues enforcement action with former employee of United Community Bank",
@@ -519,24 +546,6 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
-  },
-  {
-   "title": "Federal Reserve Board announces termination of enforcement action with Allegiant United Holdings, LLC, Nano Financial Holdings, Inc., and Nano Banc",
-   "url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20261105a.htm",
-   "published": "2026-11-05T16:00:00.000Z",
-   "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
-   "category": "rates",
-   "feed": "fed-all"
-  },
-  {
-   "title": "Bank rate increased to 4% - November 2026 Monetary Policy Summary and Minutes",
-   "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/november-2026",
-   "published": "2026-11-05T12:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
   }
  ]
 }
