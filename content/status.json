@@ -1,6 +1,12 @@
 {
  "runs": [
   {
+   "job": "indexnow",
+   "status": "ok",
+   "detail": "submitted 157 urls, HTTP 200",
+   "ranAt": "2026-11-27T03:37:14.067Z"
+  },
+  {
    "job": "mail-audit",
    "status": "skipped",
    "detail": "no api key",
@@ -233,12 +239,6 @@
    "status": "skipped",
    "detail": "no api key",
    "ranAt": "2026-11-25T04:07:55.790Z"
-  },
-  {
-   "job": "mail-daily-brief",
-   "status": "skipped",
-   "detail": "No brief written for 2026-11-25, so there is nothing to send.",
-   "ranAt": "2026-11-25T04:07:55.729Z"
   }
  ]
 }
