@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-27T21:32:04.234Z",
+ "fetchedAt": "2026-11-28T03:32:09.730Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -125,15 +125,6 @@
    "feed": "fed-speeches"
   },
   {
-   "title": "Regulators implement growth-friendly securitisation reforms",
-   "url": "https://www.bankofengland.co.uk/news/2026/november/regulators-implement-growth-friendly-securitisation-reforms",
-   "published": "2026-11-25T10:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "Card payments edge past cash in shops; euro area consumers want both",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261125~26d1ade228.en.html",
    "published": "2026-11-25T10:00:00.000Z",
@@ -141,6 +132,15 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
+  },
+  {
+   "title": "Regulators implement growth-friendly securitisation reforms",
+   "url": "https://www.bankofengland.co.uk/news/2026/november/regulators-implement-growth-friendly-securitisation-reforms",
+   "published": "2026-11-25T10:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
   },
   {
    "title": "Minutes of the Board's discount rate meetings on October 19 and October 28, 2026",
@@ -179,15 +179,6 @@
    "feed": "ecb"
   },
   {
-   "title": "General insurance stress test highlights value of rehearsing crisis response and recovery",
-   "url": "https://www.bankofengland.co.uk/news/2026/november/general-insurance-stress-test-highlights-value-of-rehearsing-crisis-response-and-recovery",
-   "published": "2026-11-23T10:00:00.000Z",
-   "source": "Bank of England",
-   "sourceLabel": "News",
-   "category": "rates",
-   "feed": "boe"
-  },
-  {
    "title": "ECB expands acceptance of DLT-based assets as eligible Eurosystem collateral",
    "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261123~76b6f57b74.en.html",
    "published": "2026-11-23T10:00:00.000Z",
@@ -195,6 +186,15 @@
    "sourceLabel": "Press",
    "category": "rates",
    "feed": "ecb"
+  },
+  {
+   "title": "General insurance stress test highlights value of rehearsing crisis response and recovery",
+   "url": "https://www.bankofengland.co.uk/news/2026/november/general-insurance-stress-test-highlights-value-of-rehearsing-crisis-response-and-recovery",
+   "published": "2026-11-23T10:00:00.000Z",
+   "source": "Bank of England",
+   "sourceLabel": "News",
+   "category": "rates",
+   "feed": "boe"
   },
   {
    "title": "Federal Reserve announces College Fed Challenge winners",
