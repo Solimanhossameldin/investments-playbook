@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-11-28T03:32:09.730Z",
+ "fetchedAt": "2026-11-28T12:24:19.845Z",
  "sourcesTotal": 7,
  "sourcesOk": 7,
  "retired": [
@@ -25,6 +25,15 @@
   }
  ],
  "items": [
+  {
+   "title": "Boris Vujčić: Interview with Kurier",
+   "url": "https://www.ecb.europa.eu//press/inter/date/2026/html/ecb.in261128~10e11f78f1.en.html",
+   "published": "2026-11-28T08:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
   {
    "title": "Decisions taken by the Governing Council of the ECB (in addition to decisions setting interest rates)",
    "url": "https://www.ecb.europa.eu//press/govcdec/otherdec/2026/html/ecb.gc261127~13ecadc0f2.en.html",
@@ -125,15 +134,6 @@
    "feed": "fed-speeches"
   },
   {
-   "title": "Card payments edge past cash in shops; euro area consumers want both",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261125~26d1ade228.en.html",
-   "published": "2026-11-25T10:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
    "title": "Regulators implement growth-friendly securitisation reforms",
    "url": "https://www.bankofengland.co.uk/news/2026/november/regulators-implement-growth-friendly-securitisation-reforms",
    "published": "2026-11-25T10:00:00.000Z",
@@ -143,13 +143,22 @@
    "feed": "boe"
   },
   {
+   "title": "Card payments edge past cash in shops; euro area consumers want both",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261125~26d1ade228.en.html",
+   "published": "2026-11-25T10:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
+  },
+  {
    "title": "Minutes of the Board's discount rate meetings on October 19 and October 28, 2026",
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261124a.htm",
    "published": "2026-11-24T19:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Daniel E. Pinto appointed to the Bank of England’s Financial Policy Committee",
@@ -179,15 +188,6 @@
    "feed": "ecb"
   },
   {
-   "title": "ECB expands acceptance of DLT-based assets as eligible Eurosystem collateral",
-   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261123~76b6f57b74.en.html",
-   "published": "2026-11-23T10:00:00.000Z",
-   "source": "European Central Bank",
-   "sourceLabel": "Press",
-   "category": "rates",
-   "feed": "ecb"
-  },
-  {
    "title": "General insurance stress test highlights value of rehearsing crisis response and recovery",
    "url": "https://www.bankofengland.co.uk/news/2026/november/general-insurance-stress-test-highlights-value-of-rehearsing-crisis-response-and-recovery",
    "published": "2026-11-23T10:00:00.000Z",
@@ -195,6 +195,15 @@
    "sourceLabel": "News",
    "category": "rates",
    "feed": "boe"
+  },
+  {
+   "title": "ECB expands acceptance of DLT-based assets as eligible Eurosystem collateral",
+   "url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr261123~76b6f57b74.en.html",
+   "published": "2026-11-23T10:00:00.000Z",
+   "source": "European Central Bank",
+   "sourceLabel": "Press",
+   "category": "rates",
+   "feed": "ecb"
   },
   {
    "title": "Federal Reserve announces College Fed Challenge winners",
@@ -318,9 +327,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261118a.htm",
    "published": "2026-11-18T19:00:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Barr, Investing in America’s Underserved Communities",
@@ -462,9 +471,9 @@
    "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm",
    "published": "2026-11-12T17:45:00.000Z",
    "source": "Federal Reserve",
-   "sourceLabel": "Press releases",
+   "sourceLabel": "Monetary policy",
    "category": "rates",
-   "feed": "fed-all"
+   "feed": "fed-monetary"
   },
   {
    "title": "Federal Reserve Board issues enforcement action with former employee of United Community Bank",
